@@ -12,10 +12,10 @@ import json, time, datetime, urllib.request, urllib.parse, pathlib, sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"}
-CHART = "https://query1.finance.yahoo.com/v8/finance/chart/{sym}?range=max&interval=1d&events=div%2Csplit"
+CHART = "https://query1.finance.yahoo.com/v8/finance/chart/{sym}?range={rng}&interval={itv}&events=div%2Csplit"
 
-def fetch_history(sym, retries=3):
-    url = CHART.format(sym=urllib.parse.quote(sym, safe=""))
+def fetch_series(sym, rng, itv, retries=3):
+    url = CHART.format(sym=urllib.parse.quote(sym, safe=""), rng=rng, itv=itv)
     for i in range(retries):
         try:
             req = urllib.request.Request(url, headers=UA)
@@ -23,7 +23,6 @@ def fetch_history(sym, retries=3):
                 j = json.load(r)
             res = j["chart"]["result"][0]
             ts = res["timestamp"]
-            # 优先用复权收盘价（与主流行情软件的前复权口径一致），无则退回原始收盘
             try:
                 closes = res["indicators"]["adjclose"][0]["adjclose"]
             except (KeyError, IndexError):
@@ -34,9 +33,21 @@ def fetch_history(sym, retries=3):
             return pairs
         except Exception as e:
             if i == retries - 1:
-                print(f"  !! {sym}: {e}", file=sys.stderr)
+                print(f"  !! {sym} {rng}/{itv}: {e}", file=sys.stderr)
                 return None
             time.sleep(2 * (i + 1))
+
+def fetch_history(sym):
+    """近5年日线（算涨跌幅） + 全历史月线（算历史高点），规避 Yahoo 对老股票
+    range=max 时悄悄降级粒度/截断近期数据的问题。"""
+    daily = fetch_series(sym, "5y", "1d")
+    monthly = fetch_series(sym, "max", "1mo")
+    if daily is None:
+        return None
+    hist_max = max(c for _, c in daily)
+    if monthly:
+        hist_max = max(hist_max, max(c for _, c in monthly))
+    return daily, hist_max
 
 def pct(cur, base):
     return (cur / base - 1) * 100
@@ -86,16 +97,16 @@ def main():
             sym = it["yahoo"]
             if sym not in cache:
                 cache[sym] = fetch_history(sym)
-                time.sleep(0.6)  # 温和限速
-            pairs = cache[sym]
-            if pairs is None:
+                time.sleep(0.4)  # 温和限速
+            fetched = cache[sym]
+            if fetched is None:
                 rows.append([it["name"], it["code"], it["market"], "获取失败",
                              "-", "-", 0.0, "-", "-", "-"])
                 continue
+            pairs, hist_max = fetched
             price = pairs[-1][1]
             cur = it["currency"]
-            ath = max(c for _, c in pairs)
-            ath = max(ath, it.get("ath_floor") or 0)  # 行情源历史不全时兜底
+            ath = max(hist_max, it.get("ath_floor") or 0)  # 兜底：配置的历史高点下限
             dd = pct(price, ath)
 
             def window(ts_base, label_ipo):
@@ -121,8 +132,19 @@ def main():
            "sections": sections_out}
     (ROOT / "data/quotes.json").write_text(
         json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
-    fails = sum(1 for s in sections_out for r in s["rows"] if r[3] == "获取失败")
-    print(f"\n完成：{sum(len(s['rows']) for s in sections_out)} 行，失败 {fails} 行")
+    rows_all = [r for s in sections_out for r in s["rows"]]
+    fails = sum(1 for r in rows_all if r[3] == "获取失败")
+    flat_1m = sum(1 for r in rows_all if r[7] == 0.0)
+    print(f"\n完成：{len(rows_all)} 行，失败 {fails} 行")
+    # ==== 数据质检 ====
+    if flat_1m > len(rows_all) * 0.1:
+        print(f"::warning::质检警告：{flat_1m} 行「近1个月」恰好为 0.0%，疑似行情序列缺失近期数据")
+    stale = [sym2 for sym2, v in cache.items()
+             if v and (ts_now - v[0][-1][0]) > 7 * 86400]
+    if stale:
+        print(f"::warning::质检警告：{len(stale)} 个代码行情超过7天未更新: {', '.join(stale[:10])}")
+    if fails > 0:
+        print(f"::warning::有 {fails} 行获取失败，请检查代码配置")
 
 if __name__ == "__main__":
     main()
