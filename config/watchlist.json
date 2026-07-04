@@ -1621,7 +1621,348 @@
    ]
   },
   {
-   "name": "10 光连接（光模块、CPO与光器件）",
+   "name": "10 封装测试（OSAT与测试设备）",
+   "items": [
+    {
+     "name": "台积电",
+     "code": "TSM",
+     "market": "美股 ADR",
+     "yahoo": "TSM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 22599.999999999996,
+      "approx": false
+     },
+     "mcap_base_price": 434.16,
+     "ath_floor": 479.0
+    },
+    {
+     "name": "日月光半导体 ADR",
+     "code": "ASX",
+     "market": "美股",
+     "yahoo": "ASX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 900,
+      "approx": true
+     },
+     "mcap_base_price": 41.87,
+     "ath_floor": 0
+    },
+    {
+     "name": "艾马克技术（Amkor）",
+     "code": "AMKR",
+     "market": "美股",
+     "yahoo": "AMKR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 171,
+      "approx": false
+     },
+     "mcap_base_price": 69.65,
+     "ath_floor": 0
+    },
+    {
+     "name": "长电科技",
+     "code": "600584",
+     "market": "A股",
+     "yahoo": "600584.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1627,
+      "approx": true
+     },
+     "mcap_base_price": 90.88,
+     "ath_floor": 0
+    },
+    {
+     "name": "通富微电",
+     "code": "002156",
+     "market": "A股",
+     "yahoo": "002156.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 985,
+      "approx": true
+     },
+     "mcap_base_price": 64.8,
+     "ath_floor": 0
+    },
+    {
+     "name": "华天科技",
+     "code": "002185",
+     "market": "A股",
+     "yahoo": "002185.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 624,
+      "approx": true
+     },
+     "mcap_base_price": 19.51,
+     "ath_floor": 0
+    },
+    {
+     "name": "ASMPT",
+     "code": "00522",
+     "market": "港股",
+     "yahoo": "0522.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 852,
+      "approx": true
+     },
+     "mcap_base_price": 204.8,
+     "ath_floor": 0
+    },
+    {
+     "name": "爱德万测试",
+     "code": "6857",
+     "market": "日股",
+     "yahoo": "6857.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 214200,
+      "approx": true
+     },
+     "mcap_base_price": 29345.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "泰瑞达",
+     "code": "TER",
+     "market": "美股",
+     "yahoo": "TER",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 591,
+      "approx": false
+     },
+     "mcap_base_price": 369.09,
+     "ath_floor": 0
+    },
+    {
+     "name": "是德科技（Keysight）",
+     "code": "KEYS",
+     "market": "美股",
+     "yahoo": "KEYS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 540,
+      "approx": false
+     },
+     "mcap_base_price": 313.86,
+     "ath_floor": 0
+    },
+    {
+     "name": "Nova",
+     "code": "NVMI",
+     "market": "美股",
+     "yahoo": "NVMI",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 136,
+      "approx": false
+     },
+     "mcap_base_price": 470.14,
+     "ath_floor": 0
+    },
+    {
+     "name": "Onto Innovation",
+     "code": "ONTO",
+     "market": "美股",
+     "yahoo": "ONTO",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 151,
+      "approx": false
+     },
+     "mcap_base_price": 307.58,
+     "ath_floor": 0
+    },
+    {
+     "name": "FormFactor",
+     "code": "FORM",
+     "market": "美股",
+     "yahoo": "FORM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 95,
+      "approx": false
+     },
+     "mcap_base_price": 123.59,
+     "ath_floor": 0
+    },
+    {
+     "name": "科休半导体",
+     "code": "COHU",
+     "market": "美股",
+     "yahoo": "COHU",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 28,
+      "approx": false
+     },
+     "mcap_base_price": 59.27,
+     "ath_floor": 0
+    },
+    {
+     "name": "康特科技",
+     "code": "CAMT",
+     "market": "美股",
+     "yahoo": "CAMT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 64,
+      "approx": false
+     },
+     "mcap_base_price": 142.5,
+     "ath_floor": 0
+    },
+    {
+     "name": "库力索法",
+     "code": "KLIC",
+     "market": "美股",
+     "yahoo": "KLIC",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 64,
+      "approx": false
+     },
+     "mcap_base_price": 121.33,
+     "ath_floor": 0
+    },
+    {
+     "name": "Aehr Test",
+     "code": "AEHR",
+     "market": "美股",
+     "yahoo": "AEHR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 21,
+      "approx": false
+     },
+     "mcap_base_price": 69.96,
+     "ath_floor": 0
+    },
+    {
+     "name": "Axcelis",
+     "code": "ACLS",
+     "market": "美股",
+     "yahoo": "ACLS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 46,
+      "approx": false
+     },
+     "mcap_base_price": 144.5,
+     "ath_floor": 0
+    },
+    {
+     "name": "ACM Research",
+     "code": "ACMR",
+     "market": "美股",
+     "yahoo": "ACMR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 62,
+      "approx": false
+     },
+     "mcap_base_price": 97.77,
+     "ath_floor": 0
+    },
+    {
+     "name": "科磊",
+     "code": "KLAC",
+     "market": "美股",
+     "yahoo": "KLAC",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3076.9,
+      "approx": false
+     },
+     "mcap_base_price": 235.55,
+     "ath_floor": 307.37
+    },
+    {
+     "name": "Nordson",
+     "code": "NDSN",
+     "market": "美股",
+     "yahoo": "NDSN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 166,
+      "approx": false
+     },
+     "mcap_base_price": 290.38,
+     "ath_floor": 0
+    },
+    {
+     "name": "布鲁克",
+     "code": "BRKR",
+     "market": "美股",
+     "yahoo": "BRKR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 93,
+      "approx": false
+     },
+     "mcap_base_price": 61.64,
+     "ath_floor": 0
+    },
+    {
+     "name": "日东纺织",
+     "code": "3110",
+     "market": "日股",
+     "yahoo": "3110.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1269,
+      "approx": true
+     },
+     "mcap_base_price": 3625.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "SKC",
+     "code": "011790",
+     "market": "韩国",
+     "yahoo": "011790.KS",
+     "currency": "₩",
+     "mcap_base": {
+      "prefix": "₩",
+      "yi": 76000,
+      "approx": true
+     },
+     "mcap_base_price": 200000.0,
+     "ath_floor": 0
+    }
+   ]
+  },
+  {
+   "name": "11 光连接（光模块、CPO与光器件）",
    "items": [
     {
      "name": "Lumentum",
@@ -2014,7 +2355,7 @@
    ]
   },
   {
-   "name": "11 光纤与光缆",
+   "name": "12 光纤与光缆",
    "items": [
     {
      "name": "康宁",
@@ -2187,7 +2528,7 @@
    ]
   },
   {
-   "name": "12 PCB",
+   "name": "13 PCB",
    "items": [
     {
      "name": "胜宏科技",
@@ -2262,7 +2603,7 @@
    ]
   },
   {
-   "name": "13 能源、电力与资源现金流",
+   "name": "14 能源、电力与资源现金流",
    "items": [
     {
      "name": "Constellation Energy",
@@ -2627,7 +2968,7 @@
    ]
   },
   {
-   "name": "14 中国互联网、AI 应用与主题 ETF",
+   "name": "15 中国互联网、AI 应用与主题 ETF",
    "items": [
     {
      "name": "腾讯控股",
@@ -2680,7 +3021,7 @@
    ]
   },
   {
-   "name": "15 软件与 SaaS",
+   "name": "16 软件与 SaaS",
    "items": [
     {
      "name": "微软",
@@ -3119,7 +3460,7 @@
    ]
   },
   {
-   "name": "16 800VDC 电力电子与功率半导体",
+   "name": "17 800VDC 电力电子与功率半导体",
    "items": [
     {
      "name": "纳微半导体",
