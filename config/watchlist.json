@@ -3460,7 +3460,208 @@
    ]
   },
   {
-   "name": "17 800VDC 电力电子与功率半导体",
+   "name": "17 碳化硅（SiC与宽禁带功率）",
+   "items": [
+    {
+     "name": "意法半导体",
+     "code": "STM",
+     "market": "美股",
+     "yahoo": "STM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 615,
+      "approx": false
+     },
+     "mcap_base_price": 68.35,
+     "ath_floor": 0
+    },
+    {
+     "name": "英飞凌 ADR",
+     "code": "IFNNY",
+     "market": "美股 OTC",
+     "yahoo": "IFNNY",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1120,
+      "approx": false
+     },
+     "mcap_base_price": 86.175,
+     "ath_floor": 0
+    },
+    {
+     "name": "安森美半导体",
+     "code": "ON",
+     "market": "美股",
+     "yahoo": "ON",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 383,
+      "approx": false
+     },
+     "mcap_base_price": 91.22,
+     "ath_floor": 0
+    },
+    {
+     "name": "Wolfspeed",
+     "code": "WOLF",
+     "market": "美股",
+     "yahoo": "WOLF",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 28,
+      "approx": true
+     },
+     "mcap_base_price": 40.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "罗姆半导体",
+     "code": "6963",
+     "market": "日股",
+     "yahoo": "6963.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 22600,
+      "approx": true
+     },
+     "mcap_base_price": 5950.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "Coherent",
+     "code": "COHR",
+     "market": "美股",
+     "yahoo": "COHR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 652.2,
+      "approx": false
+     },
+     "mcap_base_price": 333.36,
+     "ath_floor": 440.0
+    },
+    {
+     "name": "Aehr Test",
+     "code": "AEHR",
+     "market": "美股",
+     "yahoo": "AEHR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 21,
+      "approx": false
+     },
+     "mcap_base_price": 69.96,
+     "ath_floor": 0
+    },
+    {
+     "name": "时代电气",
+     "code": "688187",
+     "market": "A股",
+     "yahoo": "688187.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 780.4,
+      "approx": false
+     },
+     "mcap_base_price": 57.49,
+     "ath_floor": 92.6
+    },
+    {
+     "name": "斯达半导",
+     "code": "603290",
+     "market": "A股",
+     "yahoo": "603290.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 310,
+      "approx": true
+     },
+     "mcap_base_price": 129.35,
+     "ath_floor": 0
+    },
+    {
+     "name": "三安光电",
+     "code": "600703",
+     "market": "A股",
+     "yahoo": "600703.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 912,
+      "approx": true
+     },
+     "mcap_base_price": 18.23,
+     "ath_floor": 0
+    },
+    {
+     "name": "天岳先进",
+     "code": "688234",
+     "market": "A股",
+     "yahoo": "688234.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 626,
+      "approx": true
+     },
+     "mcap_base_price": 145.6,
+     "ath_floor": 0
+    },
+    {
+     "name": "晶盛机电",
+     "code": "300316",
+     "market": "A股",
+     "yahoo": "300316.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 664,
+      "approx": true
+     },
+     "mcap_base_price": 51.08,
+     "ath_floor": 0
+    },
+    {
+     "name": "晶升股份",
+     "code": "688478",
+     "market": "A股",
+     "yahoo": "688478.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 97,
+      "approx": true
+     },
+     "mcap_base_price": 72.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "露笑科技",
+     "code": "002617",
+     "market": "A股",
+     "yahoo": "002617.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 146,
+      "approx": true
+     },
+     "mcap_base_price": 9.15,
+     "ath_floor": 0
+    }
+   ]
+  },
+  {
+   "name": "18 800VDC 电力电子与功率半导体",
    "items": [
     {
      "name": "纳微半导体",
