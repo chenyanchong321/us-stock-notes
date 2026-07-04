@@ -86,6 +86,8 @@ def main():
     now = datetime.datetime.now(datetime.timezone.utc)
     ts_now = int(now.timestamp())
     ts_1m = int((now - datetime.timedelta(days=30)).timestamp())
+    ts_3m = int((now - datetime.timedelta(days=91)).timestamp())
+    ts_6m = int((now - datetime.timedelta(days=182)).timestamp())
     ts_1y = int((now - datetime.timedelta(days=365)).timestamp())
     ts_ytd = int(datetime.datetime(now.year, 1, 1, tzinfo=datetime.timezone.utc).timestamp())  # 基准=上年最后一个收盘
 
@@ -101,7 +103,7 @@ def main():
             fetched = cache[sym]
             if fetched is None:
                 rows.append([it["name"], it["code"], it["market"], "获取失败",
-                             "-", "-", 0.0, "-", "-", "-"])
+                             "-", "-", 0.0, "-", "-", "-", "-", "-"])
                 continue
             pairs, hist_max = fetched
             price = pairs[-1][1]
@@ -118,13 +120,15 @@ def main():
                 return round(pct(price, base), 1)
 
             m1 = window(ts_1m, "1m")
+            m3 = window(ts_3m, "3m")
+            m6 = window(ts_6m, "6m")
             ytd = window(ts_ytd, "ytd")
             y1 = window(ts_1y, "1y")
 
             rows.append([it["name"], it["code"], it["market"],
                          fmt_mcap(it, price),
                          fmt_price(cur, ath), fmt_price(cur, price),
-                         round(dd, 1), m1, ytd, y1])
+                         round(dd, 1), m1, m3, m6, ytd, y1])
             print(f"  {it['code']:>10} {it['name'][:12]:<14} 现价 {price:,.2f}  回撤 {dd:.1f}%")
         sections_out.append({"sec": sec["name"], "rows": rows})
 
