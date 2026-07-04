@@ -26,6 +26,7 @@ main{max-width:760px;margin:0 auto;padding:28px 20px 90px}
 .head{border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:26px}
 article h1{font-size:22px;margin:38px 0 14px;line-height:1.4}
 article h2{font-size:20px;margin:34px 0 12px;padding-left:10px;border-left:3px solid var(--accent);line-height:1.4}
+article h4{font-size:15px;margin:20px 0 8px}
 article h3{font-size:17px;margin:26px 0 10px}
 article p{margin:0 0 16px}
 article ul,article ol{margin:0 0 16px 1.4em}
@@ -60,47 +61,47 @@ article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 <p>从洁净室、AI 存储层，到周期估值与现金流重估</p>
 <p>整理自一次费曼式问答对话 · 2026 年 6 月</p>
 <p>含 8 张重制示意图与 7 张对比表 · 仅供学习研究，不构成投资建议</p>
-<p>导读</p>
+<h2 id="sec-1">导读</h2>
 <p>这份文档把一次围绕铠侠（Kioxia）的费曼式问答，系统沉淀成一本可反复查阅的小手册。起点是一份券商深度报告（JPM 把铠侠目标价上调到 155000 日元），但我们没有停留在结论，而是把每一个被带出来的知识点逐一拆开：芯片厂的洁净室到底是什么、ISO 洁净等级怎么读、铠侠的 AI 存储产品线如何卡位、为什么周期股在高点反而显得便宜、PE 一百倍到底贵不贵、以及中国供给（长江存储）会不会把这套多头故事打穿。</p>
 <p>内容不按聊天先后顺序，而是重新梳理成四个递进的部分：先打底（怎么造芯片），再认人（铠侠是谁、靠什么重估），然后学定价（周期股估值的反直觉），最后看风险（反方观点与中国变量）。每个部分都遵循同一个讲法——先用大白话和比喻讲清「是什么、为什么」，再上数据和术语；适合对比的内容用表格呈现；对话里出现过的每一张示意图都重新制作并嵌入对应段落旁。</p>
 <p><strong>阅读提示：</strong>带「图 X」的示意图是理解每一节的钥匙，建议结合正文一起看；文末附完整数据来源与一句话逻辑链总结。本文所有市场数据均为对话发生时（2026 年 6 月）的快照，仅供学习，不构成任何投资建议。</p>
-<p>目录</p>
-<p><strong>导读 2</strong></p>
-<p><strong>第一部分　芯片是怎么造出来的：洁净室与存储制造基础 4</strong></p>
+<h2 id="sec-2">目录</h2>
+<nav style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:0 0 24px;font-size:14px;line-height:1.7"><div style="font-weight:500;margin-bottom:8px">目录</div><div style="padding:3px 0 3px 0px;font-weight:500"><a href="#sec-1" style="color:var(--accent);text-decoration:none">导读</a></div><div style="padding:3px 0 3px 0px;font-weight:500"><a href="#sec-3" style="color:var(--accent);text-decoration:none">第一部分　芯片是怎么造出来的：洁净室与存储制造基础</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-4" style="color:var(--accent);text-decoration:none">1.1　什么是洁净室</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-5" style="color:var(--accent);text-decoration:none">1.2　HEPA / ULPA：把空气滤到几乎为零</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-6" style="color:var(--accent);text-decoration:none">1.3　正压：让空气只出不进</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-7" style="color:var(--accent);text-decoration:none">1.4　气压是怎么升高的</a></div><div style="padding:3px 0 3px 16px;font-weight:400">1.5　洁净度怎么分级：ISO 14644-1</div><div style="padding:3px 0 3px 0px;font-weight:500"><a href="#sec-9" style="color:var(--accent);text-decoration:none">第二部分　铠侠是谁：纯 NAND 玩家与两道「重估闸门」</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-10" style="color:var(--accent);text-decoration:none">2.1　先纠正一个误区：铠侠 = 纯 NAND 玩家</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-11" style="color:var(--accent);text-decoration:none">2.2　供给闸门：洁净室被 DRAM/HBM 挤占，反而利好铠侠</a></div><div style="padding:3px 0 3px 16px;font-weight:400">2.3　需求闸门：AI 推理把铠侠推向低延迟存储层</div><div style="padding:3px 0 3px 0px;font-weight:500"><a href="#sec-13" style="color:var(--accent);text-decoration:none">第三部分　怎么给铠侠定价：周期股的估值陷阱与重估</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-14" style="color:var(--accent);text-decoration:none">3.1　为什么「存储股在周期高点看起来很便宜」</a></div><div style="padding:3px 0 3px 16px;font-weight:400">3.2　身份重估：从「高 Beta 涨价股」到「现金流资产」</div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-16" style="color:var(--accent);text-decoration:none">3.3　PE 100 倍怎么理解：尾随 vs 前瞻</a></div><div style="padding:3px 0 3px 0px;font-weight:500"><a href="#sec-17" style="color:var(--accent);text-decoration:none">第四部分　反方与变量：这套故事可能错在哪</a></div><div style="padding:3px 0 3px 16px;font-weight:400">4.1　中国供给冲击：主角是长江存储（YMTC）</div><div style="padding:3px 0 3px 16px;font-weight:400">4.2　为什么「中国供给冲击」专砸 NAND</div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-20" style="color:var(--accent);text-decoration:none">4.3　HDD 与反方框架：NAND ≠ DRAM / HBM / HDD</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-21" style="color:var(--accent);text-decoration:none">4.4　哪只股票能买？IPO 进度与供应链</a></div></nav>
+
 <blockquote>
-<p>1.1　什么是洁净室 4</p>
-<p>1.2　HEPA / ULPA：把空气滤到几乎为零 4</p>
-<p>1.3　正压：让空气只出不进 4</p>
-<p>1.4　气压是怎么升高的 5</p>
-<p>1.5　洁净度怎么分级：ISO 14644-1 5</p>
+
+
+
+
+
 </blockquote>
-<p><strong>第二部分　铠侠是谁：纯 NAND 玩家与两道「重估闸门」 7</strong></p>
+
 <blockquote>
-<p>2.1　先纠正一个误区：铠侠 = 纯 NAND 玩家 7</p>
-<p>2.2　供给闸门：洁净室被 DRAM/HBM 挤占，反而利好铠侠 7</p>
-<p>2.3　需求闸门：AI 推理把铠侠推向低延迟存储层 8</p>
+
+
+
 </blockquote>
-<p><strong>第三部分　怎么给铠侠定价：周期股的估值陷阱与重估 10</strong></p>
+
 <blockquote>
-<p>3.1　为什么「存储股在周期高点看起来很便宜」 10</p>
-<p>3.2　身份重估：从「高 Beta 涨价股」到「现金流资产」 11</p>
-<p>3.3　PE 100 倍怎么理解：尾随 vs 前瞻 11</p>
+
+
+
 </blockquote>
-<p><strong>第四部分　反方与变量：这套故事可能错在哪 14</strong></p>
+
 <blockquote>
-<p>4.1　中国供给冲击：主角是长江存储（YMTC） 14</p>
-<p>4.2　为什么「中国供给冲击」专砸 NAND 15</p>
-<p>4.3　HDD 与反方框架：NAND ≠ DRAM / HBM / HDD 15</p>
-<p>4.4　哪只股票能买？IPO 进度与供应链 15</p>
+
+
+
+
 </blockquote>
 <p><strong>结语　把知识点串成一条投资逻辑链 17</strong></p>
 <p><strong>数据来源与说明 17</strong></p>
-<p>第一部分　芯片是怎么造出来的：洁净室与存储制造基础</p>
+<h2 id="sec-3">第一部分　芯片是怎么造出来的：洁净室与存储制造基础</h2>
 <p>要理解铠侠的供给逻辑，得先知道存储芯片是在什么环境里造出来的。这一部分回答四个最基础的问题：洁净室是什么、空气怎么滤干净、气压怎么控制、洁净度怎么分级。</p>
-<p>1.1　什么是洁净室</p>
+<h3 id="sec-4">1.1　什么是洁净室</h3>
 <p>芯片上的线路只有几纳米宽，而一粒灰尘大概几微米——相当于一块巨石砸在马路上。一粒灰落在晶圆上，那块芯片就直接报废。所以芯片必须在「洁净室」（Cleanroom / 无尘室）里制造：空气经过反复过滤、室内保持恒温恒湿、工人穿全身包裹的「兔子服」。</p>
 <p><strong>最关键的一点：</strong>洁净室极贵、极慢。一座先进存储厂的洁净室要花上百亿、建好几年。所以「洁净室面积」= 产能，是一种稀缺且固定的资源——造了 A 就没法造 B。这一点是后面理解「DRAM/HBM 挤占 NAND 产能」的钥匙。</p>
-<p>1.2　HEPA / ULPA：把空气滤到几乎为零</p>
+<h3 id="sec-5">1.2　HEPA / ULPA：把空气滤到几乎为零</h3>
 <p>洁净室靠高等级的空气过滤器把尘埃滤掉。两个常见等级：</p>
 <ul>
 <li><p>HEPA（高效空气过滤器）：对 0.3 微米颗粒，拦截效率 ≥ 99.97%。</p></li>
@@ -108,11 +109,11 @@ article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 </ul>
 <p><strong>一个反直觉的点：</strong>过滤器不是简单的「筛子」，而是一层杂乱交错的极细纤维，靠三种机制抓颗粒——大颗粒太重、跟不上气流转弯而「撞」上纤维（惯性撞击）；中颗粒擦过纤维「被拦住」（拦截）；极小颗粒太轻、被空气分子撞得乱飘，乱飘中「碰上」纤维（扩散）。</p>
 <p>所以最难抓的恰恰是中间尺寸约 0.3 微米那一档——它撞不动、也难拦，又飘得不够乱。比它大、比它小的反而都更好抓。这正是 HEPA 标准偏偏用 0.3 微米来定义的原因：拿「最难抓的那一档」当及格线，比它容易的自然都能过。</p>
-<p>1.3　正压：让空气只出不进</p>
+<h3 id="sec-6">1.3　正压：让空气只出不进</h3>
 <p>洁净室还要防止脏空气从缝隙渗进来，办法是把室内气压做得比室外高一点，也就是「正压」。打个比方：把洁净室想象成一个一直在轻轻打气的气球——内部气压高，一旦有门缝、孔隙，气是往外漏的；脏空气想钻进来，是逆着这股外吹气流走的，根本挤不进。</p>
 <p><img src="media/kioxia-feynman/media/ad984bd8d272116c630228c2f2b3543b0df37d5a.png" title="正压的形成：送风量大于回风量，多出来的「余风」从门缝向外挤，形成室内高压" style="width:5.625in;height:2.47917in" alt="正压的形成：送风量大于回风量，多出来的「余风」从门缝向外挤，形成室内高压" /></p>
 <p>图 1　正压的形成：送风量大于回风量，多出来的「余风」从门缝向外挤，形成室内高压</p>
-<p>1.4　气压是怎么升高的</p>
+<h3 id="sec-7">1.4　气压是怎么升高的</h3>
 <p>升高气压不是装个打气泵硬充，而是精确控制「送风 &gt; 回风」这个差额，让房间始终处于轻微的、持续往外漏气的状态。这套系统有几个零件：</p>
 <ul>
 <li><p><strong>送风端（往里打气）：</strong>空调箱带大功率风机，把空气经 HEPA/ULPA 过滤后，从天花板的 FFU（风机过滤单元）大量、持续地压入。</p></li>
@@ -121,7 +122,7 @@ article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 <li><p><strong>闭环稳压：</strong>压差传感器实时测「室内比室外高多少帕」，反馈给变频风机和风阀微调；门上还装余压阀，压力过高时自动泄一点。</p></li>
 </ul>
 <p><strong>两个数感：</strong>这个压差其实非常小，相邻房间之间通常只有 5–15 帕斯卡；而大气压本身约 10 万帕，正压只是它的万分之一左右——只要「够让空气稳定往外走、不倒灌」即可。芯片厂还会做成阶梯式正压：核心光刻区 &gt; 洁净走廊 &gt; 室外，一级压一级，空气只能从最干净处流向最脏处，绝不回头。</p>
-<p>1.5　洁净度怎么分级：ISO 14644-1</p>
+<h3 id="sec-8">1.5　洁净度怎么分级：ISO 14644-1</h3>
 <p>洁净度用国际标准 ISO 14644-1 衡量，全称《洁净室及相关受控环境　第 1 部分：按粒子浓度划分空气洁净度等级》。它的逻辑极其漂亮，记一句就够：</p>
 <p><strong>ISO 几级，每立方米空气就允许 10 的几次方个颗粒（按 ≥0.1 微米算）；等级数字越小越干净，每升一级就脏 10 倍。</strong></p>
 <p><img src="media/kioxia-feynman/media/97722983397fa2e10260f2de01bfed61367c05c9.png" title="ISO 14644-1 洁净度阶梯：从 ISO 1（最干净）到 ISO 9（≈普通房间空气），每级颗粒数 10 倍递增" style="width:5.625in;height:1.32292in" alt="ISO 14644-1 洁净度阶梯：从 ISO 1（最干净）到 ISO 9（≈普通房间空气），每级颗粒数 10 倍递增" /></p>
@@ -168,18 +169,18 @@ article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 </tbody>
 </table>
 <p><em>来源：ISO 14644-1 标准；FED-STD-209E 旧标准对照（行业通用换算）。</em></p>
-<p>第二部分　铠侠是谁：纯 NAND 玩家与两道「重估闸门」</p>
+<h2 id="sec-9">第二部分　铠侠是谁：纯 NAND 玩家与两道「重估闸门」</h2>
 <p>券商报告说铠侠这一次「确实出现了新东西」，靠的是回答两个过去没说清的问题：供给能不能可见、AI 推理能不能让它的存储变成系统关键。这一部分先纠正一个常见误区，再拆解这两道「重估闸门」。</p>
-<p>2.1　先纠正一个误区：铠侠 = 纯 NAND 玩家</p>
+<h3 id="sec-10">2.1　先纠正一个误区：铠侠 = 纯 NAND 玩家</h3>
 <p>铠侠（原东芝存储）是一家几乎只做 NAND 闪存的公司，它基本不做 DRAM，更不做 HBM。这一点非常重要，因为它会直接改变你对「DRAM/HBM 挤占洁净室」那句话的理解方向。</p>
 <p>存储产品大致分两类：NAND 是非易失性的「数据仓库」（U 盘、SSD、数据中心存储）；DRAM 是易失性的「高速工作台」（内存条），HBM 则是把多层 DRAM 堆叠起来、专供 AI 的高带宽内存。同时做 DRAM 和 NAND 的是三星、SK 海力士、美光；铠侠和闪迪则是纯 NAND 阵营。</p>
-<p>2.2　供给闸门：洁净室被 DRAM/HBM 挤占，反而利好铠侠</p>
+<h3 id="sec-11">2.2　供给闸门：洁净室被 DRAM/HBM 挤占，反而利好铠侠</h3>
 <p>报告里有句话：「DRAM/HBM 优先挤占洁净室」。很多人第一反应是「那 NAND 产能不就被挤小了，对铠侠是坏事？」——方向恰恰反了。</p>
 <p>被挤占洁净室的，不是铠侠（它没有 DRAM/HBM 业务），而是那些同时做两种产品的对手。AI 让 HBM/DRAM 利润高得离谱，于是三星、海力士、美光把宝贵的洁净室面积和资本开支优先砸向 DRAM/HBM，留给 NAND 的扩产被压缩。</p>
 <p><img src="media/kioxia-feynman/media/4454b6d779b0602533d8c8f8667f131d95aaf198.png" title="供给闸门的因果链：综合厂商把固定的洁净室让给 DRAM/HBM → 全行业 NAND 扩产受限 → 纯 NAND 的铠侠坐享紧缺涨价" style="width:5.625in;height:3.40625in" alt="供给闸门的因果链：综合厂商把固定的洁净室让给 DRAM/HBM → 全行业 NAND 扩产受限 → 纯 NAND 的铠侠坐享紧缺涨价" /></p>
 <p>图 3　供给闸门的因果链：综合厂商把固定的洁净室让给 DRAM/HBM → 全行业 NAND 扩产受限 → 纯 NAND 的铠侠坐享紧缺涨价</p>
 <p><strong>落到铠侠身上，结论要反过来：</strong>全行业 NAND 扩产被压住 → 供给紧张 → 价格上行；而铠侠作为纯 NAND 玩家，自己产能不被挤占，却能享受整个市场的紧缺涨价。这正是报告说「让 2026–2027 年紧缺更难快速结束」的含义——紧缺持续 = 铠侠多赚。别人忙着造 DRAM/HBM 不造 NAND，专心造 NAND 的铠侠就成了少数供货商。</p>
-<p>2.3　需求闸门：AI 推理把铠侠推向「GPU 系统外侧的低延迟存储层」</p>
+<h3 id="sec-12">2.3　需求闸门：AI 推理把铠侠推向「GPU 系统外侧的低延迟存储层」</h3>
 <p>报告第二道闸门是「AI 推理」，原文说 CM、GP、LC 和 XL-Flash 路线「把铠侠从容量 NAND 推向 GPU 系统外侧的低延迟存储层」。先建立一个核心画面：AI 服务器里的存储不是一锅烩，而是按「快慢 / 贵贱」分层的——最快最贵的贴着 GPU，最慢最便宜的在最外圈。铠侠原来只在最底下卖「大宗商品」，AI 把它往上拽了一层。</p>
 <p><img src="media/kioxia-feynman/media/e3be3d1665943bd76e1964368d23a9b93ab560b4.png" title="AI 服务器内存层级：铠侠正从最底层的「容量 NAND」上移到「低延迟闪存层」，从大宗供应商变成高价值供应商" style="width:5.625in;height:2.84375in" alt="AI 服务器内存层级：铠侠正从最底层的「容量 NAND」上移到「低延迟闪存层」，从大宗供应商变成高价值供应商" /></p>
 <p>图 4　AI 服务器内存层级：铠侠正从最底层的「容量 NAND」上移到「低延迟闪存层」，从大宗供应商变成高价值供应商</p>
@@ -221,9 +222,9 @@ article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 <p><strong>几个名词补充：</strong>KV Cache 是大模型推理时缓存的「前文记忆」，上下文越长、对话越久就越大，大到 DRAM 装不下时就要往快存储里挪；RAG（检索增强生成）需要又大又快的向量数据库；Storage Next 是英伟达的架构，让 SSD 不再是外围存储、而直接成为 GPU 显存的延伸，因此要求超低延迟与超高 IOPS。</p>
 <p><em>来源：铠侠投资者材料及行业媒体（ServeTheHome、StorageReview 等），经网络检索整理；XL-FLASH 延迟数据为行业公开资料。</em></p>
 <p><strong>利润逻辑（为什么这叫「闸门」）：</strong>老地盘的容量 NAND 是大宗商品——拼价格、毛利薄、强周期；新层卖的不是容量，而是「能不能喂饱 GPU」的性能差异化能力，客户绑定英伟达生态与超大规模数据中心，毛利更高、更黏、周期性更弱。这条逻辑和「涨价 / 供给」那条是两件事：前者是行业 β（NAND 整体更值钱），后者是个体 α（铠侠从大宗供应商被重估为 AI 高价值供应商）。</p>
-<p>第三部分　怎么给铠侠定价：周期股的估值陷阱与重估</p>
+<h2 id="sec-13">第三部分　怎么给铠侠定价：周期股的估值陷阱与重估</h2>
 <p>报告说铠侠「最难定价的地方，是利润表太好，好到让传统估值方法开始失真」。这一部分讲清楚周期股估值的反直觉，以及 JPM 把它重估的逻辑。</p>
-<p>3.1　为什么「存储股在周期高点看起来很便宜」</p>
+<h3 id="sec-14">3.1　为什么「存储股在周期高点看起来很便宜」</h3>
 <p>这是周期股最经典的「估值陷阱」。一句话：P/E 看着低，不是因为股价便宜，而是因为分母（每股利润 EPS）被周期临时吹大了。</p>
 <p>拆开公式：P/E = 股价 ÷ EPS。普通公司 EPS 稳，低 P/E ≈ 便宜。但存储股的 EPS 在周期里剧烈起伏：周期高点会同时发生短缺 → 涨价 → 量价齐升 → 毛利率飙到历史高位，再叠加库存周期（客户怕缺货抢着囤货，透支性放大需求）。于是 EPS 被顶到一个不可持续的虚高，这时股价虽高，P/E 算出来反而是个小数字，看着特别「便宜」。</p>
 <p><img src="media/kioxia-feynman/media/109be94d88258009ae413804f1bd9c601ee32671.png" title="周期股估值陷阱：EPS（红）冲顶时，P/E（蓝）正好踩到谷底——「看起来最便宜」的点，恰恰是利润见顶、最危险的时刻" style="width:5.625in;height:2.64583in" alt="周期股估值陷阱：EPS（红）冲顶时，P/E（蓝）正好踩到谷底——「看起来最便宜」的点，恰恰是利润见顶、最危险的时刻" /></p>
@@ -259,7 +260,7 @@ article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 </tr>
 </tbody>
 </table>
-<p>3.2　身份重估：从「高 Beta NAND 涨价股」到「AI 推理存储层现金流资产」</p>
+<h3 id="sec-15">3.2　身份重估：从「高 Beta NAND 涨价股」到「AI 推理存储层现金流资产」</h3>
 <p>这句话描述的是铠侠的一次「身份重估」——市场给它贴的标签变了，定价它的整套逻辑也跟着变。先拆词：</p>
 <ul>
 <li><p><strong>Beta（β）：</strong>衡量一只股票「波动放大倍数」的指标，对某个东西有多敏感、跟着晃得多狠。高 Beta = 暴涨暴跌。「高 Beta NAND 涨价股」= 一张押注 NAND 涨价的高杠杆周期筹码，赌的是商品价格。</p></li>
@@ -303,7 +304,7 @@ article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 </tbody>
 </table>
 <p><strong>重估要成立，需同时满足三件事：</strong>①需求可见（长期协议 LTA = 第一道闸门）→ 利润锁进合同、Beta 下降；②需求有结构性、差异化（AI 推理存储层 = 第二道闸门）→ 摆脱商品属性；③现金真还给股东（FCF + 分红回购）→ 才配得上「现金流资产」的估值框架。三件事都兑现，市场才敢把它从「周期顶、随时塌」的折价筹码，重新定价成「AI 基础设施里一块持续产现金的资产」。</p>
-<p>3.3　PE 100 倍怎么理解：尾随 vs 前瞻</p>
+<h3 id="sec-16">3.3　PE 100 倍怎么理解：尾随 vs 前瞻</h3>
 <p>看行情时铠侠 PE 显示约 102 倍，第一反应是「太贵了」。但这恰恰是上一节的另一端：这个 PE 是用「过去 12 个月（TTM）的利润」算的，而铠侠现在的利润还趴在周期低位、刚开始往上爬。</p>
 <p>它 TTM 每股收益只有约 1,009 日元，但 JPM 预测 FY2027 为 9,897 日元、FY2028 为 14,149 日元——未来两三年利润要翻 10 倍以上。市场不是在为「过去那点利润」付 102 倍，而是在为「马上要爆发的利润」定价。把分母换成前瞻利润，吓人的 100 倍立刻就塌：</p>
 <p><img src="media/kioxia-feynman/media/d46a4cd0fc6fcb68ee2f05d76b775e75db32f5eb.png" title="同一只股票，用「过去」利润算 PE 约 103 倍（看着吓人），换成 FY2027/FY2028 的前瞻利润，只有约 10.5 / 7.3 倍" style="width:5.625in;height:2.75in" alt="同一只股票，用「过去」利润算 PE 约 103 倍（看着吓人），换成 FY2027/FY2028 的前瞻利润，只有约 10.5 / 7.3 倍" /></p>
@@ -375,9 +376,9 @@ article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 </table>
 <p><em>来源：JPM《铠侠深度更新》报告（用户提供截图，微信公众号 404K）。</em></p>
 <p><strong>两个冷静点（不构成投资建议）：</strong>①「前瞻 7–10 倍很便宜」有个大前提——那两年的利润预测得真兑现，而能不能兑现正是全部争议（长协够不够硬、AI SSD 能不能落地、中国供给会不会砸盘、毛利会不会均值回归）；若周期提前掉头，前瞻 EPS 会被下调，「便宜」立刻蒸发。②从行情看，这股技术面很「烫」：当日 +12.27%、振幅 9.56%（被「美光业绩翻倍」消息带飞），股价远站在所有均线上方，是一根近乎垂直的拉升——好的前瞻预期已被抢着 price in，前瞻 PE 便宜 ≠ 现在这个点位进场的赔率就好。</p>
-<p>第四部分　反方与变量：这套故事可能错在哪</p>
+<h2 id="sec-17">第四部分　反方与变量：这套故事可能错在哪</h2>
 <p>一份负责任的研究，必须把空头逻辑也讲清楚。Morningstar 和伯恩斯坦坚持传统周期框架，核心论据是：NAND 这个市场天生更分散、客户更敏感、供给一旦恢复毛利率就会回归。这一部分拆解最重要的变量——中国供给，以及反方的市场结构论。</p>
-<p>4.1　中国供给冲击：主角是长江存储（YMTC），不是长鑫</p>
+<h3 id="sec-18">4.1　中国供给冲击：主角是长江存储（YMTC），不是长鑫</h3>
 <p><strong>先纠正一个高频混淆：</strong>长鑫（CXMT，长鑫存储 / 长鑫科技）主要做 DRAM，不是 NAND；NAND 这块，中国的主角是另一家——长江存储（YMTC）。两家名字很像，但分工不同。</p>
 <table>
 <tbody>
@@ -422,7 +423,7 @@ article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 <p><img src="media/kioxia-feynman/media/199a8eeb74537d75e6d4f6b8bc1189bb1d1847b5.png" title="全球 NAND 市场份额（最新一季）：铠侠（14%）与长江存储（13%）几乎贴在一起，正一同争夺全球第三" style="width:5.625in;height:2.63542in" alt="全球 NAND 市场份额（最新一季）：铠侠（14%）与长江存储（13%）几乎贴在一起，正一同争夺全球第三" /></p>
 <p>图 8　全球 NAND 市场份额（最新一季）：铠侠（14%）与长江存储（13%）几乎贴在一起，正一同争夺全球第三</p>
 <p><em>来源：Counterpoint（经证券时报等报道）；长江存储产能、三期与 IPO 信息综合自电子工程专辑、新浪科技、与非网等公开报道（2025–2026）。</em></p>
-<p>4.2　为什么「中国供给冲击」专砸 NAND，而不是 DRAM</p>
+<h3 id="sec-19">4.2　为什么「中国供给冲击」专砸 NAND，而不是 DRAM</h3>
 <p>这正是反方框架的核心。NAND 这个市场天生更容易被中国捅破，原因有三：</p>
 <ul>
 <li><p><strong>行业更分散：</strong>DRAM 是三星、海力士、美光三家高度垄断、供给有纪律；NAND 集中度低得多，玩家有六七家，谁多挤进来一点，价格就容易被打乱。</p></li>
@@ -430,7 +431,7 @@ article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 <li><p><strong>别人收、它逆势扩：</strong>三星、海力士、美光都把产能往利润更高的 HBM/高端 DRAM 倾斜，挤压了 NAND；长江存储正好趁这个空档逆势猛扩、抢份额。</p></li>
 </ul>
 <p>三点合起来，就是报告说 NAND「更容易被中国供给冲击」的全部含义，也是反方看空铠侠长期毛利的核心论据。</p>
-<p>4.3　HDD 与反方框架：NAND ≠ DRAM / HBM / HDD</p>
+<h3 id="sec-20">4.3　HDD 与反方框架：NAND ≠ DRAM / HBM / HDD</h3>
 <p>反方那句「NAND 不是 DRAM，不是 HBM，也不是 HDD」，重点不在技术，而在市场结构。先说 HDD 是什么：HDD（Hard Disk Drive，机械硬盘）是靠金属盘片高速旋转、磁头读写的老式硬盘，和用 NAND 闪存、没有任何机械运动的 SSD 是两种技术。</p>
 <p>但这里提 HDD，是把它当成一个「理想寡头市场」的标尺。这句话把 NAND 和三个「日子更好过的存储市场」对比，说 NAND 一个都不像：</p>
 <ul>
@@ -439,7 +440,7 @@ article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 <li><p><strong>不是 HDD：</strong>经过多年洗牌只剩希捷、西部数据、东芝三家，变成克制、不乱扩产、毛利稳定的理性寡头。</p></li>
 </ul>
 <p>所以空头搬出 HDD 是想说：别指望 NAND 也能熬成那种和气生财的寡头格局——因为 NAND 玩家有六七家（还有逆势猛扩的长江存储），客户换供应商更容易、对价格更敏感。结论：供给一旦恢复，NAND 的高毛利就会「回归」（跌回正常水平），守不住 DRAM/HBM/HDD 那样的好日子。</p>
-<p>4.4　哪只股票能买？IPO 进度与供应链</p>
+<h3 id="sec-21">4.4　哪只股票能买？IPO 进度与供应链</h3>
 <p><strong>一个现实的坑：</strong>长江存储（YMTC）和长鑫（CXMT）目前都还没上市，买不到，所以你没法直接买到一只「长江存储」的股票。两个最新动向值得记：</p>
 <ul>
 <li><p>长江存储母公司「长控集团」已于 2025 年 5 月启动 A 股 IPO 辅导（辅导机构中信证券 + 中信建投），长鑫科技的 IPO 排在更前面。未来一两年 A 股可能出现「中国存储双雄」的直接标的，值得持续盯。</p></li>

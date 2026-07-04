@@ -26,6 +26,7 @@ main{max-width:760px;margin:0 auto;padding:28px 20px 90px}
 .head{border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:26px}
 article h1{font-size:22px;margin:38px 0 14px;line-height:1.4}
 article h2{font-size:20px;margin:34px 0 12px;padding-left:10px;border-left:3px solid var(--accent);line-height:1.4}
+article h4{font-size:15px;margin:20px 0 8px}
 article h3{font-size:17px;margin:26px 0 10px}
 article p{margin:0 0 16px}
 article ul,article ol{margin:0 0 16px 1.4em}
@@ -58,75 +59,75 @@ article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 <p><strong>HIMX 与 CPO 光互连</strong></p>
 <p>一份“费曼小白”式的知识沉淀</p>
 <p>从 IC 设计、驱动芯片，到 CPO、光栅耦合、WLO 潜望镜、COUPE 光引擎与供应链格局</p>
-<p>导读</p>
+<h2 id="sec-1">导读</h2>
 <p>这份文档把我们围绕奇景光电（HIMX）与 CPO（共封装光学）展开的全部讨论，系统沉淀成一条有逻辑的知识链。它不按聊天先后顺序，而是重新梳理为六个部分：先讲清这家公司的底色（Part 1），再追问 CPO 这门技术为何会出现（Part 2），接着深入光如何进出芯片的“耦合”细节（Part 3），然后拆解关键零件与制造工艺（Part 4），再升到光引擎与整机结构（Part 5），最后落到供应链格局与投资视角（Part 6）。</p>
 <p>讲解上坚持一个原则：先用大白话和比喻把“是什么、为什么”讲透，再上数据和术语；适合对比的内容用表格呈现；引用过的具体数据与事实，均在脚注标注来源。希望它既能当入门读物，也能当一份随时回看的速查手册。</p>
-<p><strong>目录</strong></p>
-<p><strong>第一部分　这家公司是什么：HIMX 的底色 3</strong></p>
+<h2 id="sec-2">目录</h2>
+<nav style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin:0 0 24px;font-size:14px;line-height:1.7"><div style="font-weight:500;margin-bottom:8px">目录</div><div style="padding:3px 0 3px 0px;font-weight:500"><a href="#sec-3" style="color:var(--accent);text-decoration:none">第一部分　这家公司是什么：HIMX 的底色</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-4" style="color:var(--accent);text-decoration:none">1.1　IC 设计公司（Fabless）是什么</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-5" style="color:var(--accent);text-decoration:none">1.2　芯片的基本砖块：晶体管</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-6" style="color:var(--accent);text-decoration:none">1.3　主业：显示驱动芯片（DDIC）</a></div><div style="padding:3px 0 3px 0px;font-weight:500"><a href="#sec-7" style="color:var(--accent);text-decoration:none">第二部分　问题的起源：为什么会有 CPO</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-8" style="color:var(--accent);text-decoration:none">2.1　AI 的“带宽墙”：800G→6.4T 到底是什么</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-9" style="color:var(--accent);text-decoration:none">2.2　别搞混：带宽 vs 算力 vs 功耗</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-10" style="color:var(--accent);text-decoration:none">2.3　铜线的极限：功耗为什么成了瓶颈</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-11" style="color:var(--accent);text-decoration:none">2.4　CPO 的解法：把光引擎搬到芯片旁</a></div><div style="padding:3px 0 3px 0px;font-weight:500"><a href="#sec-12" style="color:var(--accent);text-decoration:none">第三部分　光是怎么进出芯片的：耦合的艺术</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-13" style="color:var(--accent);text-decoration:none">3.1　先懂“耦合”与“耦合效率”</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-14" style="color:var(--accent);text-decoration:none">3.2　光栅耦合器：让光从芯片表面冒出来</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-15" style="color:var(--accent);text-decoration:none">3.3　微透镜阵列：聚焦与对准</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-16" style="color:var(--accent);text-decoration:none">3.4　45° 棱镜潜望镜：把光拐 90°</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-17" style="color:var(--accent);text-decoration:none">3.5　两条耦合路线：边缘 vs 光栅</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-18" style="color:var(--accent);text-decoration:none">3.6　为什么明明损耗更高还选光栅（量产取舍）</a></div><div style="padding:3px 0 3px 0px;font-weight:500"><a href="#sec-19" style="color:var(--accent);text-decoration:none">第四部分　关键零件与制造工艺</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-20" style="color:var(--accent);text-decoration:none">4.1　WLO（晶圆级光学）：HIMX 的看家工艺</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-21" style="color:var(--accent);text-decoration:none">4.2　NIL 与 know-how：护城河的真相</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-22" style="color:var(--accent);text-decoration:none">4.3　微环调制器（MRM）与外部激光源（ELSFP）</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-23" style="color:var(--accent);text-decoration:none">4.4　FAU（光纤阵列单元）：光进出的总闸口</a></div><div style="padding:3px 0 3px 0px;font-weight:500"><a href="#sec-24" style="color:var(--accent);text-decoration:none">第五部分　光引擎与整机结构</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-25" style="color:var(--accent);text-decoration:none">5.1　COUPE 光引擎：EIC 叠 PIC</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-26" style="color:var(--accent);text-decoration:none">5.2　CPO 模块物理结构全解</a></div><div style="padding:3px 0 3px 0px;font-weight:500"><a href="#sec-27" style="color:var(--accent);text-decoration:none">第六部分　供应链与投资视角</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-28" style="color:var(--accent);text-decoration:none">6.1　全链分工与脉络</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-29" style="color:var(--accent);text-decoration:none">6.2　FOCI 与它的对手 TFC</a></div><div style="padding:3px 0 3px 16px;font-weight:400"><a href="#sec-30" style="color:var(--accent);text-decoration:none">6.3　HIMX 的护城河与风险清单</a></div></nav>
 <blockquote>
-<p>1.1　IC 设计公司（Fabless）是什么 3</p>
-<p>1.2　芯片的基本砖块：晶体管 3</p>
-<p>1.3　主业：显示驱动芯片（DDIC） 4</p>
+
+
+
 </blockquote>
-<p><strong>第二部分　问题的起源：为什么会有 CPO 4</strong></p>
+
 <blockquote>
-<p>2.1　AI 的“带宽墙”：800G→6.4T 到底是什么 4</p>
-<p>2.2　别搞混：带宽 vs 算力 vs 功耗 5</p>
-<p>2.3　铜线的极限：功耗为什么成了瓶颈 5</p>
-<p>2.4　CPO 的解法：把光引擎搬到芯片旁 5</p>
+
+
+
+
 </blockquote>
-<p><strong>第三部分　光是怎么进出芯片的：耦合的艺术 6</strong></p>
+
 <blockquote>
-<p>3.1　先懂“耦合”与“耦合效率” 6</p>
-<p>3.2　光栅耦合器：让光从芯片表面冒出来 7</p>
-<p>3.3　微透镜阵列：聚焦与对准 7</p>
-<p>3.4　45° 棱镜潜望镜：把光拐 90° 8</p>
-<p>3.5　两条耦合路线：边缘 vs 光栅 9</p>
-<p>3.6　为什么明明损耗更高还选光栅（量产取舍） 9</p>
+
+
+
+
+
+
 </blockquote>
-<p><strong>第四部分　关键零件与制造工艺 10</strong></p>
+
 <blockquote>
-<p>4.1　WLO（晶圆级光学）：HIMX 的看家工艺 10</p>
-<p>4.2　NIL 与 know-how：护城河的真相 10</p>
-<p>4.3　微环调制器（MRM）与外部激光源（ELSFP） 11</p>
-<p>4.4　FAU（光纤阵列单元）：光进出的总闸口 11</p>
+
+
+
+
 </blockquote>
-<p><strong>第五部分　光引擎与整机结构 12</strong></p>
+
 <blockquote>
-<p>5.1　COUPE 光引擎：EIC 叠 PIC 12</p>
-<p>5.2　CPO 模块物理结构全解 13</p>
+
+
 </blockquote>
-<p><strong>第六部分　供应链与投资视角 14</strong></p>
+
 <blockquote>
-<p>6.1　全链分工与脉络 14</p>
-<p>6.2　FOCI 与它的对手 TFC 15</p>
-<p>6.3　HIMX 的护城河与风险清单 16</p>
+
+
+
 </blockquote>
 <p><strong>结语：一句话总览 17</strong></p>
-<p>第一部分　这家公司是什么：HIMX 的底色</p>
-<p>1.1　IC 设计公司（Fabless）是什么</p>
+<h2 id="sec-3">第一部分　这家公司是什么：HIMX 的底色</h2>
+<h3 id="sec-4">1.1　IC 设计公司（Fabless）是什么</h3>
 <p>IC 是 Integrated Circuit（集成电路）的缩写，中文一般直接叫“芯片”。所以“IC 设计公司”就是芯片设计公司，关键在“设计”二字。</p>
 <p>芯片产业链大致分三段：设计公司只负责“画图纸”——用软件设计芯片里几亿到上千亿个晶体管怎么排布、怎么连接，把功能逻辑设计出来，但自己不开工厂，把图纸交给晶圆代工厂（如台积电）去制造。这种“只设计不生产”的模式叫 Fabless（无晶圆厂）。作为对照：台积电是“代工厂”（只生产、不设计别人的芯片），三星、英特尔则是“设计+生产都自己做”的 IDM。</p>
 <p>HIMX 就是一家 2001 年成立于台湾的 Fabless 公司<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>——动脑画图纸、把制造外包给代工厂的轻资产公司。</p>
-<p>1.2　芯片的基本砖块：晶体管</p>
+<h3 id="sec-5">1.2　芯片的基本砖块：晶体管</h3>
 <p>要理解芯片，得先认识它最基本的零件——晶体管。一句话：晶体管就是一个“由电来控制的开关”。</p>
 <p>普通的电灯开关靠手指拨；晶体管的妙处在于它靠另一股电信号来拨。给它的“栅极”通一点电，开关就接通、电流通过；不通电，开关就断开。这两个状态正好对应数字世界的 1 和 0。</p>
 <p>“开关能控制开关”这件事是自动计算的根源：一个晶体管的输出可以去拨动下一个晶体管，于是成千上万个开关层层串起来，电路就能根据输入信号自动地开开关关，把运算做完。无数个 1/0 组合，搭出逻辑（与/或/非）、再搭出加减乘除、再搭出记忆与运算，最后就是一整台电脑乃至今天的 AI。</p>
 <p><img src="media/himx-cpo/media/771d64b33e4c4a72eacccd6530e512a47724a7eb.png" title="晶体管是“由电控制的开关”：栅极通电则导通（输出 1），断电则断开（输出 0）" style="width:6in;height:2.20833in" alt="晶体管是“由电控制的开关”：栅极通电则导通（输出 1），断电则断开（输出 0）" /></p>
 <p><em>图 1　晶体管是“由电控制的开关”：栅极通电则导通（输出 1），断电则断开（输出 0）</em></p>
 <p>两个收尾直觉：其一，现在的晶体管小到几纳米，一颗先进芯片里有几十亿乃至上千亿个，做得越小越密、算力越强，这就是“摩尔定律”和制程竞赛的核心；其二，它无处不在——驱动芯片、GPU、CPO 里的硅光芯片，底层最小的砖块都是晶体管。所谓 IC 设计，本质就是设计这几十亿个微型开关如何排布连线。</p>
-<p>1.3　主业：显示驱动芯片（DDIC）</p>
+<h3 id="sec-6">1.3　主业：显示驱动芯片（DDIC）</h3>
 <p>HIMX 的主业是“显示驱动芯片”（Display Driver IC，缩写 DDIC）。你手机、电脑、电视的屏幕由几百万个像素点组成，每个像素显示什么颜色、多亮，都需要有人去“指挥”——驱动芯片干的就是这件事：它接收主控芯片传来的画面信号，翻译成精确的电压电流，逐个控制屏幕上每个像素点亮、变色。</p>
 <blockquote>
 <p>打个比方：如果屏幕是一支庞大的合唱团，驱动芯片就是那个指挥，决定每个人（像素）什么时候唱、唱多大声、唱什么音。没有它，屏幕就是一块亮不起来的黑玻璃。</p>
 </blockquote>
 <p>这门生意稳定（有屏幕的地方就需要它），但“周期性强”——下游消费电子需求一波动，订单就跟着起伏，毛利也偏低（约 25–30%）<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>。这也是为什么市场长期不给它高成长估值；HIMX 真正被重估，靠的是下面要讲的那块和 AI 沾边的光学业务。</p>
-<p>第二部分　问题的起源：为什么会有 CPO</p>
-<p>2.1　AI 的“带宽墙”：800G→6.4T 到底是什么</p>
+<h2 id="sec-7">第二部分　问题的起源：为什么会有 CPO</h2>
+<h3 id="sec-8">2.1　AI 的“带宽墙”：800G→6.4T 到底是什么</h3>
 <p>CPO 的故事，得从一个数字阶梯说起：800G、1.6T、3.2T、6.4T。要先纠正一个常见误解——这些既不是功率，也不是功耗，而是“数据传输速率”，也就是带宽。单位是 bit/秒：800G = 每秒 800 吉比特，1.6T = 每秒 1.6 太比特，以此类推。G 是“吉”（十亿），T 是“太”（万亿）。每一代基本在前一代基础上翻倍。</p>
 <p><img src="media/himx-cpo/media/3cf09ad2e24055941059517b6885ecef15c30671.png" title="互连带宽阶梯：数字是每秒能传多少数据（bit/秒），越宽 = 数据管道越粗，每代翻倍" style="width:5.83333in;height:2.15625in" alt="互连带宽阶梯：数字是每秒能传多少数据（bit/秒），越宽 = 数据管道越粗，每代翻倍" /></p>
 <p><em>图 2　互连带宽阶梯：数字是每秒能传多少数据（bit/秒），越宽 = 数据管道越粗，每代翻倍</em></p>
-<p>2.2　别搞混：带宽 vs 算力 vs 功耗</p>
+<h3 id="sec-9">2.2　别搞混：带宽 vs 算力 vs 功耗</h3>
 <p>这里有三个极易混淆的概念，必须分清。带宽衡量的是芯片之间那根“数据管道”每秒能搬多少数据；算力衡量单颗芯片自己算得多快；功耗衡量耗多少电、发多少热。</p>
 <table>
 <tbody>
@@ -159,10 +160,10 @@ article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 <blockquote>
 <p>打个比方：800G→6.4T 就像高速公路从 2 车道扩到 16 车道，每秒能过的车（数据）多了 8 倍。但这不代表车开得更快（算力），也不是收费站电费（功耗）——单纯是路更宽、吞吐量更大。</p>
 </blockquote>
-<p>2.3　铜线的极限：功耗为什么成了瓶颈</p>
+<h3 id="sec-10">2.3　铜线的极限：功耗为什么成了瓶颈</h3>
 <p>AI 训练要在成千上万张 GPU 之间疯狂搬数据。管道不够粗，GPU 就会“吃不饱”、空等数据，再强的算力也发挥不出来，所以大家拼命把带宽往上翻。但问题来了：当你用铜线（电信号）去推这么大的数据量时，速率每翻一倍，铜线的耗电、发热、信号衰减就急剧恶化。推到 1.6T、3.2T 这个量级，铜线基本就撞墙了——再快，电费和散热扛不住，信号也跑不远。这就是所谓的“电连接瓶颈”。</p>
 <p>因果链是：带宽要翻倍 → 用铜线传太费电发热（功耗暴涨）→ 铜的物理极限撑不住 → 改用光来传（光纤几乎不耗电、不衰减）。于是 CPO 成了下一代互连的必经之路。</p>
-<p>2.4　CPO 的解法：把光引擎搬到芯片旁</p>
+<h3 id="sec-11">2.4　CPO 的解法：把光引擎搬到芯片旁</h3>
 <p>CPO（Co-Packaged Optics，共封装光学）干的事很朴素：把“电变光”的那个转换器（光学引擎），从老远的板子边缘，搬到紧挨着主芯片的地方，和它打包在同一块封装基板上。</p>
 <p>传统方式（可插拔光模块）里，主芯片算完，电信号得扛着数据横穿整块电路板（十几厘米），一路跑到板边的光模块才转成光。那段长跑就是瓶颈。CPO 则在主芯片旁边就地建“光转换站”，电信号只走两步、立刻转成光上“高铁”，于是省电、不发热、还能跑更高带宽。</p>
 <p><img src="media/himx-cpo/media/2f55bc38625f31df14f7d3f9ec6063fd0883de75.png" title="传统可插拔 vs CPO：CPO 把光引擎挪到芯片旁，电信号只走一点点就转成光" style="width:5.83333in;height:3in" alt="传统可插拔 vs CPO：CPO 把光引擎挪到芯片旁，电信号只走一点点就转成光" /></p>
@@ -171,15 +172,15 @@ article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 <p>一句话记住 CPO：把它想成“在产房旁边直接盖产科病房”——电信号一出生就近转成光、立刻上车，不用再被推着穿过整栋楼。光学引擎与 ASIC 共封装在同一基板上，就是 CPO 的全部精髓。</p>
 </blockquote>
 <p>OIF 的官方定义其实说的就是这件事：用硅光子技术（把光路做在芯片上的工艺），把光学模块与交换 ASIC 在“最小所需面积内”装到同一块基板上——“最小面积”= 挨得最近 = 电信号路径最短。</p>
-<p>第三部分　光是怎么进出芯片的：耦合的艺术</p>
-<p>3.1　先懂“耦合”与“耦合效率”</p>
+<h2 id="sec-12">第三部分　光是怎么进出芯片的：耦合的艺术</h2>
+<h3 id="sec-13">3.1　先懂“耦合”与“耦合效率”</h3>
 <p>“耦合”（coupling）字面上讲的就是两个东西对接、配上对，把能量从一方传到另一方——它天生描述“两者之间”的关系。关键在于：光在光纤内部、在芯片内部传播时损耗都很小，真正大量漏掉的地方，是两个元件“交接”的那个界面（比如从光纤把光送进芯片入口的一瞬间）。只要对不齐、有缝隙、角度不对、光斑不匹配，光就在这个交接口漏掉了。</p>
 <p>所以衡量“光利用率”，本质上衡量的就是这个交接环节做得好不好——这就是为什么它叫“耦合效率”而不是“传输效率”。</p>
 <blockquote>
 <p>就像接力赛跑：运动员（光）自己跑得飞快、几乎不损失，真正决定成败的是交接棒那一下。棒递得干净利落几乎不掉速；手忙脚乱就丢棒掉速。耦合效率衡量的就是这个交棒动作有多干净。</p>
 </blockquote>
 <p>一个能印证的细节：芯片上接收光的部件叫“光栅耦合器”——名字里就带着“耦合”，因为它的本职就是负责光纤与芯片之间的光“对接交接”。</p>
-<p>3.2　光栅耦合器：让光从芯片表面冒出来</p>
+<h3 id="sec-14">3.2　光栅耦合器：让光从芯片表面冒出来</h3>
 <p>光在芯片内部，是被关在一条极细的“光管道”（波导）里、横着贴着表面跑的。怎么让它拐头朝上、从芯片表面射出去？光栅耦合器就是这个“出光口”——它本质上是芯片表面刻出来的一排等间距微小凹槽，像一小块搓衣板。</p>
 <p>当横着跑的光经过这排凹槽时，每一条凹槽都把一小撮光“踢”向斜上方。单条很弱，但凹槽的间距是精确按光的波长算好的，于是每条踢出去的光波步调完全一致（同相位），无数个微弱的“向上一踢”整整齐齐叠加，就合成了一束又强又集中、朝上射出的光。</p>
 <p><img src="media/himx-cpo/media/408b580b3be7f5dbf9b54c41fad201c8b70efdd1.png" title="光栅耦合器：芯片表面的周期性凹槽把水平跑的光逐级“踢”向上方，同相叠加成一束射出" style="width:5.83333in;height:2.48958in" alt="光栅耦合器：芯片表面的周期性凹槽把水平跑的光逐级“踢”向上方，同相叠加成一束射出" /></p>
@@ -188,12 +189,12 @@ article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 <p>你其实见过光栅：CD/DVD 光盘表面那圈彩虹，就是因为盘面刻满了等间距细密纹路，把白光按波长分了方向。原理是同一个。</p>
 </blockquote>
 <p>为什么 CPO 偏要用这种“从表面出光”的方式？两个原因：一是光从顶面出来，可以在晶圆切开前就测试；二是不占用芯片侧边（侧边在 CPO 里被电气连接占满了）。</p>
-<p>3.3　微透镜阵列：聚焦与对准</p>
+<h3 id="sec-15">3.3　微透镜阵列：聚焦与对准</h3>
 <p>微透镜阵列就是一大片排列整齐、肉眼几乎看不见的微型透镜，每个小到微米级。它干的活，是改善上面说的那个“交接”：把光纤里发散的光先聚好、对准，再精准送进芯片入口，让交接口上漏掉的尽量少——于是耦合效率（光利用率）大幅提高。</p>
 <p><img src="media/himx-cpo/media/ddaa4b8e24fa51bc0ce70f4bdf03ecd905bfea20.png" title="微透镜阵列把光纤发散的光聚焦、校准后，精准送入芯片的光波导入口" style="width:6in;height:2.64583in" alt="微透镜阵列把光纤发散的光聚焦、校准后，精准送入芯片的光波导入口" /></p>
 <p><em>图 5　微透镜阵列把光纤发散的光聚焦、校准后，精准送入芯片的光波导入口</em></p>
 <p>它由 HIMX 用纳米压印工艺（详见 4.1）在玻璃晶圆上批量制造，量产成本低、精度高、一致性好——这正是它能卡位的核心本事。</p>
-<p>3.4　45° 棱镜潜望镜：把光拐 90°</p>
+<h3 id="sec-16">3.4　45° 棱镜潜望镜：把光拐 90°</h3>
 <p>光从光栅垂直朝上射出，可光纤是横躺在旁边的，方向对不上，需要把向上的光拐成水平（拐 90°）。靠的是一块切了 45° 斜面的小玻璃，原理是“全反射”。</p>
 <p>当光在玻璃内部传播、撞到玻璃与空气的交界面时，如果撞击角度够斜（对玻璃约超过 42°），光不会穿出去，而是 100% 被弹回来——像一面完美的镜子，且不需要任何镀层。45° 恰好超过这个临界角，所以光一撞上 45° 斜面就被干净地全部反射。几何上，一束垂直向上的光撞在 45° 斜面上，反射出去正好变成水平，差 90°。</p>
 <p><img src="media/himx-cpo/media/65d5768737cbfdf5083080ea50f0e1e7adfff768.png" title="45° 棱镜潜望镜：向上的光经 45° 斜面全反射拐 90° 变水平，再经微透镜聚焦进光纤" style="width:5.83333in;height:2.48958in" alt="45° 棱镜潜望镜：向上的光经 45° 斜面全反射拐 90° 变水平，再经微透镜聚焦进光纤" /></p>
@@ -202,7 +203,7 @@ article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 <p>这其实就是潜水艇潜望镜的原理：潜望镜里装着 45° 镜子，海面的光水平射进来、撞上镜面拐 90° 朝下送到你眼睛。HIMX 这块小玻璃做的是一模一样的事，只是把“镀银镜子”换成了“靠全反射的玻璃斜面”——所以它被叫做“微型光学潜望镜”。</p>
 </blockquote>
 <p>妙处在于：同一块玻璃，一面是 45° 棱镜（负责拐 90°），另一面是微透镜阵列（负责聚焦对准），两件事一次干完。</p>
-<p>3.5　两条耦合路线：边缘 vs 光栅</p>
+<h3 id="sec-17">3.5　两条耦合路线：边缘 vs 光栅</h3>
 <p>其实把光从光纤送进芯片，不止“微透镜阵列”这一种方式。业界主要有两大家族：边缘耦合（光纤对准芯片侧面边缘、水平怼进去）和光栅耦合（光从芯片顶面垂直进出）。微透镜阵列只是“光栅耦合”这条路线里的一个必需零件。</p>
 <p><img src="media/himx-cpo/media/3567735bdd95d29b4f592a0d9350c2214ea7e946.png" title="两种耦合几何：边缘耦合从侧面水平进；光栅耦合从顶面垂直进出（COUPE 走这条路）" style="width:5.83333in;height:2.36458in" alt="两种耦合几何：边缘耦合从侧面水平进；光栅耦合从顶面垂直进出（COUPE 走这条路）" /></p>
 <p><em>图 7　两种耦合几何：边缘耦合从侧面水平进；光栅耦合从顶面垂直进出（COUPE 走这条路）</em></p>
@@ -241,66 +242,66 @@ article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
 </tr>
 </tbody>
 </table>
-<p>3.6　为什么明明损耗更高还选光栅（量产取舍）</p>
+<h3 id="sec-18">3.6　为什么明明损耗更高还选光栅（量产取舍）</h3>
 <p>从上表看出来：边缘耦合只赢在“单点损耗”这一项，光栅耦合在其余几乎所有维度都占优。原因是 CPO 里芯片边缘已被海量电气连接占满（没地方留给光纤水平进）；光栅走顶面这块“空地皮”，还能用 2D 表面堆出远多于 1D 边缘的通道；又能在晶圆切开前就逐颗测试，省掉坏品浪费；也更适合自动化、晶圆级的大批量生产。</p>
 <p>损耗略高怎么办？它落在系统预算之内，工程上也能往下压；而前面那块 WLO 玻璃（微透镜+棱镜）存在的意义之一，正是把这条路上的损耗尽量补救回来。所以这是“用一点可控的损耗，换来巨大的可制造性与可扩展性”。</p>
 <blockquote>
 <p>这背后是一条贯穿半导体行业的通用规律：在大规模量产的世界里，“能不能稳定地造出几百万套”（可制造性、可测试性、可扩展性）往往比“单件性能最优”更重要。边缘耦合是“实验室最优”，光栅耦合是“工厂最优”。</p>
 </blockquote>
-<p>第四部分　关键零件与制造工艺</p>
-<p>4.1　WLO（晶圆级光学）：HIMX 的看家工艺</p>
+<h2 id="sec-19">第四部分　关键零件与制造工艺</h2>
+<h3 id="sec-20">4.1　WLO（晶圆级光学）：HIMX 的看家工艺</h3>
 <p>WLO = Wafer-Level Optics，晶圆级光学。理解它的关键不在“光学”，而在“晶圆级”——它讲的其实是一种制造方式。传统做光学元件是单件加工，像老师傅一片一片磨镜片，慢、贵、一致性差。WLO 借用半导体思路：在一整片玻璃晶圆上，用模具一次性批量“复制”出成千上万个微型光学元件，再切开。</p>
 <p><img src="media/himx-cpo/media/4ec41047329edf47ca40cad4e3f5d1a74258d390.png" title="“晶圆级”的含义：传统单件研磨一次一个，WLO 用纳米压印一次压出整片晶圆上百上千个" style="width:5.83333in;height:2.57292in" alt="“晶圆级”的含义：传统单件研磨一次一个，WLO 用纳米压印一次压出整片晶圆上百上千个" /></p>
 <p><em>图 8　“晶圆级”的含义：传统单件研磨一次一个，WLO 用纳米压印一次压出整片晶圆上百上千个</em></p>
 <p>HIMX 用的是 NIL（纳米压印）：拿刻好凹凸的模具，往涂了光学胶的玻璃晶圆上一压、固化成型。妙的是它能在玻璃的一面压出微透镜阵列、另一面压出 45° 棱镜，一次成型、两面对齐——这正是 3.4 里那块“潜望镜玻璃”的来历。</p>
-<p>4.2　NIL 与 know-how：护城河的真相</p>
+<h3 id="sec-21">4.2　NIL 与 know-how：护城河的真相</h3>
 <p>一个常被误解的点：纳米压印（NIL）本身并不是 HIMX 独有的。佳能、EVG、SUSS MicroTec 等设备厂都对外出售 NIL 设备，工艺在业界早已广泛使用；HIMX 自己的 NIL 设备当年也是向 EVG 买的<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>。</p>
 <p>那它凭什么卡位？真正的壁垒在于 know-how。know-how 指的是“实际做出来的本事”——那种靠长期动手积累、写不进说明书、外人短期学不会的实操经验和窍门，区别于“知道原理”（know-why）。</p>
 <blockquote>
 <p>打个比方：菜谱（原理）网上全有，但同一份菜谱，大厨做出来和你做出来天差地别——那个差距就是 know-how，藏在“火候”“手感”“盐少许到底多少”这些只能靠日复一日练出来的地方。</p>
 </blockquote>
 <p>HIMX 的护城河，是“15 年以上的 WLO 量产良率经验 + 把透镜块与 V 槽底板两半都自己压、保证对齐的整合度 + 拿到 COUPE Gen1&amp;2 独家供应资格”三层叠加。换句话说，它是“经验型卡位”而非“专利型垄断”——好处是别人短期追不上（要靠时间熬），隐患是它不像专利那样有法律独占，理论上别人肯花同样年头踩坑，终究有可能追平。</p>
-<p>4.3　微环调制器（MRM）与外部激光源（ELSFP）</p>
+<h3 id="sec-22">4.3　微环调制器（MRM）与外部激光源（ELSFP）</h3>
 <p>要让光承载数据，需要两样东西配合：一个稳定的光源，和一支在光上“写字”的笔。</p>
 <p>外部激光源（ELSFP）是光源。它发出的是一束稳定不变的光（像一支一直亮着、纹丝不动的手电筒），里面没有信息。它之所以是“外部”的、还单独做成可插拔模块，是因为激光器又烫又娇贵——塞进滚烫的封装里会伤性能和寿命，坏了还会拖累整块昂贵封装；所以把它挪到封装外凉快处发光，再用光纤把“原始稳定光”送进芯片。</p>
 <p>微环调制器（MRM）是那支“写数据的笔”。它是一个极小的环形光路，紧挨主光道；加上电信号，就能在特定波长上控制光“通过还是不通过”，相当于一个超高速光开关，把数据 0/1 一位位刻进光里。台积电用的是 200G 级别的微环调制器<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>。</p>
 <blockquote>
 <p>类比：激光是一股稳定的水流，微环调制器是一个飞快开关的水龙头，靠“通—断—通—断”打出摩斯电码，数据就这么写进了光里。而把发热的“发电机”（激光）放远点、只把生光管道接进来、动脑的活留给凉快芯片，正是 ELSFP 的设计逻辑。</p>
 </blockquote>
-<p>4.4　FAU（光纤阵列单元）：光进出的总闸口</p>
+<h3 id="sec-23">4.4　FAU（光纤阵列单元）：光进出的总闸口</h3>
 <p>FAU = Fiber Array Unit，光纤阵列单元。拆开看就是：“把一排光纤整整齐齐排好、再封装成一个能直接用的整体模组”。因为你不可能拿一根根松散的光纤手工怼到芯片上——几十根必须排得笔直、间距精确、每根都对准它该对的光点，还得把光拐弯、聚焦好，所以要先在外面组装成一个整体，再整块装上去。</p>
 <blockquote>
 <p>最好理解的类比：FAU 就是一个多芯的精密“光接口插头”——像 USB / HDMI 接头的光学、微米精度版，而且这个接头里还内置了拐光、聚光的光学元件。插到芯片上，光就能在“光纤世界”和“芯片世界”之间干净地穿过去。</p>
 </blockquote>
 <p>拆开一个 FAU，里面有三样：一排光纤；一块 V 槽底板（刻着平行 V 形小沟，每根光纤往一道沟里一放就被固定得笔直、间距精确，像蛋托卡住一个个蛋）；以及那块 WLO 潜望镜玻璃（45° 棱镜 + 微透镜阵列）。HIMX 做里面的光学内脏，FOCI 把这些零件加光纤组装成完整 FAU。它是光纤世界与芯片世界唯一的交界口——前面讲的耦合、损耗、拐弯、聚焦全浓缩在这一小块上，所以它做得好不好，直接决定整套 CPO 跑不跑得通。</p>
-<p>第五部分　光引擎与整机结构</p>
-<p>5.1　COUPE 光引擎：EIC 叠 PIC</p>
+<h2 id="sec-24">第五部分　光引擎与整机结构</h2>
+<h3 id="sec-25">5.1　COUPE 光引擎：EIC 叠 PIC</h3>
 <p>COUPE = Compact Universal Photonic Engine，紧凑型通用光子引擎，是台积电的硅光子平台。关键词是 Engine（引擎）：就像汽车引擎把汽油转换成动力，COUPE 这台光引擎干的是把电信号转换成光（以及反过来）。前面讲 CPO 时“被挪到芯片旁的那个光学引擎”，具体就是它。</p>
 <p>一台光引擎需要两种芯片配合：光子芯片（PIC，管光的一半，上面有调制器、波导、光栅耦合器、光电探测器）和电子芯片（EIC，管电的一半 / 驱动大脑，负责驱动控制光子元件）。</p>
 <p>台积电的杀手锏是：不把两块芯片并排放，而是把电子芯片直接叠在光子芯片正上方，用铜对铜的无凸点键合（SoIC-X）面对面焊死。这么一叠，两者间的电路被压到极短（亚 10 微米），电阻、损耗、延迟都大幅下降。台积电号称这带来约 5–10 倍能效、10–20 倍更低延迟，路线图指向 12.8 Tbps<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>。这和最早讲 CPO 的逻辑一模一样：缩短电路、省电降耗，只是这次用在了引擎内部两块芯片之间。</p>
 <p><img src="media/himx-cpo/media/e904ef02901edacf759da0bdd82b52fabc05ae30.png" title="COUPE 光引擎剖面：电子芯片 EIC 叠在光子芯片 PIC 上，铜键合让电路极短；光经光栅射出、过 FAU 进光纤" style="width:6.04167in;height:3.84375in" alt="COUPE 光引擎剖面：电子芯片 EIC 叠在光子芯片 PIC 上，铜键合让电路极短；光经光栅射出、过 FAU 进光纤" /></p>
 <p><em>图 9　COUPE 光引擎剖面：电子芯片 EIC 叠在光子芯片 PIC 上，铜键合让电路极短；光经光栅射出、过 FAU 进光纤</em></p>
 <p>进度上：第一代计划 2026 下半年量产、AMD 首发；第二代约 2027 末–2028，NVIDIA 的 Rubin Ultra 很可能首用；NVIDIA 已公布的 Spectrum-X、Quantum-X Photonics 交换平台用的就是 COUPE<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>。</p>
-<p>5.2　CPO 模块物理结构全解</p>
+<h3 id="sec-26">5.2　CPO 模块物理结构全解</h3>
 <p>把前面所有零件按真实物理位置摆在一起，就是一个完整的 CPO 模块。它装在同一块封装基板上，包含：交换 ASIC（主控/计算芯片，如 NVIDIA Quantum-X）、光学引擎 SiPh PIC（上面有微环调制器）、FAU（含微透镜阵列、棱镜准直器、V 槽底板）、外部激光源 ELSFP，以及进出的光纤；ASIC 与光引擎之间是 5cm 以内的短距电气连接。</p>
 <p><img src="media/himx-cpo/media/7134a3f13d31c4b55b790ee0e2bbbb1c40c87c4c.png" title="CPO 模块物理结构：各零件的真实位置与供应商分工（HIMX 卡微透镜、Largan 从棱镜准直器切入）" style="width:6.25in;height:4.59375in" alt="CPO 模块物理结构：各零件的真实位置与供应商分工（HIMX 卡微透镜、Largan 从棱镜准直器切入）" /></p>
 <p><em>图 10　CPO 模块物理结构：各零件的真实位置与供应商分工（HIMX 卡微透镜、Largan 从棱镜准直器切入）</em></p>
 <p>把整张图当成一条“光的一生”来读就全活了：外部激光源发出稳定的光，用光纤送进 PIC → 微环调制器把数据 0/1 飞快写进光里 → 光跑到光栅耦合器被“踢”成一束朝上 → 进入 FAU：先被棱镜准直器拐弯捋直、再被微透镜阵列聚焦对准，V 槽底板把光纤固定好 → 最后干净地钻进光纤奔向数据中心。整个过程由旁边的交换 ASIC 通过短距电气连接驱动。</p>
 <p>注：报告把“棱镜准直器”标为“Largan 切入点”。“准直”就是把发散的光捋成一束平行笔直的光；大立光（Largan）正想从这个环节切进来抢 HIMX 的单<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>。在 HIMX 的实际设计里，微透镜和棱镜本是同一块玻璃，报告这里是按功能拆开标注。</p>
-<p>第六部分　供应链与投资视角</p>
-<p>6.1　全链分工与脉络</p>
+<h2 id="sec-27">第六部分　供应链与投资视角</h2>
+<h3 id="sec-28">6.1　全链分工与脉络</h3>
 <p>把这一路的概念收成一张图，顺着箭头看一遍就是完整脉络：HIMX 是一家只设计不生产的 IC 设计公司，手里两摊生意——主业驱动芯片（稳定但不性感），副业 CPO 光学元件（高毛利、估值核心）；副业之所以存在，是因为 AI 带宽墙逼出了 CPO；光在 CPO 里的旅程是“光栅耦合器 → WLO 潜望镜 → 进光纤”，HIMX 正卡在中间那个潜望镜环节；最后落到一个很现实的量产取舍，以及它“经验型卡位、非专利垄断”的护城河性质和 Gen3 二供风险。</p>
 <p><img src="media/himx-cpo/media/348bbaaa8891cda83f6273a37aba1ffff89e380e.png" title="HIMX × CPO 全链脉络：从公司底色到护城河与风险的一张总览图" style="width:5.3125in;height:6.1875in" alt="HIMX × CPO 全链脉络：从公司底色到护城河与风险的一张总览图" /></p>
 <p><em>图 11　HIMX × CPO 全链脉络：从公司底色到护城河与风险的一张总览图</em></p>
 <p>整条链的角色分工：HIMX（做光学零件）→ FOCI（组装成 FAU）→ TSMC（装进 COUPE 光引擎）→ NVIDIA（装进 AI 系统）→ 卖给数据中心。</p>
-<p>6.2　FOCI 与它的对手 TFC</p>
+<h3 id="sec-29">6.2　FOCI 与它的对手 TFC</h3>
 <p>FOCI 全称 Fiber Optic Communications（台湾柜买代码 3363），是这条链里和 HIMX 配对的“组装总成厂”：把 HIMX 的光学零件加上光纤，在微米级精度下组装成完整的 FAU、并设计好它怎么对接 COUPE。它的看家技术叫 ReLFACon（可回流焊的带透镜光纤阵列连接器）。HIMX 持有 FOCI 约 5.3% 股权、两家深度绑定；FOCI 是 COUPE Gen1&amp;2 的独家 FAU 供应商，已募资约 1 亿美元备产，并握有独立的 FAU 结构专利<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a>。</p>
 <blockquote>
 <p>盖房子的比方：HIMX 是烧砖、做预制构件的厂；FOCI 是拿这些构件加光纤、精密吊装对齐成可交付模块的总包施工方。砖再好，没人精准砌成楼也白搭——FOCI 干的就是“砌成楼”这一步。</p>
 </blockquote>
 <p>市场对它的关注甚至更高：FOCI 股价年内一度上涨约 167%、市值约 20 亿美元，大摩估其 FAU 业务到 2028 年营收可达约 200 亿新台币<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a>。但有两个风险点值得盯紧。其一，FOCI 自己不依赖 HIMX（握有独立 FAU 专利），可反过来 HIMX 高度依赖 FOCI——它的光学零件几乎都得通过 FOCI 的 FAU 出货，FOCI 出问题或丢份额会连累 HIMX。</p>
 <p>其二，更现实的是 FOCI 正面临强劲对手 TFC（天孚通信，深市 300394）。TFC 提供“透镜阵列 + FAU + 封装”的一站式套件、量产规模更大（苏州、东南亚都有大厂），被指在 CPO 商业化落地上反超 FOCI；而 FOCI 主要专注 ReLFACon 与 FAU、需客户再对接多家供应商<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a>。当 CPO 从“实验室”走向“大规模量产”时，能不能稳定交付几百万套比实验室级精度更要命——这正是 3.6 里那个量产取舍逻辑，只不过这次砍向了 FOCI 自己，并会顺着供应链传导回 HIMX。</p>
-<p>6.3　HIMX 的护城河与风险清单</p>
+<h3 id="sec-30">6.3　HIMX 的护城河与风险清单</h3>
 <p>把投资视角收个口。HIMX 的卡位是真的、毛利也是真的，但它的护城河同时依赖“商业关系”和“一个特定的技术路线选择”，两者任何一个松动，逻辑都会受影响。主要风险有三条：</p>
 <p>其一，二供风险：所谓“独家”只覆盖到 Gen2（约 2026–2028 量产期），Gen3（2029+）有可能引入第二供应商。其二，架构路线风险：HIMX 的价值绑定在“COUPE 选了光栅耦合”这条路上；若未来某代转向边缘耦合或别的方案，这个微透镜卡位可能被整条绕过。其三，竞争切入风险：Largan 正从“棱镜准直器”环节切入抢 HIMX 的单，TFC 则在 FAU 层面反超 FOCI 并传导回 HIMX。</p>
 <p>一个有用的对照是把它和台积电放在一起看——同在这条链上，护城河的深度和确定性并不一样：</p>
