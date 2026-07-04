@@ -1168,6 +1168,445 @@
      "ath_floor": 2.266
     }
    ]
+  },
+  {
+   "name": "11 软件与 SaaS",
+   "items": [
+    {
+     "name": "微软",
+     "code": "MSFT",
+     "market": "美股",
+     "yahoo": "MSFT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 29000.0,
+      "approx": false
+     },
+     "mcap_base_price": 390.49,
+     "ath_floor": 555.45
+    },
+    {
+     "name": "甲骨文",
+     "code": "ORCL",
+     "market": "美股",
+     "yahoo": "ORCL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3928,
+      "approx": false
+     },
+     "mcap_base_price": 140.27,
+     "ath_floor": 0
+    },
+    {
+     "name": "Adobe",
+     "code": "ADBE",
+     "market": "美股",
+     "yahoo": "ADBE",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 945,
+      "approx": false
+     },
+     "mcap_base_price": 219.72,
+     "ath_floor": 0
+    },
+    {
+     "name": "赛富时（Salesforce）",
+     "code": "CRM",
+     "market": "美股",
+     "yahoo": "CRM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1595,
+      "approx": false
+     },
+     "mcap_base_price": 166.11,
+     "ath_floor": 0
+    },
+    {
+     "name": "戴尔科技",
+     "code": "DELL",
+     "market": "美股",
+     "yahoo": "DELL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2760,
+      "approx": false
+     },
+     "mcap_base_price": 394.32,
+     "ath_floor": 0
+    },
+    {
+     "name": "Palantir",
+     "code": "PLTR",
+     "market": "美股",
+     "yahoo": "PLTR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3103,
+      "approx": false
+     },
+     "mcap_base_price": 129.3,
+     "ath_floor": 0
+    },
+    {
+     "name": "Snowflake",
+     "code": "SNOW",
+     "market": "美股",
+     "yahoo": "SNOW",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 872,
+      "approx": false
+     },
+     "mcap_base_price": 260.15,
+     "ath_floor": 0
+    },
+    {
+     "name": "Datadog",
+     "code": "DDOG",
+     "market": "美股",
+     "yahoo": "DDOG",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 911,
+      "approx": false
+     },
+     "mcap_base_price": 260.36,
+     "ath_floor": 0
+    },
+    {
+     "name": "MongoDB",
+     "code": "MDB",
+     "market": "美股",
+     "yahoo": "MDB",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 263,
+      "approx": false
+     },
+     "mcap_base_price": 354.88,
+     "ath_floor": 0
+    },
+    {
+     "name": "Elastic",
+     "code": "ESTC",
+     "market": "美股",
+     "yahoo": "ESTC",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 60,
+      "approx": false
+     },
+     "mcap_base_price": 58.04,
+     "ath_floor": 0
+    },
+    {
+     "name": "Applovin",
+     "code": "APP",
+     "market": "美股",
+     "yahoo": "APP",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1792,
+      "approx": false
+     },
+     "mcap_base_price": 527.06,
+     "ath_floor": 0
+    },
+    {
+     "name": "CrowdStrike",
+     "code": "CRWD",
+     "market": "美股",
+     "yahoo": "CRWD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 485,
+      "approx": false
+     },
+     "mcap_base_price": 193.98,
+     "ath_floor": 0
+    },
+    {
+     "name": "Palo Alto Networks",
+     "code": "PANW",
+     "market": "美股",
+     "yahoo": "PANW",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1149,
+      "approx": false
+     },
+     "mcap_base_price": 348.06,
+     "ath_floor": 0
+    },
+    {
+     "name": "飞塔信息（Fortinet）",
+     "code": "FTNT",
+     "market": "美股",
+     "yahoo": "FTNT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1195,
+      "approx": false
+     },
+     "mcap_base_price": 156.25,
+     "ath_floor": 0
+    },
+    {
+     "name": "Zscaler",
+     "code": "ZS",
+     "market": "美股",
+     "yahoo": "ZS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 228,
+      "approx": false
+     },
+     "mcap_base_price": 147.33,
+     "ath_floor": 0
+    },
+    {
+     "name": "Okta",
+     "code": "OKTA",
+     "market": "美股",
+     "yahoo": "OKTA",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 247,
+      "approx": false
+     },
+     "mcap_base_price": 141.42,
+     "ath_floor": 0
+    },
+    {
+     "name": "Rubrik",
+     "code": "RBRK",
+     "market": "美股",
+     "yahoo": "RBRK",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 167,
+      "approx": false
+     },
+     "mcap_base_price": 83.64,
+     "ath_floor": 0
+    },
+    {
+     "name": "Cloudflare",
+     "code": "NET",
+     "market": "美股",
+     "yahoo": "NET",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 836,
+      "approx": false
+     },
+     "mcap_base_price": 242.41,
+     "ath_floor": 0
+    },
+    {
+     "name": "ServiceNow",
+     "code": "NOW",
+     "market": "美股",
+     "yahoo": "NOW",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2200,
+      "approx": false
+     },
+     "mcap_base_price": 106.32,
+     "ath_floor": 0
+    },
+    {
+     "name": "Twilio",
+     "code": "TWLO",
+     "market": "美股",
+     "yahoo": "TWLO",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 324,
+      "approx": false
+     },
+     "mcap_base_price": 209.31,
+     "ath_floor": 0
+    },
+    {
+     "name": "Atlassian",
+     "code": "TEAM",
+     "market": "美股",
+     "yahoo": "TEAM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 220,
+      "approx": false
+     },
+     "mcap_base_price": 83.84,
+     "ath_floor": 0
+    },
+    {
+     "name": "JFrog",
+     "code": "FROG",
+     "market": "美股",
+     "yahoo": "FROG",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 109,
+      "approx": false
+     },
+     "mcap_base_price": 94.81,
+     "ath_floor": 0
+    },
+    {
+     "name": "monday.com",
+     "code": "MNDY",
+     "market": "美股",
+     "yahoo": "MNDY",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 40,
+      "approx": false
+     },
+     "mcap_base_price": 79.77,
+     "ath_floor": 0
+    },
+    {
+     "name": "Workday",
+     "code": "WDAY",
+     "market": "美股",
+     "yahoo": "WDAY",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 363,
+      "approx": false
+     },
+     "mcap_base_price": 135.4,
+     "ath_floor": 0
+    },
+    {
+     "name": "HubSpot",
+     "code": "HUBS",
+     "market": "美股",
+     "yahoo": "HUBS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 100,
+      "approx": false
+     },
+     "mcap_base_price": 192.12,
+     "ath_floor": 0
+    },
+    {
+     "name": "Asana",
+     "code": "ASAN",
+     "market": "美股",
+     "yahoo": "ASAN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 17,
+      "approx": false
+     },
+     "mcap_base_price": 7.34,
+     "ath_floor": 0
+    },
+    {
+     "name": "Klaviyo",
+     "code": "KVYO",
+     "market": "美股",
+     "yahoo": "KVYO",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 47,
+      "approx": false
+     },
+     "mcap_base_price": 16.9,
+     "ath_floor": 0
+    },
+    {
+     "name": "Shopify",
+     "code": "SHOP",
+     "market": "美股",
+     "yahoo": "SHOP",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1553,
+      "approx": false
+     },
+     "mcap_base_price": 119.46,
+     "ath_floor": 0
+    },
+    {
+     "name": "Toast",
+     "code": "TOST",
+     "market": "美股",
+     "yahoo": "TOST",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 164,
+      "approx": false
+     },
+     "mcap_base_price": 28.82,
+     "ath_floor": 0
+    },
+    {
+     "name": "Zoom通讯",
+     "code": "ZM",
+     "market": "美股",
+     "yahoo": "ZM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 266,
+      "approx": false
+     },
+     "mcap_base_price": 87.145,
+     "ath_floor": 0
+    },
+    {
+     "name": "Zeta Global",
+     "code": "ZETA",
+     "market": "美股",
+     "yahoo": "ZETA",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 50,
+      "approx": false
+     },
+     "mcap_base_price": 20.7,
+     "ath_floor": 0
+    }
+   ]
   }
  ]
 }
