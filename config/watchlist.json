@@ -1766,7 +1766,180 @@
    ]
   },
   {
-   "name": "11 能源、电力与资源现金流",
+   "name": "11 光纤与光缆",
+   "items": [
+    {
+     "name": "康宁",
+     "code": "GLW",
+     "market": "美股",
+     "yahoo": "GLW",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1685,
+      "approx": false
+     },
+     "mcap_base_price": 196.79,
+     "ath_floor": 0
+    },
+    {
+     "name": "长飞光纤",
+     "code": "601869",
+     "market": "A股",
+     "yahoo": "601869.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 3601,
+      "approx": true
+     },
+     "mcap_base_price": 475.08,
+     "ath_floor": 0
+    },
+    {
+     "name": "长飞光纤",
+     "code": "06869",
+     "market": "港股",
+     "yahoo": "6869.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 1525,
+      "approx": true
+     },
+     "mcap_base_price": 201.2,
+     "ath_floor": 0
+    },
+    {
+     "name": "亨通光电",
+     "code": "600487",
+     "market": "A股",
+     "yahoo": "600487.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2200,
+      "approx": true
+     },
+     "mcap_base_price": 89.42,
+     "ath_floor": 0
+    },
+    {
+     "name": "中天科技",
+     "code": "600522",
+     "market": "A股",
+     "yahoo": "600522.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1707,
+      "approx": true
+     },
+     "mcap_base_price": 50.22,
+     "ath_floor": 0
+    },
+    {
+     "name": "烽火通信",
+     "code": "600498",
+     "market": "A股",
+     "yahoo": "600498.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 731,
+      "approx": true
+     },
+     "mcap_base_price": 61.91,
+     "ath_floor": 0
+    },
+    {
+     "name": "富通科技",
+     "code": "00465",
+     "market": "港股",
+     "yahoo": "0465.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 25,
+      "approx": true
+     },
+     "mcap_base_price": 3.72,
+     "ath_floor": 0
+    },
+    {
+     "name": "住友电气",
+     "code": "5802",
+     "market": "日股",
+     "yahoo": "5802.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 20700,
+      "approx": true
+     },
+     "mcap_base_price": 2664.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "藤仓（Fujikura）",
+     "code": "5803",
+     "market": "日股",
+     "yahoo": "5803.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 15800,
+      "approx": true
+     },
+     "mcap_base_price": 5358.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "住友化学 ADR",
+     "code": "SOMMY",
+     "market": "美股 OTC",
+     "yahoo": "SOMMY",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 180,
+      "approx": true
+     },
+     "mcap_base_price": 16.505,
+     "ath_floor": 0
+    },
+    {
+     "name": "信越化学",
+     "code": "4063",
+     "market": "日股",
+     "yahoo": "4063.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 129400.0,
+      "approx": false
+     },
+     "mcap_base_price": 6958.0,
+     "ath_floor": 7930.0
+    },
+    {
+     "name": "信越化学",
+     "code": "SHECF",
+     "market": "美股 OTC",
+     "yahoo": "SHECF",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 775.6,
+      "approx": false
+     },
+     "mcap_base_price": 41.71,
+     "ath_floor": 50.77
+    }
+   ]
+  },
+  {
+   "name": "12 能源、电力与资源现金流",
    "items": [
     {
      "name": "Constellation Energy",
@@ -2131,7 +2304,7 @@
    ]
   },
   {
-   "name": "12 中国互联网、AI 应用与主题 ETF",
+   "name": "13 中国互联网、AI 应用与主题 ETF",
    "items": [
     {
      "name": "腾讯控股",
@@ -2184,7 +2357,7 @@
    ]
   },
   {
-   "name": "13 软件与 SaaS",
+   "name": "14 软件与 SaaS",
    "items": [
     {
      "name": "微软",
@@ -2623,7 +2796,7 @@
    ]
   },
   {
-   "name": "14 800VDC 电力电子与功率半导体",
+   "name": "15 800VDC 电力电子与功率半导体",
    "items": [
     {
      "name": "纳微半导体",
