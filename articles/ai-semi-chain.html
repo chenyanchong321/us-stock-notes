@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 与半导体产业链学习笔记 · 烟囱的美股学习笔记</title>
+<style>
+:root{--bg:#0e1117;--panel:#161b24;--panel2:#1c2330;--border:#242c3b;--text:#e6e9ef;--text2:#8b95a7;--accent:#4a8cf0;--gold:#e8b64c}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:16px;line-height:1.85}
+#bar{position:sticky;top:0;background:rgba(22,27,36,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);z-index:10}
+#bar .in{max-width:760px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px}
+#bar a{color:var(--text2);text-decoration:none;font-size:14px}
+#bar a:hover{color:var(--accent)}
+#bar .site{margin-left:auto;font-size:13px;color:var(--text2)}
+#bar .site b{color:var(--accent);font-weight:600}
+main{max-width:760px;margin:0 auto;padding:28px 20px 90px}
+.head h1{font-size:26px;line-height:1.4;margin-bottom:12px}
+.meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.meta .date{font-size:13px;color:var(--text2)}
+.meta .tag{font-size:12px;color:var(--accent);background:rgba(74,140,240,.12);border-radius:4px;padding:2px 8px}
+.meta .pdf{font-size:13px;color:var(--text2);text-decoration:none;border:1px solid var(--border);border-radius:6px;padding:3px 10px}
+.meta .pdf:hover{color:var(--text);border-color:var(--text2)}
+.head{border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:26px}
+article h1{font-size:22px;margin:38px 0 14px;line-height:1.4}
+article h2{font-size:20px;margin:34px 0 12px;padding-left:10px;border-left:3px solid var(--accent);line-height:1.4}
+article h3{font-size:17px;margin:26px 0 10px}
+article p{margin:0 0 16px}
+article ul,article ol{margin:0 0 16px 1.4em}
+article li{margin-bottom:6px}
+article img,article svg{max-width:100%;height:auto;border-radius:10px;display:block;margin:18px auto;background:#fff}
+article blockquote{border-left:3px solid var(--gold);background:var(--panel);border-radius:0 8px 8px 0;padding:12px 16px;margin:0 0 16px;color:var(--text2)}
+article table{border-collapse:collapse;width:100%;margin:0 0 18px;font-size:14px;display:block;overflow-x:auto;white-space:nowrap}
+article th,article td{border:1px solid var(--border);padding:8px 12px;text-align:left}
+article th{background:var(--panel);color:var(--text2)}
+article tr:nth-child(even) td{background:rgba(28,35,48,.5)}
+article code{background:var(--panel2);border-radius:4px;padding:1px 6px;font-size:14px}
+article pre{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:14px;overflow-x:auto;margin:0 0 16px}
+article pre code{background:none;padding:0}
+article a{color:var(--accent)}
+article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+.disclaim{margin-top:50px;padding:14px 18px;background:var(--panel);border:1px solid var(--border);border-radius:10px;font-size:13px;color:var(--text2)}
+</style>
+</head>
+<body>
+<div id="bar"><div class="in">
+  <a href="../index.html?view=notes">← 返回笔记库</a>
+  <span class="site">📓 <b>烟囱</b>的美股学习笔记</span>
+</div></div>
+<main>
+  <div class="head">
+    <h1>AI 与半导体产业链学习笔记</h1>
+    <div class="meta"><span class="date">2026-07-04</span><span class="tag">产业链</span><span class="tag">总纲</span><a class="pdf" href="../notes/AI与半导体产业链学习笔记.pdf" download>⬇ 下载 PDF</a></div>
+  </div>
+  <article>
+<p><strong>从江波龙到康宁：一次对话沉淀的完整知识地图</strong></p>
+<p>整理日期：2026 年 7 月 4 日 · 基于对话中的公开信息与 JPM 2026-07-03 中国策略报告</p>
+<blockquote>
+<p>阅读提示：本笔记按“存储 → 概念工具箱 → JPM 报告 → PCB → 封装 → 晶圆制造 → 光通信 → 全景地图”的顺序组织，每章末尾附一句话记忆卡。所有数据为整理时点的公开信息，本笔记仅作学习科普，不构成投资建议。</p>
+</blockquote>
+<hr />
+<h2 id="第一章-存储行业与江波龙">第一章 存储行业与江波龙</h2>
+<h3 id="江波龙是做什么的">1.1 江波龙是做什么的</h3>
+<p>江波龙（301308.SZ）不制造存储芯片，而是<strong>存储模组厂</strong>：从三星、SK 海力士、长江存储等原厂买来 NAND/DRAM 晶圆，配上自研主控芯片、固件算法，封装测试成成品出售——手机的 eMMC/UFS、电脑的 SSD 和内存条、存储卡（旗下雷克沙 Lexar 与 FORESEE 双品牌）。</p>
+<p>比喻：原厂是“面粉厂”，江波龙是“面包店”——而且是有自研配方（5nm UFS4.1 主控已量产、累计部署超 1.4 亿颗）的高端面包店。</p>
+<h3 id="中国存储产业链分层">1.2 中国存储产业链分层</h3>
+<table>
+<thead>
+<tr class="header">
+<th>环节</th>
+<th>做什么</th>
+<th>代表公司</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>晶圆制造（原厂）</td>
+<td>造存储颗粒本身，最重资产</td>
+<td>长鑫存储（DRAM）、长江存储（NAND）——均未上市（长鑫 IPO 已获批）</td>
+</tr>
+<tr class="even">
+<td>设计（Fabless）</td>
+<td>设计利基型存储/主控芯片</td>
+<td>兆易创新（NOR 全球前三）</td>
+</tr>
+<tr class="odd">
+<td>模组/方案</td>
+<td>买颗粒做成成品</td>
+<td>江波龙、佰维存储、德明利</td>
+</tr>
+<tr class="even">
+<td>封测</td>
+<td>封装测试</td>
+<td>深科技、太极实业</td>
+</tr>
+</tbody>
+</table>
+<p>“中国存储龙头是长鑫/长江存储”说的是制造环节，但它们不在 A 股；<strong>A 股能买到的存储龙头就是模组厂和设计厂</strong>。</p>
+<p>模组厂的商业模式本质是“低买高卖＋库存杠杆”：涨价周期里低价库存瞬间增值、利润爆炸（江波龙 2026Q1 净利 38.6 亿、同比 +2644%）；跌价周期同样会爆亏（2023 年江波龙亏损）。<strong>周期性极强，利润质量不如原厂稳定。</strong></p>
+<h3 id="与韩国美国存储上市公司对比">1.3 与韩国、美国存储上市公司对比</h3>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>江波龙</th>
+<th>三星/SK海力士（韩）</th>
+<th>美光（美）</th>
+<th>闪迪/西数（美）</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>环节</td>
+<td>模组厂</td>
+<td>原厂（DRAM+NAND）</td>
+<td>原厂</td>
+<td>原厂（NAND）+模组</td>
+</tr>
+<tr class="even">
+<td>核心资产</td>
+<td>主控、固件、品牌渠道</td>
+<td>晶圆厂+制程（HBM 为利润核心）</td>
+<td>晶圆厂+HBM</td>
+<td>NAND 晶圆厂</td>
+</tr>
+<tr class="odd">
+<td>定价权</td>
+<td>弱，跟随原厂</td>
+<td>强，三家寡头占全球约 95% DRAM</td>
+<td>强</td>
+<td>中</td>
+</tr>
+<tr class="even">
+<td>真正对标</td>
+<td>金士顿（全球模组第一，未上市）</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>原厂赚“制造+技术垄断”的钱（尤其 HBM 卖给英伟达）；江波龙赚“周期+方案能力”的钱，被称“A 股稀缺标的”是因为这个位置的上市公司少，而非技术最强。</p>
+<p><strong>记忆卡：江波龙是“周期放大器”，不是“技术垄断者”。</strong></p>
+<h3 id="a-股模组三兄弟对比">1.4 A 股模组三兄弟对比</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>江波龙</th>
+<th>佰维存储</th>
+<th>德明利</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>人设</td>
+<td>全能大哥</td>
+<td>封测赌徒</td>
+<td>弹性之王</td>
+</tr>
+<tr class="even">
+<td>26Q1 营收</td>
+<td>99 亿（最大）</td>
+<td>68 亿（+342%）</td>
+<td>75 亿（+502%）</td>
+</tr>
+<tr class="odd">
+<td>26Q1 净利</td>
+<td>38.6 亿</td>
+<td>29.0 亿</td>
+<td>预告约 31.5~36.5 亿</td>
+</tr>
+<tr class="even">
+<td>核心差异</td>
+<td>产品线最全，自研 5nm UFS 主控进头部手机厂，双品牌</td>
+<td>自建先进封测厂，靠微型化封装绑定 Meta（Ray-Ban AI 眼镜主供）、Google、华为、小米</td>
+<td>U 盘主控起家，囤货杠杆最猛，涨价周期利润弹性全场最大，转攻企业级 SSD</td>
+</tr>
+<tr class="odd">
+<td>风格</td>
+<td>均衡正规军</td>
+<td>AI 端侧特种兵</td>
+<td>周期放大器</td>
+</tr>
+</tbody>
+</table>
+<p><strong>记法：要“稳和全”看江波龙，要“AI 端侧故事”看佰维，要“周期弹性”看德明利。</strong></p>
+<h3 id="海外模组厂在哪上市">1.5 海外模组厂在哪上市</h3>
+<p>反直觉事实：<strong>美股和日股几乎买不到纯模组厂，这类公司扎堆台股。</strong></p>
+<ul>
+<li>美国：全球模组老大金士顿是私人公司不上市；美股相关标的仅 Penguin Solutions（PENG，旗下 SMART Modular）、Netlist（NLST）；闪迪、西数、美光本质是原厂。</li>
+<li>日本：没有模组龙头；日股存储标的是原厂铠侠 Kioxia（285A）。</li>
+<li>台股（真正的对标池）：群联 Phison（8299，主控+模组，与江波龙路线最像）、威刚 ADATA（3260）、创见 Transcend（2451）、宇瞻 Apacer（8271）、十铨（4967）、宜鼎 Innodisk（5289，工控利基）。</li>
+</ul>
+<hr />
+<h2 id="第二章-概念工具箱一利基市场niche">第二章 概念工具箱一：利基市场（Niche）</h2>
+<p><strong>利基 = 英文 niche 音译</strong>，原意“墙上凿出的小壁龛”——放小雕像刚好，塞不下大件。商业含义：<strong>市场太小、大公司看不上，但小公司钻进去反而活得滋润的细分角落</strong>。</p>
+<svg viewBox="0 0 680 356" style="width:100%;height:auto" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans CJK SC,PingFang SC,sans-serif">
+<text x="200" y="42" text-anchor="middle" font-size="17" font-weight="600" fill="#222">大池塘 · 主流市场</text> <text x="550" y="42" text-anchor="middle" font-size="17" font-weight="600" fill="#222">小水洼 · 利基市场</text> <rect x="30" y="58" width="340" height="238" rx="12" fill="#E6F1FB" stroke="#85B7EB" stroke-width="1"/> <text x="200" y="90" text-anchor="middle" font-size="13.5" fill="#185FA5">标准DRAM / 标准NAND，几千亿美元</text> <rect x="46" y="112" width="96" height="38" rx="4" fill="#FFFFFF" stroke="#8FA8C0"/> <text x="94" y="136" text-anchor="middle" font-size="15" font-weight="600" fill="#222">三星</text> <rect x="152" y="112" width="96" height="38" rx="4" fill="#FFFFFF" stroke="#8FA8C0"/> <text x="200" y="136" text-anchor="middle" font-size="15" font-weight="600" fill="#222">SK海力士</text> <rect x="258" y="112" width="96" height="38" rx="4" fill="#FFFFFF" stroke="#8FA8C0"/> <text x="306" y="136" text-anchor="middle" font-size="15" font-weight="600" fill="#222">美光</text> <text x="200" y="196" text-anchor="middle" font-size="13.5" fill="#185FA5">三巨头吃掉全球九成以上份额</text> <text x="200" y="222" text-anchor="middle" font-size="13.5" fill="#185FA5">拼产能、拼制程、拼价格</text> <text x="200" y="248" text-anchor="middle" font-size="13.5" fill="#185FA5">小公司进去就是炮灰</text> <text x="409" y="162" text-anchor="middle" font-size="13" fill="#666">看不上</text> <line x1="376" y1="177" x2="436" y2="177" stroke="#666" stroke-width="1.4" stroke-dasharray="5 4"/> <path d="M436 173 L446 177 L436 181 Z" fill="#666"/> <rect x="450" y="58" width="200" height="66" rx="8" fill="#EAF3DE" stroke="#97C459"/> <text x="550" y="86" text-anchor="middle" font-size="15.5" font-weight="600" fill="#2F5A0F">NOR Flash</text> <text x="550" y="108" text-anchor="middle" font-size="12.5" fill="#3B6D11">存启动代码，市场小但稳</text> <rect x="450" y="144" width="200" height="66" rx="8" fill="#EAF3DE" stroke="#97C459"/> <text x="550" y="172" text-anchor="middle" font-size="15.5" font-weight="600" fill="#2F5A0F">小容量 DRAM</text> <text x="550" y="194" text-anchor="middle" font-size="12.5" fill="#3B6D11">家电、路由器用，巨头已退出</text> <rect x="450" y="230" width="200" height="66" rx="8" fill="#EAF3DE" stroke="#97C459"/> <text x="550" y="258" text-anchor="middle" font-size="15.5" font-weight="600" fill="#2F5A0F">SLC NAND</text> <text x="550" y="280" text-anchor="middle" font-size="12.5" fill="#3B6D11">工业、车规，要稳不要大</text> <text x="340" y="336" text-anchor="middle" font-size="13.5" fill="#555">利基（niche）＝ 大鱼看不上、小鱼却能当王的小水洼 —— 兆易创新就住在右边</text>
+</svg>
+<p>小水洼为什么反而好赚钱：其一，<strong>巨头主动退出</strong>——三星的产线产能倒进小水洼瞬间溢出，撑不起它的工厂；其二，<strong>竞争者少、价格稳</strong>——往往只有两三家玩家，毛利率反而稳定；其三，<strong>客户要“稳”不要“新”</strong>——家电、工控、汽车客户要一颗芯片供货十年不改设计，巨头嫌烦，小公司当宝。</p>
+<p><strong>记忆卡：利基＝壁龛，塞不下大佛，正好供小神。兆易创新靠 NOR 这个壁龛做到全球前三。</strong></p>
+<hr />
+<h2 id="第三章-概念工具箱二nor-flash-与-nand-flash">第三章 概念工具箱二：NOR Flash 与 NAND Flash</h2>
+<p><strong>闪存（Flash）＝ 断电也不忘事的存储芯片</strong>。两种“性格”来自内部电路两种接法（NOR 门/NAND 门），接法不同 → 性格完全不同。</p>
+<svg viewBox="0 0 680 372" style="width:100%;height:auto" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans CJK SC,PingFang SC,sans-serif">
+<rect x="290" y="30" width="100" height="40" rx="4" fill="#FAFAF7" stroke="#999"/> <text x="340" y="55" text-anchor="middle" font-size="16" font-weight="600" fill="#222">CPU</text> <path d="M300 70 L300 92 L175 92 L175 142" fill="none" stroke="#666" stroke-width="1.4"/> <path d="M171 142 L175 152 L179 142 Z" fill="#666"/> <text x="240" y="84" text-anchor="middle" font-size="12.5" fill="#666">按字节直接读 · 代码原地执行</text> <rect x="40" y="156" width="270" height="176" rx="12" fill="#FCF1DC" stroke="#E0B25C"/> <text x="175" y="184" text-anchor="middle" font-size="16" font-weight="600" fill="#7A5A10">NOR Flash · 字典</text> <text x="175" y="206" text-anchor="middle" font-size="12.5" fill="#8A6414">容量 MB 级 · 每字节贵 · 读快写慢</text> <g fill="#FFFFFF" stroke="#C9A25C"> <rect x="78" y="222" width="24" height="16" rx="2"/><rect x="112" y="222" width="24" height="16" rx="2"/><rect x="146" y="222" width="24" height="16" rx="2"/><rect x="180" y="222" width="24" height="16" rx="2"/><rect x="214" y="222" width="24" height="16" rx="2"/><rect x="248" y="222" width="24" height="16" rx="2"/> <rect x="78" y="248" width="24" height="16" rx="2"/><rect x="112" y="248" width="24" height="16" rx="2"/><rect x="146" y="248" width="24" height="16" rx="2"/><rect x="180" y="248" width="24" height="16" rx="2"/><rect x="214" y="248" width="24" height="16" rx="2"/><rect x="248" y="248" width="24" height="16" rx="2"/> <rect x="78" y="274" width="24" height="16" rx="2"/><rect x="112" y="274" width="24" height="16" rx="2"/><rect x="146" y="274" width="24" height="16" rx="2"/><rect x="180" y="274" width="24" height="16" rx="2"/><rect x="214" y="274" width="24" height="16" rx="2"/><rect x="248" y="274" width="24" height="16" rx="2"/> </g> <text x="175" y="316" text-anchor="middle" font-size="12.5" fill="#8A6414">每个格子都有独立门牌号</text> <rect x="468" y="108" width="96" height="40" rx="4" fill="#FAFAF7" stroke="#999"/> <text x="516" y="133" text-anchor="middle" font-size="14.5" font-weight="600" fill="#222">内存 RAM</text> <path d="M516 226 L516 158" fill="none" stroke="#666" stroke-width="1.4"/> <path d="M512 158 L516 148 L520 158 Z" fill="#666"/> <text x="600" y="196" text-anchor="middle" font-size="12.5" fill="#666">先整页搬出来</text> <path d="M516 104 L516 52 L400 52" fill="none" stroke="#666" stroke-width="1.4"/> <path d="M400 48 L390 52 L400 56 Z" fill="#666"/> <text x="470" y="42" text-anchor="middle" font-size="12.5" fill="#666">再交给 CPU</text> <rect x="380" y="230" width="270" height="102" rx="12" fill="#E6F1FB" stroke="#85B7EB"/> <text x="515" y="258" text-anchor="middle" font-size="16" font-weight="600" fill="#134A80">NAND Flash · 仓库</text> <text x="515" y="280" text-anchor="middle" font-size="12.5" fill="#185FA5">容量 GB–TB 级 · 便宜 · 只能整页搬</text> <rect x="398" y="292" width="115" height="28" rx="4" fill="#FFFFFF" stroke="#8FA8C0"/> <text x="455" y="310" text-anchor="middle" font-size="12" fill="#185FA5">第 1 页（4KB）</text> <rect x="525" y="292" width="115" height="28" rx="4" fill="#FFFFFF" stroke="#8FA8C0"/> <text x="582" y="310" text-anchor="middle" font-size="12" fill="#185FA5">第 2 页（4KB）</text> <text x="340" y="358" text-anchor="middle" font-size="13.5" fill="#555">一个是随手翻的字典，一个是要叉车整箱搬货的仓库</text>
+</svg>
+<ul>
+<li><strong>为什么两种性格</strong>：NOR 给每个格子修独立走廊——想读哪格直接走过去，快而精准，代价是走廊占地（容量小、贵）；NAND 把格子串成串共用走廊——省地方（容量大、便宜），代价是取货必须整串搬。</li>
+<li><strong>为什么设备都要一颗 NOR</strong>：开机“第一口气”——通电时内存是空的，CPU 需要一份能立刻原地执行的说明书，只有 NOR 行。路由器、电视、汽车、耳机、电脑 BIOS 里都有一颗几块钱的 NOR。</li>
+<li>NOR 单颗几毛到几块钱、全球一年市场几十亿美元——对三星是零花钱，但万物皆需一颗、量大且稳。兆易创新靠它做到全球前三；江波龙做的则是右边“大仓库”的成品生意。</li>
+</ul>
+<p><strong>记忆卡：NOR 是字典，翻哪页读哪页，存“程序”；NAND 是仓库，整箱进出，存“数据”。</strong></p>
+<hr />
+<h2 id="第四章-概念工具箱三主控芯片与固件">第四章 概念工具箱三：主控芯片与固件</h2>
+<p><strong>主控（controller）＝ 指挥存储颗粒干活的小芯片。颗粒是仓库，主控是仓库管理员——没有管理员，仓库只是一堆哑巴货架。</strong></p>
+<svg viewBox="0 0 680 336" style="width:100%;height:auto" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans CJK SC,PingFang SC,sans-serif">
+<rect x="26" y="112" width="124" height="60" rx="4" fill="#FAFAF7" stroke="#999"/> <text x="88" y="136" text-anchor="middle" font-size="15" font-weight="600" fill="#222">手机 / 电脑</text> <text x="88" y="158" text-anchor="middle" font-size="12.5" fill="#555">只管喊话下单</text> <text x="186" y="128" text-anchor="middle" font-size="12.5" fill="#666">“存这个！”</text> <line x1="154" y1="142" x2="216" y2="142" stroke="#666" stroke-width="1.4"/> <path d="M216 138 L226 142 L216 146 Z" fill="#666"/> <rect x="230" y="50" width="424" height="232" rx="12" fill="#F1EFE8" stroke="#B4B2A9"/> <text x="442" y="78" text-anchor="middle" font-size="16" font-weight="600" fill="#444">一块 SSD 的内部</text> <rect x="252" y="96" width="132" height="86" rx="8" fill="#FCF1DC" stroke="#E0B25C"/> <text x="318" y="130" text-anchor="middle" font-size="15.5" font-weight="600" fill="#7A5A10">主控芯片</text> <text x="318" y="156" text-anchor="middle" font-size="12.5" fill="#8A6414">仓库管理员</text> <line x1="388" y1="118" x2="460" y2="118" stroke="#666" stroke-width="1.4"/> <path d="M460 114 L470 118 L460 122 Z" fill="#666"/> <line x1="388" y1="166" x2="460" y2="166" stroke="#666" stroke-width="1.4"/> <path d="M460 162 L470 166 L460 170 Z" fill="#666"/> <g fill="#E6F1FB" stroke="#85B7EB"> <rect x="474" y="98" width="80" height="40" rx="4"/> <rect x="564" y="98" width="80" height="40" rx="4"/> <rect x="474" y="146" width="80" height="40" rx="4"/> <rect x="564" y="146" width="80" height="40" rx="4"/> </g> <text x="514" y="123" text-anchor="middle" font-size="12.5" fill="#185FA5">颗粒 ①</text> <text x="604" y="123" text-anchor="middle" font-size="12.5" fill="#185FA5">颗粒 ②</text> <text x="514" y="171" text-anchor="middle" font-size="12.5" fill="#185FA5">颗粒 ③</text> <text x="604" y="171" text-anchor="middle" font-size="12.5" fill="#185FA5">颗粒 ④</text> <text x="442" y="226" text-anchor="middle" font-size="12.5" fill="#555">管理员的活：记账（数据放哪格）· 纠错（格子会记错）</text> <text x="442" y="250" text-anchor="middle" font-size="12.5" fill="#555">均衡磨损（每格有写入寿命）· 指挥并行（四仓同开＝速度×4）</text> <text x="340" y="316" text-anchor="middle" font-size="13.5" fill="#555">同样的颗粒，配不同的管理员，速度和寿命天差地别</text>
+</svg>
+<p>NAND 颗粒便宜量大但有三个毛病，全靠主控兜着：<strong>会记错</strong>（主控 ECC 纠错算法当校对员）；<strong>会累死</strong>（每格擦写几千到几万次报废，主控“均衡磨损”让所有格子均匀变旧）；<strong>单干很慢</strong>（主控同时指挥 4~8 颗颗粒并行，速度翻倍再翻倍）。</p>
+<p><strong>固件（firmware）＝ 管理员的工作手册</strong>：同一颗主控，换一本更聪明的手册，性能就不一样。江波龙说核心竞争力是“固件算法”，即手册写得好。</p>
+<p>自研主控为什么值得吹：买现成管理员（台湾慧荣 Silicon Motion 美股 SIMO、群联专门“出租管理员”）vs 自己培养——自研每颗省几美元（乘上亿出货量）、性能可为大客户定制、能进高端供应链。</p>
+<p><strong>记忆卡：颗粒是货架，主控是管理员，固件是手册；模组厂的护城河多半藏在后两样里。</strong></p>
+<hr />
+<h2 id="第五章-jpm-中国策略报告解读2026-07-03">第五章 JPM 中国策略报告解读（2026-07-03）</h2>
+<h3 id="一句话主旨">5.1 一句话主旨</h3>
+<p><strong>7 月钱会继续从 AI 股流出去炒别的（战术性轮动），8 月二季报一出，AI 重新当老大。</strong> 短期换仓不改长期主线。</p>
+<h3 id="为什么-7-月让位三个理由">5.2 为什么 7 月“让位”（三个理由）</h3>
+<ol type="1">
+<li><strong>AI 股短期过热、监管泼水</strong>：A 股换手率 6 月底飙到 6% 以上（历史高位区），20 多家 AI 公司（含寒武纪）被要求发布股价异动风险提示；A 股半导体两天回调 8~9%。</li>
+<li><strong>月底政治局会议 → 政策题材接棒</strong>：会前资金炒政策预期——消费、地产、基建（做多预期+空头回补）。</li>
+<li><strong>7 月初业绩预告窗口</strong>：基本面强但上半年涨得少的板块——<strong>非银金融（券商保险）和医疗</strong>——有补涨机会。</li>
+</ol>
+<h3 id="为什么-8-月-ai-归来">5.3 为什么 8 月 AI 归来</h3>
+<p>硬数据：6 月盈利预测修正中，<strong>IT 板块 EPS 被上调最多（+4.1%），MSCI 中国整体为 -0.7%</strong>。二季报+下半年指引落地后，资金回来认业绩（存储股的暴增预告正是这一逻辑的一部分）。</p>
+<h3 id="容易被忽略的暗线">5.4 容易被忽略的暗线</h3>
+<ul>
+<li><strong>腾讯被点名长线买点</strong>：估值 -2SD（比自身历史均值便宜两个标准差）；对比美团、京东被大额做空（外卖大战），腾讯阿里没有。</li>
+<li><strong>证金公司清仓 2015 年救市老仓位</strong>：浦发、中信银行、平安、人寿、神华等仍有残余抛压；JPM 解读为机构职能重组，<strong>不是国家队看空</strong>。</li>
+<li><strong>潜在回流弹药</strong>：监管收紧富途/老虎等跨境券商（涉客户资产 2400~3500 亿元）+跨境 TRS（2000~3000 亿元），最多约 <strong>4400~6500 亿元可能回流 A 股</strong>，且大概率买半导体、AI、国产替代。</li>
+<li><strong>点位</strong>：年底基准 MXCN 100 点、沪深 300 目标 5200（当时约 4900，隐含约 6% 空间）；悲观情形 80/4000。长期主题三件套：<strong>AI、能源安全、机器人</strong>。</li>
+</ul>
+<h3 id="如何消费券商报告">5.5 如何“消费”券商报告</h3>
+<p>这是<strong>资金流+仓位分析</strong>报告，擅长回答“钱往哪流”，不擅长“公司值多少钱”。两个滤镜：报告披露 JPM 与名单公司有投行业务往来（Top Picks 天然有利益关联）；板块轮动技术评分本质是<strong>动量指标</strong>——追认已发生的趋势，不预测拐点。判断依据含大量 “anecdotally”（听说/客户反馈）时可信度打折。</p>
+<h3 id="jpm-首选股名单三层逻辑">5.6 JPM 首选股名单：三层逻辑</h3>
+<p><strong>全球供应链组（卖铲子给全世界）</strong></p>
+<ul>
+<li><strong>中际旭创</strong>：全球光模块龙头。数据中心 GPU 间传数据靠光纤，光模块是“光↔︎电翻译器”，800G/1.6T 高端全球份额第一。</li>
+<li><strong>胜宏科技（Victory Giant-H, 2476.HK）</strong>：AI 加速卡高端 PCB，英伟达链核心供应商。</li>
+<li><strong>长电科技</strong>：中国最大、全球前三封测厂；AI 芯片流行先进封装，封测价值量大增。</li>
+<li><strong>潍柴动力-H</strong>：柴油机/重卡巨头切入<strong>数据中心巨型备用电源</strong>——“AI 的柴油后勤”。</li>
+</ul>
+<p><strong>本土化替代组（美国不卖了，我自己造）</strong></p>
+<ul>
+<li><strong>北方华创</strong>：中国最大半导体设备厂（刻蚀/薄膜/炉管），对标应用材料；国产晶圆厂扩产买它的机器。</li>
+<li><strong>中微公司（AMEC）</strong>：刻蚀设备尖刀，对标泛林 Lam；与北方华创并称国产设备双子星。</li>
+<li><strong>百度</strong>：文心大模型+自研昆仑芯+萝卜快跑，芯片+应用国产闭环。</li>
+<li><strong>智谱 AI（2513.HK）</strong>：清华系大模型公司，2026 年 1 月港股上市（“全球大模型第一股”），2025 年收入约 1 亿美元级——买它买的是“国产 OpenAI 期权”。</li>
+<li><strong>天数智芯</strong>：国产通用 GPU，与智谱同日港股上市，市值约 400 亿港元；英伟达买不到，国产 GPU 就有人排队。</li>
+</ul>
+<p><strong>宏观经济代理组（不赌技术，赌中国经济）</strong></p>
+<ul>
+<li><strong>华润置地</strong>：央企地产+万象城包租公，“中国内需温度计”。</li>
+<li><strong>腾讯</strong>：微信+游戏+广告+混元，“中国经济+一点 AI”的压舱石。</li>
+</ul>
+<h2 id="注意这份名单里没有一只存储股存储行情涨价周期与-ai-生态卡位是两套互补的叙事">注意：这份名单里<strong>没有一只存储股</strong>——存储行情（涨价周期）与 AI 生态卡位是两套互补的叙事。</h2>
+<h2 id="第六章-pcb-深研从加速卡板到千层饼">第六章 PCB 深研：从加速卡板到千层饼</h2>
+<h3 id="pcb-三兄弟">6.1 PCB 三兄弟</h3>
+<p>PCB（印刷电路板）：芯片是“器官”，PCB 是“骨架+血管”。遥控器板几块钱一片，英伟达 AI 加速板一片几千上万元。</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>胜宏科技</th>
+<th>沪电股份（002463）</th>
+<th>深南电路（002916）</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>人设</td>
+<td>进攻型赌手</td>
+<td>稳健型老钱</td>
+<td>央企多面手</td>
+</tr>
+<tr class="even">
+<td>出身</td>
+<td>惠州民企，老兵翻身</td>
+<td>昆山台商背景 30 余年</td>
+<td>深圳央企（中航系）</td>
+</tr>
+<tr class="odd">
+<td>本事</td>
+<td>AI 加速卡板（英伟达订单占七成）</td>
+<td>AI 服务器板+交换机板+汽车板，客户分散</td>
+<td>PCB＋IC 载板＋电子装联三合一，华为老主顾</td>
+</tr>
+<tr class="even">
+<td>26Q1</td>
+<td>营收 55 亿 +28%，净利 12.9 亿 +40%</td>
+<td>营收 62 亿 +54%，净利 12.4 亿 +63%</td>
+<td>营收 66 亿 +38%，净利 8.5 亿 +73%</td>
+</tr>
+<tr class="odd">
+<td>风格</td>
+<td>弹性最大，命系英伟达</td>
+<td>盈利质量最好，砸 177 亿扩产</td>
+<td>业务最杂但有稀缺资产（载板）</td>
+</tr>
+</tbody>
+</table>
+<p>胜宏 2025 年营收 192.9 亿（+80%）、净利 43.1 亿（+274%），2026 年 4 月 H 股上市首日涨 57%。风险三条：客户集中（英伟达打喷嚏它重感冒）、同行在追（沪电、深南、台湾金像电）、涨太快筹码情绪化（一则高管绯闻传言单日蒸发 200 亿市值）。</p>
+<h3 id="加速卡加速加速的是谁">6.2 加速卡：「加速」加速的是谁</h3>
+<p><strong>“加速”是相对 CPU 说的</strong>：CPU 像教授——全能但核少；AI 的本质工作是海量重复矩阵运算——不难但量大。把苦力活外包给一块卡，卡上 GPU 有上万个“只会算术的小学生”同时开工，这就是加速。加速卡＝显卡的服务器豪华版（H100/B200）；<strong>加速卡板＝这张卡的电路板底座</strong>。</p>
+<svg viewBox="0 0 680 372" style="width:100%;height:auto" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans CJK SC,PingFang SC,sans-serif">
+<rect x="26" y="140" width="130" height="64" rx="4" fill="#FAFAF7" stroke="#999"/> <text x="91" y="164" text-anchor="middle" font-size="15" font-weight="600" fill="#222">CPU · 教授</text> <text x="91" y="188" text-anchor="middle" font-size="12.5" fill="#555">全能，但核少</text> <text x="203" y="154" text-anchor="middle" font-size="12.5" fill="#666">苦力活外包</text> <line x1="160" y1="170" x2="234" y2="170" stroke="#666" stroke-width="1.4"/> <path d="M234 166 L244 170 L234 174 Z" fill="#666"/> <rect x="248" y="48" width="404" height="258" rx="12" fill="#EAF3DE" stroke="#97C459"/> <text x="450" y="78" text-anchor="middle" font-size="16" font-weight="600" fill="#2F5A0F">一张 AI 加速卡（俯视）</text> <text x="450" y="100" text-anchor="middle" font-size="12.5" fill="#3B6D11">绿色底板 ＝ 高多层 PCB（胜宏的活）</text> <rect x="394" y="118" width="112" height="72" rx="8" fill="#FCF1DC" stroke="#E0B25C"/> <text x="450" y="148" text-anchor="middle" font-size="15.5" font-weight="600" fill="#7A5A10">GPU 芯片</text> <text x="450" y="172" text-anchor="middle" font-size="12.5" fill="#8A6414">上万个小核</text> <rect x="286" y="128" width="90" height="52" rx="6" fill="#E6F1FB" stroke="#85B7EB"/> <text x="331" y="158" text-anchor="middle" font-size="13" fill="#185FA5">HBM 显存</text> <rect x="524" y="128" width="90" height="52" rx="6" fill="#E6F1FB" stroke="#85B7EB"/> <text x="569" y="158" text-anchor="middle" font-size="13" fill="#185FA5">HBM 显存</text> <rect x="286" y="216" width="104" height="38" rx="4" fill="#FFFFFF" stroke="#9AB080"/> <text x="338" y="240" text-anchor="middle" font-size="12.5" fill="#3B6D11">供电模块</text> <rect x="420" y="216" width="194" height="38" rx="4" fill="#FFFFFF" stroke="#9AB080"/> <text x="517" y="240" text-anchor="middle" font-size="12.5" fill="#3B6D11">金手指（插进服务器）</text> <text x="450" y="288" text-anchor="middle" font-size="12.5" fill="#3B6D11">板内上百万条细铜线把所有零件连成一体</text> <text x="340" y="348" text-anchor="middle" font-size="13.5" fill="#555">加速 ＝ CPU 把并行苦力活外包给 GPU；加速卡板 ＝ 承载这一切的精密底板</text>
+</svg>
+<p>这块底板贵在：GPU 与 HBM 间每秒传几 TB 数据，布线差一毫米信号就乱；单卡功耗 700 瓦以上，供电铜层要扛大电流；全部塞进二三十层。<strong>遥控器板是平房，加速卡板是精装修摩天楼。</strong></p>
+<h3 id="交换机几千个-gpu-怎么开会">6.3 交换机：几千个 GPU 怎么开会</h3>
+<p>为什么 GPU 要联网：训练大模型要几千上万张卡共同持有同一个模型、分头计算，每轮都要互相交换梯度“对答案”——一万个学生做同一张卷子，每做一题全班互传纸条核对一次。传纸条靠专职“电话总机”＝交换机。</p>
+<svg viewBox="0 0 680 400" style="width:100%;height:auto" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans CJK SC,PingFang SC,sans-serif">
+<rect x="130" y="36" width="420" height="164" rx="12" fill="#EEEDFE" stroke="#AFA9EC"/> <text x="340" y="64" text-anchor="middle" font-size="16" font-weight="600" fill="#443B9E">800G 交换机 · 电话总机</text> <rect x="258" y="76" width="164" height="38" rx="6" fill="#FCF1DC" stroke="#E0B25C"/> <text x="340" y="100" text-anchor="middle" font-size="13" fill="#7A5A10">交换芯片（分拣中心）</text> <g fill="#E6F1FB" stroke="#85B7EB"> <rect x="168" y="128" width="100" height="30" rx="4"/> <rect x="300" y="128" width="100" height="30" rx="4"/> <rect x="432" y="128" width="100" height="30" rx="4"/> </g> <text x="218" y="147" text-anchor="middle" font-size="12.5" fill="#185FA5">光模块</text> <text x="350" y="147" text-anchor="middle" font-size="12.5" fill="#185FA5">光模块</text> <text x="482" y="147" text-anchor="middle" font-size="12.5" fill="#185FA5">光模块</text> <g stroke="#666" stroke-width="1.4"> <line x1="218" y1="172" x2="218" y2="252"/> <line x1="350" y1="172" x2="350" y2="252"/> <line x1="482" y1="172" x2="482" y2="252"/> </g> <g fill="#666"> <path d="M214 172 L218 162 L222 172 Z"/><path d="M214 252 L218 262 L222 252 Z"/> <path d="M346 172 L350 162 L354 172 Z"/><path d="M346 252 L350 262 L354 252 Z"/> <path d="M478 172 L482 162 L486 172 Z"/><path d="M478 252 L482 262 L486 252 Z"/> </g> <text x="270" y="216" text-anchor="middle" font-size="12.5" fill="#666">光纤</text> <text x="592" y="216" text-anchor="middle" font-size="12.5" fill="#666">双向狂传数据</text> <g fill="#EAF3DE" stroke="#97C459"> <rect x="158" y="266" width="120" height="70" rx="8"/> <rect x="290" y="266" width="120" height="70" rx="8"/> <rect x="422" y="266" width="120" height="70" rx="8"/> </g> <text x="218" y="294" text-anchor="middle" font-size="15" font-weight="600" fill="#2F5A0F">服务器 A</text> <text x="218" y="318" text-anchor="middle" font-size="12.5" fill="#3B6D11">8 × GPU</text> <text x="350" y="294" text-anchor="middle" font-size="15" font-weight="600" fill="#2F5A0F">服务器 B</text> <text x="350" y="318" text-anchor="middle" font-size="12.5" fill="#3B6D11">8 × GPU</text> <text x="482" y="294" text-anchor="middle" font-size="15" font-weight="600" fill="#2F5A0F">服务器 C</text> <text x="482" y="318" text-anchor="middle" font-size="12.5" fill="#3B6D11">8 × GPU</text> <text x="340" y="364" text-anchor="middle" font-size="13" fill="#555">整台总机的底板＝“交换机板”：几十层电路、上百条高速通道（沪电的活）</text> <text x="340" y="386" text-anchor="middle" font-size="13" fill="#555">训练大模型＝几千个 GPU 随时“对答案”，交换机负责把纸条秒速送达</text>
+</svg>
+<p>运作流程（A 发数据给 C）：<strong>打包</strong>（网卡切包裹写地址）→ <strong>变成光</strong>（光模块电转光，沿光纤飞）→ <strong>分拣</strong>（交换芯片——多为博通——查地址瞬间转发，每秒分拣几十亿个包裹）→ <strong>送达</strong>（再变回电进 C 的 GPU），全程几百纳秒。</p>
+<p><strong>800G</strong>＝单端口每秒 800Gb ≈ 每秒 100GB ≈ 一秒 20 部高清电影；一台交换机 64 个端口同时全速。集群要“总机套总机”（叶脊结构），所以交换机和光模块用量随 GPU 等比暴增。交换机板难在：800G 信号在铜线里跑像 F1 开进小区——线长一点弯一点就“糊”，需要几十层低损耗材料+绣花布线，全球做得好的一只手数得过来。</p>
+<h3 id="高多层pcb-是一摞板">6.4 高多层：PCB 是“一摞板”</h3>
+<p><strong>PCB 不是一块板，是千层饼</strong>：一层铜线、一层绝缘材料压起来。电线不能在同一平面交叉（短路），GPU 几千个引脚的线各走各路，只能立体分层——这条线 3 楼走、那条线 7 楼走，换楼层坐“电梯”（过孔）；还有整层铜皮的“电力楼层/接地楼层”。</p>
+<svg viewBox="0 0 680 330" style="width:100%;height:auto" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans CJK SC,PingFang SC,sans-serif">
+<text x="140" y="64" text-anchor="middle" font-size="16" font-weight="600" fill="#222">遥控器板 · 2 层</text> <g fill="#F0C060" stroke="#D9A441"> <rect x="40" y="122" width="200" height="11" rx="2"/> <rect x="40" y="158" width="200" height="11" rx="2"/> </g> <rect x="40" y="133" width="200" height="25" fill="#F1EFE8"/> <text x="140" y="150" text-anchor="middle" font-size="12" fill="#666">绝缘层</text> <text x="140" y="198" text-anchor="middle" font-size="12.5" fill="#555">上下各一条“公路”，够用了</text> <text x="540" y="64" text-anchor="middle" font-size="16" font-weight="600" fill="#222">AI 加速卡板 · 20~30 层</text> <g fill="#F0C060" stroke="#D9A441"> <rect x="420" y="80" width="240" height="6" rx="1"/><rect x="420" y="90" width="240" height="6" rx="1"/><rect x="420" y="100" width="240" height="6" rx="1"/><rect x="420" y="110" width="240" height="6" rx="1"/><rect x="420" y="120" width="240" height="6" rx="1"/><rect x="420" y="130" width="240" height="6" rx="1"/><rect x="420" y="140" width="240" height="6" rx="1"/><rect x="420" y="150" width="240" height="6" rx="1"/><rect x="420" y="160" width="240" height="6" rx="1"/><rect x="420" y="170" width="240" height="6" rx="1"/><rect x="420" y="180" width="240" height="6" rx="1"/><rect x="420" y="190" width="240" height="6" rx="1"/><rect x="420" y="200" width="240" height="6" rx="1"/><rect x="420" y="210" width="240" height="6" rx="1"/> </g> <rect x="486" y="74" width="9" height="148" rx="2" fill="#378ADD"/> <text x="330" y="98" text-anchor="middle" font-size="12.5" fill="#555">每层铜线＝一条横向公路</text> <line x1="400" y1="94" x2="417" y2="84" stroke="#999" stroke-width="1" stroke-dasharray="3 3"/> <text x="330" y="142" text-anchor="middle" font-size="12.5" fill="#555">层与层之间是绝缘“楼板”</text> <line x1="402" y1="138" x2="417" y2="128" stroke="#999" stroke-width="1" stroke-dasharray="3 3"/> <text x="490" y="248" text-anchor="middle" font-size="12.5" fill="#185FA5">过孔：打穿楼层的“电梯”</text> <line x1="490" y1="236" x2="490" y2="226" stroke="#999" stroke-width="1" stroke-dasharray="3 3"/> <text x="340" y="290" text-anchor="middle" font-size="13" fill="#555">高多层＝把几十条公路叠成立体高架桥；层数越多，对位和钻孔越难，越贵</text> <text x="340" y="312" text-anchor="middle" font-size="13" fill="#555">“绿色”只是表面阻焊漆的颜色，跟材料本身无关</text>
+</svg>
+<p>段位表：遥控器 1~2 层；家电 4~8 层；手机主板约 10 层（走“更细”路线）；<strong>16 层以上叫“高多层”</strong>；AI 加速卡/交换机 20~40 层。贵在良率：30 层图案要对齐到千分之几毫米、一次压合不能错、几十万个孔精准打穿指定楼层（打过头要“背钻”）。<strong>便宜板拼价格，高多层拼良率</strong>——良率就是胜宏、沪电的护城河。</p>
+<h3 id="覆铜板pcb-的面粉厂建滔积层板">6.5 覆铜板：PCB 的面粉厂（建滔积层板）</h3>
+<p>做千层饼先要饼皮——<strong>覆铜板（CCL）</strong>：铜箔＋玻璃纤维布＋树脂压成的标准板材，PCB 厂买回去蚀刻钻孔。<strong>建滔积层板（1888.HK）是全球产量最大的覆铜板厂</strong>（与 A 股生益科技并称双雄）。逻辑简单粗暴：纯涨价周期股——2026 年铜价高企+玻璃布紧缺，FR-4 年内提价 4 轮、6 月再官宣 +15%。<strong>面粉涨价，面包店抢购囤货，面粉厂躺赚</strong>；AI 需求一被质疑，涨价链条第一个断的也是它。</p>
+<hr />
+<h2 id="第七章-ic-载板芯片与主板之间的翻译官">第七章 IC 载板：芯片与主板之间的翻译官</h2>
+<p><strong>IC = Integrated Circuit（集成电路），即“芯片”的学名。</strong> 芯片触点间距约 0.05mm（细声细语），PCB 主板焊点间距约 1mm（大嗓门）——蚊子没法直接和大象握手。<strong>载板（substrate）就是中间的翻译官</strong>：微米级细线接住芯片，内部层层走线放大约 20 倍间距，下面用大锡球对接主板。</p>
+<svg viewBox="0 0 680 326" style="width:100%;height:auto" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans CJK SC,PingFang SC,sans-serif">
+<rect x="285" y="46" width="120" height="46" rx="6" fill="#FCF1DC" stroke="#E0B25C"/> <text x="345" y="75" text-anchor="middle" font-size="15" font-weight="600" fill="#7A5A10">裸芯片 Die</text> <text x="530" y="58" text-anchor="middle" font-size="12.5" fill="#555">芯片触点：间距约 0.05mm</text> <line x1="452" y1="62" x2="412" y2="76" stroke="#999" stroke-width="1" stroke-dasharray="3 3"/> <g fill="#D9A441"> <circle cx="295" cy="101" r="3"/><circle cx="315" cy="101" r="3"/><circle cx="335" cy="101" r="3"/><circle cx="355" cy="101" r="3"/><circle cx="375" cy="101" r="3"/><circle cx="395" cy="101" r="3"/> </g> <path d="M245 110 L445 110 L560 194 L130 194 Z" fill="#EAF3DE" stroke="#97C459"/> <g stroke="#97C459" stroke-width="1"> <line x1="295" y1="112" x2="170" y2="192"/> <line x1="315" y1="112" x2="240" y2="192"/> <line x1="335" y1="112" x2="310" y2="192"/> <line x1="355" y1="112" x2="380" y2="192"/> <line x1="375" y1="112" x2="450" y2="192"/> <line x1="395" y1="112" x2="520" y2="192"/> </g> <text x="76" y="140" text-anchor="middle" font-size="15" font-weight="600" fill="#222">IC 载板</text> <text x="76" y="160" text-anchor="middle" font-size="12.5" fill="#555">超精细 PCB</text> <line x1="116" y1="150" x2="192" y2="152" stroke="#999" stroke-width="1" stroke-dasharray="3 3"/> <g fill="#378ADD"> <circle cx="170" cy="204" r="6"/><circle cx="240" cy="204" r="6"/><circle cx="310" cy="204" r="6"/><circle cx="380" cy="204" r="6"/><circle cx="450" cy="204" r="6"/><circle cx="520" cy="204" r="6"/> </g> <text x="606" y="208" text-anchor="middle" font-size="12.5" fill="#555">锡球：间距约 1mm</text> <line x1="530" y1="204" x2="546" y2="206" stroke="#999" stroke-width="1" stroke-dasharray="3 3"/> <rect x="60" y="214" width="560" height="54" rx="6" fill="#F1EFE8" stroke="#B4B2A9"/> <text x="345" y="238" text-anchor="middle" font-size="15" font-weight="600" fill="#444">PCB 主板</text> <text x="345" y="258" text-anchor="middle" font-size="12.5" fill="#666">胜宏 / 沪电的世界</text> <text x="340" y="302" text-anchor="middle" font-size="13" fill="#555">你见过的每颗黑色芯片，底下那层绿色小板就是载板——买芯片＝顺便买了一块深南的板</text>
+</svg>
+<p><strong>深南电路的双重身份</strong>：“户口”在 PCB 行业（同样是铜线+层压+钻孔的手艺，但线宽从 50~100 微米精细到 10 微米级，洁净度接近芯片厂）；“工作单位”在半导体圈（载板卖给长电、日月光等封测厂，封装时裸片装上载板、罩塑封壳，从此成为芯片身体的一部分）。</p>
+<p>门派设定：<strong>BT 载板</strong>（手机/存储芯片用，深南主场，正吃存储涨价红利）vs <strong>ABF 载板</strong>（CPU/GPU 大芯片用，难度天花板，AI 最缺）。ABF 高地在日本揖斐电、台湾欣兴电子（注意不是“新兴”）、日本新光电气手里；深南是从 BT 向 ABF 爬坡的国产替代主力。</p>
+<p><strong>记忆卡：载板＝芯片的贴身底座；深南＝身体是 PCB 厂，客户在半导体圈。</strong></p>
+<hr />
+<h2 id="第八章-封测三巨头同一门手艺三种命运">第八章 封测三巨头：同一门手艺，三种命运</h2>
+<p>封测厂（OSAT）承接“后道”：切割晶圆、装载板、穿盔甲（塑封）、做体检（测试）。全球座次：<strong>日月光第一（约 26% 份额）、安靠第二、长电第三</strong>。</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>日月光 ASE</th>
+<th>安靠 Amkor</th>
+<th>长电科技</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>上市地</td>
+<td>台股3711/美股ASX</td>
+<td>美股AMKR</td>
+<td>A股600584</td>
+</tr>
+<tr class="even">
+<td>体量</td>
+<td>一家顶二三名之和</td>
+<td>约 63 亿美元营收</td>
+<td>约 50 亿美元（359.6 亿元）</td>
+</tr>
+<tr class="odd">
+<td>人设</td>
+<td>无可争议的霸主</td>
+<td>西方世界的“安全选项”</td>
+<td>国产替代主力军</td>
+</tr>
+<tr class="even">
+<td>看家本领</td>
+<td>规模+全服务+先进封装（吞并矽品后断层领先）</td>
+<td>车规芯片封测全球第一；产地最分散（韩日越葡+亚利桑那新厂）</td>
+<td>蛇吞象收购星科金朋获得全球布局；XDFOI 芯粒封装，砸近 500 亿扩产</td>
+</tr>
+<tr class="odd">
+<td>地缘角色</td>
+<td>技术产能中心，但集中在台湾</td>
+<td>“去中国化”供应链最大受益者</td>
+<td>“去美国化”供应链最大受益者</td>
+</tr>
+</tbody>
+</table>
+<p>要点：<strong>手艺同源，命运由客户和地址决定</strong>——日月光赚全世界的钱但押在台湾一个篮子；安靠赚西方阵营的钱、篮子撒最开（车规认证周期长、客户锁定即不换，又是利基逻辑）；长电赚“中国自主可控”的钱（还收购了闪迪上海封测厂切入存储封测）。</p>
+<p>两个补充：<strong>最肥的英伟达 CoWoS 在台积电自己手里</strong>——台积电是“造完大脑顺手把最高级盔甲也穿了”的人，不是 OSAT 的对标对手，而是把顶级蛋糕直接端走的人，三巨头吃它的溢出订单；国内还有<strong>通富微电</strong>（老四，AMD 的 CPU/GPU 大部分在它苏州/槟城厂封装——绑定超级客户的特种兵）和<strong>华天科技</strong>（老六，性价比路线）。</p>
+<hr />
+<h2 id="第九章-晶圆代工双雄中芯国际与华虹宏力">第九章 晶圆代工双雄：中芯国际与华虹宏力</h2>
+<p>晶圆厂是“前道”——把沙子变成芯片。共同商业模式＝<strong>代工</strong>：自己不设计芯片，只替别人造（兆易画好 NOR 图纸，交给中芯/华虹的产线）。国产 AI 芯片（寒武纪、昇腾、天数智芯）没法去台积电，中芯几乎是唯一选择——<strong>国产算力卖得越火，中芯产能越紧张</strong>。</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>中芯国际（0981.HK/688981）</th>
+<th>华虹宏力（1347.HK/688347）</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>人设</td>
+<td>冲击尖端的全能学霸</td>
+<td>特色工艺的老师傅</td>
+</tr>
+<tr class="even">
+<td>段位</td>
+<td>大陆第一、全球第三代工厂</td>
+<td>大陆第二、全球第六左右</td>
+</tr>
+<tr class="odd">
+<td>路线</td>
+<td>追摩尔定律：14nm 及以下先进制程</td>
+<td>不追摩尔定律：功率、电源管理 BCD、MCU、闪存</td>
+</tr>
+<tr class="even">
+<td>代表作</td>
+<td>无 EUV 硬做出 7nm 级（华为麒麟复活）</td>
+<td>电动车 IGBT、家电 MCU、银行卡芯片</td>
+</tr>
+<tr class="odd">
+<td>AI 叙事</td>
+<td>国产 GPU 唯一量产基地，“国产算力总闸门”</td>
+<td>沾边不多，吃成熟制程涨价+功率复苏</td>
+</tr>
+<tr class="even">
+<td>26Q1 侧写</td>
+<td>产能满载、扩产凶猛</td>
+<td>营收 6.6 亿美元 +22%，毛利率 13%</td>
+</tr>
+</tbody>
+</table>
+<p>中芯的估值买的不是当期利润（重资产+扩产压利润），而是“中国必须有自己的台积电”这张<strong>国家意志期权</strong>。华虹是<strong>晶圆代工界的利基玩家</strong>：功率芯片要耐 600 伏高压，5nm 反而做不了——老师傅活儿，客户认证后轻易不换；弱点是毛利率仅 13%（台积电约 55%+），赚辛苦钱且强周期。2026 年 5 月“华虹半导体”正式更名“华虹宏力”。</p>
+<p>“避风港失灵”的教训：<strong>产能紧张是基本面，股价短期是资金面</strong>——7 月战术性回撤砸的就是前期涨幅大的半导体股，与公司好坏关系不大。</p>
+<hr />
+<h2 id="第十章-光通信长飞与康宁">第十章 光通信：长飞与康宁</h2>
+<p>先分工：光通信这条路上，<strong>长飞负责“修路”（光纤光缆），中际旭创负责“路口的翻译器”（光模块）</strong>。</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>康宁 Corning（GLW.US）</th>
+<th>长飞光纤（6869.HK/601869）</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>身份</td>
+<td>170 余年美国材料科学巨头</td>
+<td>1988 年武汉起家的光纤专业户</td>
+</tr>
+<tr class="even">
+<td>业务纯度</td>
+<td>多元集团：光通信+大猩猩玻璃+面板玻璃+药用玻璃+汽车陶瓷</td>
+<td>几乎全押：预制棒→光纤→光缆→光互联组件</td>
+</tr>
+<tr class="odd">
+<td>体量</td>
+<td>总营收 150 亿美元级；光通信单季 18.5 亿美元（+36%）</td>
+<td>2025 全年营收 142.5 亿元（约 20 亿美元）</td>
+</tr>
+<tr class="even">
+<td>光纤份额</td>
+<td>约 19%，第一</td>
+<td>约 13%，第二（中天 11.3%、亨通 11.2%）</td>
+</tr>
+<tr class="odd">
+<td>主场</td>
+<td>北美云巨头（Meta 大单，数据中心将成最大客户）</td>
+<td>中国运营商+一带一路，正切入数据中心</td>
+</tr>
+<tr class="even">
+<td>技术旗帜</td>
+<td>1970 年发明低损耗光纤</td>
+<td>空芯光纤量产全球领先（损耗 0.04dB/km，已交付上万芯公里）</td>
+</tr>
+<tr class="odd">
+<td>股票性格</td>
+<td>稳健蓝筹，股价创 25 年新高</td>
+<td>纯弹性，港股一年十倍级</td>
+</tr>
+</tbody>
+</table>
+<p>要点：份额 19% vs 13% 接近，但<strong>康宁光通信一个部门年收入约等于长飞全公司三倍</strong>（北美高毛利整体方案 vs 中国运营商压价采购）——所以这轮涨价（国内裸纤同比 +418%）对长飞利润弹性更大，从地板涨起来弹跳最惊人。商业模式是“专卖店 vs 百货公司”：同一个 AI 光纤逻辑，康宁是低度数版，长飞是原浆版（下行时康宁有其他业务垫着）。<strong>空芯光纤</strong>是换赛道：光在空气芯里跑，速度更快损耗更低，微软等推动部署，长飞量产进度第一梯队——但目前故事成分大于报表成分。共享的大背景：AI 数据中心光纤用量是传统的 3~5 倍（Meta 一个数据中心要 800 万英里光纤），光棒扩产要 18~24 个月，2026 年全球缺口约 16%。</p>
+<p><strong>记忆卡：买康宁≈买“AI 需要光纤”的稳健打包版；买长飞≈同一判断的高杠杆纯度版＋一张空芯光纤彩票。</strong></p>
+<hr />
+<h2 id="第十一章-市场情绪课meta-传闻为什么砸出三条赛道">第十一章 市场情绪课：Meta 传闻为什么砸出三条赛道</h2>
+<p>事件：Meta 出售算力的消息 → 市场联想“AI 下游需求没那么强？算力租赁价格要崩？” → 首当其冲的是前期涨幅巨大的存储、光模块/光纤、PCB。港股三个代表：<strong>兆易创新</strong>（今年 1 月 H 股上市，三张牌：NOR 全球前三＋国产 32 位 MCU 老大“中国版意法半导体”＋利基 DRAM 委托长鑫代工；Fabless 无厂模式）、<strong>长飞光纤</strong>（周期涨价+空芯叙事双击标的）、<strong>建滔积层板</strong>（纯涨价周期股）。</p>
+<p>共性：<strong>没有一家直接卖东西给 Meta</strong>。它们都是隔两三层的上游“卖铲子的”，股价装的不是当下订单，而是“涨价能持续很多个季度”的预期。Meta 传闻动摇的正是预期根基——<strong>越是靠涨价预期撑估值、前期涨得越猛的，杀得越狠</strong>，与当季利润几乎无关。这与 JPM“7 月战术性回撤砸前期强势股”是同一件事的两种表述。</p>
+<hr />
+<h2 id="第十二章-全景地图把所有公司放回流水线">第十二章 全景地图：把所有公司放回流水线</h2>
+<svg viewBox="0 0 680 512" style="width:100%;height:auto" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans CJK SC,PingFang SC,sans-serif">
+<text x="340" y="30" text-anchor="middle" font-size="17" font-weight="600" fill="#222">AI 硬件产业全景 · 本次对话地图</text> <rect x="40" y="48" width="600" height="56" rx="8" fill="#F1EFE8" stroke="#B4B2A9"/> <text x="340" y="70" text-anchor="middle" font-size="14.5" font-weight="600" fill="#444">① 上游材料</text> <text x="340" y="92" text-anchor="middle" font-size="12.5" fill="#555">建滔积层板（覆铜板）· 长飞（光纤光缆/空芯光纤）· 铜箔、玻璃布</text> <line x1="340" y1="106" x2="340" y2="118" stroke="#666" stroke-width="1.4"/><path d="M336 118 L340 128 L344 118 Z" fill="#666"/> <rect x="40" y="130" width="600" height="56" rx="8" fill="#E6F1FB" stroke="#85B7EB"/> <text x="340" y="152" text-anchor="middle" font-size="14.5" font-weight="600" fill="#134A80">② 芯片设计（Fabless）与存储原厂</text> <text x="340" y="174" text-anchor="middle" font-size="12.5" fill="#185FA5">兆易创新（NOR/MCU/利基DRAM）· 国产GPU（天数智芯等）· 长鑫/长江存储、三星/海力士/美光</text> <line x1="340" y1="188" x2="340" y2="200" stroke="#666" stroke-width="1.4"/><path d="M336 200 L340 210 L344 200 Z" fill="#666"/> <rect x="40" y="212" width="600" height="56" rx="8" fill="#EAF3DE" stroke="#97C459"/> <text x="340" y="234" text-anchor="middle" font-size="14.5" font-weight="600" fill="#2F5A0F">③ 晶圆制造（前道：把沙子变芯片）</text> <text x="340" y="256" text-anchor="middle" font-size="12.5" fill="#3B6D11">代工：中芯国际 · 华虹宏力 · 台积电 ／ 设备：北方华创 · 中微公司</text> <line x1="340" y1="270" x2="340" y2="282" stroke="#666" stroke-width="1.4"/><path d="M336 282 L340 292 L344 282 Z" fill="#666"/> <rect x="40" y="294" width="600" height="56" rx="8" fill="#FCF1DC" stroke="#E0B25C"/> <text x="340" y="316" text-anchor="middle" font-size="14.5" font-weight="600" fill="#7A5A10">④ 封装测试（后道：穿盔甲）</text> <text x="340" y="338" text-anchor="middle" font-size="12.5" fill="#8A6414">载板：深南电路（BT→ABF）→ 封测：长电 · 日月光 · 安靠 · 通富 ／ CoWoS：台积电自留</text> <line x1="340" y1="352" x2="340" y2="364" stroke="#666" stroke-width="1.4"/><path d="M336 364 L340 374 L344 364 Z" fill="#666"/> <rect x="40" y="376" width="600" height="56" rx="8" fill="#EEEDFE" stroke="#AFA9EC"/> <text x="340" y="398" text-anchor="middle" font-size="14.5" font-weight="600" fill="#443B9E">⑤ 系统硬件（装板、联网、成品）</text> <text x="340" y="420" text-anchor="middle" font-size="12.5" fill="#534AB7">胜宏（加速卡板）· 沪电（交换机板）· 中际旭创（光模块）· 江波龙/佰维/德明利/金士顿（存储模组）</text> <line x1="340" y1="434" x2="340" y2="446" stroke="#666" stroke-width="1.4"/><path d="M336 446 L340 456 L344 446 Z" fill="#666"/> <rect x="40" y="458" width="600" height="42" rx="8" fill="#F1EFE8" stroke="#B4B2A9"/> <text x="340" y="484" text-anchor="middle" font-size="13.5" font-weight="600" fill="#444">⑥ 需求源头：AI 数据中心（英伟达 · Meta · 微软 · 国产算力）—— 海平面一晃，所有支流一起晃</text>
+</svg>
+<p>三条支流最后汇进同一个海：<strong>AI 资本开支</strong>。附带两条平行叙事：存储流水线（原厂→模组，赚涨价周期的钱）与 JPM 名单（沿英伟达产业链从里到外各挑中国工位，赚生态卡位的钱）。</p>
+<hr />
+<h2 id="附录一句话记忆卡合集">附录：一句话记忆卡合集</h2>
+<table>
+<thead>
+<tr class="header">
+<th>概念/公司</th>
+<th>一句话</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>江波龙</td>
+<td>存储面包店，周期放大器，A 股稀缺不等于技术垄断</td>
+</tr>
+<tr class="even">
+<td>利基</td>
+<td>壁龛：塞不下大佛，正好供小神</td>
+</tr>
+<tr class="odd">
+<td>NOR / NAND</td>
+<td>字典存程序，仓库存数据；开机第一口气只能靠字典</td>
+</tr>
+<tr class="even">
+<td>主控/固件</td>
+<td>颗粒是货架，主控是管理员，固件是手册</td>
+</tr>
+<tr class="odd">
+<td>三兄弟</td>
+<td>稳和全看江波龙，AI 端侧看佰维，周期弹性看德明利</td>
+</tr>
+<tr class="even">
+<td>胜宏</td>
+<td>英伟达中国供应链的高杠杆版</td>
+</tr>
+<tr class="odd">
+<td>沪电</td>
+<td>六边形战士，交换机板独门蛋糕</td>
+</tr>
+<tr class="even">
+<td>深南</td>
+<td>户口在 PCB，工作单位在半导体（载板）</td>
+</tr>
+<tr class="odd">
+<td>加速</td>
+<td>CPU 把并行苦力活外包给 GPU</td>
+</tr>
+<tr class="even">
+<td>交换机</td>
+<td>一万个学生互传纸条的电话总机</td>
+</tr>
+<tr class="odd">
+<td>高多层</td>
+<td>千层饼＋立交桥，拼的是良率</td>
+</tr>
+<tr class="even">
+<td>覆铜板/建滔</td>
+<td>PCB 的面粉厂，涨价周期躺赚</td>
+</tr>
+<tr class="odd">
+<td>IC 载板</td>
+<td>蚊子和大象之间的翻译官</td>
+</tr>
+<tr class="even">
+<td>长电/日月光/安靠</td>
+<td>手艺同源，命运由客户和地址决定</td>
+</tr>
+<tr class="odd">
+<td>台积电（封装）</td>
+<td>造完大脑顺手穿最贵的盔甲，端走顶级蛋糕</td>
+</tr>
+<tr class="even">
+<td>中芯</td>
+<td>国家意志期权，国产算力总闸门</td>
+</tr>
+<tr class="odd">
+<td>华虹</td>
+<td>代工界的利基老师傅，赚辛苦钱</td>
+</tr>
+<tr class="even">
+<td>长飞 vs 康宁</td>
+<td>原浆版 vs 低度数版的同一个 AI 光纤逻辑</td>
+</tr>
+<tr class="odd">
+<td>券商报告</td>
+<td>擅长“钱往哪流”，不擅长“值多少钱”；动量评分只追认不预测</td>
+</tr>
+<tr class="even">
+<td>市场情绪</td>
+<td>产能紧张是基本面，股价短期是资金面；靠预期撑估值的跌得最狠</td>
+</tr>
+</tbody>
+</table>
+<p><em>本笔记基于 2026 年 7 月 4 日前的对话与公开信息整理，仅供学习，不构成投资建议。</em></p>
+
+  </article>
+  <div class="disclaim">本文为个人学习笔记，由对话探讨整理而成，仅作知识分享，不构成任何投资建议。</div>
+</main>
+</body>
+</html>

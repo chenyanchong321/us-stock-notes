@@ -1,0 +1,1079 @@
+{
+ "site": "烟囱的美股学习笔记",
+ "sections": [
+  {
+   "name": "01 核心指数与行业 ETF",
+   "items": [
+    {
+     "name": "纳指100ETF（Invesco QQQ）",
+     "code": "QQQ",
+     "market": "美股 ETF",
+     "yahoo": "QQQ",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 4953.7,
+      "approx": false
+     },
+     "mcap_base_price": 712.6,
+     "ath_floor": 748.65
+    },
+    {
+     "name": "半导体ETF（iShares SOXX）",
+     "code": "SOXX",
+     "market": "美股 ETF",
+     "yahoo": "SOXX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 361.3,
+      "approx": false
+     },
+     "mcap_base_price": 566.32,
+     "ath_floor": 655.95
+    },
+    {
+     "name": "标普500ETF（SPDR SPY）",
+     "code": "SPY",
+     "market": "美股 ETF",
+     "yahoo": "SPY",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 7961.4,
+      "approx": false
+     },
+     "mcap_base_price": 744.78,
+     "ath_floor": 760.4
+    }
+   ]
+  },
+  {
+   "name": "02 美股七巨头",
+   "items": [
+    {
+     "name": "苹果",
+     "code": "AAPL",
+     "market": "美股",
+     "yahoo": "AAPL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 45300.0,
+      "approx": false
+     },
+     "mcap_base_price": 308.63,
+     "ath_floor": 317.4
+    },
+    {
+     "name": "微软",
+     "code": "MSFT",
+     "market": "美股",
+     "yahoo": "MSFT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 29000.0,
+      "approx": false
+     },
+     "mcap_base_price": 390.49,
+     "ath_floor": 555.45
+    },
+    {
+     "name": "谷歌（Alphabet）",
+     "code": "GOOGL",
+     "market": "美股",
+     "yahoo": "GOOGL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 43900.0,
+      "approx": false
+     },
+     "mcap_base_price": 359.91,
+     "ath_floor": 408.61
+    },
+    {
+     "name": "亚马逊",
+     "code": "AMZN",
+     "market": "美股",
+     "yahoo": "AMZN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 26100.0,
+      "approx": false
+     },
+     "mcap_base_price": 242.67,
+     "ath_floor": 278.56
+    },
+    {
+     "name": "Meta Platforms",
+     "code": "META",
+     "market": "美股",
+     "yahoo": "META",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 14800.0,
+      "approx": false
+     },
+     "mcap_base_price": 582.9,
+     "ath_floor": 796.25
+    },
+    {
+     "name": "英伟达",
+     "code": "NVDA",
+     "market": "美股",
+     "yahoo": "NVDA",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 47200.0,
+      "approx": false
+     },
+     "mcap_base_price": 194.83,
+     "ath_floor": 236.54
+    },
+    {
+     "name": "特斯拉",
+     "code": "TSLA",
+     "market": "美股",
+     "yahoo": "TSLA",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 14800.0,
+      "approx": false
+     },
+     "mcap_base_price": 393.45,
+     "ath_floor": 498.83
+    }
+   ]
+  },
+  {
+   "name": "03 存储、硬盘与存储 ETF",
+   "items": [
+    {
+     "name": "Roundhill Memory ETF",
+     "code": "DRAM",
+     "market": "美股 ETF",
+     "yahoo": "DRAM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 107.1,
+      "approx": false
+     },
+     "mcap_base_price": 60.63,
+     "ath_floor": 81.34
+    },
+    {
+     "name": "美光科技",
+     "code": "MU",
+     "market": "美股",
+     "yahoo": "MU",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 9420.3,
+      "approx": false
+     },
+     "mcap_base_price": 975.56,
+     "ath_floor": 1255.0
+    },
+    {
+     "name": "SK海力士",
+     "code": "000660.KS",
+     "market": "韩国",
+     "yahoo": "000660.KS",
+     "currency": "₩",
+     "mcap_base": {
+      "prefix": "₩",
+      "yi": 17213600.0,
+      "approx": false
+     },
+     "mcap_base_price": 2425000.0,
+     "ath_floor": 2987000.0
+    },
+    {
+     "name": "希捷科技",
+     "code": "STX",
+     "market": "美股",
+     "yahoo": "STX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1839.1,
+      "approx": false
+     },
+     "mcap_base_price": 820.16,
+     "ath_floor": 1145.0
+    },
+    {
+     "name": "闪迪",
+     "code": "SNDK",
+     "market": "美股",
+     "yahoo": "SNDK",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2584.1,
+      "approx": false
+     },
+     "mcap_base_price": 1745.0,
+     "ath_floor": 2354.39
+    }
+   ]
+  },
+  {
+   "name": "04 机器人、汽车零部件与无人系统",
+   "items": [
+    {
+     "name": "哈默纳科机电",
+     "code": "6324",
+     "market": "日本",
+     "yahoo": "6324.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 8368.6,
+      "approx": false
+     },
+     "mcap_base_price": 8840.0,
+     "ath_floor": 9510.0
+    },
+    {
+     "name": "拓普集团",
+     "code": "601689",
+     "market": "A股",
+     "yahoo": "601689.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1085.0,
+      "approx": false
+     },
+     "mcap_base_price": 62.43,
+     "ath_floor": 86.88
+    },
+    {
+     "name": "三花智控",
+     "code": "002050",
+     "market": "A股",
+     "yahoo": "002050.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2061.5,
+      "approx": false
+     },
+     "mcap_base_price": 48.99,
+     "ath_floor": 60.77
+    },
+    {
+     "name": "三花智控",
+     "code": "02050",
+     "market": "港股",
+     "yahoo": "2050.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 1275.9,
+      "approx": false
+     },
+     "mcap_base_price": 30.32,
+     "ath_floor": 46.48
+    },
+    {
+     "name": "鸣志电器",
+     "code": "603728",
+     "market": "A股",
+     "yahoo": "603728.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 284.9,
+      "approx": false
+     },
+     "mcap_base_price": 68.02,
+     "ath_floor": 92.5
+    },
+    {
+     "name": "恒立液压",
+     "code": "601100",
+     "market": "A股",
+     "yahoo": "601100.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1631.3,
+      "approx": false
+     },
+     "mcap_base_price": 121.66,
+     "ath_floor": 137.66
+    },
+    {
+     "name": "AeroVironment",
+     "code": "AVAV",
+     "market": "美股",
+     "yahoo": "AVAV",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 96.7,
+      "approx": false
+     },
+     "mcap_base_price": 190.89,
+     "ath_floor": 417.86
+    }
+   ]
+  },
+  {
+   "name": "05 贵金属、矿业与加密资产",
+   "items": [
+    {
+     "name": "黄金 / 美元",
+     "code": "XAUUSD",
+     "market": "外汇 / 商品",
+     "yahoo": "GC=F",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "约 $",
+      "yi": 289300.0,
+      "approx": true
+     },
+     "mcap_base_price": 4176.3,
+     "ath_floor": 5586.2
+    },
+    {
+     "name": "白银 / 美元",
+     "code": "XAGUSD",
+     "market": "外汇 / 商品",
+     "yahoo": "SI=F",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "约 $",
+      "yi": 35200.0,
+      "approx": true
+     },
+     "mcap_base_price": 62.71,
+     "ath_floor": 121.3
+    },
+    {
+     "name": "紫金矿业",
+     "code": "601899",
+     "market": "A股",
+     "yahoo": "601899.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 7397.5,
+      "approx": false
+     },
+     "mcap_base_price": 27.82,
+     "ath_floor": 44.94
+    },
+    {
+     "name": "紫金矿业",
+     "code": "02899",
+     "market": "港股",
+     "yahoo": "2899.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 8168.6,
+      "approx": false
+     },
+     "mcap_base_price": 30.72,
+     "ath_floor": 46.98
+    },
+    {
+     "name": "比特币",
+     "code": "BTC",
+     "market": "加密资产",
+     "yahoo": "BTC-USD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 12400.0,
+      "approx": false
+     },
+     "mcap_base_price": 61750.92,
+     "ath_floor": 126198.07
+    },
+    {
+     "name": "Circle",
+     "code": "CRCL",
+     "market": "美股",
+     "yahoo": "CRCL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 172.7,
+      "approx": false
+     },
+     "mcap_base_price": 64.62,
+     "ath_floor": 298.99
+    },
+    {
+     "name": "Strategy",
+     "code": "MSTR",
+     "market": "美股",
+     "yahoo": "MSTR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 360.6,
+      "approx": false
+     },
+     "mcap_base_price": 100.77,
+     "ath_floor": 543.0
+    },
+    {
+     "name": "Hyperliquid",
+     "code": "HYPE",
+     "market": "加密资产",
+     "yahoo": "HYPE32196-USD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 154.5,
+      "approx": false
+     },
+     "mcap_base_price": 69.42,
+     "ath_floor": 76.85
+    },
+    {
+     "name": "白银 ETF-iShares Silver Trust",
+     "code": "SLV",
+     "market": "美股",
+     "yahoo": "SLV",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 391.2,
+      "approx": false
+     },
+     "mcap_base_price": 55.02,
+     "ath_floor": 109.83
+    },
+    {
+     "name": "iShares Gold Trust",
+     "code": "IAU",
+     "market": "美股",
+     "yahoo": "IAU",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 722.7,
+      "approx": false
+     },
+     "mcap_base_price": 77.51,
+     "ath_floor": 104.4
+    },
+    {
+     "name": "VanEck Gold Miners ETF",
+     "code": "GDX",
+     "market": "美股",
+     "yahoo": "GDX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 285.3,
+      "approx": false
+     },
+     "mcap_base_price": 78.43,
+     "ath_floor": 117.18
+    },
+    {
+     "name": "黄金 ETF 华安",
+     "code": "518880",
+     "market": "A股 ETF",
+     "yahoo": "518880.SS",
+     "currency": "¥",
+     "mcap_base": null,
+     "mcap_base_price": 8.672,
+     "ath_floor": 11.977
+    },
+    {
+     "name": "伊格尔矿业（Agnico Eagle）",
+     "code": "AEM",
+     "market": "美股",
+     "yahoo": "AEM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 769.4,
+      "approx": false
+     },
+     "mcap_base_price": 153.86,
+     "ath_floor": 255.24
+    },
+    {
+     "name": "赫克拉矿业（Hecla Mining）",
+     "code": "HL",
+     "market": "美股",
+     "yahoo": "HL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 109.5,
+      "approx": false
+     },
+     "mcap_base_price": 16.33,
+     "ath_floor": 34.17
+    }
+   ]
+  },
+  {
+   "name": "06 AI 算力平台与数据中心基础设施",
+   "items": [
+    {
+     "name": "Nebius",
+     "code": "NBIS",
+     "market": "美股",
+     "yahoo": "NBIS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 547.5,
+      "approx": false
+     },
+     "mcap_base_price": 215.62,
+     "ath_floor": 299.86
+    },
+    {
+     "name": "CoreWeave",
+     "code": "CRWV",
+     "market": "美股",
+     "yahoo": "CRWV",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 446.0,
+      "approx": false
+     },
+     "mcap_base_price": 81.75,
+     "ath_floor": 187.0
+    },
+    {
+     "name": "Vertiv Holdings",
+     "code": "VRT",
+     "market": "美股",
+     "yahoo": "VRT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1154.3,
+      "approx": false
+     },
+     "mcap_base_price": 300.53,
+     "ath_floor": 379.93
+    }
+   ]
+  },
+  {
+   "name": "07 半导体龙头、晶圆代工与设备",
+   "items": [
+    {
+     "name": "英伟达",
+     "code": "NVDA",
+     "market": "美股",
+     "yahoo": "NVDA",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 47200.0,
+      "approx": false
+     },
+     "mcap_base_price": 194.83,
+     "ath_floor": 236.54
+    },
+    {
+     "name": "台积电",
+     "code": "TSM",
+     "market": "美股 ADR",
+     "yahoo": "TSM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 22599.999999999996,
+      "approx": false
+     },
+     "mcap_base_price": 434.16,
+     "ath_floor": 479.0
+    },
+    {
+     "name": "阿斯麦",
+     "code": "ASML",
+     "market": "美股 ADR",
+     "yahoo": "ASML",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 6819.2,
+      "approx": false
+     },
+     "mcap_base_price": 1769.32,
+     "ath_floor": 1999.96
+    },
+    {
+     "name": "应用材料",
+     "code": "AMAT",
+     "market": "美股",
+     "yahoo": "AMAT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 4787.9,
+      "approx": false
+     },
+     "mcap_base_price": 603.04,
+     "ath_floor": 739.67
+    },
+    {
+     "name": "泛林集团",
+     "code": "LRCX",
+     "market": "美股",
+     "yahoo": "LRCX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 4394.6,
+      "approx": false
+     },
+     "mcap_base_price": 351.41,
+     "ath_floor": 438.5
+    },
+    {
+     "name": "科磊",
+     "code": "KLAC",
+     "market": "美股",
+     "yahoo": "KLAC",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3076.9,
+      "approx": false
+     },
+     "mcap_base_price": 235.55,
+     "ath_floor": 307.37
+    },
+    {
+     "name": "博通",
+     "code": "AVGO",
+     "market": "美股",
+     "yahoo": "AVGO",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 17200.0,
+      "approx": false
+     },
+     "mcap_base_price": 360.45,
+     "ath_floor": 495.0
+    },
+    {
+     "name": "AMD",
+     "code": "AMD",
+     "market": "美股",
+     "yahoo": "AMD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 8443.6,
+      "approx": false
+     },
+     "mcap_base_price": 517.82,
+     "ath_floor": 584.73
+    },
+    {
+     "name": "英特尔",
+     "code": "INTC",
+     "market": "美股",
+     "yahoo": "INTC",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 6048.8,
+      "approx": false
+     },
+     "mcap_base_price": 120.35,
+     "ath_floor": 142.35
+    },
+    {
+     "name": "Arm Holdings",
+     "code": "ARM",
+     "market": "美股 ADR",
+     "yahoo": "ARM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3367.5,
+      "approx": false
+     },
+     "mcap_base_price": 315.28,
+     "ath_floor": 452.7
+    },
+    {
+     "name": "迈威尔科技",
+     "code": "MRVL",
+     "market": "美股",
+     "yahoo": "MRVL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2147.7,
+      "approx": false
+     },
+     "mcap_base_price": 245.29,
+     "ath_floor": 329.88
+    },
+    {
+     "name": "Credo Technology",
+     "code": "CRDO",
+     "market": "美股",
+     "yahoo": "CRDO",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 451.1,
+      "approx": false
+     },
+     "mcap_base_price": 241.91,
+     "ath_floor": 308.67
+    },
+    {
+     "name": "信越化学",
+     "code": "4063",
+     "market": "日股",
+     "yahoo": "4063.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 129400.0,
+      "approx": false
+     },
+     "mcap_base_price": 6958.0,
+     "ath_floor": 7930.0
+    },
+    {
+     "name": "信越化学",
+     "code": "SHECF",
+     "market": "美股 OTC",
+     "yahoo": "SHECF",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 775.6,
+      "approx": false
+     },
+     "mcap_base_price": 41.71,
+     "ath_floor": 50.77
+    }
+   ]
+  },
+  {
+   "name": "08 光通信、CPO、化合物半导体与通信设备",
+   "items": [
+    {
+     "name": "Lumentum",
+     "code": "LITE",
+     "market": "美股",
+     "yahoo": "LITE",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 566.6,
+      "approx": false
+     },
+     "mcap_base_price": 728.32,
+     "ath_floor": 1085.68
+    },
+    {
+     "name": "Coherent",
+     "code": "COHR",
+     "market": "美股",
+     "yahoo": "COHR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 652.2,
+      "approx": false
+     },
+     "mcap_base_price": 333.36,
+     "ath_floor": 440.0
+    },
+    {
+     "name": "Applied Optoelectronics",
+     "code": "AAOI",
+     "market": "美股",
+     "yahoo": "AAOI",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 97.0,
+      "approx": false
+     },
+     "mcap_base_price": 120.95,
+     "ath_floor": 233.67
+    },
+    {
+     "name": "奇景光电",
+     "code": "HIMX",
+     "market": "美股 ADR",
+     "yahoo": "HIMX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 22.9,
+      "approx": false
+     },
+     "mcap_base_price": 13.15,
+     "ath_floor": 25.09
+    },
+    {
+     "name": "Sivers Semiconductors",
+     "code": "SIVEF",
+     "market": "美股 OTC",
+     "yahoo": "SIVEF",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 15.6,
+      "approx": false
+     },
+     "mcap_base_price": 5.28,
+     "ath_floor": 11.18
+    },
+    {
+     "name": "AXT Inc",
+     "code": "AXTI",
+     "market": "美股",
+     "yahoo": "AXTI",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 37.1,
+      "approx": false
+     },
+     "mcap_base_price": 56.62,
+     "ath_floor": 143.16
+    },
+    {
+     "name": "纳微半导体",
+     "code": "NVTS",
+     "market": "美股",
+     "yahoo": "NVTS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 35.2,
+      "approx": false
+     },
+     "mcap_base_price": 14.46,
+     "ath_floor": 34.17
+    },
+    {
+     "name": "时代电气",
+     "code": "688187",
+     "market": "A股",
+     "yahoo": "688187.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 780.4,
+      "approx": false
+     },
+     "mcap_base_price": 57.49,
+     "ath_floor": 92.6
+    },
+    {
+     "name": "时代电气",
+     "code": "03898",
+     "market": "港股",
+     "yahoo": "3898.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 499.6,
+      "approx": false
+     },
+     "mcap_base_price": 37.54,
+     "ath_floor": 75.0
+    },
+    {
+     "name": "诺基亚",
+     "code": "NOK",
+     "market": "美股 ADR",
+     "yahoo": "NOK",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 673.8,
+      "approx": false
+     },
+     "mcap_base_price": 12.07,
+     "ath_floor": 62.5
+    }
+   ]
+  },
+  {
+   "name": "09 能源、电力与资源现金流",
+   "items": [
+    {
+     "name": "Constellation Energy",
+     "code": "CEG",
+     "market": "美股",
+     "yahoo": "CEG",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 854.3,
+      "approx": false
+     },
+     "mcap_base_price": 239.25,
+     "ath_floor": 412.7
+    },
+    {
+     "name": "Vistra Energy",
+     "code": "VST",
+     "market": "美股",
+     "yahoo": "VST",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 509.3,
+      "approx": false
+     },
+     "mcap_base_price": 151.05,
+     "ath_floor": 219.82
+    },
+    {
+     "name": "华能国际",
+     "code": "600011",
+     "market": "A股",
+     "yahoo": "600011.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 980.0,
+      "approx": false
+     },
+     "mcap_base_price": 7.1,
+     "ath_floor": 19.25
+    },
+    {
+     "name": "华能国际",
+     "code": "00902",
+     "market": "港股",
+     "yahoo": "0902.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 1242.4,
+      "approx": false
+     },
+     "mcap_base_price": 5.57,
+     "ath_floor": 11.9
+    },
+    {
+     "name": "Williams Companies",
+     "code": "WMB",
+     "market": "美股",
+     "yahoo": "WMB",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 894.5,
+      "approx": false
+     },
+     "mcap_base_price": 73.14,
+     "ath_floor": 80.08
+    },
+    {
+     "name": "中国海洋石油",
+     "code": "00883",
+     "market": "港股",
+     "yahoo": "0883.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 10100.0,
+      "approx": false
+     },
+     "mcap_base_price": 21.18,
+     "ath_floor": 30.98
+    },
+    {
+     "name": "兖煤澳大利亚",
+     "code": "03668",
+     "market": "港股",
+     "yahoo": "3668.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 396.2,
+      "approx": false
+     },
+     "mcap_base_price": 30.0,
+     "ath_floor": 49.4
+    }
+   ]
+  },
+  {
+   "name": "10 中国互联网、AI 应用与主题 ETF",
+   "items": [
+    {
+     "name": "腾讯控股",
+     "code": "00700",
+     "market": "港股",
+     "yahoo": "0700.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 38900.0,
+      "approx": false
+     },
+     "mcap_base_price": 431.2,
+     "ath_floor": 714.9
+    },
+    {
+     "name": "智谱",
+     "code": "02513",
+     "market": "港股",
+     "yahoo": "2513.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 8011.3,
+      "approx": false
+     },
+     "mcap_base_price": 1793.0,
+     "ath_floor": 2980.0
+    },
+    {
+     "name": "AI 人工智能 ETF",
+     "code": "512930",
+     "market": "A股 ETF",
+     "yahoo": "512930.SS",
+     "currency": "¥",
+     "mcap_base": null,
+     "mcap_base_price": 0.727,
+     "ath_floor": 2.953
+    },
+    {
+     "name": "人工智能 ETF",
+     "code": "159819",
+     "market": "A股 ETF",
+     "yahoo": "159819.SZ",
+     "currency": "¥",
+     "mcap_base": null,
+     "mcap_base_price": 2.04,
+     "ath_floor": 2.266
+    }
+   ]
+  }
+ ]
+}

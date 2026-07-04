@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>康宁 GlassBridge 科普 · 补充篇 · 烟囱的美股学习笔记</title>
+<style>
+:root{--bg:#0e1117;--panel:#161b24;--panel2:#1c2330;--border:#242c3b;--text:#e6e9ef;--text2:#8b95a7;--accent:#4a8cf0;--gold:#e8b64c}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:16px;line-height:1.85}
+#bar{position:sticky;top:0;background:rgba(22,27,36,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);z-index:10}
+#bar .in{max-width:760px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px}
+#bar a{color:var(--text2);text-decoration:none;font-size:14px}
+#bar a:hover{color:var(--accent)}
+#bar .site{margin-left:auto;font-size:13px;color:var(--text2)}
+#bar .site b{color:var(--accent);font-weight:600}
+main{max-width:760px;margin:0 auto;padding:28px 20px 90px}
+.head h1{font-size:26px;line-height:1.4;margin-bottom:12px}
+.meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.meta .date{font-size:13px;color:var(--text2)}
+.meta .tag{font-size:12px;color:var(--accent);background:rgba(74,140,240,.12);border-radius:4px;padding:2px 8px}
+.meta .pdf{font-size:13px;color:var(--text2);text-decoration:none;border:1px solid var(--border);border-radius:6px;padding:3px 10px}
+.meta .pdf:hover{color:var(--text);border-color:var(--text2)}
+.head{border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:26px}
+article h1{font-size:22px;margin:38px 0 14px;line-height:1.4}
+article h2{font-size:20px;margin:34px 0 12px;padding-left:10px;border-left:3px solid var(--accent);line-height:1.4}
+article h3{font-size:17px;margin:26px 0 10px}
+article p{margin:0 0 16px}
+article ul,article ol{margin:0 0 16px 1.4em}
+article li{margin-bottom:6px}
+article img,article svg{max-width:100%;height:auto;border-radius:10px;display:block;margin:18px auto;background:#fff}
+article blockquote{border-left:3px solid var(--gold);background:var(--panel);border-radius:0 8px 8px 0;padding:12px 16px;margin:0 0 16px;color:var(--text2)}
+article table{border-collapse:collapse;width:100%;margin:0 0 18px;font-size:14px;display:block;overflow-x:auto;white-space:nowrap}
+article th,article td{border:1px solid var(--border);padding:8px 12px;text-align:left}
+article th{background:var(--panel);color:var(--text2)}
+article tr:nth-child(even) td{background:rgba(28,35,48,.5)}
+article code{background:var(--panel2);border-radius:4px;padding:1px 6px;font-size:14px}
+article pre{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:14px;overflow-x:auto;margin:0 0 16px}
+article pre code{background:none;padding:0}
+article a{color:var(--accent)}
+article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+.disclaim{margin-top:50px;padding:14px 18px;background:var(--panel);border:1px solid var(--border);border-radius:10px;font-size:13px;color:var(--text2)}
+</style>
+</head>
+<body>
+<div id="bar"><div class="in">
+  <a href="../index.html?view=notes">← 返回笔记库</a>
+  <span class="site">📓 <b>烟囱</b>的美股学习笔记</span>
+</div></div>
+<main>
+  <div class="head">
+    <h1>康宁 GlassBridge 科普 · 补充篇</h1>
+    <div class="meta"><span class="date">2026-06-30</span><span class="tag">康宁</span><span class="tag">技术细节</span><a class="pdf" href="../notes/康宁GlassBridge科普_补充篇.pdf" download>⬇ 下载 PDF</a></div>
+  </div>
+  <article>
+<p><strong>康宁 Glass Bridge 科普 · 补充篇</strong></p>
+<p>FAU 对比 · 微透镜耦合原理 · 对准的真相</p>
+<p>2026 年 6 月</p>
+<p>本文是《康宁 Glass Bridge 与玻璃光电封装》的补充篇，独立成册、不替代正篇，专门解答三个追加问题：FAU 与 Glass Bridge 在传输实现上的区别、奇景微透镜“放大”耦合的原理、以及对准究竟发生在哪里。</p>
+<p><strong>导读</strong></p>
+<p>正篇讲清了康宁 Glass Bridge 的整体架构、离子交换工艺与护城河。这份补充篇沿着随后的追问继续深入，聚焦“传输/耦合的实现细节”这一层：传统 FAU 方案和康宁玻璃波导方案，在“光到底怎么从光纤走进芯片”上的根本差异；奇景光电微透镜方案里那个反直觉的“放大”到底在做什么；以及一个最容易卡住的问题——既然最后要把光聚焦到亚微米的小点上，对准的难度为什么反而被化解了。</p>
+<p>延续费曼式风格：先用比喻讲清直觉，再上术语与数据。涉及具体数据与产业判断处以脚注标注来源。文中关于“利空 / 机会”的表述均为技术与产业层面的事实陈述与情景分析，不构成任何投资建议。</p>
+<p><strong>目录</strong></p>
+<p><strong>第一部分　传统 FAU 与 Glass Bridge：传输路径的根本区别</strong> 3</p>
+<blockquote>
+<p>1.1　一句话本质：让光“跳过去” vs 给光“修座桥” 3</p>
+<p>1.2　三个维度看清区别 3</p>
+<p>1.3　产业含义：为什么说 FAU 厂商承压 5</p>
+</blockquote>
+<p><strong>第二部分　奇景微透镜的“放大”到底是什么</strong> 6</p>
+<blockquote>
+<p>2.1　困惑澄清：放大在中途，终点又收小 6</p>
+<p>2.2　为什么“放大”能换来对准容差 7</p>
+</blockquote>
+<p><strong>第三部分　对准到底发生在哪里</strong> 8</p>
+<blockquote>
+<p>3.1　“对准”要拆成两种，别混在一起 8</p>
+<p>3.2　平行光偏着打，仍聚到同一焦点 9</p>
+<p>3.3　两个人传球：吸管与漏斗的比喻 9</p>
+</blockquote>
+<p><strong>第四部分　奇景微透镜 vs 康宁 Glass Bridge：谁更好</strong> 10</p>
+<blockquote>
+<p>4.1　康宁理论占优的维度 10</p>
+<p>4.2　奇景现在更实在的维度 10</p>
+<p>4.3　投资含义（仅陈述，不构成建议） 11</p>
+</blockquote>
+<p><strong>附录　关键数据与来源</strong> 12</p>
+<p><strong>第一部分　传统 FAU 与 Glass Bridge：传输路径的根本区别</strong></p>
+<p><strong>1.1　一句话本质：让光“跳过去” vs 给光“修座桥”</strong></p>
+<p>传统 FAU 的世界里，光纤负责把光一路运到芯片“门口”，但最后那一下，光得从光纤端面跳进 PIC——中间没有缓冲。而康宁在光纤和 PIC 之间，预先架了一段玻璃波导当“桥”，光是顺着桥平稳走过去的，过桥的同时还顺手把光斑从粗变细。</p>
+<p><img src="media/corning-glassbridge-2/media/71294570cbc5d0a257bf8a885dfb0ab28f6ceba8.png" title="图 1　两种“光怎么传进芯片”的架构：FAU 外挂部件硬跳 vs Glass Bridge 把渐变波导修进基板" style="width:6.25in;height:4.6875in" alt="图 1　两种“光怎么传进芯片”的架构：FAU 外挂部件硬跳 vs Glass Bridge 把渐变波导修进基板" /></p>
+<p><em>图 1　两种“光怎么传进芯片”的架构：FAU 外挂部件硬跳 vs Glass Bridge 把渐变波导修进基板</em></p>
+<p><strong>1.2　三个维度看清区别</strong></p>
+<p>维度一，谁来跨越“尺寸鸿沟”。光纤光斑约 9 µm、PIC 波导约 0.5 µm，差近 20 倍。FAU 方案没有专门部件去解决这个鸿沟，只能靠极致紧对准硬怼（端面耦合），或额外加微透镜放大中转（奇景微透镜的活）。Glass Bridge 的整个卖点，就是那段 IOX 渐变波导本身就是一个模斑转换器，走光时顺便把 9 µm 平滑收到 0.5 µm<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>。</p>
+<p>维度二，是“外挂部件”还是“集成进基板”。FAU 是一个独立的小玻璃块，里面用 V 形槽排好光纤，做好后粘到 PIC 的边缘或表面——它是 bolt-on 的分立零件，接口是一个粘接结点。Glass Bridge 把那段波导直接做进玻璃封装基板（连接器本体）里，耦合变成了整块玻璃内部“波导到波导”的连续过渡。</p>
+<p>维度三，光以什么姿势进芯片。FAU 有两种耦合姿势：端面耦合（光横着进，损耗低，但对准要 &lt; 1 µm、难堆高密度）；光栅耦合（芯片表面刻光栅把光折射进去，光竖着进，对准容差松到 2~4 µm，但光栅散射导致损耗偏高）<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>。Glass Bridge 是横向、渐变式的连续过渡，因为有中间尺寸的渐变波导兜底，既不像端面耦合那样吹毛求疵，也不像光栅那样牺牲损耗。</p>
+<table>
+<tbody>
+<tr class="odd">
+<td><strong>维度</strong></td>
+<td><strong>传统 FAU</strong></td>
+<td><strong>康宁 Glass Bridge</strong></td>
+</tr>
+<tr class="even">
+<td><strong>跨越尺寸鸿沟</strong></td>
+<td>没有专门部件，靠紧对准或微透镜硬扛</td>
+<td>渐变玻璃波导自带模斑转换，专门解决</td>
+</tr>
+<tr class="odd">
+<td><strong>与封装的关系</strong></td>
+<td>独立外挂部件，粘到 PIC 上</td>
+<td>波导集成进玻璃基板本体</td>
+</tr>
+<tr class="even">
+<td><strong>进芯片姿势</strong></td>
+<td>端面耦合(&lt;1µm)或光栅耦合(2~4µm,损耗高)</td>
+<td>横向渐变、波导到波导连续过渡</td>
+</tr>
+<tr class="odd">
+<td><strong>密度与量产</strong></td>
+<td>光纤一多，装配复杂度爆炸</td>
+<td>光刻定义、晶圆级，易堆高密度</td>
+</tr>
+<tr class="even">
+<td><strong>一句话</strong></td>
+<td>光纤→门口→一脚跨进芯片</td>
+<td>光纤→过桥(顺便变细)→进芯片</td>
+</tr>
+</tbody>
+</table>
+<p><strong>1.3　产业含义：为什么说 FAU 厂商承压</strong></p>
+<p>康宁把卖点 framing 成解决 CPO 的“尺寸鸿沟（dimensional gap）”。大行（摩根士丹利、花旗）的判断是：Glass Bridge 对 FAU 厂商构成颠覆性压力，但两年内对光模块／光收发器厂商冲击有限，因为后者离这个具体接口较远<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>。所谓“iFAU 演进替代方案”，指的是 FAU 阵营也在往更智能、更高密度方向进化来应对，而康宁这种“波导直接集成进玻璃”被视为更彻底的路线。</p>
+<p><strong>第二部分　奇景微透镜的“放大”到底是什么</strong></p>
+<p><strong>2.1　困惑澄清：放大在中途，终点又收小</strong></p>
+<p>一个很自然的困惑是：PIC 的光斑那么小、光纤那么大，为什么说微透镜是“放大”？关键在于——放大不是发生在终点，也不是为了匹配 PIC 的尺寸，而是发生在中途、为了买对准容差。</p>
+<p>逻辑链是这样的：光纤的小光斑（约 9 µm）发散出来后，第一片微透镜把它准直放大成一束又宽又平行的大光束（可宽到几十甚至上百微米）；这束宽光束穿过空气间隙，到对面再用第二片透镜聚焦收小，落到 PIC 上约 0.5 µm 的接收点。所以整条路径的尺寸是“小 → 放大 → 又收小”，终点其实比起点还小。</p>
+<p><img src="media/corning-glassbridge-2/media/a4eda6a0aaf60c44369232d5301a3587988bd849.png" title="图 2　微透镜“扩束”耦合：小光斑放大成宽光束（买容差），再聚焦收小落到芯片" style="width:6.25in;height:4.375in" alt="图 2　微透镜“扩束”耦合：小光斑放大成宽光束（买容差），再聚焦收小落到芯片" /></p>
+<p><em>图 2　微透镜“扩束”耦合：小光斑放大成宽光束（买容差），再聚焦收小落到芯片</em></p>
+<p><strong>2.2　为什么“放大”能换来对准容差</strong></p>
+<p>因为对准的难易程度和光束粗细直接相关。一束很窄的光，横向偏移几微米就完全错过接收口、全漏；而一束很宽的光，偏移同样的距离，大部分光斑仍然盖在接收口上，只损失一点点。这就是行业里说的“扩束（expanded beam）”——故意把光放大成胖光束，是为了让“对得不那么准也不漏”。它把对准容差从端面耦合那种苛刻的“小于 1 µm”，放宽到“几微米也能用”。所以“放大”更准确的理解是：中途扩束以换取容差，终点再聚焦收小。</p>
+<p><strong>第三部分　对准到底发生在哪里</strong></p>
+<p><strong>3.1　“对准”要拆成两种，别混在一起</strong></p>
+<p>最容易卡住的问题是：既然最后还要把光聚焦收小到 0.5 µm 落进 PIC，那不还是要对那个小点吗？放大又有什么用？解开这个结的关键，是把“对准”拆成两种，它们发生在不同的地方、不同的时间。</p>
+<p>第一种，是光斑收小到 0.5 µm 落进 PIC 那一下的精密对准。它确实苛刻，但它是在工厂里一次性做好、然后用胶锁死的：透镜②和 PIC 被永久粘成一个整体，这个 0.5 µm 的聚焦点从此就“冻”在那儿不动了。</p>
+<p>第二种，是装配/插拔时把两半（光纤那一半、芯片那一半）对接起来。这一步要反复做、要快、要便宜，而它发生在中间那段又宽又平行的大光束上——不是发生在 0.5 µm 的收口上。</p>
+<p><img src="media/corning-glassbridge-2/media/8964c8cc47aac84a80b934af2447f2986930cc96.png" title="图 3　对准发生在哪里：0.5µm 精密对准锁在厂里，现场只对宽光束；偏一点焦点也不移出收口" style="width:6.25in;height:4.53125in" alt="图 3　对准发生在哪里：0.5µm 精密对准锁在厂里，现场只对宽光束；偏一点焦点也不移出收口" /></p>
+<p><em>图 3　对准发生在哪里：0.5µm 精密对准锁在厂里，现场只对宽光束；偏一点焦点也不移出收口</em></p>
+<p><strong>3.2　平行光偏着打，仍聚到同一焦点</strong></p>
+<p>这里有一个关键的光学事实：一束平行光，不管它偏着打在透镜②的哪个位置，只要还落在透镜口径内，都会被聚焦到同一个焦点上。所以你对接时偏了一点，宽光束只是偏着打在透镜②上，焦点不会移动，光照样落进 PIC 那个 0.5 µm 的点里，你只是边缘被削掉一丢丢、损失一点点功率而已。苛刻的对准被“前置”到了工厂并固化，留给现场的就只剩宽容的那一步。</p>
+<p><strong>3.3　两个人传球：吸管与漏斗的比喻</strong></p>
+<p>裸光纤（没有透镜）就像两个人各拿一根细吸管要对接，每次传球都得把两根吸管口对得严丝合缝，极难。扩束方案则是：每个人的吸管在工厂里就被永久接到了一个大漏斗上（吸管对漏斗这一步精密对准，在厂里做一次、粘死）。现场要做的，只是把两个大漏斗大致对上——漏斗口大，你偏一点它照样把球接住，再在内部顺回到吸管。</p>
+<p>这也顺便点明了和 Glass Bridge 的关系：康宁走的是同一个思路——把苛刻对准前置固化，只不过它固化得更彻底。奇景是用“漏斗（透镜）+ 空气间隙”把精密对准锁在厂里；康宁是用光刻在玻璃里直接定义好波导位置，在晶圆级就把对准一次性做死，连中间那段自由空间都省了，光全程在玻璃里导着走。两者都在回避“每颗芯片现场精密对准”，区别只是固化的方式（自由空间扩束 vs 玻璃导波）和彻底程度。</p>
+<p><strong>第四部分　奇景微透镜 vs 康宁 Glass Bridge：谁更好</strong></p>
+<p>两者是解决同一个问题（光纤↔︎PIC 的尺寸鸿沟与对准）的两种不同物理路线：奇景是“自由空间扩束”，康宁是“导波过渡”。分维度看，各有所长。</p>
+<p><strong>4.1　康宁理论占优的维度</strong></p>
+<p>光的损耗：微透镜方案中间有一段光在空气里飞，要穿过透镜表面（菲涅尔反射）、还常配光栅耦合（散射损耗）；Glass Bridge 全程光被关在玻璃波导里走，没有自由空间跳跃、没有光栅散射，损耗理论上更低（康宁报 &lt; 0.65 dB）<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>。密度与量产：微透镜阵列要一片片精确模压、对齐，光纤多了装配复杂度上升；Glass Bridge 的波导是光刻定义、晶圆级，天然适合堆高密度、规模化。集成度：微透镜是夹在中间的分立光学件，Glass Bridge 把光路做进了封装玻璃本体，少一层装配、少一处可能进灰尘/老化的界面。</p>
+<p><strong>4.2　奇景现在更实在的维度</strong></p>
+<p>成熟度与落地：奇景微透镜已经是台积电 COUPE 硅光方案的独家供应商，是已经量产验证、拿到设计中标的现成方案<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>；Glass Bridge 更新、量产证据更少。可插拔与鲁棒性：扩束方案的“大光束 + 空气间隙”对灰尘、表面污染、反复插拔反而更宽容，这是自由空间扩束连接器一直被用在可插拔场景的原因。生态依赖：Glass Bridge 要发挥优势，往往需要“玻璃基板 + TGV + 倒装”一整套生态配合；微透镜则能更灵活地嵌进现有光栅耦合架构。</p>
+<table>
+<tbody>
+<tr class="odd">
+<td><strong>维度</strong></td>
+<td><strong>奇景微透镜（自由空间扩束）</strong></td>
+<td><strong>康宁 Glass Bridge（玻璃导波）</strong></td>
+</tr>
+<tr class="even">
+<td><strong>传输损耗</strong></td>
+<td>有空气段、透镜反射、常配光栅散射</td>
+<td>全程导波，无自由空间/光栅，理论更低</td>
+</tr>
+<tr class="odd">
+<td><strong>密度/量产</strong></td>
+<td>逐片模压对齐，高密度较吃力</td>
+<td>光刻定义、晶圆级，易堆高密度</td>
+</tr>
+<tr class="even">
+<td><strong>集成度</strong></td>
+<td>夹在中间的分立光学件</td>
+<td>光路做进玻璃基板本体</td>
+</tr>
+<tr class="odd">
+<td><strong>成熟度</strong></td>
+<td>已量产、台积电 COUPE 独家设计中标</td>
+<td>较新，量产证据较少</td>
+</tr>
+<tr class="even">
+<td><strong>可插拔/鲁棒性</strong></td>
+<td>大光束 + 间隙，耐灰尘、耐反复插拔</td>
+<td>依赖玻璃封装生态配合</td>
+</tr>
+</tbody>
+</table>
+<p><strong>4.3　投资含义（仅陈述，不构成建议）</strong></p>
+<p>结论是：在损耗、密度、可量产性这些“理论性能”维度上，康宁的导波路线确实更先进；但在成熟度、已落地的设计中标、可插拔鲁棒性上，奇景现在更实在。两者短期会并存——不同 CPO 架构（光栅耦合的 COUPE vs 边缘耦合的玻璃方案）会各自选用更搭的耦合器。技术方向上康宁更具颠覆性，但产业替代要看量产成本、良率、客户迁移速度，需要时间兑现<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>。</p>
+<p><strong>附录　关键数据与来源</strong></p>
+<table>
+<tbody>
+<tr class="odd">
+<td><strong>数据 / 观点</strong></td>
+<td><strong>来源</strong></td>
+</tr>
+<tr class="even">
+<td><strong>端面耦合 &lt;1µm；光栅耦合容差 2~4µm 但散射损耗高</strong></td>
+<td>ManufacturingTomorrow；Vik's Newsletter《Grating Coupled COUPE for CPO》</td>
+</tr>
+<tr class="odd">
+<td><strong>IOX 波导对接 SMF-28 损耗 &lt;0.65 dB；传输 &lt;0.1 dB/cm</strong></td>
+<td>IMAPS《Glass Substrate for Co-Packaged Optics》；康宁 GlassBridge 产品页</td>
+</tr>
+<tr class="even">
+<td><strong>大行：FAU 厂商承压，光模块两年内相对安全</strong></td>
+<td>BigGo Finance（摩根士丹利/花旗）；AllWeatherFinance</td>
+</tr>
+<tr class="odd">
+<td><strong>奇景是台积电 COUPE 微透镜独家供应商</strong></td>
+<td>TechNews，郭明錤（2025-01-23）</td>
+</tr>
+</tbody>
+</table>
+<p><em>说明：本文为科普整理，不构成任何投资建议。</em></p>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>康宁 IOX 玻璃波导：对接 SMF-28 耦合损耗 &lt; 0.65 dB、1310nm 传输损耗 &lt; 0.1 dB/cm。来源：IMAPS《Glass Substrate for Co-Packaged Optics》、康宁 GlassBridge 产品页。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>端面耦合需对准 &lt; 1 µm；光栅耦合对准容差约 2~4 µm，但有光栅散射损耗。来源：行业资料 ManufacturingTomorrow、Vik's Newsletter《Grating Coupled COUPE for CPO》。<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p>摩根士丹利、花旗观点：GlassBridge 两年内不太可能颠覆光收发器格局；FAU 厂商面临颠覆性压力，AI 光模块公司短期相对安全。来源：BigGo Finance、AllWeatherFinance。<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4" role="doc-endnote"><p>康宁 IOX 玻璃波导：对接 SMF-28 耦合损耗 &lt; 0.65 dB、1310nm 传输损耗 &lt; 0.1 dB/cm。来源：IMAPS《Glass Substrate for Co-Packaged Optics》、康宁 GlassBridge 产品页。<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5" role="doc-endnote"><p>奇景光电是台积电 COUPE 硅光方案微透镜阵列的独家供应商。来源：TechNews，郭明錤（2025-01-23）。<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6" role="doc-endnote"><p>摩根士丹利、花旗观点：GlassBridge 两年内不太可能颠覆光收发器格局；FAU 厂商面临颠覆性压力，AI 光模块公司短期相对安全。来源：BigGo Finance、AllWeatherFinance。<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+  </article>
+  <div class="disclaim">本文为个人学习笔记，由对话探讨整理而成，仅作知识分享，不构成任何投资建议。</div>
+</main>
+</body>
+</html>
