@@ -28,4 +28,5 @@ jobs:
           git config user.email "actions@github.com"
           git add data/quotes.json
           git diff --cached --quiet || git commit -m "chore: 更新行情数据 $(date -u +%F)"
+          git pull --rebase origin main
           git push
