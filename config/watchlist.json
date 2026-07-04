@@ -1775,6 +1775,165 @@
      "ath_floor": 0
     }
    ]
+  },
+  {
+   "name": "12 800VDC 电力电子与功率半导体",
+   "items": [
+    {
+     "name": "纳微半导体",
+     "code": "NVTS",
+     "market": "美股",
+     "yahoo": "NVTS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 35.2,
+      "approx": false
+     },
+     "mcap_base_price": 14.46,
+     "ath_floor": 34.17
+    },
+    {
+     "name": "英诺赛科",
+     "code": "02577",
+     "market": "港股",
+     "yahoo": "2577.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 534,
+      "approx": false
+     },
+     "mcap_base_price": 60.65,
+     "ath_floor": 0
+    },
+    {
+     "name": "英飞凌 ADR",
+     "code": "IFNNY",
+     "market": "美股 OTC",
+     "yahoo": "IFNNY",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1120,
+      "approx": false
+     },
+     "mcap_base_price": 86.175,
+     "ath_floor": 0
+    },
+    {
+     "name": "安森美半导体",
+     "code": "ON",
+     "market": "美股",
+     "yahoo": "ON",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 383,
+      "approx": false
+     },
+     "mcap_base_price": 91.22,
+     "ath_floor": 0
+    },
+    {
+     "name": "德州仪器",
+     "code": "TXN",
+     "market": "美股",
+     "yahoo": "TXN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2667,
+      "approx": false
+     },
+     "mcap_base_price": 293.08,
+     "ath_floor": 0
+    },
+    {
+     "name": "Monolithic Power",
+     "code": "MPWR",
+     "market": "美股",
+     "yahoo": "MPWR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 631,
+      "approx": false
+     },
+     "mcap_base_price": 1288.16,
+     "ath_floor": 0
+    },
+    {
+     "name": "时代电气",
+     "code": "688187",
+     "market": "A股",
+     "yahoo": "688187.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 780.4,
+      "approx": false
+     },
+     "mcap_base_price": 57.49,
+     "ath_floor": 92.6
+    },
+    {
+     "name": "时代电气",
+     "code": "03898",
+     "market": "港股",
+     "yahoo": "3898.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 499.6,
+      "approx": false
+     },
+     "mcap_base_price": 37.54,
+     "ath_floor": 75.0
+    },
+    {
+     "name": "伊顿",
+     "code": "ETN",
+     "market": "美股",
+     "yahoo": "ETN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1562,
+      "approx": false
+     },
+     "mcap_base_price": 398.52,
+     "ath_floor": 0
+    },
+    {
+     "name": "Vertiv Holdings",
+     "code": "VRT",
+     "market": "美股",
+     "yahoo": "VRT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1154.3,
+      "approx": false
+     },
+     "mcap_base_price": 300.53,
+     "ath_floor": 379.93
+    },
+    {
+     "name": "伟创力",
+     "code": "FLEX",
+     "market": "美股",
+     "yahoo": "FLEX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 513,
+      "approx": false
+     },
+     "mcap_base_price": 136.855,
+     "ath_floor": 0
+    }
+   ]
   }
  ]
 }
