@@ -197,18 +197,56 @@
      "ath_floor": 2987000.0
     },
     {
-     "name": "希捷科技",
-     "code": "STX",
-     "market": "美股",
-     "yahoo": "STX",
+     "name": "南方两倍做多海力士",
+     "code": "07709",
+     "market": "港股 ETF",
+     "yahoo": "7709.HK",
+     "currency": "HK$",
+     "mcap_base": null,
+     "mcap_base_price": 116.8,
+     "ath_floor": 0
+    },
+    {
+     "name": "三星电子",
+     "code": "005930",
+     "market": "韩国",
+     "yahoo": "005930.KS",
+     "currency": "₩",
+     "mcap_base": {
+      "prefix": "₩",
+      "yi": 20027400,
+      "approx": false
+     },
+     "mcap_base_price": 335000,
+     "ath_floor": 0
+    },
+    {
+     "name": "铠侠",
+     "code": "285A",
+     "market": "日股",
+     "yahoo": "285A.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 416400,
+      "approx": false
+     },
+     "mcap_base_price": 83300,
+     "ath_floor": 0
+    },
+    {
+     "name": "铠侠 ADR",
+     "code": "KXIAY",
+     "market": "美股 OTC",
+     "yahoo": "KXIAY",
      "currency": "$",
      "mcap_base": {
       "prefix": "$",
-      "yi": 1839.1,
+      "yi": 3118,
       "approx": false
      },
-     "mcap_base_price": 820.16,
-     "ath_floor": 1145.0
+     "mcap_base_price": 45.07,
+     "ath_floor": 0
     },
     {
      "name": "闪迪",
@@ -223,6 +261,62 @@
      },
      "mcap_base_price": 1745.0,
      "ath_floor": 2354.39
+    },
+    {
+     "name": "希捷科技",
+     "code": "STX",
+     "market": "美股",
+     "yahoo": "STX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1839.1,
+      "approx": false
+     },
+     "mcap_base_price": 820.16,
+     "ath_floor": 1145.0
+    },
+    {
+     "name": "西部数据",
+     "code": "WDC",
+     "market": "美股",
+     "yahoo": "WDC",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1870,
+      "approx": false
+     },
+     "mcap_base_price": 539,
+     "ath_floor": 0
+    },
+    {
+     "name": "兆易创新",
+     "code": "03986",
+     "market": "港股",
+     "yahoo": "3986.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 6120,
+      "approx": true
+     },
+     "mcap_base_price": 917.5,
+     "ath_floor": 0
+    },
+    {
+     "name": "澜起科技",
+     "code": "06809",
+     "market": "港股",
+     "yahoo": "6809.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 4385,
+      "approx": true
+     },
+     "mcap_base_price": 382.6,
+     "ath_floor": 0
     }
    ]
   },
