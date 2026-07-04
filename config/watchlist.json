@@ -621,8 +621,64 @@
    ]
   },
   {
-   "name": "06 AI 算力平台与数据中心基础设施",
+   "name": "06 云与 AI 算力数据中心",
    "items": [
+    {
+     "name": "微软",
+     "code": "MSFT",
+     "market": "美股",
+     "yahoo": "MSFT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 29000.0,
+      "approx": false
+     },
+     "mcap_base_price": 390.49,
+     "ath_floor": 555.45
+    },
+    {
+     "name": "亚马逊",
+     "code": "AMZN",
+     "market": "美股",
+     "yahoo": "AMZN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 26100.0,
+      "approx": false
+     },
+     "mcap_base_price": 242.67,
+     "ath_floor": 278.56
+    },
+    {
+     "name": "谷歌（Alphabet）",
+     "code": "GOOGL",
+     "market": "美股",
+     "yahoo": "GOOGL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 43900.0,
+      "approx": false
+     },
+     "mcap_base_price": 359.91,
+     "ath_floor": 408.61
+    },
+    {
+     "name": "甲骨文",
+     "code": "ORCL",
+     "market": "美股",
+     "yahoo": "ORCL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3928,
+      "approx": false
+     },
+     "mcap_base_price": 140.27,
+     "ath_floor": 0
+    },
     {
      "name": "Nebius",
      "code": "NBIS",
@@ -650,6 +706,118 @@
      },
      "mcap_base_price": 81.75,
      "ath_floor": 187.0
+    },
+    {
+     "name": "IREN Ltd",
+     "code": "IREN",
+     "market": "美股",
+     "yahoo": "IREN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 186,
+      "approx": false
+     },
+     "mcap_base_price": 38.82,
+     "ath_floor": 0
+    },
+    {
+     "name": "Cipher Mining",
+     "code": "CIFR",
+     "market": "美股",
+     "yahoo": "CIFR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 76,
+      "approx": false
+     },
+     "mcap_base_price": 20.04,
+     "ath_floor": 0
+    },
+    {
+     "name": "Applied Digital",
+     "code": "APLD",
+     "market": "美股",
+     "yahoo": "APLD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 99,
+      "approx": false
+     },
+     "mcap_base_price": 33.06,
+     "ath_floor": 0
+    },
+    {
+     "name": "戴尔科技",
+     "code": "DELL",
+     "market": "美股",
+     "yahoo": "DELL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2760,
+      "approx": false
+     },
+     "mcap_base_price": 394.32,
+     "ath_floor": 0
+    },
+    {
+     "name": "慧与科技（HPE）",
+     "code": "HPE",
+     "market": "美股",
+     "yahoo": "HPE",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 544,
+      "approx": false
+     },
+     "mcap_base_price": 41.23,
+     "ath_floor": 0
+    },
+    {
+     "name": "联想集团",
+     "code": "00992",
+     "market": "港股",
+     "yahoo": "0992.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 2641,
+      "approx": false
+     },
+     "mcap_base_price": 21.3,
+     "ath_floor": 0
+    },
+    {
+     "name": "易昆尼克斯（Equinix）",
+     "code": "EQIX",
+     "market": "美股",
+     "yahoo": "EQIX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 972,
+      "approx": false
+     },
+     "mcap_base_price": 1002.02,
+     "ath_floor": 0
+    },
+    {
+     "name": "万国数据",
+     "code": "GDS",
+     "market": "美股",
+     "yahoo": "GDS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 57,
+      "approx": false
+     },
+     "mcap_base_price": 29.82,
+     "ath_floor": 0
     },
     {
      "name": "Vertiv Holdings",
