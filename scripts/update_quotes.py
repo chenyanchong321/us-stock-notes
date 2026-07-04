@@ -72,7 +72,7 @@ def main():
     ts_now = int(now.timestamp())
     ts_1m = int((now - datetime.timedelta(days=30)).timestamp())
     ts_1y = int((now - datetime.timedelta(days=365)).timestamp())
-    ts_ytd = int(datetime.datetime(now.year - 1, 12, 31, tzinfo=datetime.timezone.utc).timestamp())
+    ts_ytd = int(datetime.datetime(now.year, 1, 1, tzinfo=datetime.timezone.utc).timestamp())  # 基准=上年最后一个收盘
 
     cache = {}
     sections_out = []
