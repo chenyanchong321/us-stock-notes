@@ -12,7 +12,7 @@ import json, time, datetime, urllib.request, urllib.parse, pathlib, sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"}
-CHART = "https://query1.finance.yahoo.com/v8/finance/chart/{sym}?range=max&interval=1d"
+CHART = "https://query1.finance.yahoo.com/v8/finance/chart/{sym}?range=max&interval=1d&events=div%2Csplit"
 
 def fetch_history(sym, retries=3):
     url = CHART.format(sym=urllib.parse.quote(sym, safe=""))
@@ -23,7 +23,11 @@ def fetch_history(sym, retries=3):
                 j = json.load(r)
             res = j["chart"]["result"][0]
             ts = res["timestamp"]
-            closes = res["indicators"]["quote"][0]["close"]
+            # 优先用复权收盘价（与主流行情软件的前复权口径一致），无则退回原始收盘
+            try:
+                closes = res["indicators"]["adjclose"][0]["adjclose"]
+            except (KeyError, IndexError):
+                closes = res["indicators"]["quote"][0]["close"]
             pairs = [(t, c) for t, c in zip(ts, closes) if c is not None]
             if not pairs:
                 raise ValueError("empty series")
