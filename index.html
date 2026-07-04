@@ -103,6 +103,12 @@ td.name .mkt{margin-left:6px;background:var(--panel2);border-radius:4px;padding:
 /* 页脚声明 */
 #footer{margin-left:var(--sidebar-w);padding:0 28px 40px;font-size:12px;color:var(--text2)}
 
+/* 侧边栏拖拽手柄 */
+#resizer{position:fixed;top:var(--header-h);bottom:0;left:calc(var(--sidebar-w) - 3px);width:6px;cursor:col-resize;z-index:150;background:transparent;transition:background .15s}
+#resizer:hover,#resizer.on{background:var(--accent)}
+body.resizing{user-select:none;cursor:col-resize}
+@media(max-width:860px){#resizer{display:none}}
+
 .hidden{display:none!important}
 #no-result{color:var(--text2);text-align:center;padding:40px;display:none}
 #loading{color:var(--text2);text-align:center;padding:60px}
@@ -125,6 +131,7 @@ td.name .mkt{margin-left:6px;background:var(--panel2);border-radius:4px;padding:
 </header>
 
 <div id="loading">数据加载中…</div>
+<div id="resizer" title="拖拽调整目录宽度"></div>
 
 <!-- ================= 视图一：数据面板 ================= -->
 <div id="view-dash" class="hidden">
@@ -293,6 +300,30 @@ function renderNotes(cfg){
   });
   document.getElementById("note-total").textContent = noteCount;
 }
+
+/* ===== 侧边栏宽度拖拽 ===== */
+(function(){
+  const rz = document.getElementById("resizer");
+  const root = document.documentElement;
+  const saved = localStorage.getItem("sidebarW");
+  if(saved) root.style.setProperty("--sidebar-w", saved + "px");
+  let dragging = false;
+  rz.addEventListener("pointerdown", e=>{
+    dragging = true; rz.classList.add("on");
+    document.body.classList.add("resizing");
+    rz.setPointerCapture(e.pointerId);
+  });
+  rz.addEventListener("pointermove", e=>{
+    if(!dragging) return;
+    const w = Math.min(480, Math.max(160, e.clientX));
+    root.style.setProperty("--sidebar-w", w + "px");
+  });
+  rz.addEventListener("pointerup", e=>{
+    dragging = false; rz.classList.remove("on");
+    document.body.classList.remove("resizing");
+    localStorage.setItem("sidebarW", parseInt(getComputedStyle(root).getPropertyValue("--sidebar-w")));
+  });
+})();
 
 /* ===== 启动 ===== */
 (async ()=>{
