@@ -4658,7 +4658,360 @@
    ]
   },
   {
-   "name": "18 贵金属与有色金属",
+   "name": "18 价值老登（非 AI · 七大板块）",
+   "items": [
+    {
+     "name": "三一重工",
+     "code": "600031",
+     "market": "A股",
+     "yahoo": "600031.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 84.8,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "恒立液压",
+     "code": "601100",
+     "market": "A股",
+     "yahoo": "601100.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1631.3,
+      "approx": false
+     },
+     "mcap_base_price": 121.66,
+     "ath_floor": 137.66
+    },
+    {
+     "name": "港股通创新药ETF",
+     "code": "159570",
+     "market": "A股 ETF",
+     "yahoo": "159570.SZ",
+     "currency": "¥",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "洛阳钼业",
+     "code": "603993",
+     "market": "A股",
+     "yahoo": "603993.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 216.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "紫金矿业",
+     "code": "601899",
+     "market": "A股",
+     "yahoo": "601899.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 7397.5,
+      "approx": false
+     },
+     "mcap_base_price": 27.82,
+     "ath_floor": 44.94
+    },
+    {
+     "name": "新华保险",
+     "code": "601336",
+     "market": "A股",
+     "yahoo": "601336.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 31.2,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "中国平安",
+     "code": "601318",
+     "market": "A股",
+     "yahoo": "601318.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 182.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "中国财险",
+     "code": "02328",
+     "market": "港股",
+     "yahoo": "2328.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 222.4,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "大唐发电",
+     "code": "601991",
+     "market": "A股",
+     "yahoo": "601991.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1419,
+      "approx": true
+     },
+     "mcap_base_price": 7.67,
+     "ath_floor": 0
+    },
+    {
+     "name": "华能国际",
+     "code": "00902",
+     "market": "港股",
+     "yahoo": "0902.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 1242.4,
+      "approx": false
+     },
+     "mcap_base_price": 5.57,
+     "ath_floor": 11.9
+    },
+    {
+     "name": "长江电力",
+     "code": "600900",
+     "market": "A股",
+     "yahoo": "600900.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 244.7,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "思源电气",
+     "code": "002028",
+     "market": "A股",
+     "yahoo": "002028.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 7.8,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "许继电气",
+     "code": "000400",
+     "market": "A股",
+     "yahoo": "000400.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 10.1,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "国电南瑞",
+     "code": "600406",
+     "market": "A股",
+     "yahoo": "600406.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 80.3,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "特变电工",
+     "code": "600089",
+     "market": "A股",
+     "yahoo": "600089.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1100,
+      "approx": true
+     },
+     "mcap_base_price": 22.01,
+     "ath_floor": 0
+    },
+    {
+     "name": "宁德时代",
+     "code": "300750",
+     "market": "A股",
+     "yahoo": "300750.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 44.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "比亚迪",
+     "code": "002594",
+     "market": "A股",
+     "yahoo": "002594.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 30.4,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "阳光电源",
+     "code": "300274",
+     "market": "A股",
+     "yahoo": "300274.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 20.7,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "德业股份",
+     "code": "605117",
+     "market": "A股",
+     "yahoo": "605117.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 6.5,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "赣锋锂业",
+     "code": "002460",
+     "market": "A股",
+     "yahoo": "002460.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1259,
+      "approx": true
+     },
+     "mcap_base_price": 62.97,
+     "ath_floor": 0
+    },
+    {
+     "name": "天齐锂业",
+     "code": "002466",
+     "market": "A股",
+     "yahoo": "002466.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 16.4,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    }
+   ],
+   "groups": [
+    {
+     "name": "工程机械（量＋涨价）",
+     "codes": [
+      "600031",
+      "601100"
+     ]
+    },
+    {
+     "name": "创新药（产业重估）",
+     "codes": [
+      "159570"
+     ]
+    },
+    {
+     "name": "有色·铜（价格杠杆）",
+     "codes": [
+      "603993",
+      "601899"
+     ]
+    },
+    {
+     "name": "保险（权益杠杆）",
+     "codes": [
+      "601336",
+      "601318",
+      "02328"
+     ]
+    },
+    {
+     "name": "电力（煤电剪刀差）",
+     "codes": [
+      "601991",
+      "00902",
+      "600900"
+     ]
+    },
+    {
+     "name": "电网设备（出海＞柔直＞网内）",
+     "codes": [
+      "002028",
+      "000400",
+      "600406",
+      "600089"
+     ]
+    },
+    {
+     "name": "储能与锂（量／价分开）",
+     "codes": [
+      "300750",
+      "002594",
+      "300274",
+      "605117",
+      "002460",
+      "002466"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "19 贵金属与有色金属",
    "items": [
     {
      "name": "黄金 / 美元",
@@ -4876,7 +5229,7 @@
    ]
   },
   {
-   "name": "19 加密资产",
+   "name": "20 加密资产",
    "items": [
     {
      "name": "比特币",
