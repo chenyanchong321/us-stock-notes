@@ -16,6 +16,18 @@
      "page": "articles/physical-walls.html"
     },
     {
+     "t": "AI 投资的物理墙 · 补充篇：带隙、激光器竞对与 SiC 三层楼",
+     "date": "2026-07-06",
+     "tags": [
+      "物理墙",
+      "带隙",
+      "激光器",
+      "SiC"
+     ],
+     "d": "主篇读后追问实录：带隙的电子公寓类比、光芯片十二家竞对全景、碳化硅三层楼对比。",
+     "page": "articles/physical-walls-supplement.html"
+    },
+    {
      "t": "模型厂调研与存储层级：从预训练到冷热调配",
      "date": "2026-07-05",
      "tags": [
