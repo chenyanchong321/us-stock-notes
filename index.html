@@ -457,7 +457,7 @@ function renderNotes(cfg){
     tl+=`<a class="tl-item" href="${n.page}">
       <span class="tl-date">${n.date.slice(5)}</span>
       <span class="tl-t">${n.t}</span>
-      <span class="tl-cat">${n.cat.replace(/^./,"")}</span>
+      <span class="tl-cat">${[...n.cat].slice(1).join("").trim()}</span>
     </a>`;
   });
   document.getElementById("note-timeline").innerHTML = tl;
