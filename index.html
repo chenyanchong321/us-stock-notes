@@ -62,9 +62,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 .section-head .avg{font-size:12px;color:var(--text2)}
 
 /* 表格 */
-.tbl-wrap{background:var(--panel);border:1px solid var(--border);border-radius:10px}
+.tbl-wrap{background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow-x:auto}
 table{width:100%;border-collapse:collapse;white-space:nowrap}
-th{font-size:12px;color:var(--text2);text-align:right;padding:9px 9px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;background:var(--panel);position:sticky;top:var(--header-h);z-index:5}
+th{font-size:12px;color:var(--text2);text-align:right;padding:9px 9px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;background:var(--panel)}
 th:first-child{text-align:left}
 th:hover{color:var(--text)}
 th .arrow{font-size:10px;margin-left:3px;color:var(--accent)}
@@ -84,6 +84,9 @@ tr.grp{scroll-margin-top:calc(var(--header-h) + 48px)}
 tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;font-weight:600;padding:9px 14px;text-align:left;letter-spacing:.5px;border-left:3px solid var(--accent)}
 .sidebar a.sub{padding:5px 18px 5px 34px;font-size:12.5px;color:#9fb3d9}
 .sidebar a.sub:hover{color:var(--accent)}
+
+#floatHead{position:fixed;display:none;overflow:hidden;z-index:150;background:var(--panel);border-bottom:1px solid var(--border);box-shadow:0 3px 10px rgba(0,0,0,.4)}
+#floatHead table{border-collapse:collapse;white-space:nowrap}
 
 /* 深回撤高亮 */
 .deep{color:var(--gold);font-weight:600}
@@ -115,10 +118,6 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 #resizer{position:fixed;top:var(--header-h);bottom:0;left:calc(var(--sidebar-w) - 3px);width:6px;cursor:col-resize;z-index:150;background:transparent;transition:background .15s}
 #resizer:hover,#resizer.on{background:var(--accent)}
 body.resizing{user-select:none;cursor:col-resize}
-@media(max-width:1330px){
-  .tbl-wrap{overflow-x:auto}
-  th{position:static}
-}
 @media(max-width:860px){#resizer{display:none}}
 
 .hidden{display:none!important}
@@ -324,6 +323,45 @@ function renderNotes(cfg){
   });
   document.getElementById("note-total").textContent = noteCount;
 }
+
+/* ===== 悬浮表头（任意宽度吸顶，横滚同步） ===== */
+(function(){
+  const fh=document.createElement("div"); fh.id="floatHead"; document.body.appendChild(fh);
+  const TOP=56; let curWrap=null;
+  function syncX(){ if(curWrap&&fh.firstChild) fh.firstChild.style.transform=`translateX(${-curWrap.scrollLeft}px)`; }
+  function build(wrap){
+    curWrap=wrap;
+    const src=wrap.querySelector("table");
+    const t=document.createElement("table");
+    t.style.width=src.scrollWidth+"px"; t.style.tableLayout="fixed";
+    const tr=document.createElement("tr");
+    src.querySelectorAll("thead th").forEach(th=>{
+      const c=th.cloneNode(true);
+      c.style.width=th.getBoundingClientRect().width+"px";
+      c.addEventListener("click",()=>{ th.click(); curWrap=null; onScroll(); });
+      tr.appendChild(c);
+    });
+    const thead=document.createElement("thead"); thead.appendChild(tr); t.appendChild(thead);
+    fh.innerHTML=""; fh.appendChild(t);
+    if(!wrap._fhBound){ wrap.addEventListener("scroll",syncX,{passive:true}); wrap._fhBound=true; }
+    syncX();
+  }
+  function onScroll(){
+    let found=null;
+    for(const wrap of document.querySelectorAll("#view-dash:not(.hidden) .tbl-wrap")){
+      const r=wrap.getBoundingClientRect();
+      if(r.top<TOP+4 && r.bottom>TOP+80){ found=wrap; break; }
+    }
+    if(!found){ fh.style.display="none"; curWrap=null; return; }
+    if(found!==curWrap) build(found);
+    const r=found.getBoundingClientRect();
+    fh.style.display="block";
+    fh.style.top=TOP+"px"; fh.style.left=r.left+"px"; fh.style.width=found.clientWidth+"px";
+    syncX();
+  }
+  window.addEventListener("scroll",onScroll,{passive:true});
+  window.addEventListener("resize",()=>{ curWrap=null; onScroll(); });
+})();
 
 /* ===== 侧边栏宽度拖拽 ===== */
 (function(){
