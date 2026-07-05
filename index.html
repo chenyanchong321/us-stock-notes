@@ -137,12 +137,36 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 .note-cat h3{font-size:16px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .note-cat h3 .n{font-size:12px;color:var(--text2);font-weight:400}
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;transition:.15s;color:inherit;text-decoration:none;cursor:pointer;position:relative}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:0;display:flex;flex-direction:column;transition:.15s;color:inherit;text-decoration:none;cursor:pointer;position:relative;overflow:hidden}
 .card:hover{border-color:var(--accent);transform:translateY(-2px)}
 .card::after{content:"→";position:absolute;right:16px;bottom:12px;color:var(--border);font-size:15px;transition:.15s}
 .card:hover::after{color:var(--accent)}
 .card:hover .t{color:var(--accent)}
+.card .thumb{height:118px;background:#f7f6f2;display:flex;align-items:center;justify-content:center;overflow:hidden;border-bottom:1px solid var(--border)}
+.card .thumb img{width:100%;height:100%;object-fit:cover;object-position:center top}
+.card .thumb .emo{font-size:42px;filter:saturate(.8)}
+.card .thumb.fallback{background:var(--panel2)}
+.card .body{padding:13px 16px 15px;display:flex;flex-direction:column;gap:8px;flex:1}
 .card .t{font-size:15px;font-weight:600;line-height:1.4;transition:.15s}
+/* 时间线视图 */
+.view-toggle{display:flex;gap:8px;margin:0 0 18px}
+.view-toggle button{background:var(--panel);border:1px solid var(--border);color:var(--text2);border-radius:99px;padding:6px 16px;font-size:13px;cursor:pointer}
+.view-toggle button.on{color:var(--accent);border-color:var(--accent);background:rgba(74,140,240,.08)}
+#note-timeline{border-left:2px solid var(--border);margin-left:6px;padding-left:22px}
+.tl-month{font-size:13px;color:var(--accent);font-weight:600;margin:22px 0 10px;position:relative}
+.tl-month::before{content:"";position:absolute;left:-27px;top:4px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.tl-item{display:flex;gap:12px;align-items:baseline;padding:7px 0;color:inherit;text-decoration:none;position:relative;flex-wrap:wrap}
+.tl-item::before{content:"";position:absolute;left:-25.5px;top:14px;width:5px;height:5px;border-radius:50%;background:var(--border)}
+.tl-item:hover .tl-t{color:var(--accent)}
+.tl-date{font-size:12px;color:var(--text2);font-variant-numeric:tabular-nums;flex:0 0 44px}
+.tl-t{font-size:14.5px;font-weight:500;transition:.15s}
+.tl-cat{font-size:11px;color:var(--text2);background:var(--panel2);border-radius:4px;padding:1px 7px}
+/* 回到顶部 */
+#toTop{position:fixed;right:22px;bottom:22px;z-index:190;width:42px;height:42px;border-radius:50%;
+  background:var(--panel2);border:1px solid var(--border);color:var(--text2);font-size:18px;cursor:pointer;
+  display:none;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.45);transition:.15s}
+#toTop:hover{color:var(--accent);border-color:var(--accent)}
+@media(max-width:860px){#toTop{right:14px;bottom:74px}}
 .card .d{font-size:13px;color:var(--text2);line-height:1.6;flex:1}
 .card .meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .card .date{font-size:11px;color:var(--text2)}
@@ -220,7 +244,12 @@ body.resizing{user-select:none;cursor:col-resize}
       <h2>写给投资者的 AI 底层知识</h2>
       <p>这里的每一篇笔记，都是我和 AI 一起把一个知识点掰开揉碎的过程记录——大量示意图，用费曼学习法讲到"小白也能懂"。看懂产业的底层逻辑，再去看行情数据，判断才有根。文章为网页版，电脑和手机都能舒适阅读，每篇文内可下载 PDF 存档。</p>
     </div>
+    <div class="view-toggle">
+      <button id="vt-cat" class="on">📂 分类视图</button>
+      <button id="vt-tl">🕒 时间线</button>
+    </div>
     <div id="note-cats"></div>
+    <div id="note-timeline" class="hidden"></div>
   </div>
 </div>
 
@@ -406,14 +435,42 @@ function renderNotes(cfg){
         <h3>${c.cat}<span class="n">${c.items.length} 篇</span></h3>
         <div class="cards">${c.items.map(n=>`
           <a class="card" href="${n.page}">
-            <div class="t">${n.t}</div>
-            <div class="meta"><span class="date">${n.date}</span>${n.tags.map(t=>`<span class="tag">${t}</span>`).join("")}</div>
-            <div class="d">${n.d}</div>
+            <div class="thumb${n.img?"":" fallback"}">${n.img?`<img src="${n.img}" loading="lazy" alt="">`:`<span class="emo">${[...c.cat][0]}</span>`}</div>
+            <div class="body">
+              <div class="t">${n.t}</div>
+              <div class="meta"><span class="date">${n.date}</span>${n.tags.map(t=>`<span class="tag">${t}</span>`).join("")}</div>
+              <div class="d">${n.d}</div>
+            </div>
           </a>`).join("")}
         </div>
       </div>`);
   });
   document.getElementById("note-total").textContent = noteCount;
+
+  /* 时间线视图 */
+  const flat = cfg.cats.flatMap(c=>c.items.map(n=>({...n, cat:c.cat})));
+  flat.sort((a,b)=>b.date.localeCompare(a.date));
+  let tl="", lastM="";
+  flat.forEach(n=>{
+    const m=n.date.slice(0,7);
+    if(m!==lastM){ tl+=`<div class="tl-month">${m.replace("-","年")}月</div>`; lastM=m; }
+    tl+=`<a class="tl-item" href="${n.page}">
+      <span class="tl-date">${n.date.slice(5)}</span>
+      <span class="tl-t">${n.t}</span>
+      <span class="tl-cat">${n.cat.replace(/^./,"")}</span>
+    </a>`;
+  });
+  document.getElementById("note-timeline").innerHTML = tl;
+  const vtc=document.getElementById("vt-cat"), vtt=document.getElementById("vt-tl");
+  function setNotesView(v){
+    vtc.classList.toggle("on",v==="cat"); vtt.classList.toggle("on",v==="tl");
+    document.getElementById("note-cats").classList.toggle("hidden",v!=="cat");
+    document.getElementById("note-timeline").classList.toggle("hidden",v!=="tl");
+    try{ localStorage.setItem("notesView",v); }catch(e){}
+  }
+  vtc.addEventListener("click",()=>setNotesView("cat"));
+  vtt.addEventListener("click",()=>setNotesView("tl"));
+  try{ if(localStorage.getItem("notesView")==="tl") setNotesView("tl"); }catch(e){}
 }
 
 /* ===== 悬浮表头（任意宽度吸顶，横滚同步） ===== */
@@ -458,6 +515,17 @@ function renderNotes(cfg){
   }
   window.addEventListener("scroll",onScroll,{passive:true});
   window.addEventListener("resize",()=>{ curWrap=null; onScroll(); });
+})();
+
+/* ===== 一键回到顶部 ===== */
+(function(){
+  const b=document.createElement("button");
+  b.id="toTop"; b.title="回到顶部"; b.textContent="↑";
+  document.body.appendChild(b);
+  b.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
+  window.addEventListener("scroll",()=>{
+    b.style.display = window.scrollY>600 ? "flex" : "none";
+  },{passive:true});
 })();
 
 /* ===== 侧边栏宽度拖拽 ===== */

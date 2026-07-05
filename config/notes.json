@@ -13,7 +13,8 @@
       "CCL"
      ],
      "d": "从一篇「涨价单」文章追问出的产业链通识课：一阶/二阶受益、被动件原理、MLCC 千层饼、超容保命、CCL 面粉与四条链全景。",
-     "page": "articles/ai-hardware-price-chain.html"
+     "page": "articles/ai-hardware-price-chain.html",
+     "img": "assets/thumbs/ai-hardware-price-chain.svg"
     },
     {
      "t": "AI 投资的物理墙：从三种材料到九堵墙的全景框架",
@@ -25,7 +26,8 @@
       "框架"
      ],
      "d": "AI 是撞墙—绕墙前进的：电流墙、内存墙、翘曲墙……九堵物理墙的旧新方案对照，与寻找下一个 HBM 的三因子公式。",
-     "page": "articles/physical-walls.html"
+     "page": "articles/physical-walls.html",
+     "img": "assets/thumbs/physical-walls.svg"
     },
     {
      "t": "AI 投资的物理墙 · 补充篇：带隙、激光器竞对与 SiC 三层楼",
@@ -48,7 +50,8 @@
       "谷歌"
      ],
      "d": "一篇谷歌模型厂调研纪要的完整拆解：预训练与后训练、HBM/DRAM/SSD/Blob 存储金字塔、冷热数据调配与投资映射。",
-     "page": "articles/model-factory-storage.html"
+     "page": "articles/model-factory-storage.html",
+     "img": "assets/thumbs/model-factory-storage.svg"
     },
     {
      "t": "英伟达与 AI 时代 · 全景笔记",
@@ -59,7 +62,8 @@
       "CUDA"
      ],
      "d": "从 GPU 架构、CUDA 生态到数据中心收入结构，一篇看懂英伟达帝国的护城河与产业位置。",
-     "page": "articles/nvidia-ai-panorama.html"
+     "page": "articles/nvidia-ai-panorama.html",
+     "img": "articles/media/nvidia-ai-panorama/media/20cd46be24225377da78ab06190c731fbc2ece05.png"
     },
     {
      "t": "AI 算力投资学习笔记",
@@ -70,7 +74,8 @@
       "产业链"
      ],
      "d": "AI 算力产业链全景地图：训练与推理的区别、算力去哪了、钱被谁赚走了。",
-     "page": "articles/ai-compute.html"
+     "page": "articles/ai-compute.html",
+     "img": "articles/media/ai-compute/media/image1.png"
     },
     {
      "t": "AI 推理与存储超级周期 · 费曼学习笔记",
@@ -81,7 +86,8 @@
       "美光"
      ],
      "d": "推理时代为什么引爆 HBM 和存储超级周期？用费曼式讲解拆透存储涨价的底层逻辑。",
-     "page": "articles/ai-storage-supercycle.html"
+     "page": "articles/ai-storage-supercycle.html",
+     "img": "articles/media/ai-storage-supercycle/media/95a30d8126aca41df148a21668f36876d6fef36c.png"
     },
     {
      "t": "AI 软件股投资逻辑",
@@ -92,7 +98,8 @@
       "估值"
      ],
      "d": "算力之后看应用：AI 软件股的商业模式、竞争格局与估值逻辑怎么看。",
-     "page": "articles/ai-software.html"
+     "page": "articles/ai-software.html",
+     "img": "articles/media/ai-software/media/4e3c95405f948321a33ab6b2f3bad7508fda91c3.png"
     },
     {
      "t": "AI 投资黄金时代探讨 2025-2026",
@@ -112,7 +119,8 @@
       "总纲"
      ],
      "d": "AI 产业链上下游关系速查总纲：从芯片设计到云服务，各环节公司一图归位。",
-     "page": "articles/ai-semi-chain.html"
+     "page": "articles/ai-semi-chain.html",
+     "img": "assets/thumbs/ai-semi-chain.svg"
     },
     {
      "t": "铠侠存储产业费曼笔记",
@@ -123,7 +131,8 @@
       "周期"
      ],
      "d": "从洁净室、AI 存储层级到周期估值与现金流重估，一本可反复查阅的铠侠小手册。",
-     "page": "articles/kioxia-feynman.html"
+     "page": "articles/kioxia-feynman.html",
+     "img": "articles/media/kioxia-feynman/media/ad984bd8d272116c630228c2f2b3543b0df37d5a.png"
     },
     {
      "t": "澜起科技与 AI 互联硬件全景",
@@ -134,7 +143,8 @@
       "互联"
      ],
      "d": "不造算力的公司凭什么受益？从一根内存条内部讲到光互联产业链，由电到光拆解澜起的卡位。",
-     "page": "articles/montage-interconnect.html"
+     "page": "articles/montage-interconnect.html",
+     "img": "articles/media/montage-interconnect/media/e927cebdacf4d9b65e3205ed096e023c28d1aad9.png"
     },
     {
      "t": "美股 AI 板块深度调研：从谷歌融资到 Meta 算力冲击",
@@ -162,7 +172,8 @@
       "台积电"
      ],
      "d": "从沙子到芯片：光刻、刻蚀、沉积、封测全流程拆解，看懂芯片是怎么造出来的。",
-     "page": "articles/chip-manufacturing.html"
+     "page": "articles/chip-manufacturing.html",
+     "img": "articles/media/chip-manufacturing/media/354ed7a8d8bc48cba06b4499bdef9463421c4fe1.png"
     },
     {
      "t": "半导体设备学习笔记",
@@ -189,7 +200,8 @@
       "CPO"
      ],
      "d": "玻璃基板与光电封装：康宁在 AI 硬件里的新故事，为什么玻璃可能是下一个关键材料。",
-     "page": "articles/corning-glassbridge.html"
+     "page": "articles/corning-glassbridge.html",
+     "img": "articles/media/corning-glassbridge/media/26f815b570ff976232e76dacb3a5c984cdaa1b19.png"
     },
     {
      "t": "康宁 GlassBridge 科普 · 补充篇",
@@ -199,7 +211,8 @@
       "技术细节"
      ],
      "d": "GlassBridge 的技术细节与产业影响补充：解答上一篇留下的关键疑问。",
-     "page": "articles/corning-glassbridge-2.html"
+     "page": "articles/corning-glassbridge-2.html",
+     "img": "articles/media/corning-glassbridge-2/media/71294570cbc5d0a257bf8a885dfb0ab28f6ceba8.png"
     },
     {
      "t": "信越化学 · 深度解读",
@@ -210,7 +223,8 @@
       "上游材料"
      ],
      "d": "硅片之王信越化学：半导体上游材料的隐形冠军，垄断格局与周期属性怎么看。",
-     "page": "articles/shinetsu.html"
+     "page": "articles/shinetsu.html",
+     "img": "articles/media/shinetsu/media/65d4257fdd873a8246318128c6f36f2c2a5722f5.png"
     }
    ]
   },
@@ -226,7 +240,8 @@
       "AI缺电"
      ],
      "d": "拆解《EQT 深度研究》的逻辑骨架：亏不了钱的底子、AI 缺电四步链、估值传导壁垒、四情景赔率与两套操作方案。",
-     "page": "articles/eqt-report.html"
+     "page": "articles/eqt-report.html",
+     "img": "assets/thumbs/eqt-report.svg"
     },
     {
      "t": "时代电气学习笔记",
@@ -237,7 +252,8 @@
       "A/H"
      ],
      "d": "IGBT 与轨交双主业的时代电气：功率半导体的国产替代逻辑与 A/H 折价。",
-     "page": "articles/times-electric.html"
+     "page": "articles/times-electric.html",
+     "img": "articles/media/times-electric/media/9349ce85516e2498ff55ed605081397931cc53e5.png"
     },
     {
      "t": "康宁 GLW 情况说明（2026-07-03）",
@@ -263,7 +279,8 @@
       "硅光"
      ],
      "d": "从驱动芯片到 CPO、光栅耦合、COUPE 光引擎与供应链格局，看懂奇景光电的转型故事。",
-     "page": "articles/himx-cpo.html"
+     "page": "articles/himx-cpo.html",
+     "img": "articles/media/himx-cpo/media/771d64b33e4c4a72eacccd6530e512a47724a7eb.png"
     },
     {
      "t": "光纤光缆：从玻璃棒到 AI 算力",
@@ -274,7 +291,8 @@
       "长飞"
      ],
      "d": "从光纤预制棒怎么造，到拉丝、光缆、海缆与 AI 算力需求，串成一条完整认知链。",
-     "page": "articles/fiber-cable.html"
+     "page": "articles/fiber-cable.html",
+     "img": "articles/media/fiber-cable/media/98248db6b0e50bd77c078785d3723db533eb0200.png"
     }
    ]
   },
@@ -290,7 +308,8 @@
       "物理"
      ],
      "d": "从人形机器人的 BOM、执行器、谐波减速器，一路拆到电磁与扭矩的底层物理——33 张示意图的费曼式深潜。",
-     "page": "articles/robots-energy.html"
+     "page": "articles/robots-energy.html",
+     "img": "articles/media/robots-energy/media/9d0580ecfde4a20d908001ddca50e3685c54bc17.png"
     }
    ]
   }
