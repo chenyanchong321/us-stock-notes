@@ -47,8 +47,12 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 
 /* 顶栏统计 */
 #topbar{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:20px}
-#search{flex:1;min-width:220px;max-width:380px;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:9px 14px;color:var(--text);font-size:14px;outline:none}
+#searchwrap{position:relative;flex:0 1 300px;min-width:150px}
+#search{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:7px 30px 7px 12px;color:var(--text);font-size:13px;outline:none;box-sizing:border-box}
 #search:focus{border-color:var(--accent)}
+#search-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);color:var(--text2);cursor:pointer;font-size:13px;padding:2px 4px;display:none}
+#search-clear:hover{color:var(--text)}
+@media(max-width:860px){#header .slogan{display:none}}
 .stat{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:8px 16px}
 .stat .k{font-size:11px;color:var(--text2)}
 .stat .v{font-size:16px;font-weight:600;margin-top:2px}
@@ -72,6 +76,10 @@ td{padding:8px 9px;text-align:right;border-bottom:1px solid rgba(36,44,59,.5);fo
 tr:last-child td{border-bottom:none}
 tr:hover td{background:var(--panel2)}
 td.name{text-align:left;max-width:150px;white-space:normal;line-height:1.4}
+/* 冻结名称列（Excel 式首列锁定） */
+th:first-child,td.name{position:sticky;left:0;z-index:3;background:var(--panel)}
+tr:hover td.name{background:var(--panel2)}
+tr.grp td .glabel{position:sticky;left:14px;display:inline-block}
 td.name .cn{font-weight:500;display:block}
 td.name .sub{font-size:11px;color:var(--text2);white-space:nowrap}
 td.name .mkt{margin-left:6px;background:var(--panel2);border-radius:4px;padding:0 5px}
@@ -87,6 +95,7 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 
 #floatHead{position:fixed;display:none;overflow:hidden;z-index:150;background:var(--panel);border-bottom:1px solid var(--border);box-shadow:0 3px 10px rgba(0,0,0,.4)}
 #floatHead table{border-collapse:collapse;white-space:nowrap}
+#floatHead th:first-child{position:relative;z-index:2;background:var(--panel)}
 
 /* 深回撤高亮 */
 .deep{color:var(--gold);font-weight:600}
@@ -138,6 +147,10 @@ body.resizing{user-select:none;cursor:col-resize}
     <div class="tab active" data-view="dash">📊 数据面板</div>
     <div class="tab" data-view="notes">📚 学习笔记</div>
   </div>
+  <div id="searchwrap">
+    <input id="search" type="text" placeholder="🔍 搜索名称 / 代码，如 NVDA、紫金…">
+    <span id="search-clear" title="清空">✕</span>
+  </div>
   <div class="slogan">看得懂的数据 · 讲得清的知识</div>
 </header>
 
@@ -152,7 +165,6 @@ body.resizing{user-select:none;cursor:col-resize}
   </nav>
   <div class="main">
     <div id="topbar">
-      <input id="search" type="text" placeholder="🔍 搜索名称 / 代码，如 NVDA、紫金…">
       <div class="stat"><div class="k">观察标的</div><div class="v" id="st-total">–</div></div>
       <div class="stat"><div class="k">回撤 &gt;30% 标的</div><div class="v" id="st-deep">–</div></div>
       <div class="stat"><div class="k">近1月上涨占比</div><div class="v" id="st-up1m">–</div></div>
@@ -226,7 +238,7 @@ function renderDash(quotes){
       const g=r[12]||"";
       if(g && g!==lastG){
         const gid=`${id}-g${gi++}`;
-        body+=`<tr class="grp" id="${gid}"><td colspan="${COLS.length}">▸ ${g}</td></tr>`;
+        body+=`<tr class="grp" id="${gid}"><td colspan="${COLS.length}"><span class="glabel">▸ ${g}</span></td></tr>`;
         subnav+=`<a class="sub" href="#${gid}">↳ ${g}</a>`;
         lastG=g;
       }
@@ -328,7 +340,12 @@ function renderNotes(cfg){
 (function(){
   const fh=document.createElement("div"); fh.id="floatHead"; document.body.appendChild(fh);
   const TOP=56; let curWrap=null;
-  function syncX(){ if(curWrap&&fh.firstChild) fh.firstChild.style.transform=`translateX(${-curWrap.scrollLeft}px)`; }
+  function syncX(){
+    if(!(curWrap&&fh.firstChild)) return;
+    fh.firstChild.style.transform=`translateX(${-curWrap.scrollLeft}px)`;
+    const th0=fh.querySelector("th:first-child");
+    if(th0) th0.style.transform=`translateX(${curWrap.scrollLeft}px)`;   /* 首列反向抵消=冻结 */
+  }
   function build(wrap){
     curWrap=wrap;
     const src=wrap.querySelector("table");
@@ -457,9 +474,20 @@ let PROFILES = {};
       document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===tab));
       document.getElementById("view-dash").classList.toggle("hidden",tab.dataset.view!=="dash");
       document.getElementById("view-notes").classList.toggle("hidden",tab.dataset.view!=="notes");
+      document.getElementById("searchwrap").style.display = tab.dataset.view==="dash" ? "" : "none";
       window.scrollTo(0,0);
     });
   });
+
+  /* 搜索框一键清空 */
+  (function(){
+    const inp = document.getElementById("search"), clr = document.getElementById("search-clear");
+    inp.addEventListener("input", ()=>{ clr.style.display = inp.value ? "block" : "none"; });
+    clr.addEventListener("click", ()=>{
+      inp.value = ""; clr.style.display = "none";
+      inp.dispatchEvent(new Event("input")); inp.focus();
+    });
+  })();
 
   /* URL 参数直达笔记库（文章页"返回"用） */
   if(new URLSearchParams(location.search).get("view")==="notes"){
