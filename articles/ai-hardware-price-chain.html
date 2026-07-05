@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 硬件涨价链学习笔记：800V、MLCC、超级电容与 PCB/CCL · 烟囱的美股学习笔记</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<style>
+:root{--bg:#ffffff;--panel:#f6f8fa;--panel2:#eef1f4;--border:#e2e5e9;--text:#1f2328;--text2:#6b7280;--accent:#2563eb;--gold:#b8860b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:16px;line-height:1.85}
+#bar{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);z-index:10}
+#bar .in{max-width:760px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px}
+#bar a{color:var(--text2);text-decoration:none;font-size:14px}
+#bar a:hover{color:var(--accent)}
+#bar .site{margin-left:auto;font-size:13px;color:var(--text2)}
+#bar .site b{color:var(--accent);font-weight:600}
+main{max-width:760px;margin:0 auto;padding:28px 20px 90px}
+.head h1{font-size:26px;line-height:1.4;margin-bottom:12px}
+.meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.meta .date{font-size:13px;color:var(--text2)}
+.meta .tag{font-size:12px;color:var(--accent);background:rgba(74,140,240,.12);border-radius:4px;padding:2px 8px}
+.meta .pdf{font-size:13px;color:var(--text2);text-decoration:none;border:1px solid var(--border);border-radius:6px;padding:3px 10px}
+.meta .pdf:hover{color:var(--text);border-color:var(--text2)}
+.head{border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:26px}
+article h1{font-size:22px;margin:38px 0 14px;line-height:1.4}
+article h2{font-size:20px;margin:34px 0 12px;padding-left:10px;border-left:3px solid var(--accent);line-height:1.4}
+article h3{font-size:17px;margin:26px 0 10px}
+article p{margin:0 0 16px}
+article ul,article ol{margin:0 0 16px 1.4em}
+article li{margin-bottom:6px}
+article img,article svg{max-width:100%;height:auto;border-radius:10px;display:block;margin:18px auto;background:#fff;border:1px solid var(--border)}
+article blockquote{border-left:3px solid var(--gold);background:var(--panel);border-radius:0 8px 8px 0;padding:12px 16px;margin:0 0 16px;color:var(--text2)}
+article table{border-collapse:collapse;width:100%;margin:0 0 18px;font-size:14px;word-break:break-word}
+article th,article td{border:1px solid var(--border);padding:8px 12px;text-align:left}
+article th{background:var(--panel);color:var(--text2)}
+article tr:nth-child(even) td{background:rgba(246,248,250,.7)}
+article code{background:var(--panel2);border-radius:4px;padding:1px 6px;font-size:14px}
+article pre{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:14px;overflow-x:auto;margin:0 0 16px}
+article pre code{background:none;padding:0}
+article a{color:var(--accent)}
+article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+.disclaim{margin-top:50px;padding:14px 18px;background:var(--panel);border:1px solid var(--border);border-radius:10px;font-size:13px;color:var(--text2)}
+</style>
+</head>
+<body>
+<div id="bar"><div class="in">
+  <a href="../index.html?view=notes">← 返回笔记库</a>
+  <span class="site">📓 <b>烟囱</b>的美股学习笔记</span>
+</div></div>
+<main>
+  <div class="head">
+    <h1>AI 硬件涨价链学习笔记：800V、MLCC、超级电容与 PCB/CCL</h1>
+    <div class="meta"><span class="date">2026-07-06</span><span class="tag">800V</span><span class="tag">MLCC</span><span class="tag">超级电容</span><span class="tag">CCL</span><a class="pdf" href="../notes/AI硬件涨价链学习笔记.pdf" download>⬇ 下载 PDF</a></div>
+  </div>
+  <article>
+<p><strong>从 800V 供电革命到 MLCC、超级电容与 PCB/CCL——一条“涨价单”引出的产业链通识课</strong></p>
+<p>整理日期：2026年7月6日 · 文中行情与涨价数据截至 2026 年 7 月初</p>
+<blockquote>
+<p>阅读提示：本笔记源自一次围绕公众号文章《AI 的下一张涨价单，hvdc800》的连环追问，已按“事件解读 → 概念工具箱 → 元件深读 → 板块格局 → 产业链全景”的认知顺序重新组织，非聊天时间线。所有涉及股票的内容仅供学习，不构成投资建议。</p>
+</blockquote>
+<h2 id="目录">目录</h2>
+<p>第一章 事件解读：800V 供电革命与“下一张涨价单”</p>
+<p>第二章 概念工具箱（一）：一阶、二阶与“已定价/未定价”</p>
+<p>第三章 概念工具箱（二）：主动件与被动件</p>
+<p>第四章 MLCC 深读：名字、蓄水池原理与千层饼结构</p>
+<p>第五章 MLCC 板块：格局、玩家与投资价值</p>
+<p>第六章 超级电容：给 GPU 抹平心电图的“游泳池脸盆”</p>
+<p>第七章 CCL、PCB 与四条产业链</p>
+<p>第八章 全景总结</p>
+<p>附录 一句话记忆卡合集</p>
+<h2 id="第一章-事件解读800v-供电革命与下一张涨价单">第一章 事件解读：800V 供电革命与“下一张涨价单”</h2>
+<blockquote>
+<p>你当时的问题：解读一下这篇文章（《AI 的下一张涨价单，hvdc800》，口罩哥研报60秒，2026.07.05）。</p>
+</blockquote>
+<p>文章的核心一句话：AI 服务器的供电方式正在从“低压大电流”改成 800V 高压直流（HVDC），这个改变把原本花在铜缆上的钱，转移到了功率半导体、电容电感、高端电路板上——而市场还没给这些环节涨价定价。</p>
+<p>为什么改 800V？用运钞车打比方：同样运 100 万，可以运一卡车硬币（低压大电流），也可以运一小箱大额钞票（高压小电流）。功率 = 电压 × 电流，电压提到 800V 后，同样功率下机架电流从 12,500A 降到 750A（降 16.7 倍）。电流小了，“运钱的车”（铜缆）就能细很多——铜省 45%，运维成本最多省 70%。代价是：钞票面额大了，需要更高级的“点钞和找零设备”——能承受高压高频转换的 SiC/GaN 功率芯片和更多电容。这就是文章标题说的“BOM 利润池外溢”。</p>
+<svg width="100%" viewBox="0 0 680 330" role="img" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans CJK SC,PingFang SC,sans-serif" style="width:100%;height:auto">
+<title>
+800V HVDC 价值转移图
+</title>
+<desc>800V 高压直流供电架构降低机架电流，省下铜的价值转移到功率半导体、被动件和 PCB/CCL 三个环节；下方对照光模块（已定价）与功率+被动件（未定价）。</desc> <g><rect x="190" y="20" width="300" height="64" rx="4" fill="#EEEDFE" stroke="#AFA9EC"/><text font-size="16" font-weight="600" fill="#443B9E" x="340" y="46" text-anchor="middle">800V 高压直流供电（HVDC）</text><text font-size="13" fill="#534AB7" x="340" y="68" text-anchor="middle">机架电流降 16.7 倍 · 铜用量省 45%</text></g> <path d="M340 84 V104" stroke="#666" stroke-width="1.4" fill="none"/> <path d="M136 104 H544" stroke="#666" stroke-width="1.4" fill="none"/> <path d="M136 104 V124" stroke="#666" stroke-width="1.4" fill="none"/> <path d="M340 104 V124" stroke="#666" stroke-width="1.4" fill="none"/> <path d="M544 104 V124" stroke="#666" stroke-width="1.4" fill="none"/> <path d="M132 124 L136 134 L140 124 Z" fill="#666"/> <path d="M336 124 L340 134 L344 124 Z" fill="#666"/> <path d="M540 124 L544 134 L548 124 Z" fill="#666"/> <g><rect x="40" y="134" width="192" height="70" rx="4" fill="#E1F5EE" stroke="#5DCAA5"/><text font-size="16" font-weight="600" fill="#085041" x="136" y="164" text-anchor="middle">功率半导体</text><text font-size="13" fill="#0F6E56" x="136" y="186" text-anchor="middle">单机架价值逐代跳 17 倍</text></g> <g><rect x="244" y="134" width="192" height="70" rx="4" fill="#E1F5EE" stroke="#5DCAA5"/><text font-size="16" font-weight="600" fill="#085041" x="340" y="164" text-anchor="middle">被动件</text><text font-size="13" fill="#0F6E56" x="340" y="186" text-anchor="middle">MLCC 单柜价值 +182%</text></g> <g><rect x="448" y="134" width="192" height="70" rx="4" fill="#E1F5EE" stroke="#5DCAA5"/><text font-size="16" font-weight="600" fill="#085041" x="544" y="164" text-anchor="middle">PCB / CCL</text><text font-size="13" fill="#0F6E56" x="544" y="186" text-anchor="middle">CCL 价格创 26 年新高</text></g> <text font-size="13" fill="#666" x="340" y="236" text-anchor="middle">市场定价状态对照（文章观点）</text> <g><rect x="110" y="248" width="210" height="52" rx="4" fill="#F1EFE8" stroke="#B4B2A9"/><text font-size="16" font-weight="600" fill="#444" x="215" y="270" text-anchor="middle">光模块</text><text font-size="13" fill="#666" x="215" y="290" text-anchor="middle">已定价 · 拥挤交易</text></g> <g><rect x="360" y="248" width="210" height="52" rx="4" fill="#E1F5EE" stroke="#5DCAA5"/><text font-size="16" font-weight="600" fill="#085041" x="465" y="270" text-anchor="middle">功率 + 被动件</text><text font-size="13" fill="#0F6E56" x="465" y="290" text-anchor="middle">未定价的二阶机会</text></g>
+</svg>
+<p>文章给出的三个受益环节：</p>
+<p>其一，功率半导体。单机架价值从 B200 的约 $1.1 万一路涨到 Feynman 世代的约 $19 万，逐代跳升 17 倍（Morgan Stanley 测算）；GaN 含量从 $3/kW 长期看到 $46/kW。真正的刚需拐点在 2027 下半年的 Rubin Ultra（单机架约 600kW）。</p>
+<p>其二，被动件。MLCC 用量从每柜约 44 万颗涨到约 60 万颗，单柜价值从 $1,530 到 $4,320（+182%）；村田、国巨已发正式涨价函（合约提价 15%~40%）。超级电容缺口 60-65%，最紧。</p>
+<p>其三，PCB/CCL。单机架 PCB 价值从 GB300 约 $35,100 到 Rubin 约 $116,700（+233%）；上游 CCL 进口价创 2000 年以来新高（TrendForce，$20,728/吨，同比 +74.5%），M9 材料近乎单一来源，玻纤布是终极瓶颈。</p>
+<p>投资逻辑上，文章认为光模块 PE 已 32-45 倍、是“拥挤交易”（已定价），功率+被动件是“还没被定价的二阶机会”。</p>
+<p>事实、叙事、风险要分开。事实：MLCC 涨价函、CCL 创新高有据可查。叙事：华强北现货“3-10 倍”是绝缺型号极端个例（文章自己也承认），“17 倍”来自单一投行测算且要到 Feynman 世代才兑现，70 层背板是 2027 路线图而非现货。风险：文章结尾在推销自家付费研报，有营销动机；“未定价”也可能是市场理性地没买账。</p>
+<p><strong>记忆卡：800V 把电流降了 16 倍，省下的铜钱变成了功率芯片和电容的账单——这是 AI 涨价故事里还没被炒热的下半场。</strong></p>
+<h2 id="第二章-概念工具箱一一阶二阶与已定价未定价">第二章 概念工具箱（一）：一阶、二阶与“已定价/未定价”</h2>
+<blockquote>
+<p>你当时的问题：什么叫“二阶导”？我一直对“一阶”“二阶”了解得不清楚，帮我小白科普一下并多举例子。</p>
+</blockquote>
+<p>先说数学上的二阶导，用开车打比方：位置在变，“位置变多快”是速度——一阶导；“速度本身变多快”是加速度——二阶导。一阶导回答“在不在涨”，二阶导回答“涨得越来越快还是越来越慢”。股市里“业绩增速放缓”就是二阶导语言：利润还在涨（一阶为正），但涨速在掉（二阶转负）——股价常常跌的就是这个。</p>
+<p>但文章里的“二阶”不是导数，是“第几圈涟漪”：投资圈借这个词表达受益传导的顺序。往水里扔石头（AI 算力爆发），涟漪一圈圈往外扩，越靠里的越先被看见。</p>
+<svg width="100%" viewBox="0 0 680 374" role="img" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans CJK SC,PingFang SC,sans-serif" style="width:100%;height:auto">
+<title>
+一阶二阶受益传导图
+</title>
+<desc>AI 算力爆发像石头落水，一阶受益是 GPU 和光模块（已定价），二阶受益是功率半导体和被动件（未定价），三阶受益是电力、铜和上游材料。</desc> <g><rect x="140" y="20" width="400" height="56" rx="4" fill="#EEEDFE" stroke="#AFA9EC"/><text font-size="16" font-weight="600" fill="#443B9E" x="340" y="44" text-anchor="middle">AI 算力爆发</text><text font-size="13" fill="#534AB7" x="340" y="64" text-anchor="middle">石头砸进水里</text></g> <path d="M340 76 V96" stroke="#666" stroke-width="1.4" fill="none"/> <path d="M336 96 L340 106 L344 96 Z" fill="#666"/> <g><rect x="140" y="106" width="400" height="56" rx="4" fill="#F1EFE8" stroke="#B4B2A9"/><text font-size="16" font-weight="600" fill="#444" x="340" y="130" text-anchor="middle">一阶受益：GPU · 光模块</text><text font-size="13" fill="#666" x="340" y="150" text-anchor="middle">第一圈涟漪 · 人人看见 · 已定价</text></g> <path d="M340 162 V182" stroke="#666" stroke-width="1.4" fill="none"/> <path d="M336 182 L340 192 L344 182 Z" fill="#666"/> <g><rect x="140" y="192" width="400" height="56" rx="4" fill="#E1F5EE" stroke="#5DCAA5"/><text font-size="16" font-weight="600" fill="#085041" x="340" y="216" text-anchor="middle">二阶受益：功率半导体 · 被动件</text><text font-size="13" fill="#0F6E56" x="340" y="236" text-anchor="middle">第二圈涟漪 · 正在被发现 · 未定价</text></g> <path d="M340 248 V268" stroke="#666" stroke-width="1.4" fill="none"/> <path d="M336 268 L340 278 L344 268 Z" fill="#666"/> <g><rect x="140" y="278" width="400" height="56" rx="4" fill="#F1EFE8" stroke="#B4B2A9"/><text font-size="16" font-weight="600" fill="#444" x="340" y="302" text-anchor="middle">三阶受益：电力 · 铜 · 上游材料</text><text font-size="13" fill="#666" x="340" y="322" text-anchor="middle">更远的涟漪 · 最晚被发现</text></g>
+</svg>
+<p>历史例子帮助建立直觉。19 世纪淘金热：一阶是挖金子的矿工，二阶是卖铲子卖牛仔裤的（李维斯由此发家）——矿工大多没赚到钱，卖铲子的赚翻了。新能源车：一阶是特斯拉、比亚迪；二阶是宁德时代（电池）、赣锋锂业（锂矿）——等大家反应过来“车再多也得用锂”，锂矿已涨十倍。2020 年疫情：一阶疫苗股，二阶玻璃药瓶、低温冷链。这轮 AI：一阶是英伟达和光模块（中际旭创两年十几倍），文章赌的二阶是供电和被动件。</p>
+<p>“已定价/未定价”是另一个关键概念：好公司不等于好股票，关键看价格里包含了多少预期。像赌马——人人都知道那匹马最快，赔率只有 1.1 倍，赢了也赚不到什么；冷门马哪怕胜率低些，10 倍赔率反而可能是好赌注。光模块 PE 32-45 倍，说明好消息已写进价格（已定价）；文章赌功率和被动件的好消息还没写进去（未定价）。当然，“未定价”也可能是市场理性地认为它不值——这是此类论述天然的风险。</p>
+<p><strong>记忆卡：一阶是人人看见的第一圈涟漪（已定价），二阶是石头的力量传到的第二圈（还没定价）——赚钱靠的往往不是找对石头，而是比别人早一圈看到涟漪。</strong></p>
+<h2 id="第三章-概念工具箱二主动件与被动件">第三章 概念工具箱（二）：主动件与被动件</h2>
+<blockquote>
+<p>你当时的问题：为什么要把它叫做“被动件”？</p>
+</blockquote>
+<p>电子元件分两大家族，区别就一条：能不能“主动做事”——放大和控制信号。</p>
+<p>主动件（芯片、晶体管）像餐厅里的厨师：通上电就能把小信号变大、能判断能运算，是“干活的人”。被动件（电阻、电容、电感）像锅碗瓢盆和水管阀门：自己不产生也不放大任何东西，只会三件事——挡住（电阻，像水阀限流）、存住（电容，像水池储水稳压）、稳住（电感，像飞轮抗拒流量突变）。厨师再厉害，没有锅碗瓢盆也做不出菜——所以芯片越强，配套的被动件反而用得越多。“被动”不是贬义，是物理属性：只被动地响应电流，从不主动出手。</p>
+<p><strong>记忆卡：主动件是厨师（放大、运算），被动件是锅碗瓢盆（挡、存、稳）——AI 芯片这个厨师越猛，后厨的锅就得配越多。</strong></p>
+<h2 id="第四章-mlcc-深读名字蓄水池原理与千层饼结构">第四章 MLCC 深读：名字、蓄水池原理与千层饼结构</h2>
+<blockquote>
+<p>你当时的问题：MLCC 我不太了解是个啥玩意儿，费曼小白一下；后来又追问：给一下英文全称，把“微型蓄水池”的原理用绘图讲透，我想吃透这个概念到底是咋弄的。</p>
+</blockquote>
+<p>MLCC 全称 Multilayer Ceramic Capacitor，直译“多层陶瓷电容器”。“积层陶瓷电容”是台湾、日本的叫法，大陆行业标准叫“片式多层陶瓷电容器”，同一个东西——名字本身就把结构剧透完了：用陶瓷做的、叠了很多层的电容。</p>
+<p>费曼版定义：MLCC 是电路里的“微型蓄水池”，芯片用电忽大忽小，它负责随时放水补水，把电压稳住。没有它，芯片一个瞬间大负载就会“电压跳水”直接死机。它被叫做“电子工业的大米”：小到像一粒米甚至一粒沙，但哪儿都离不开——一部 iPhone 约 1000 颗，一辆电动车约 1 万颗，一个 AI 服务器机柜要 44 万~60 万颗。</p>
+<p>先看它在电路里干什么。电源（VRM）像自来水厂，持续供水；GPU 是用水大户，麻烦在于用电极不规律——这一微秒全力算、下一微秒在等数据，功率瞬间跳变。水厂隔着几厘米走线，对纳秒级的用电需求来说就是“远水救不了近火”。于是工程师在芯片脚边（物理上贴在 GPU 周围几毫米处）放成百上千个小水池：芯片猛吸电的瞬间，水池“哗”地放水补上；芯片歇气时，水厂把水池回填。它为什么快？电容存电靠纯物理静电——电荷贴在金属板上，要用直接拿，没有化学反应要等（电池慢就慢在等化学反应）。</p>
+<svg width="100%" viewBox="0 0 680 410" role="img" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans CJK SC,PingFang SC,sans-serif" style="width:100%;height:auto">
+<title>
+MLCC 蓄水池工作原理图
+</title>
+<desc>电源像自来水厂，通过供电走线给 GPU 芯片供电；MLCC 像贴在芯片脚边的小水池，芯片猛吸电时它瞬间放电救急，芯片歇气时电源把它重新充满。底部对比：没有 MLCC 电压跳水，有 MLCC 电压平稳。</desc> <text font-size="13" fill="#666" x="340" y="46" text-anchor="middle">芯片用电忽大忽小，电源隔得远、反应慢——所以要在芯片脚边放个小水池</text> <g><rect x="40" y="80" width="130" height="64" rx="4" fill="#EEEDFE" stroke="#AFA9EC"/><text font-size="16" font-weight="600" fill="#443B9E" x="105" y="106" text-anchor="middle">电源（VRM）</text><text font-size="13" fill="#534AB7" x="105" y="128" text-anchor="middle">自来水厂</text></g> <path d="M170 112 H540" stroke="#666" stroke-width="1.4" fill="none"/> <text font-size="13" fill="#666" x="255" y="102" text-anchor="middle">供电走线（水管）</text> <g><rect x="540" y="80" width="100" height="64" rx="4" fill="#FAECE7" stroke="#F0997B"/><text font-size="16" font-weight="600" fill="#712B13" x="590" y="106" text-anchor="middle">GPU 芯片</text><text font-size="13" fill="#993C1D" x="590" y="128" text-anchor="middle">用水大户</text></g> <path d="M355 112 V200" stroke="#666" stroke-width="1.4" fill="none"/> <g><rect x="285" y="200" width="140" height="64" rx="4" fill="#E1F5EE" stroke="#5DCAA5"/><text font-size="16" font-weight="600" fill="#085041" x="355" y="226" text-anchor="middle">MLCC</text><text font-size="13" fill="#0F6E56" x="355" y="248" text-anchor="middle">楼下小水池</text></g> <path d="M330 185 V140" stroke="#1D9E75" stroke-width="1.4" fill="none"/> <path d="M326 140 L330 130 L334 140 Z" fill="#1D9E75"/> <text font-size="13" fill="#0F6E56" x="318" y="165" text-anchor="end">芯片猛吸电时：瞬间放水救急</text> <path d="M382 130 V175" stroke="#666" stroke-width="1.4" fill="none"/> <path d="M378 175 L382 185 L386 175 Z" fill="#666"/> <text font-size="13" fill="#666" x="394" y="165" text-anchor="start">芯片歇气时：电源回填充满</text> <text font-size="13" fill="#666" x="170" y="312" text-anchor="middle">没有 MLCC：电压跳水，芯片死机</text> <path d="M60 340 H140 L160 372 L180 344 H280" stroke="#E24B4A" stroke-width="2" fill="none"/> <text font-size="13" fill="#666" x="510" y="312" text-anchor="middle">有 MLCC：水池随时补，电压稳</text> <path d="M400 344 H620" stroke="#1D9E75" stroke-width="2" fill="none"/>
+</svg>
+<p>再看它肚子里长什么样。电容的本质简单到不可思议：两块金属板，中间隔一层绝缘体，就能存电荷——一块存正电、一块存负电，隔着绝缘层互相吸引着“憋在那儿”。但两块板存的电太少，扩容三个办法：板做大（面积增）、隔层做薄（距离减）、多叠几副板。MLCC 选了全叠满：左右两个外电极像两把梳子，梳齿（金属电极层）交错插进来，每相邻一对齿就是一副小电容，中间陶瓷是绝缘夹心。叠 1000 层等于 1000 个小电容并联，容量翻 1000 倍，整颗还是一粒米大。制造就是“印刷千层饼”：陶瓷浆料刮一层膜、印一层金属浆、再刮一层……叠几百上千次，切块，高温烧结。</p>
+<svg width="100%" viewBox="0 0 680 372" role="img" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans CJK SC,PingFang SC,sans-serif" style="width:100%;height:auto">
+<title>
+MLCC 内部千层饼结构剖面图
+</title>
+<desc>MLCC 剖面：左右两个外电极像两把梳子，各自伸出金属电极层交错排列，中间隔着陶瓷绝缘介质。容量正比于层数乘电极面积除以介质厚度，叠得越多越薄，容量越大。</desc> <text font-size="13" fill="#666" x="340" y="40" text-anchor="middle">把一颗 MLCC 纵向切开（剖面放大几百倍）</text> <rect x="180" y="60" width="340" height="190" rx="4" fill="#F1EFE8" stroke="#B4B2A9"/> <rect x="160" y="60" width="25" height="190" rx="3" fill="#7F77DD"/> <rect x="495" y="60" width="25" height="190" rx="3" fill="#1D9E75"/> <rect x="185" y="82" width="280" height="5" fill="#7F77DD"/> <rect x="215" y="102" width="280" height="5" fill="#1D9E75"/> <rect x="185" y="122" width="280" height="5" fill="#7F77DD"/> <rect x="215" y="142" width="280" height="5" fill="#1D9E75"/> <rect x="185" y="162" width="280" height="5" fill="#7F77DD"/> <rect x="215" y="182" width="280" height="5" fill="#1D9E75"/> <rect x="185" y="202" width="280" height="5" fill="#7F77DD"/> <rect x="215" y="222" width="280" height="5" fill="#1D9E75"/> <path d="M160 52 V44 H100" stroke="#999" stroke-width="1" stroke-dasharray="3 3" fill="none"/> <text font-size="13" fill="#666" x="94" y="48" text-anchor="end">外电极（接水管）</text> <path d="M530 124 H548" stroke="#999" stroke-width="1" stroke-dasharray="3 3" fill="none"/> <text font-size="13" fill="#666" x="552" y="118" text-anchor="start">金属电极层</text> <text font-size="13" fill="#666" x="552" y="134" text-anchor="start">两把梳子交错</text> <text font-size="13" fill="#666" x="350" y="276" text-anchor="middle">灰色夹心 = 陶瓷绝缘介质，电荷就存在电极与介质的界面上</text> <text font-size="14" fill="#222" x="340" y="308" text-anchor="middle">容量 ∝ 层数 × 电极面积 ÷ 介质厚度</text> <text font-size="13" fill="#666" x="340" y="332" text-anchor="middle">高端品叠 1000+ 层、每层不到 1 微米——层数与薄度就是高端与低端的分水岭</text>
+</svg>
+<p>高低端的分水岭就在层数与薄度：叠 100 层、每层 3 微米是消费级便宜货；叠 1000 层、每层压到 1 微米以下还不能烧裂短路，全世界只有村田、三星电机等几家做得好——AI 服务器抢的就是这种。行业还有个换算：一颗 AI 级高端 MLCC 要消耗约 4 颗普通品的产能。</p>
+<p><strong>记忆卡：MLCC = Multilayer（千层饼）+ Ceramic（陶瓷夹心）+ Capacitor（存电的两块板）——两把金属梳子隔着陶瓷交错咬合，叠一千层就是一千个水池并联，贴在芯片脚边随时放水救急。</strong></p>
+<h2 id="第五章-mlcc-板块格局玩家与投资价值">第五章 MLCC 板块：格局、玩家与投资价值</h2>
+<blockquote>
+<p>你当时的问题：MLCC 对应的标的股票有哪些？把这个板块现在的格局、现状和投资价值说明一下，包括美股和 A 股。</p>
+</blockquote>
+<p>为什么 AI 让 MLCC 突然紧缺？三个原因叠加：GPU 功率大且波动剧烈，要的是大容量高端品；用量是传统服务器的 8-12 倍；高端品一颗吃 4 颗普通产能。村田社长 2026 年 2 月说，高端 MLCC 询单量是现有产能的 2 倍，“完全无法满足”，紧张可能持续两年。</p>
+<p>格局呈金字塔：塔尖高端市场基本被村田（约 30%）和三星电机（约 23%）垄断，本轮涨价的震中就在这里；中层是 TDK（11-13%）、太阳诱电（8-10%）、国巨（含 KEMET，7-9%）；中国大陆厂商合计约 10%，主要在中低端，高端正在送样追赶。</p>
+<svg width="100%" viewBox="0 0 680 286" role="img" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans CJK SC,PingFang SC,sans-serif" style="width:100%;height:auto">
+<title>
+MLCC 市场格局金字塔
+</title>
+<desc>MLCC 市场分三层：高端由村田和三星电机垄断，是本轮 AI 涨价的震中；中端是 TDK、太阳诱电、国巨；中低端是中国大陆厂商三环集团和风华高科，约占 10% 份额。</desc> <g><rect x="200" y="30" width="280" height="64" rx="4" fill="#EEEDFE" stroke="#AFA9EC"/><text font-size="16" font-weight="600" fill="#443B9E" x="340" y="56" text-anchor="middle">高端：日韩双雄</text><text font-size="13" fill="#534AB7" x="340" y="78" text-anchor="middle">村田 ≈30% · 三星电机 ≈23%</text></g> <path d="M480 62 H510" stroke="#999" stroke-width="1" stroke-dasharray="3 3" fill="none"/> <text font-size="13" fill="#666" x="516" y="66" text-anchor="start">涨价潮的震中</text> <g><rect x="130" y="106" width="420" height="64" rx="4" fill="#E1F5EE" stroke="#5DCAA5"/><text font-size="16" font-weight="600" fill="#085041" x="340" y="132" text-anchor="middle">中端：日台厂商</text><text font-size="13" fill="#0F6E56" x="340" y="154" text-anchor="middle">TDK 11-13% · 太阳诱电 8-10% · 国巨 7-9%</text></g> <g><rect x="60" y="182" width="560" height="64" rx="4" fill="#F1EFE8" stroke="#B4B2A9"/><text font-size="16" font-weight="600" fill="#444" x="340" y="208" text-anchor="middle">中低端：中国大陆 ≈10%</text><text font-size="13" fill="#666" x="340" y="230" text-anchor="middle">三环集团 · 风华高科 · 国产替代进行时</text></g>
+</svg>
+<p>现状（截至 2026 年 7 月初）：村田 6 月正式发函，对 AI 服务器和高端车规品提价 10%-40%，7 月 1 日生效；国巨同日启动近年最大范围全线涨价；高端货交期从 8-12 周拉长到 16-24 周；缺货预计持续到 2027 上半年，下半年高容品预计再涨 20%-30%。村田把 AI 相关 MLCC 增速预期从 18% 上修到 30%，投资高峰预期从 2028 年延到 2030 年。</p>
+<p>对应标的，每家一个“人设”帮助记忆：</p>
+<table>
+<thead>
+<tr class="header">
+<th>公司</th>
+<th>市场</th>
+<th>人设</th>
+<th>看家本领</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>村田 Murata（6981.T / OTC: MRAAY）</td>
+<td>日股</td>
+<td>绝对学霸</td>
+<td>高端垄断者，AI 涨价最大受益人</td>
+</tr>
+<tr class="even">
+<td>三星电机（009150.KS）</td>
+<td>韩股</td>
+<td>二当家</td>
+<td>高端第二极，IT 和车规都强</td>
+</tr>
+<tr class="odd">
+<td>太阳诱电（6976.T）</td>
+<td>日股</td>
+<td>偏科尖子</td>
+<td>高频/大容量见长，弹性大</td>
+</tr>
+<tr class="even">
+<td>TDK（6762.T / ADR: TTDKY）</td>
+<td>日股</td>
+<td>多元老将</td>
+<td>MLCC 只是业务之一</td>
+</tr>
+<tr class="odd">
+<td>国巨 Yageo（2327.TW）</td>
+<td>台股</td>
+<td>并购狂人</td>
+<td>吞了 KEMET，靠买买买往高端爬</td>
+</tr>
+<tr class="even">
+<td>三环集团（300408.SZ）</td>
+<td>A股</td>
+<td>国产优等生</td>
+<td>大陆技术标杆，已进华为/浪潮服务器链</td>
+</tr>
+<tr class="odd">
+<td>风华高科（000636.SZ）</td>
+<td>A股</td>
+<td>弹性追赶者</td>
+<td>车规见长，高端送样中，故事弹性最大</td>
+</tr>
+</tbody>
+</table>
+<p>两点补充：美股没有纯 MLCC 标的（KEMET 2020 年已被国巨收购），想参与只能买村田、京瓷等 OTC ADR，流动性一般。A股还有上游材料线——国瓷材料（陶瓷粉）、博迁新材（镍粉）、洁美科技（离型膜），逻辑是“不管谁扩产，粉和膜都得多买”。</p>
+<p>投资价值按老规矩拆。事实：涨价函、缺货、交期翻倍、订单排到 2027 都是真的。叙事要小心三点：涨价发生在高端而高端在日韩手里，A股标的吃到的更多是“国产替代+情绪”；股价已经跑了很远——4 至 6 月三环涨约 134%、风华涨约 193%，村田股价一年翻倍但利润几乎没涨，“未定价”对这个板块已不太成立；6 月底风华还因传闻一字跌停，博弈已经很拥挤。风险：MLCC 是强周期行业，2018 年那轮国巨一年涨 10 倍随后跌掉 80%，各家都在扩产，2027 年后供给释放，周期见顶的剧本以前演过。</p>
+<p><strong>记忆卡：MLCC 是给芯片稳压的“电子大米”，AI 把高端米抢缺货了；最正宗的受益人是日韩双雄，A股炒的是替代梦——记住这是周期品，2018 年涨 10 倍再跌 80% 的剧本演过一次。</strong></p>
+<h2 id="第六章-超级电容给-gpu-抹平心电图的游泳池脸盆">第六章 超级电容：给 GPU 抹平心电图的“游泳池脸盆”</h2>
+<blockquote>
+<p>你当时的问题：超级电容这一块，用费曼技巧给小白说明一下整个情况。</p>
+</blockquote>
+<p>先摆三样东西：电池像保温瓶——存水多，但倒水慢（靠化学反应，充放电几十分钟起）；普通电容像脸盆——存水少，但一秒泼光（纯物理静电）；超级电容就是游泳池规格的脸盆——容量是普通电容的几千倍，放电依然秒级，还能反复充放上百万次不坏（电池几千次就衰减）。</p>
+<p>AI 服务器为什么突然需要它？两个场景。其一是“心电图”负载：几万张 GPU 同步计算、同步等待，整个机房功率一秒内从 30% 跳到 100% 再跳回来，电网最怕这种抽风式用电——超级电容站在中间当减震器，功率猛抽时放水、松开时蓄水，把心电图抹平。其二是掉电保命（BBU 备份电源）：断电瞬间超容立刻顶上几十秒，让 GPU 把数据保存好体面关机。电池反应太慢、寿命太短，这两个活都干不了。</p>
+<p>现状是四条链里缺口最大、供应商最少的一环：2026 年 GB300 平台需求约 1500-1800 万颗，全球高端 LIC（锂离子电容）核心供应商日本 Musashi 满产只有约 650 万颗，缺口 60% 以上。A股稀缺标的是江海股份（002484）：LH800 模组批量供英伟达，33kW 超容+BBU 方案独供字节跳动数据中心，产能正从 300 万颗扩到 800 万颗（2025 年超容收入 3.52 亿元，同比 +52.5%）。</p>
+<p><strong>记忆卡：超级电容 = 秒级充放、百万次循环的“游泳池级脸盆”，给 GPU 抹平心电图、断电时保命——全球高端产能几乎只有 Musashi 一家，缺口 60%。</strong></p>
+<h2 id="第七章-cclpcb-与四条产业链">第七章 CCL、PCB 与四条产业链</h2>
+<blockquote>
+<p>你当时的问题：CCL 的全称是什么？把 MLCC、PCB、CCL、功率半导体这几条产业链和需求梳理串起来，并列出 CCL（好像已经炒过一遍了）和 PCB 涉及的股票。</p>
+</blockquote>
+<p>CCL = Copper Clad Laminate，覆铜板。做法像做千层饼：玻纤布（钢筋）浸上树脂（混凝土），两面压上铜箔（电线），高温压合成板。PCB（Printed Circuit Board，印刷电路板）厂买来覆铜板，蚀刻线路、钻孔、层层叠合，就成了承载所有芯片元件的“地基”。关系是：玻纤布/铜箔/树脂 → CCL（面粉）→ PCB（面包）→ 服务器。</p>
+<p>四条链的需求逻辑各不相同：</p>
+<svg width="100%" viewBox="0 0 680 386" role="img" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans CJK SC,PingFang SC,sans-serif" style="width:100%;height:auto">
+<title>
+AI 服务器四条供应链对照图
+</title>
+<desc>MLCC、超级电容、功率半导体、PCB/CCL 四条产业链，从上游材料到中游元件板材，最终汇入 AI 服务器。</desc> <g><rect x="40" y="50" width="150" height="56" rx="4" fill="#F1EFE8" stroke="#B4B2A9"/><text font-size="15" font-weight="600" fill="#444" x="115" y="74" text-anchor="middle">陶瓷粉 · 镍粉</text><text font-size="12.5" fill="#666" x="115" y="94" text-anchor="middle">国瓷 · 博迁 · 洁美</text></g> <path d="M190 78 H210" stroke="#666" stroke-width="1.4" fill="none"/><path d="M210 74 L220 78 L210 82 Z" fill="#666"/> <g><rect x="220" y="50" width="150" height="56" rx="4" fill="#E1F5EE" stroke="#5DCAA5"/><text font-size="15" font-weight="600" fill="#085041" x="295" y="74" text-anchor="middle">MLCC 电容</text><text font-size="12.5" fill="#0F6E56" x="295" y="94" text-anchor="middle">村田 · 三环 · 风华</text></g> <path d="M370 78 H530" stroke="#666" stroke-width="1.4" fill="none"/><path d="M530 74 L540 78 L530 82 Z" fill="#666"/> <g><rect x="40" y="130" width="150" height="56" rx="4" fill="#F1EFE8" stroke="#B4B2A9"/><text font-size="15" font-weight="600" fill="#444" x="115" y="154" text-anchor="middle">锂电材料 · 活性炭</text><text font-size="12.5" fill="#666" x="115" y="174" text-anchor="middle">电极 · 电解液</text></g> <path d="M190 158 H210" stroke="#666" stroke-width="1.4" fill="none"/><path d="M210 154 L220 158 L210 162 Z" fill="#666"/> <g><rect x="220" y="130" width="150" height="56" rx="4" fill="#E1F5EE" stroke="#5DCAA5"/><text font-size="15" font-weight="600" fill="#085041" x="295" y="154" text-anchor="middle">超级电容</text><text font-size="12.5" fill="#0F6E56" x="295" y="174" text-anchor="middle">Musashi · 江海股份</text></g> <path d="M370 158 H530" stroke="#666" stroke-width="1.4" fill="none"/><path d="M530 154 L540 158 L530 162 Z" fill="#666"/> <g><rect x="40" y="210" width="150" height="56" rx="4" fill="#F1EFE8" stroke="#B4B2A9"/><text font-size="15" font-weight="600" fill="#444" x="115" y="234" text-anchor="middle">SiC / GaN 衬底</text><text font-size="12.5" fill="#666" x="115" y="254" text-anchor="middle">天岳先进 等</text></g> <path d="M190 238 H210" stroke="#666" stroke-width="1.4" fill="none"/><path d="M210 234 L220 238 L210 242 Z" fill="#666"/> <g><rect x="220" y="210" width="150" height="56" rx="4" fill="#E1F5EE" stroke="#5DCAA5"/><text font-size="15" font-weight="600" fill="#085041" x="295" y="234" text-anchor="middle">功率半导体</text><text font-size="12.5" fill="#0F6E56" x="295" y="254" text-anchor="middle">英飞凌 · 安森美</text></g> <path d="M370 238 H530" stroke="#666" stroke-width="1.4" fill="none"/><path d="M530 234 L540 238 L530 242 Z" fill="#666"/> <g><rect x="40" y="290" width="150" height="56" rx="4" fill="#F1EFE8" stroke="#B4B2A9"/><text font-size="15" font-weight="600" fill="#444" x="115" y="314" text-anchor="middle">玻纤布·铜箔·树脂</text><text font-size="12.5" fill="#666" x="115" y="334" text-anchor="middle">日东纺 · 宏和 · 菲利华</text></g> <path d="M190 318 H210" stroke="#666" stroke-width="1.4" fill="none"/><path d="M210 314 L220 318 L210 322 Z" fill="#666"/> <g><rect x="220" y="290" width="150" height="56" rx="4" fill="#E1F5EE" stroke="#5DCAA5"/><text font-size="15" font-weight="600" fill="#085041" x="295" y="314" text-anchor="middle">CCL 覆铜板</text><text font-size="12.5" fill="#0F6E56" x="295" y="334" text-anchor="middle">台光 · 生益科技</text></g> <path d="M370 318 H390" stroke="#666" stroke-width="1.4" fill="none"/><path d="M390 314 L400 318 L390 322 Z" fill="#666"/> <g><rect x="400" y="290" width="110" height="56" rx="4" fill="#E1F5EE" stroke="#5DCAA5"/><text font-size="15" font-weight="600" fill="#085041" x="455" y="314" text-anchor="middle">PCB</text><text font-size="12.5" fill="#0F6E56" x="455" y="334" text-anchor="middle">沪电 · 胜宏</text></g> <path d="M510 318 H530" stroke="#666" stroke-width="1.4" fill="none"/><path d="M530 314 L540 318 L530 322 Z" fill="#666"/> <g><rect x="540" y="50" width="100" height="296" rx="4" fill="#EEEDFE" stroke="#AFA9EC"/><text font-size="16" font-weight="600" fill="#443B9E" x="590" y="188" text-anchor="middle">AI 服务器</text><text font-size="12.5" fill="#534AB7" x="590" y="210" text-anchor="middle">GB300→Rubin</text></g>
+</svg>
+<p>MLCC 链：AI 用量 8-12 倍且要高端品（1 颗吃 4 颗产能）→ 中游涨价 → 上游陶瓷粉（国瓷材料）、镍粉（博迁新材）、离型膜（洁美科技）跟着放量。</p>
+<p>超容链：800V 架构+功率波动催生从 0 到 1 的增量需求，卡在 Musashi 和江海的产能上。</p>
+<p>功率半导体链：800V 高压需要 SiC/GaN 器件做电压变换（“变速箱”），单机架价值逐代跳升——原文 17 倍那条线。上游衬底（天岳先进、Wolfspeed），中游器件（英飞凌、安森美、纳芯微）。</p>
+<p>PCB/CCL 链：GPU 越快，信号在板里跑得越急，对材料损耗要求越苛刻 → 需要 M8/M9 级高端 CCL 和更高层数 PCB（GB200 背板 78 层）→ 最上游高端玻纤布/石英布成终极瓶颈：1080 超薄电子布年内涨超 100%，石英 Q 布价格是普通布的 6-13 倍。2026 年内建滔积层板已 5 轮提价、FR-4 累计 +50%；台光电、联茂对高阶材料再调涨 10%。</p>
+<p>CCL 及其上游标的（这块确实已炒过一大轮）：</p>
+<table>
+<thead>
+<tr class="header">
+<th>公司</th>
+<th>市场</th>
+<th>位置</th>
+<th>现状（截至 2026.07）</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>台光电子（2383.TW）</td>
+<td>台股</td>
+<td>M9 高端 CCL 近乎独供</td>
+<td>高端王者，Q2 再提价 10%</td>
+</tr>
+<tr class="even">
+<td>生益科技（600183）</td>
+<td>A股</td>
+<td>大陆 CCL 龙头</td>
+<td>M9 级通过英伟达认证，利润同比 +92%</td>
+</tr>
+<tr class="odd">
+<td>联茂（6213.TW）/ 台燿（6274.TW）</td>
+<td>台股</td>
+<td>高阶二梯队</td>
+<td>跟随提价 10%</td>
+</tr>
+<tr class="even">
+<td>建滔积层板（1888.HK）</td>
+<td>港股</td>
+<td>中低端大宗龙头</td>
+<td>年内 5 轮提价，FR-4 累计 +50%</td>
+</tr>
+<tr class="odd">
+<td>南亚新材 / 金安国纪</td>
+<td>A股</td>
+<td>CCL 二线</td>
+<td>利润弹性巨大（+378% / +655%~871%）</td>
+</tr>
+<tr class="even">
+<td>日东纺（3110.T）</td>
+<td>日股</td>
+<td>高端玻纤布霸主</td>
+<td>终极瓶颈环节</td>
+</tr>
+<tr class="odd">
+<td>宏和科技（603256）</td>
+<td>A股</td>
+<td>高端电子布</td>
+<td>超薄布国产替代</td>
+</tr>
+<tr class="even">
+<td>菲利华（300395）</td>
+<td>A股</td>
+<td>石英材料</td>
+<td>对应最贵的石英 Q 布</td>
+</tr>
+</tbody>
+</table>
+<p>PCB 标的：</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>公司</th>
+<th>市场</th>
+<th>人设</th>
+<th>现状（截至 2026.07）</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>沪电股份（002463）</td>
+<td>A股</td>
+<td>背板独供王</td>
+<td>GB200/300 78 层 M9 背板全球独家，单台价值 3-5 万元，毛利率 40%+，股价一年约 4 倍</td>
+</tr>
+<tr class="even">
+<td>胜宏科技（300476）</td>
+<td>A股</td>
+<td>AI PCB 全球份额第一</td>
+<td>英伟达加速卡核心供应商，2025 年涨 586%，赴港二次上市</td>
+</tr>
+<tr class="odd">
+<td>深南电路 / 生益电子 / 景旺电子</td>
+<td>A股</td>
+<td>二梯队</td>
+<td>扩产潮中，订单外溢受益</td>
+</tr>
+<tr class="even">
+<td>金像电（2368.TW）</td>
+<td>台股</td>
+<td>台系服务器板龙头</td>
+<td>GPU/ASIC 板主力</td>
+</tr>
+<tr class="odd">
+<td>TTM（TTMI）</td>
+<td>美股</td>
+<td>美国本土稀缺标的</td>
+<td>数据中心+军工 PCB</td>
+</tr>
+</tbody>
+</table>
+<p>一盆对照冷水：原文把功率+被动件说成“未定价的二阶”，但 PCB/CCL 这条链其实是已经被充分发现的二阶——胜宏一年 6 倍、沪电 4 倍、覆铜板厂利润翻几倍、订单排到 2027。它演示的正是“二阶机会被市场找到之后”的样子。所以真正的问题不是“哪条链受益”，而是每条链处在被发现的第几个阶段：PCB/CCL 接近光模块（拥挤），MLCC 半山腰（A股标的已翻倍），超容和功率半导体相对靠前——但“靠前”也意味着兑现最远（超容看 2026-27，功率半导体的大账单要等 2027H2 的 Rubin Ultra）。</p>
+<p><strong>记忆卡：CCL 是“PCB 的面粉”（玻纤布+树脂+铜箔压的千层饼）；四条链一句话——MLCC 稳压、超容保命、功率半导体变速、PCB/CCL 打地基；PCB/CCL 已被炒熟，超容缺口最狠但盘子最小。</strong></p>
+<h2 id="第八章-全景总结">第八章 全景总结</h2>
+<p>把整本笔记装回一张地图。石头是 AI 算力爆发；第一圈涟漪（GPU、光模块）已被挤满；第二圈涟漪就是本笔记的主角——800V 供电革命把铜缆的钱转移给了四条链：MLCC（稳压的电子大米，日韩垄断高端，A股炒替代）、超级电容（保命的游泳池脸盆，Musashi 独大、缺口 60%、江海稀缺）、功率半导体（SiC/GaN 变速箱，逐代 17 倍但兑现在 2027 之后）、PCB/CCL（地基和面粉，涨价最凶也炒得最熟）。</p>
+<p>判断框架带走三条：第一，看到任何“XX 受益”的叙事，先问它是第几圈涟漪、被发现到什么程度（已定价还是未定价）；第二，事实（涨价函、订单、认证）、叙事（测算、路线图、极端个例）、风险（周期、扩产、营销动机）永远分开摆；第三，被动件、覆铜板这类“锅碗瓢盆”生意都是强周期——涨价潮越壮观，越要记得上一轮周期顶部的样子。</p>
+<h2 id="附录一句话记忆卡合集">附录：一句话记忆卡合集</h2>
+<table>
+<thead>
+<tr class="header">
+<th>概念</th>
+<th>一句话</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>800V HVDC</td>
+<td>电流降 16 倍，省下的铜钱变成功率芯片和电容的账单——AI 涨价故事的下半场</td>
+</tr>
+<tr class="even">
+<td>一阶 / 二阶</td>
+<td>一阶是人人看见的第一圈涟漪（已定价），二阶是力量传到的第二圈（未定价）——比别人早一圈看到涟漪</td>
+</tr>
+<tr class="odd">
+<td>被动件</td>
+<td>主动件是厨师（放大、运算），被动件是锅碗瓢盆（挡、存、稳）——厨师越猛，锅配越多</td>
+</tr>
+<tr class="even">
+<td>MLCC 原理</td>
+<td>两把金属梳子隔着陶瓷交错咬合，叠一千层就是一千个水池并联，贴在芯片脚边放水救急</td>
+</tr>
+<tr class="odd">
+<td>MLCC 板块</td>
+<td>高端米被 AI 抢缺货，正宗受益人是日韩双雄，A股炒替代梦——周期品，2018 年涨 10 倍跌 80% 演过</td>
+</tr>
+<tr class="even">
+<td>超级电容</td>
+<td>秒级充放、百万次循环的游泳池脸盆，抹平心电图、断电保命——Musashi 独大，缺口 60%</td>
+</tr>
+<tr class="odd">
+<td>CCL / 四条链</td>
+<td>CCL 是 PCB 的面粉；MLCC 稳压、超容保命、功率半导体变速、PCB/CCL 打地基——后者已炒熟</td>
+</tr>
+</tbody>
+</table>
+<p><em>免责声明：本笔记为个人学习整理，全部内容仅供学习参考，不构成任何投资建议。文中数据来自 2026 年 7 月初的公开报道与第三方研究（TrendForce、Morgan Stanley、财联社、东方财富等），原始文章《AI 的下一张涨价单，hvdc800》为公众号内容且含付费研报推广，请注意甄别。</em></p>
+
+  </article>
+  <div class="disclaim">本文为个人学习笔记，由对话探讨整理而成，仅作知识分享，不构成任何投资建议。</div>
+</main>
+</body>
+</html>
