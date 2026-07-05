@@ -440,16 +440,7 @@ let PROFILES = {};
       fetch("data/quotes.json"+bust).then(r=>r.json()),
       fetch("config/notes.json"+bust).then(r=>r.json())
     ]);
-    fetch("config/profiles.json"+bust).then(r=>r.ok?r.json():{}).then(p=>{
-      PROFILES = p || {};
-      document.querySelectorAll("td.name").forEach(td=>{
-        const c = td.querySelector(".sub"); if(!c) return;
-        if(PROFILES[c.childNodes[0].textContent.trim()]){
-          const cn = td.querySelector(".cn");
-          if(cn){ cn.style.borderBottom = "1px dotted var(--text2)"; cn.style.cursor = "help"; }
-        }
-      });
-    }).catch(()=>{});
+    fetch("config/profiles.json"+bust).then(r=>r.ok?r.json():{}).then(p=>{ PROFILES = p || {}; }).catch(()=>{});
     renderDash(quotes);
     renderNotes(notesCfg);
   }catch(e){
