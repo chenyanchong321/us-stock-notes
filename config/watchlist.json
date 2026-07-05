@@ -45,6 +45,26 @@
      },
      "mcap_base_price": 744.78,
      "ath_floor": 760.4
+    },
+    {
+     "name": "上证指数",
+     "code": "SHCOMP",
+     "market": "A股 指数",
+     "yahoo": "000001.SS",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "恒生指数",
+     "code": "HSI",
+     "market": "港股 指数",
+     "yahoo": "^HSI",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
     }
    ]
   },
