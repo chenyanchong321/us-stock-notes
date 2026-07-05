@@ -524,7 +524,7 @@ function renderNotes(cfg){
   const b=document.createElement("button");
   b.id="toTop"; b.title="回到顶部"; b.textContent="↑";
   document.body.appendChild(b);
-  b.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
+  b.addEventListener("click",()=>window.scrollTo(0,0));
   window.addEventListener("scroll",()=>{
     b.style.display = window.scrollY>600 ? "flex" : "none";
   },{passive:true});
