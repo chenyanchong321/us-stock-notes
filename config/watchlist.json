@@ -65,16 +65,6 @@
      "ath_floor": 0
     },
     {
-     "name": "纳斯达克中国金龙",
-     "code": "HXC",
-     "market": "美股 指数",
-     "yahoo": "^HXC",
-     "currency": "",
-     "mcap_base": null,
-     "mcap_base_price": 1.0,
-     "ath_floor": 0
-    },
-    {
      "name": "标普500波动率VIX",
      "code": "VIX",
      "market": "美股 指数",
@@ -125,11 +115,11 @@
      "ath_floor": 0
     },
     {
-     "name": "恒生科技指数",
-     "code": "HSTECH",
-     "market": "港股 指数",
-     "yahoo": "^HSTECH",
-     "currency": "",
+     "name": "恒生科技ETF（南方）",
+     "code": "3033",
+     "market": "港股 ETF",
+     "yahoo": "3033.HK",
+     "currency": "HK$",
      "mcap_base": null,
      "mcap_base_price": 1.0,
      "ath_floor": 0
@@ -205,6 +195,16 @@
      },
      "mcap_base_price": 566.32,
      "ath_floor": 655.95
+    },
+    {
+     "name": "中国金龙ETF（PGJ）",
+     "code": "PGJ",
+     "market": "美股 ETF",
+     "yahoo": "PGJ",
+     "currency": "$",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
     }
    ],
    "groups": [
@@ -216,8 +216,7 @@
       "IXIC",
       "NDX",
       "SOX",
-      "RUT",
-      "HXC"
+      "RUT"
      ]
     },
     {
@@ -233,7 +232,7 @@
       "SHCOMP",
       "000300",
       "HSI",
-      "HSTECH",
+      "3033",
       "HSCE",
       "N225",
       "KOSPI"
@@ -244,7 +243,8 @@
      "codes": [
       "QQQ",
       "SPY",
-      "SOXX"
+      "SOXX",
+      "PGJ"
      ]
     }
    ]
