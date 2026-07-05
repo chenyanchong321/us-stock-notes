@@ -387,6 +387,51 @@ function renderNotes(cfg){
   });
 })();
 
+/* ===== 标的简介浮窗 ===== */
+let PROFILES = {};
+(function(){
+  const tip = document.createElement("div");
+  tip.id = "stip";
+  tip.style.cssText = "position:fixed;display:none;z-index:300;max-width:330px;background:var(--panel2);border-left:3px solid var(--accent);border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);border-radius:0 10px 10px 0;padding:11px 13px;font-size:13px;line-height:1.65;color:var(--text2);box-shadow:0 8px 28px rgba(0,0,0,.5);pointer-events:none";
+  document.body.appendChild(tip);
+  const st = document.createElement("style");
+  st.textContent = "#stip b{color:var(--text);font-weight:600}";
+  document.head.appendChild(st);
+  function codeOf(td){
+    const s = td.querySelector(".sub");
+    return s ? s.childNodes[0].textContent.trim() : "";
+  }
+  function place(x, y){
+    const w = tip.offsetWidth, h = tip.offsetHeight;
+    let L = x + 14, T = y + 16;
+    if(L + w > innerWidth - 8)  L = Math.max(8, x - w - 14);
+    if(T + h > innerHeight - 8) T = Math.max(8, y - h - 12);
+    tip.style.left = L + "px"; tip.style.top = T + "px";
+  }
+  document.addEventListener("mouseover", e=>{
+    const td = e.target.closest("td.name"); if(!td) return;
+    const txt = PROFILES[codeOf(td)]; if(!txt) return;
+    tip.innerHTML = txt; tip.style.display = "block";
+    place(e.clientX, e.clientY);
+  });
+  document.addEventListener("mousemove", e=>{
+    if(tip.style.display !== "block") return;
+    if(!e.target.closest || !e.target.closest("td.name")){ tip.style.display = "none"; return; }
+    place(e.clientX, e.clientY);
+  });
+  document.addEventListener("mouseout", e=>{
+    if(e.target.closest && e.target.closest("td.name") && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest("td.name")))
+      tip.style.display = "none";
+  });
+  document.addEventListener("click", e=>{      /* 手机端：点名称显示，点其他处收起 */
+    const td = e.target.closest("td.name");
+    if(td && PROFILES[codeOf(td)]){
+      tip.innerHTML = PROFILES[codeOf(td)]; tip.style.display = "block";
+      place(e.clientX||20, e.clientY||100);
+    } else tip.style.display = "none";
+  });
+})();
+
 /* ===== 启动 ===== */
 (async ()=>{
   try{
@@ -395,6 +440,16 @@ function renderNotes(cfg){
       fetch("data/quotes.json"+bust).then(r=>r.json()),
       fetch("config/notes.json"+bust).then(r=>r.json())
     ]);
+    fetch("config/profiles.json"+bust).then(r=>r.ok?r.json():{}).then(p=>{
+      PROFILES = p || {};
+      document.querySelectorAll("td.name").forEach(td=>{
+        const c = td.querySelector(".sub"); if(!c) return;
+        if(PROFILES[c.childNodes[0].textContent.trim()]){
+          const cn = td.querySelector(".cn");
+          if(cn){ cn.style.borderBottom = "1px dotted var(--text2)"; cn.style.cursor = "help"; }
+        }
+      });
+    }).catch(()=>{});
     renderDash(quotes);
     renderNotes(notesCfg);
   }catch(e){
