@@ -62,9 +62,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 .section-head .avg{font-size:12px;color:var(--text2)}
 
 /* 表格 */
-.tbl-wrap{background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow-x:auto}
+.tbl-wrap{background:var(--panel);border:1px solid var(--border);border-radius:10px}
 table{width:100%;border-collapse:collapse;white-space:nowrap}
-th{font-size:12px;color:var(--text2);text-align:right;padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;background:var(--panel)}
+th{font-size:12px;color:var(--text2);text-align:right;padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;background:var(--panel);position:sticky;top:var(--header-h);z-index:5}
 th:first-child{text-align:left}
 th:hover{color:var(--text)}
 th .arrow{font-size:10px;margin-left:3px;color:var(--accent)}
