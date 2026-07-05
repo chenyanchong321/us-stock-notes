@@ -143,7 +143,8 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 .card:hover::after{color:var(--accent)}
 .card:hover .t{color:var(--accent)}
 .card .thumb{height:118px;background:#f7f6f2;display:flex;align-items:center;justify-content:center;overflow:hidden;border-bottom:1px solid var(--border)}
-.card .thumb img{width:100%;height:100%;object-fit:cover;object-position:center top}
+.card .thumb img{width:100%;height:100%;object-fit:cover;object-position:center}
+.card .thumb.svgt img{object-fit:contain;padding:8px;box-sizing:border-box}
 .card .thumb .emo{font-size:42px;filter:saturate(.8)}
 .card .thumb.fallback{background:var(--panel2)}
 .card .body{padding:13px 16px 15px;display:flex;flex-direction:column;gap:8px;flex:1}
@@ -435,7 +436,7 @@ function renderNotes(cfg){
         <h3>${c.cat}<span class="n">${c.items.length} 篇</span></h3>
         <div class="cards">${c.items.map(n=>`
           <a class="card" href="${n.page}">
-            <div class="thumb${n.img?"":" fallback"}">${n.img?`<img src="${n.img}" loading="lazy" alt="">`:`<span class="emo">${[...c.cat][0]}</span>`}</div>
+            <div class="thumb${n.img?(n.img.endsWith(".svg")?" svgt":""):" fallback"}">${n.img?`<img src="${n.img}" loading="lazy" alt="">`:`<span class="emo">${[...c.cat][0]}</span>`}</div>
             <div class="body">
               <div class="t">${n.t}</div>
               <div class="meta"><span class="date">${n.date}</span>${n.tags.map(t=>`<span class="tag">${t}</span>`).join("")}</div>
