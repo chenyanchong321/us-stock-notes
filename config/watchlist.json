@@ -915,7 +915,180 @@
    ]
   },
   {
-   "name": "06 云与 AI 算力数据中心",
+   "name": "06 光芯片与激光器",
+   "items": [
+    {
+     "name": "Coherent",
+     "code": "COHR",
+     "market": "美股",
+     "yahoo": "COHR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 652.2,
+      "approx": false
+     },
+     "mcap_base_price": 333.36,
+     "ath_floor": 440.0
+    },
+    {
+     "name": "Lumentum",
+     "code": "LITE",
+     "market": "美股",
+     "yahoo": "LITE",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 566.6,
+      "approx": false
+     },
+     "mcap_base_price": 728.32,
+     "ath_floor": 1085.68
+    },
+    {
+     "name": "住友电气",
+     "code": "5802",
+     "market": "日股",
+     "yahoo": "5802.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 20700,
+      "approx": true
+     },
+     "mcap_base_price": 2664.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "古河电工",
+     "code": "5801",
+     "market": "日股",
+     "yahoo": "5801.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 63450,
+      "approx": true
+     },
+     "mcap_base_price": 9000.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "源杰科技",
+     "code": "688498",
+     "market": "A股",
+     "yahoo": "688498.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1427,
+      "approx": true
+     },
+     "mcap_base_price": 1659.23,
+     "ath_floor": 0
+    },
+    {
+     "name": "长光华芯",
+     "code": "688048",
+     "market": "A股",
+     "yahoo": "688048.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 723,
+      "approx": true
+     },
+     "mcap_base_price": 410.6,
+     "ath_floor": 0
+    },
+    {
+     "name": "仕佳光子",
+     "code": "688313",
+     "market": "A股",
+     "yahoo": "688313.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 723,
+      "approx": true
+     },
+     "mcap_base_price": 158.57,
+     "ath_floor": 0
+    },
+    {
+     "name": "光迅科技",
+     "code": "002281",
+     "market": "A股",
+     "yahoo": "002281.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1717,
+      "approx": true
+     },
+     "mcap_base_price": 217.33,
+     "ath_floor": 0
+    },
+    {
+     "name": "华工科技",
+     "code": "000988",
+     "market": "A股",
+     "yahoo": "000988.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1508,
+      "approx": true
+     },
+     "mcap_base_price": 150.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "永鼎股份",
+     "code": "600105",
+     "market": "A股",
+     "yahoo": "600105.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 758,
+      "approx": true
+     },
+     "mcap_base_price": 54.53,
+     "ath_floor": 0
+    },
+    {
+     "name": "AXT Inc",
+     "code": "AXTI",
+     "market": "美股",
+     "yahoo": "AXTI",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 37.1,
+      "approx": false
+     },
+     "mcap_base_price": 56.62,
+     "ath_floor": 143.16
+    },
+    {
+     "name": "Applied Optoelectronics",
+     "code": "AAOI",
+     "market": "美股",
+     "yahoo": "AAOI",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 97.0,
+      "approx": false
+     },
+     "mcap_base_price": 120.95,
+     "ath_floor": 233.67
+    }
+   ]
+  },
+  {
+   "name": "07 云与 AI 算力数据中心",
    "items": [
     {
      "name": "微软",
@@ -1130,7 +1303,7 @@
    ]
   },
   {
-   "name": "07 半导体设备",
+   "name": "08 半导体设备",
    "items": [
     {
      "name": "阿斯麦",
@@ -1485,7 +1658,7 @@
    ]
   },
   {
-   "name": "08 半导体材料",
+   "name": "09 半导体材料",
    "items": [
     {
      "name": "信越化学",
@@ -1714,7 +1887,7 @@
    ]
   },
   {
-   "name": "09 封装测试（OSAT与测试设备）",
+   "name": "10 封装测试（OSAT与测试设备）",
    "items": [
     {
      "name": "台积电",
@@ -2055,7 +2228,7 @@
    ]
   },
   {
-   "name": "10 碳化硅（SiC与宽禁带功率）",
+   "name": "11 碳化硅（SiC与宽禁带功率）",
    "items": [
     {
      "name": "意法半导体",
@@ -2256,7 +2429,7 @@
    ]
   },
   {
-   "name": "11 800VDC 电力电子与功率半导体",
+   "name": "12 800VDC 电力电子与功率半导体",
    "items": [
     {
      "name": "纳微半导体",
@@ -2415,7 +2588,7 @@
    ]
   },
   {
-   "name": "12 光纤与光缆",
+   "name": "13 光纤与光缆",
    "items": [
     {
      "name": "康宁",
@@ -2588,7 +2761,7 @@
    ]
   },
   {
-   "name": "13 PCB",
+   "name": "14 PCB",
    "items": [
     {
      "name": "胜宏科技",
@@ -2663,7 +2836,7 @@
    ]
   },
   {
-   "name": "14 能源、电力与资源现金流",
+   "name": "15 能源、电力与资源现金流",
    "items": [
     {
      "name": "Constellation Energy",
@@ -3056,7 +3229,7 @@
    ]
   },
   {
-   "name": "15 软件与 SaaS",
+   "name": "16 软件与 SaaS",
    "items": [
     {
      "name": "微软",
@@ -3495,7 +3668,7 @@
    ]
   },
   {
-   "name": "16 机器人、汽车零部件与无人系统",
+   "name": "17 机器人、汽车零部件与无人系统",
    "items": [
     {
      "name": "哈默纳科机电",
@@ -3598,7 +3771,7 @@
    ]
   },
   {
-   "name": "17 中国互联网、AI 应用与主题 ETF",
+   "name": "18 中国互联网、AI 应用与主题 ETF",
    "items": [
     {
      "name": "腾讯控股",
@@ -3651,7 +3824,7 @@
    ]
   },
   {
-   "name": "18 贵金属与有色金属",
+   "name": "19 贵金属与有色金属",
    "items": [
     {
      "name": "黄金 / 美元",
@@ -3834,7 +4007,7 @@
    ]
   },
   {
-   "name": "19 加密资产",
+   "name": "20 加密资产",
    "items": [
     {
      "name": "比特币",
