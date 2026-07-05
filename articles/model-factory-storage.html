@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>模型厂调研与存储层级：从预训练到冷热调配 · 烟囱的美股学习笔记</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<style>
+:root{--bg:#ffffff;--panel:#f6f8fa;--panel2:#eef1f4;--border:#e2e5e9;--text:#1f2328;--text2:#6b7280;--accent:#2563eb;--gold:#b8860b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:16px;line-height:1.85}
+#bar{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);z-index:10}
+#bar .in{max-width:760px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px}
+#bar a{color:var(--text2);text-decoration:none;font-size:14px}
+#bar a:hover{color:var(--accent)}
+#bar .site{margin-left:auto;font-size:13px;color:var(--text2)}
+#bar .site b{color:var(--accent);font-weight:600}
+main{max-width:760px;margin:0 auto;padding:28px 20px 90px}
+.head h1{font-size:26px;line-height:1.4;margin-bottom:12px}
+.meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.meta .date{font-size:13px;color:var(--text2)}
+.meta .tag{font-size:12px;color:var(--accent);background:rgba(74,140,240,.12);border-radius:4px;padding:2px 8px}
+.meta .pdf{font-size:13px;color:var(--text2);text-decoration:none;border:1px solid var(--border);border-radius:6px;padding:3px 10px}
+.meta .pdf:hover{color:var(--text);border-color:var(--text2)}
+.head{border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:26px}
+article h1{font-size:22px;margin:38px 0 14px;line-height:1.4}
+article h2{font-size:20px;margin:34px 0 12px;padding-left:10px;border-left:3px solid var(--accent);line-height:1.4}
+article h3{font-size:17px;margin:26px 0 10px}
+article p{margin:0 0 16px}
+article ul,article ol{margin:0 0 16px 1.4em}
+article li{margin-bottom:6px}
+article img,article svg{max-width:100%;height:auto;border-radius:10px;display:block;margin:18px auto;background:#fff;border:1px solid var(--border)}
+article blockquote{border-left:3px solid var(--gold);background:var(--panel);border-radius:0 8px 8px 0;padding:12px 16px;margin:0 0 16px;color:var(--text2)}
+article table{border-collapse:collapse;width:100%;margin:0 0 18px;font-size:14px;word-break:break-word}
+article th,article td{border:1px solid var(--border);padding:8px 12px;text-align:left}
+article th{background:var(--panel);color:var(--text2)}
+article tr:nth-child(even) td{background:rgba(246,248,250,.7)}
+article code{background:var(--panel2);border-radius:4px;padding:1px 6px;font-size:14px}
+article pre{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:14px;overflow-x:auto;margin:0 0 16px}
+article pre code{background:none;padding:0}
+article a{color:var(--accent)}
+article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+.disclaim{margin-top:50px;padding:14px 18px;background:var(--panel);border:1px solid var(--border);border-radius:10px;font-size:13px;color:var(--text2)}
+</style>
+</head>
+<body>
+<div id="bar"><div class="in">
+  <a href="../index.html?view=notes">← 返回笔记库</a>
+  <span class="site">📓 <b>烟囱</b>的美股学习笔记</span>
+</div></div>
+<main>
+  <div class="head">
+    <h1>模型厂调研与存储层级：从预训练到冷热调配</h1>
+    <div class="meta"><span class="date">2026-07-05</span><span class="tag">调研</span><span class="tag">存储层级</span><span class="tag">谷歌</span><a class="pdf" href="../notes/模型厂调研与存储层级学习笔记.pdf" download>⬇ 下载 PDF</a></div>
+  </div>
+  <article>
+<p><strong>从预训练到冷热调配：一篇谷歌模型调研纪要的完整拆解</strong></p>
+<p>整理日期：2026 年 7 月 5 日 · 基于公众号“北向牧风”2026-07-05 文章《模型厂关于近期热点的碎碎念》及对话中联网核实的公开信息</p>
+<blockquote>
+<p>阅读提示：本笔记按“基础概念 → 存储结构 → 调配机制 → 投资映射 → 全文解读 → 全景总结”的知识逻辑组织，不按聊天顺序。每章开头保留当时的提问，末尾附一句话记忆卡。全文用一个“大厨与厨房”的类比体系贯穿。原文是匿名内部调研纪要，所有数字无法独立核实，仅作学习参考，不构成投资建议。</p>
+</blockquote>
+<h2 id="目录">目录</h2>
+<p>第一章 概念工具箱：预训练与后训练——培养一位大厨</p>
+<p>第二章 存储金字塔：HBM、DRAM、SSD 与 Blob Storage 管家</p>
+<p>第三章 冷热数据自动调配：管家的巡逻路线</p>
+<p>第四章 1:10 配比、“吃满算力”与 DRAM 的投资映射</p>
+<p>第五章 全文解读：一切都被算力（和电）卡着脖子</p>
+<p>第六章 全景总结与知识地图</p>
+<p>附录 一句话记忆卡合集</p>
+<hr />
+<h2 id="第一章-概念工具箱预训练与后训练培养一位大厨">第一章 概念工具箱：预训练与后训练——培养一位大厨</h2>
+<blockquote>
+<p>你当时的问题：能帮我费曼小白一下，什么叫后训练，什么叫预训练吗？文章里说“后训练效果很大程度依赖预训练的底子”，他有没有提到这一点？</p>
+</blockquote>
+<p>一句话定义：预训练是让模型“读万卷书”学会语言和知识，后训练是教这个博学的“书呆子”怎么当一个好用的助手。</p>
+<p>用培养一位大厨来打比方。预训练（Pre-training）相当于从小背菜谱、吃遍天下：把几乎整个互联网的文字喂给模型，它只做一件事——看着前面的字，猜下一个字是什么。听起来笨，但为了猜得准，它被迫学会了语法、事实知识、甚至推理的雏形，就像一个孩子为了背下全世界的菜谱，顺带搞懂了火候和食材搭配的底层逻辑。这一步烧掉训练成本的大头（数月时间、上万块 GPU），产出的是一个“毛坯模型”：满腹经纶，但你问它问题，它只会续写，不会好好回答。</p>
+<p>后训练（Post-training）相当于进餐厅当学徒。毛坯模型再经过两类调教：一是 SFT（监督微调），给它看大量“人类示范的好答案”，学会问答的格式和礼貌；二是 RLHF／强化学习，让它反复试做，人类或规则打分，做得好有奖励，做得差被纠正——学徒就这样学会了听懂客人点菜、按规矩摆盘。后训练成本比预训练低得多，但迭代最频繁，各家模型的“性格差异”主要来自这里。</p>
+<svg viewBox="0 0 700 430" xmlns="http://www.w3.org/2000/svg" role="img" font-family="Noto Sans CJK SC,PingFang SC,sans-serif" style="width:100%;height:auto">
+<title>
+预训练与后训练对比示意图
+</title>
+<desc>用培养大厨类比：预训练是海量阅读打基础，后训练是餐厅学徒学规矩，两阶段依次衔接产出可用的AI助手。</desc> <rect x="30" y="50" width="300" height="270" rx="10" fill="#E6F1FB" stroke="#85B7EB" stroke-width="1.5"/> <text x="180" y="86" text-anchor="middle" fill="#134A80" font-size="19" font-weight="700">阶段一 · 预训练</text> <text x="180" y="111" text-anchor="middle" fill="#185FA5" font-size="13">Pre-training「读万卷书」</text> <text x="55" y="150" fill="#222" font-size="13.5">吃进几乎整个互联网的文本</text> <text x="55" y="180" fill="#222" font-size="13.5">任务只有一个：猜下一个词</text> <text x="55" y="210" fill="#222" font-size="13.5">学会语言 + 世界知识 + 推理雏形</text> <text x="55" y="240" fill="#185FA5" font-size="12.5">成本：数月、上万块GPU、烧掉大头</text> <text x="55" y="270" fill="#185FA5" font-size="12.5">产出：博学但不会「接客」的毛坯模型</text> <text x="180" y="303" text-anchor="middle" fill="#185FA5" font-size="12" font-style="italic">类比：从小背下全世界菜谱的天才</text> <line x1="332" y1="185" x2="358" y2="185" stroke="#666" stroke-width="1.4"/> <path d="M 358 181 L 368 185 L 358 189 Z" fill="#666"/> <rect x="370" y="50" width="300" height="270" rx="10" fill="#EAF3DE" stroke="#97C459" stroke-width="1.5"/> <text x="520" y="86" text-anchor="middle" fill="#2F5A0F" font-size="19" font-weight="700">阶段二 · 后训练</text> <text x="520" y="111" text-anchor="middle" fill="#3B6D11" font-size="13">Post-training「学做人做事」</text> <text x="395" y="150" fill="#222" font-size="13.5">SFT：看人类示范学「好答案」</text> <text x="395" y="180" fill="#222" font-size="13.5">RLHF/RL：按反馈奖惩，越练越顺手</text> <text x="395" y="210" fill="#222" font-size="13.5">学会听懂指令、守规矩、会用工具</text> <text x="395" y="240" fill="#3B6D11" font-size="12.5">成本：远低于预训练，但迭代最频繁</text> <text x="395" y="270" fill="#3B6D11" font-size="12.5">产出：能上岗接单的AI助手</text> <text x="520" y="303" text-anchor="middle" fill="#3B6D11" font-size="12" font-style="italic">类比：进餐厅当学徒，学接待与摆盘</text> <line x1="180" y1="330" x2="180" y2="360" stroke="#999" stroke-width="1.5"/> <line x1="520" y1="330" x2="520" y2="360" stroke="#999" stroke-width="1.5"/> <line x1="180" y1="360" x2="520" y2="360" stroke="#999" stroke-width="1.5"/> <line x1="350" y1="360" x2="350" y2="385" stroke="#999" stroke-width="1.5"/> <text x="350" y="408" text-anchor="middle" fill="#222" font-size="14.5" font-weight="600">底子决定上限：菜谱没背够的学徒，再怎么教礼仪也做不出好菜</text>
+</svg>
+<p>关于“后训练依赖预训练底子”：原文确实一字不差地提到了。在“Anthropic 的领先会不会形成打不破的正循环”那个问答里，专家答：“后训练效果很大程度依赖预训练的底子——对追赶者来说，最初架构一旦没选好，后训练追赶的速度和效率都会受很大影响。”上下文更进一步：这种领先会一直持续，直到竞争者重新做模型选型、拿到同类预训练数据——想追上大概率要用不同架构重新预训练，没法在现有底子上缝缝补补。用类比说：学徒阶段教不会的东西，得回炉重背菜谱，而重背菜谱是几个月、几十亿美元级的事。</p>
+<p><strong>记忆卡：预训练决定模型“知道多少”（天花板），后训练决定它“会不会好好说”（把本事释放出来）——底子不够，调教难补。</strong></p>
+<h2 id="第二章-存储金字塔hbmdramssd-与-blob-storage-管家">第二章 存储金字塔：HBM、DRAM、SSD 与 Blob Storage 管家</h2>
+<blockquote>
+<p>你当时的问题：Blob Storage 到底是个什么东西？为什么通过它的层级划分就能实现降本和透明化？DRAM、SSD 和 HBM 我一直没分清，它们三者到底有什么不同？我理解 HBM 是最“热”的高带宽存储、DRAM 介于 SSD 和 HBM 之间，对吗？</p>
+</blockquote>
+<p>一句话总纲：整个数据中心的存储就是一个大厨房——芯片是大厨，数据是食材，放得离灶台越近越快也越贵；Blob Storage 是那位管家，决定每样食材放哪一层。</p>
+<p>Blob 是 Binary Large Object（一大坨二进制数据）的缩写，Blob Storage 即“对象存储”，可以想成酒店的寄存处：你把行李（数据）交出去，拿到一张凭证（key），要用时凭证取回。行李究竟放在前台柜子还是地下仓库，你既不知道也不用关心——这就是“对开发者透明”。省钱的原理在于数据访问天然极度偏斜：绝大部分数据大部分时间没人碰（冷），只有一小撮被反复读写（热）。管家把热的放贵而快的层（DRAM/SSD），冷的搬去便宜的 HDD 甚至磁带。开发者一行代码不用改，账单却降下来了。所以“要不要多用 HDD 降本”是个伪问题：HDD 早就在用，管家自动会把冷数据放过去，真正缺的不是便宜的仓库，是灶台边的操作台（DRAM）。</p>
+<p>三种存储介质的区别：</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>HBM「灶台调料架」</th>
+<th>DRAM「操作台」</th>
+<th>SSD「储藏间」</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>本质</td>
+<td>就是 DRAM 芯片，堆叠后直接封装在 GPU/TPU 旁边</td>
+<td>独立内存条，插在主板上</td>
+<td>NAND 闪存</td>
+</tr>
+<tr class="even">
+<td>速度</td>
+<td>带宽极致（TB/s 级）</td>
+<td>快（纳秒级延迟）</td>
+<td>慢一两个数量级（微秒级）</td>
+</tr>
+<tr class="odd">
+<td>断电后</td>
+<td>数据消失</td>
+<td>数据消失</td>
+<td>数据还在</td>
+</tr>
+<tr class="even">
+<td>容量/价格</td>
+<td>最小、最贵</td>
+<td>中等</td>
+<td>大、便宜</td>
+</tr>
+</tbody>
+</table>
+<p>你的理解是对的：HBM 最热最快，DRAM 介于 HBM 和 SSD 之间。最值得记住的一点：HBM 不是一种和 DRAM 并列的新东西，它就是 DRAM，只是“焊在大厨手边”的豪华封装版。同样的晶圆，做成 HBM 还是普通内存条，是厂商的产能分配选择——这正是后面投资逻辑的钥匙。</p>
+<svg viewBox="0 0 700 470" xmlns="http://www.w3.org/2000/svg" role="img" font-family="Noto Sans CJK SC,PingFang SC,sans-serif" style="width:100%;height:auto">
+<title>
+存储金字塔：HBM、DRAM、SSD、HDD 四层结构
+</title>
+<desc>越往上越快越贵容量越小：HBM贴着芯片、DRAM是操作台、SSD是储藏间、HDD是远端仓库，Blob Storage作为管家在各层间自动搬运冷热温数据。</desc> <polygon points="290,60 410,60 435,125 265,125" fill="#0C447C"/> <polygon points="260,135 440,135 470,200 230,200" fill="#378ADD"/> <polygon points="225,210 475,210 510,275 190,275" fill="#B5D4F4"/> <polygon points="185,285 515,285 555,350 145,350" fill="#E6F1FB" stroke="#B5D4F4" stroke-width="1"/> <text x="350" y="88" text-anchor="middle" fill="#E6F1FB" font-size="15" font-weight="700">HBM</text> <text x="350" y="110" text-anchor="middle" fill="#B5D4F4" font-size="11.5">灶台调料架 · 热</text> <text x="350" y="163" text-anchor="middle" fill="#FFFFFF" font-size="15" font-weight="700">DRAM 内存</text> <text x="350" y="185" text-anchor="middle" fill="#E6F1FB" font-size="11.5">操作台 · 热/温</text> <text x="350" y="238" text-anchor="middle" fill="#0C447C" font-size="15" font-weight="700">SSD 固态盘</text> <text x="350" y="260" text-anchor="middle" fill="#185FA5" font-size="11.5">储藏间 · 温</text> <text x="350" y="313" text-anchor="middle" fill="#0C447C" font-size="15" font-weight="700">HDD 机械盘</text> <text x="350" y="335" text-anchor="middle" fill="#185FA5" font-size="11.5">远端仓库 · 冷</text> <line x1="120" y1="330" x2="120" y2="90" stroke="#666" stroke-width="1.4"/> <path d="M 116 90 L 120 80 L 124 90 Z" fill="#666"/> <text x="112" y="200" text-anchor="middle" fill="#555" font-size="12" transform="rotate(-90 112 200)">越快 · 越贵（每GB）</text> <line x1="580" y1="90" x2="580" y2="330" stroke="#666" stroke-width="1.4"/> <path d="M 576 330 L 580 340 L 584 330 Z" fill="#666"/> <text x="592" y="200" text-anchor="middle" fill="#555" font-size="12" transform="rotate(90 592 200)">容量越大 · 越便宜</text> <rect x="145" y="385" width="410" height="52" rx="10" fill="#EAF3DE" stroke="#97C459" stroke-width="1.5"/> <text x="350" y="407" text-anchor="middle" fill="#2F5A0F" font-size="14" font-weight="700">Blob Storage（仓库管家）</text> <text x="350" y="427" text-anchor="middle" fill="#3B6D11" font-size="11.5">按冷热自动决定放哪层，开发者只管存取，不问位置</text> <line x1="350" y1="360" x2="350" y2="383" stroke="#639922" stroke-width="1.5" stroke-dasharray="4 3"/> <rect x="290" y="18" width="120" height="26" rx="6" fill="none" stroke="#999" stroke-width="1.5"/> <text x="350" y="36" text-anchor="middle" fill="#222" font-size="12.5" font-weight="600">GPU / TPU（大厨）</text>
+</svg>
+<p><strong>记忆卡：HBM 就是焊在芯片边上的 DRAM；大厨不缺仓库缺操作台——数据放哪一层，是速度与价格的换算题。</strong></p>
+<h2 id="第三章-冷热数据自动调配管家的巡逻路线">第三章 冷热数据自动调配：管家的巡逻路线</h2>
+<blockquote>
+<p>你当时的问题：如果 HBM、DRAM 继续涨，存储系统会自动调整冷热数据策略来控成本吗？它具体的机制原理是什么？帮我这个小白科普一下。</p>
+</blockquote>
+<p>一句话定义：所谓“自动调整冷热数据”，就是管家手里有一本实时更新的点单记录，谁被点得勤就往灶台边搬，谁积灰了就往地窖搬——而“搬家的门槛”会跟着各层的价格自动浮动。机制分四步循环。</p>
+<p>第一步，记录温度。系统里每份数据（每个 Blob）都挂着一小条元数据：最后一次被读是什么时候、过去一小时/一天/一周被读了几次。这是“体温计”，成本极低，因为只是记账，不碰数据本身。</p>
+<p>第二步，打热度分。核心公式思想：热度 ≈ 访问频率 × 新近度。刚被读过加分，久不被读按时间指数衰减——今天被点 50 次是爆款，三个月没人点自动沦为“下架候选”。有些系统还加预测：新数据默认先当热数据供着，因为经验规律是“新的头几天最热，之后冷得很有规律”。</p>
+<p>第三步，对照门槛——控成本的核心。每一层（DRAM/SSD/HDD）都有一条准入线：热度分过线才配住这层。关键在于这条线不是死的，它的输入包括每个数据中心当下各层的容量余量和单位成本。DRAM 涨价或紧张了，系统等于收到“涨租通知”，自动把 DRAM 层的准入线抬高——原来热度 60 分就能住内存，现在得 80 分。最贵的地皮只留给最烫的数据，控成本不需要任何人开会拍板，价格信号直接变成了调度参数。</p>
+<p>第四步，后台搬运。升降级由后台进程在访问低峰期批量执行，搬完只改索引里“存放位置”那一栏——凭证（key）从头到尾没变，所以开发者完全无感，这就把“透明”闭环了。为防数据在两层间被反复搬来搬去，升舱要明显过线、降舱要明显掉线才动手。</p>
+<svg viewBox="0 0 700 430" xmlns="http://www.w3.org/2000/svg" role="img" font-family="Noto Sans CJK SC,PingFang SC,sans-serif" style="width:100%;height:auto">
+<title>
+冷热数据自动调配的循环机制
+</title>
+<desc>四步循环：记录每次访问、给数据打热度分、对照随价格浮动的门槛、后台搬运升降级；全程凭证不变，开发者无感。</desc> <rect x="60" y="60" width="240" height="80" rx="10" fill="#E6F1FB" stroke="#85B7EB" stroke-width="1.5"/> <text x="180" y="94" text-anchor="middle" fill="#134A80" font-size="15" font-weight="700">1. 记录访问</text> <text x="180" y="118" text-anchor="middle" fill="#185FA5" font-size="12">每份数据的「点单记录」：谁、何时、多频繁</text> <rect x="400" y="60" width="240" height="80" rx="10" fill="#E6F1FB" stroke="#85B7EB" stroke-width="1.5"/> <text x="520" y="94" text-anchor="middle" fill="#134A80" font-size="15" font-weight="700">2. 打热度分</text> <text x="520" y="118" text-anchor="middle" fill="#185FA5" font-size="12">越常点分越高，久不点分数按天衰减</text> <rect x="400" y="270" width="240" height="80" rx="10" fill="#EAF3DE" stroke="#97C459" stroke-width="1.5"/> <text x="520" y="304" text-anchor="middle" fill="#2F5A0F" font-size="15" font-weight="700">3. 对照门槛</text> <text x="520" y="328" text-anchor="middle" fill="#3B6D11" font-size="12">门槛随各层价格与余量浮动，贵则抬高</text> <rect x="60" y="270" width="240" height="80" rx="10" fill="#EAF3DE" stroke="#97C459" stroke-width="1.5"/> <text x="180" y="304" text-anchor="middle" fill="#2F5A0F" font-size="15" font-weight="700">4. 后台搬运</text> <text x="180" y="328" text-anchor="middle" fill="#3B6D11" font-size="12">过线升舱、掉线降舱，低峰期批量搬</text> <line x1="300" y1="100" x2="390" y2="100" stroke="#666" stroke-width="1.4"/> <path d="M 390 96 L 400 100 L 390 104 Z" fill="#666"/> <line x1="520" y1="140" x2="520" y2="260" stroke="#666" stroke-width="1.4"/> <path d="M 516 260 L 520 270 L 524 260 Z" fill="#666"/> <line x1="400" y1="310" x2="310" y2="310" stroke="#666" stroke-width="1.4"/> <path d="M 310 306 L 300 310 L 310 314 Z" fill="#666"/> <line x1="180" y1="270" x2="180" y2="150" stroke="#666" stroke-width="1.4"/> <path d="M 176 150 L 180 140 L 184 150 Z" fill="#666"/> <text x="350" y="196" text-anchor="middle" fill="#222" font-size="13.5" font-weight="600">凭证（key）始终不变</text> <text x="350" y="218" text-anchor="middle" fill="#555" font-size="12.5">数据搬到哪层，开发者都无感</text> <text x="350" y="405" text-anchor="middle" fill="#222" font-size="14" font-weight="600">DRAM 涨价 → 第3步门槛自动抬高 → 热层只留最烫的数据，成本自动收紧</text>
+</svg>
+<p>为什么这套东西源自 YouTube？因为视频访问是最典型的“幂律分布”：约 1% 的视频吃掉绝大多数播放量，海量长尾视频几乎无人问津但又不能删。YouTube 早年被迫建了这套分层系统，还摸透了热度衰减规律。AI 时代的数据访问偏斜得一模一样——正在训练的数据集滚烫、上周的 checkpoint 温、三个月前的原始语料冰凉——Google 直接让这位管了十几年视频仓库的老管家转岗管 AI 数据。</p>
+<p>一个重要边界，别高估它：这套机制省的是“放错地方的浪费”，省不掉真实的热数据需求。推理时的 KV Cache、正在训练的批次，再怎么调度也必须待在 DRAM/HBM 里。巧劲降本和 DRAM 稀缺可以同时成立。</p>
+<p><strong>记忆卡：冷热调配 = 点单记录打分 + 随价格浮动的准入门槛 + 后台无感搬家；它优化“数据住哪”，省不掉“必须住豪宅的那批数据”。</strong></p>
+<h2 id="第四章-110-配比吃满算力与-dram-的投资映射">第四章 1:10 配比、“吃满算力”与 DRAM 的投资映射</h2>
+<blockquote>
+<p>你当时的问题：TPU v7 的 HBM 与 DRAM 理想配比 1:10 就能把算力“吃满”——可上个窗口聊过 GPU 推理效率不到 10%，这 10 倍空间很难只靠加 HBM 解决，为什么这里说配好 1:10 就能吃满？“吃满”是指 GPU 没有任何闲置吗？DRAM 的生产厂商是铠侠还是闪迪？投资机会在哪里？</p>
+</blockquote>
+<p>“吃满算力”的意思是让 GPU/TPU 的计算单元尽量不空转。大厨炒菜手速极快，瓶颈从来不是刀工，而是食材递得不够快：推理时长上下文的 KV Cache（这桌客人点过的所有菜的备料）体积巨大，HBM 这个调料架根本放不下。只有两个选择：要么买更多带 HBM 的芯片纯粹当容量用（为了多个调料架再雇一个大厨，奢侈），要么在旁边配一张巨大的操作台（DRAM），把暂时不炒的备料放那里随取随用。1:10 就是一份 HBM 配十份 DRAM 当二级缓冲，让大厨基本不用停手等料。</p>
+<p>这和“GPU 推理效率不到 10%”不矛盾，是同一件事的两面：利用率低的最大元凶之一就是“内存墙”——算得快、喂不上。加 DRAM 解决的是容量这一半，带宽、调度、通信等瓶颈依然存在。1:10 是谷歌基准测试里的理想值（厂商叙事，带宣传成分），不等于现实一配就满血。而现实配比只有 1:1 到 1:2，缺口巨大——所以结论“利好 DRAM”成立。</p>
+<p>纠错一处：铠侠和闪迪不生产 DRAM，它们做的是 NAND 闪存（SSD 里的“储藏间”）。DRAM 全球基本被三家垄断：三星（2026Q1 份额约 38%）、SK 海力士（约 29%）、美光（约 22%），外加追赶中的合肥长鑫。HBM 也出自这三家（SK 海力士目前领先）。“DRAM 稀缺”的直接受益者是三巨头，不是铠侠/闪迪——后两者要涨也是搭 SSD 需求外溢的顺风车，逻辑隔了一层。</p>
+<p>投资映射按“事实 / 叙事 / 风险”三层拆开（信息时点：2026-07-05，来源：虎嗅、新浪财经、SMM 等公开报道）：</p>
+<p>事实层面：本轮存储超级周期已非常凶猛——DRAM 价格四年累计涨约 7 倍，2026 年 Q1、Q2 环比各涨约 90% 和 60%；HBM 与普通 DRAM 共用晶圆产能，且 HBM 每单位容量约吃 3 倍晶圆面积，产能挤占导致普通内存暴涨；AI 服务器已吃掉全球 DRAM 产能的一半（两年前约 35%）。这也解释了“存储占服务器价值从个位数百分比冲到 30% 以上”——主要不是用量变了，而是价格飞了。</p>
+<p>叙事层面：文章说的“1:10 配比、加 DRAM 空间巨大”，是看多 DRAM 的核心故事；“除非内存价格高过 TPU 和 HBM，否则公司宁可投内存，也不投 TPU”。</p>
+<p>风险层面：存储是强周期行业，Jefferies 预计涨势延续到 2027 年、2028 年才明显放缓——但三巨头已因涉嫌联手控产抬价在美国吃了集体诉讼，且历史上每轮内存周期的顶都比预测来得突然；此刻价格已在高位，追高的赔率和两年前完全不同。这些叙事已在市场流传，价格里含了不少预期。本笔记仅作学习整理，不构成投资建议。</p>
+<p><strong>记忆卡：大厨不缺仓库缺操作台——DRAM 是这轮 AI 存储行情的主角，而做操作台的只有三星、海力士、美光三家（铠侠/闪迪做的是储藏间）。</strong></p>
+<h2 id="第五章-全文解读一切都被算力和电卡着脖子">第五章 全文解读：一切都被算力（和电）卡着脖子</h2>
+<blockquote>
+<p>你当时的问题：这篇文章比较棒啊！你来解读一下吧。</p>
+</blockquote>
+<p>《模型厂关于近期热点的碎碎念》（北向牧风，2026-07-05）自称一篇谷歌内部的大模型调研纪要。全文可以拧成一条主线：现在这个行业里，一切都被算力（以及给算力供电的电力）卡着脖子。需求、收入、模型竞争、存储，全是这条主线的分支。</p>
+<p>需求与收入侧：企业在省 token，但总需求没降——单价往下、总量往上。Anthropic 的 ARR 三月 190 亿、四月 300 亿、五月 450 亿（美元年化），但这个斜率之后看不到了，原因不是需求没了，而是算力供给跟不上——“卡的用量趋势约等于收入趋势”是全文最值得记住的等式。Anthropic 一家吃掉 GCP 一半以上的算力需求、TPU 总量的 30% 以上（约 200 万~250 万片），V6 基本全供它，V7 除 DeepMind 训练任务外也优先供它，连 Google 自家 Gemini 项目都排不上队。</p>
+<p>供给侧（最硬核）：瓶颈已经不是造卡，而是电——新买的 TPU 和 GB300 面临“卡到了、插不上电”，原规划 12GW 可能只落地 6GW。所以 2026-2027 年行业核心动作是在现有机房里拆旧卡换新卡而不是盖新机房；TPU 租赁价格未来两个月预计大涨（远超 20-30%）。真正的产能释放点在 2028 年——Google 与台积电合资的 TPU 工厂投产，出货量从 2026 年约 340 万片跳到 2027 年约 700 万片。成本牌：TPU v7 单机架 BOM 约 150 万美元，英伟达 GB200 NVL72 约 324 万；据称 V8i 单卡性能测试超过 GB300——“TPU 便宜的底气在这里”。</p>
+<p>模型竞争与架构：GPT-5.6 相比 5.5 只有微小提升。专家诊断：OpenAI 不缺数据（Codex 用户量够大），缺的是架构选型——它的 MoE 是“小专家太多”，单个专家维度太小，吃不下反馈循环数据里的信息。</p>
+<p>MoE（Mixture of Experts）就是把模型的每一层拆成一队厨师，来一个 token，调度员（Router）只叫醒其中几个干活，省算力。早期业界缺高质量长任务数据，主流思路是靠 LongCOT“先想清楚再干”——任务前生成十万字的思考，把各种可能性想一遍，这需要多样性，一大群各有偏科的小厨师正合适。但等到用户真实使用产生的高质量、长程反馈数据多起来（比如一次改几小时代码的完整记录），小厨师脑容量不够、记不全，只有少数几位全能大厨（大专家）装得下。文章说 Anthropic 在 2025 年就押注了大专家；竞争者一缺同类数据、二没法轻易改已定型的架构——绕回第一章那句话：架构是预训练时定死的地基，地基不对，后训练装修装不出摩天楼。</p>
+<svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" role="img" font-family="Noto Sans CJK SC,PingFang SC,sans-serif" style="width:100%;height:auto">
+<title>
+MoE 小专家与大专家架构对比
+</title>
+<desc>小专家MoE是很多小厨师各管一小摊，适合发散思考；大专家是少数全能大厨，吃得下长程反馈数据。Anthropic在2025年押注大专家。</desc> <rect x="30" y="45" width="300" height="280" rx="10" fill="#E6F1FB" stroke="#85B7EB" stroke-width="1.5"/> <text x="180" y="80" text-anchor="middle" fill="#134A80" font-size="17" font-weight="700">小专家 MoE</text> <text x="180" y="103" text-anchor="middle" fill="#185FA5" font-size="12">一群只会一两道菜的小厨师</text> <g fill="#378ADD"> <rect x="65" y="120" width="42" height="30" rx="5"/> <rect x="117" y="120" width="42" height="30" rx="5"/> <rect x="169" y="120" width="42" height="30" rx="5"/> <rect x="221" y="120" width="42" height="30" rx="5"/> <rect x="65" y="158" width="42" height="30" rx="5"/> <rect x="117" y="158" width="42" height="30" rx="5"/> <rect x="169" y="158" width="42" height="30" rx="5"/> <rect x="221" y="158" width="42" height="30" rx="5"/> </g> <text x="180" y="222" text-anchor="middle" fill="#222" font-size="13">长处：思路发散、多样性高</text> <text x="180" y="248" text-anchor="middle" fill="#222" font-size="13">适合 LongCOT「先想清楚再干」</text> <text x="180" y="280" text-anchor="middle" fill="#185FA5" font-size="12.5">短板：单个专家维度小</text> <text x="180" y="302" text-anchor="middle" fill="#185FA5" font-size="12.5">吃不下长程反馈数据</text> <rect x="370" y="45" width="300" height="280" rx="10" fill="#EAF3DE" stroke="#97C459" stroke-width="1.5"/> <text x="520" y="80" text-anchor="middle" fill="#2F5A0F" font-size="17" font-weight="700">大专家</text> <text x="520" y="103" text-anchor="middle" fill="#3B6D11" font-size="12">少数几位全能大厨</text> <g fill="#639922"> <rect x="410" y="120" width="100" height="68" rx="7"/> <rect x="522" y="120" width="100" height="68" rx="7"/> </g> <text x="520" y="222" text-anchor="middle" fill="#222" font-size="13">长处：容量大，装得下</text> <text x="520" y="248" text-anchor="middle" fill="#222" font-size="13">高质量、长程的反馈经验</text> <text x="520" y="280" text-anchor="middle" fill="#3B6D11" font-size="12.5">代价：训练与推理更重</text> <text x="520" y="302" text-anchor="middle" fill="#3B6D11" font-size="12.5">需要数据质量先跟上</text> <line x1="180" y1="345" x2="505" y2="345" stroke="#666" stroke-width="1.4"/> <path d="M 505 341 L 515 345 L 505 349 Z" fill="#666"/> <text x="350" y="378" text-anchor="middle" fill="#222" font-size="13.5" font-weight="600">反馈数据变多变长 → 范式转向大专家（Anthropic 2025 年押注）</text>
+</svg>
+<p>存储部分（第二至四章已详拆）文章还补了个彩蛋：冷热温自动调配机制源自早年 YouTube 管理热门/冷门视频的分层系统——Google 把管了十几年视频的管家直接派来管 AI 数据。</p>
+<p>可信度提醒三点：第一，这是匿名“内部调研纪要”，公众号自己声明不对观点背书，文中所有数字（ARR、芯片数、BOM、1:10 配比）都无法独立核实，当“高质量的行业耳语”看，别当财报看。第二，文中大量吹捧 Anthropic 与 Fable 5，这些是受访专家的说法，不是官方口径，应多打个问号。第三，往投资上引（TPU 链、DRAM、电力设备）时，记得这些叙事已在市场流传。</p>
+<p><strong>记忆卡：这篇文章一句话——算力荒决定收入（卡的用量约等于收入），电力荒决定算力（有卡插不上电），而架构选型在预训练那天就决定了谁能吃下反馈数据、坐稳牌桌。</strong></p>
+<h2 id="第六章-全景总结与知识地图">第六章 全景总结与知识地图</h2>
+<p>把全部话题放回一张逻辑地图：最上游是电力（当前最硬的物理约束），电力之下是算力（TPU/GPU + HBM），算力旁边是存储金字塔（HBM→DRAM→SSD→HDD，Blob Storage 管家自动调配冷热），算力之上是模型（预训练打底子、定架构；后训练教做事，效果受制于底子），模型之上是收入（卡的用量约等于收入趋势）。四个环环相扣的稀缺：电 → 卡 → DRAM → 好底子的模型。</p>
+<p>投资视角下，每层稀缺对应一批受益者：电力设备与电源链（电荒）、TPU/先进封装链与台积电（卡荒）、三星/海力士/美光（DRAM 荒）、押对架构的模型厂（底子荒）。同时每层也对应一个风险：电力落地不及预期、算力租金周期反转、存储周期见顶、架构范式再次迁移。</p>
+<p><strong>记忆卡：一条产业链四层稀缺——电、卡、内存、底子；谁卡脖子谁涨价，谁涨价谁的供应商受益。</strong></p>
+<h2 id="附录-一句话记忆卡合集">附录 一句话记忆卡合集</h2>
+<table>
+<thead>
+<tr class="header">
+<th>主题</th>
+<th>一句话</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>预训练 vs 后训练</td>
+<td>预训练决定“知道多少”（天花板），后训练决定“会不会好好说”；底子不够，调教难补</td>
+</tr>
+<tr class="even">
+<td>存储金字塔</td>
+<td>HBM 就是焊在芯片边上的 DRAM；大厨不缺仓库缺操作台</td>
+</tr>
+<tr class="odd">
+<td>冷热调配</td>
+<td>点单记录打分 + 随价格浮动的门槛 + 无感搬家；优化“住哪”，省不掉“必须住豪宅的数据”</td>
+</tr>
+<tr class="even">
+<td>DRAM 投资</td>
+<td>操作台只有三星、海力士、美光在做；铠侠/闪迪做的是储藏间（NAND）</td>
+</tr>
+<tr class="odd">
+<td>文章主线</td>
+<td>算力荒决定收入，电力荒决定算力，架构选型在预训练那天定生死</td>
+</tr>
+<tr class="even">
+<td>全景地图</td>
+<td>四层稀缺：电 → 卡 → 内存 → 底子</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>免责声明：本笔记为个人学习整理，基于 2026-07-05 时点的公开信息与匿名调研纪要（未经独立核实），仅作知识科普，不构成任何投资建议。DRAM 市场数据来源：虎嗅、新浪财经、SMM、seccw 等公开报道。</em></p>
+
+  </article>
+  <div class="disclaim">本文为个人学习笔记，由对话探讨整理而成，仅作知识分享，不构成任何投资建议。</div>
+</main>
+</body>
+</html>

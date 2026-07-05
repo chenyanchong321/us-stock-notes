@@ -16,6 +16,17 @@
      "page": "articles/physical-walls.html"
     },
     {
+     "t": "模型厂调研与存储层级：从预训练到冷热调配",
+     "date": "2026-07-05",
+     "tags": [
+      "调研",
+      "存储层级",
+      "谷歌"
+     ],
+     "d": "一篇谷歌模型厂调研纪要的完整拆解：预训练与后训练、HBM/DRAM/SSD/Blob 存储金字塔、冷热数据调配与投资映射。",
+     "page": "articles/model-factory-storage.html"
+    },
+    {
      "t": "英伟达与 AI 时代 · 全景笔记",
      "date": "2026-06-28",
      "tags": [
