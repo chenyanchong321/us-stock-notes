@@ -347,9 +347,10 @@ function renderNotes(cfg){
 /* ===== 启动 ===== */
 (async ()=>{
   try{
+    const bust = "?t=" + Math.floor(Date.now()/60000);
     const [quotes, notesCfg] = await Promise.all([
-      fetch("data/quotes.json").then(r=>r.json()),
-      fetch("config/notes.json").then(r=>r.json())
+      fetch("data/quotes.json"+bust).then(r=>r.json()),
+      fetch("config/notes.json"+bust).then(r=>r.json())
     ]);
     renderDash(quotes);
     renderNotes(notesCfg);
