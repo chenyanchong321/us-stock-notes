@@ -84,6 +84,23 @@ tr.grp td .glabel{position:sticky;left:14px;display:inline-block}
 tr.buy td.name{box-shadow:inset 3px 0 0 var(--gold)}
 tr.buy td.name .cn::before{content:"★ ";color:var(--gold);font-size:11px}
 tr.buy .buyline{color:var(--gold)!important}
+tr.buy .buyline.hit{color:var(--up)!important;font-weight:600}
+/* 今日机会聚合条 */
+#opps{width:100%;background:rgba(47,191,113,.08);border:1px solid rgba(47,191,113,.35);border-radius:8px;padding:8px 14px;font-size:13px;color:var(--text);line-height:1.9}
+#opps a{color:var(--up);text-decoration:none;margin-right:12px;white-space:nowrap}
+#opps a:hover{text-decoration:underline}
+/* 手机端 */
+.mobile-only{display:none}
+.tab{white-space:nowrap}
+@media(max-width:860px){
+  #header{padding:0 10px;gap:8px}
+  #header .logo{font-size:14px}
+  #header .logo span{display:none}
+  .tab{padding:0 8px;font-size:13px}
+  #searchwrap{flex:1 1 110px;min-width:90px}
+  .mobile-only{display:block;width:100%}
+  #secjump{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:14px;width:100%}
+}
 td.name .cn{font-weight:500;display:block}
 td.name .sub{font-size:11px;color:var(--text2);white-space:nowrap}
 td.name .mkt{margin-left:6px;background:var(--panel2);border-radius:4px;padding:0 5px}
@@ -172,7 +189,9 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="stat"><div class="k">观察标的</div><div class="v" id="st-total">–</div></div>
       <div class="stat"><div class="k">回撤 &gt;30% 标的</div><div class="v" id="st-deep">–</div></div>
       <div class="stat"><div class="k">近1月上涨占比</div><div class="v" id="st-up1m">–</div></div>
-      <div class="refresh-note">数据每日自动更新 · 市值为估算口径</div>
+      <div class="refresh-note">交易时段每30分钟自动更新 · 市值为估算口径</div>
+      <select id="secjump" class="mobile-only"><option value="">📂 跳转板块…</option></select>
+      <div id="opps" class="hidden"></div>
     </div>
     <div id="sections"></div>
     <div id="no-result">没有匹配的标的</div>
@@ -229,13 +248,21 @@ function posCell(v, rng){
   const range = rng ? `<span style="color:var(--text2)">${rng}</span>` : "";
   return `<span style="white-space:nowrap">${range}<span style="color:${c};font-weight:600">（${Math.round(v)}%）</span></span>`;
 }
+function buyHit(r){
+  const b = BUY[r[1]];
+  if(!b || b.includes("风险锚") || b.includes("市值")) return false;
+  const th = parseFloat((b.match(/[\d.]+/)||[])[0]);
+  const px = parseFloat(String(r[5]).replace(/[^\d.]/g,""));
+  return !!(th && px && px <= th*1.02);
+}
 function priceCell(r){
   const b = BUY[r[1]];
-  const buyLine = b ? `<span class="buyline" style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">买点 ${b}</span>` : "";
+  const hit = buyHit(r);
+  const buyLine = b ? `<span class="buyline${hit?" hit":""}" style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">${hit?"🎯":""}买点 ${b}</span>` : "";
   return `<span style="display:block">${r[5]}</span>${buyLine}`;
 }
-function rowHTML(r){
-  return `<tr class="${BUY[r[1]]?"buy":""}" data-key="${(r[0]+r[1]).toLowerCase()}">
+function rowHTML(r, grp){
+  return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${grp||""}" data-key="${(r[0]+r[1]).toLowerCase()}">
     <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
     <td>${r[3]}</td><td>${r[4]}</td><td>${priceCell(r)}</td>
     <td>${posCell(r[14], r[15])}</td>
@@ -264,7 +291,7 @@ function renderDash(quotes){
         subnav+=`<a class="sub" href="#${gid}">↳ ${g}</a>`;
         lastG=g;
       }
-      body+=rowHTML(r);
+      body+=rowHTML(r, lastG);
     });
     navEl.insertAdjacentHTML("beforeend",
       `<a href="#${id}" data-sec="${id}">${s.sec}<span class="cnt">${s.rows.length}</span></a>`+subnav);
@@ -305,13 +332,36 @@ function renderDash(quotes){
         if(typeof y==="string") return -1;
         return asc?x-y:y-x;
       });
-      tbody.innerHTML = rows.map(rowHTML).join("");
+      tbody.innerHTML = rows.map(r=>rowHTML(r, r[12])).join("");
       applyFilter();
     });
   });
 
   /* 搜索 */
   document.getElementById("search").addEventListener("input",applyFilter);
+
+  /* 今日机会：现价进入买点区的标的聚合 */
+  const hits = all.filter(buyHit);
+  if(hits.length){
+    const el = document.getElementById("opps");
+    el.classList.remove("hidden");
+    el.innerHTML = `🎯 已进买点区（${hits.length}）：` +
+      hits.map(r=>`<a href="#" data-k="${(r[0]+r[1]).toLowerCase()}">${r[0]} ${r[5]}</a>`).join("");
+    el.querySelectorAll("a").forEach(a=>a.addEventListener("click",e=>{
+      e.preventDefault();
+      const tr=document.querySelector(`tr[data-key="${a.dataset.k}"]`);
+      if(tr){ tr.scrollIntoView({block:"center"}); tr.style.outline="1px solid var(--up)"; setTimeout(()=>tr.style.outline="",2000); }
+    }));
+  }
+
+  /* 手机端板块跳转 */
+  const sj = document.getElementById("secjump");
+  DATA.forEach((s,i)=>sj.insertAdjacentHTML("beforeend",`<option value="sec${i}">${s.sec}</option>`));
+  sj.addEventListener("change",()=>{
+    const t=document.getElementById(sj.value);
+    if(t) t.scrollIntoView();
+    sj.value="";
+  });
 }
 
 function applyFilter(){
@@ -440,6 +490,54 @@ let PROFILES = {};
     const s = td.querySelector(".sub");
     return s ? s.childNodes[0].textContent.trim() : "";
   }
+  const NOTE_CODE = {
+    "EQT":["eqt-report","EQT 报告解读"],"688187":["times-electric","时代电气学习笔记"],
+    "03898":["times-electric","时代电气学习笔记"],"GLW":["corning-glw-brief","康宁 GLW 情况说明"],
+    "HIMX":["himx-cpo","HIMX 与 CPO 光互连"],"06809":["montage-interconnect","澜起科技与 AI 互联"],
+    "285A":["kioxia-feynman","铠侠存储费曼笔记"],"KXIAY":["kioxia-feynman","铠侠存储费曼笔记"],
+    "4063":["shinetsu","信越化学深度解读"],"SHECF":["shinetsu","信越化学深度解读"],
+    "NVDA":["nvidia-ai-panorama","英伟达与 AI 时代全景"]
+  };
+  const NOTE_GRP = {
+    "光芯片与激光器":["physical-walls-supplement","物理墙·补充篇（激光器十二家竞对）"],
+    "SiC":["physical-walls-supplement","物理墙·补充篇（SiC 三层楼）"],
+    "GaN":["physical-walls","AI 投资的物理墙"],"电源管理":["physical-walls","AI 投资的物理墙"],
+    "电力设备与整机":["physical-walls","AI 投资的物理墙"],"上游衬底与材料":["physical-walls","AI 投资的物理墙（三材料地图）"],
+    "MLCC":["ai-hardware-price-chain","AI 硬件涨价链（MLCC 千层饼）"],"超级电容":["ai-hardware-price-chain","AI 硬件涨价链（超容保命）"],
+    "粉·膜":["ai-hardware-price-chain","AI 硬件涨价链"],"AI PCB":["ai-hardware-price-chain","AI 硬件涨价链（PCB/CCL）"],
+    "CCL":["ai-hardware-price-chain","AI 硬件涨价链（面粉与面包）"],"玻纤":["ai-hardware-price-chain","AI 硬件涨价链（终极瓶颈）"],
+    "HBM/DRAM":["ai-storage-supercycle","AI 推理与存储超级周期"],"NAND":["kioxia-feynman","铠侠存储费曼笔记"],
+    "HDD":["ai-storage-supercycle","AI 推理与存储超级周期"],"存储模组":["ai-storage-supercycle","AI 推理与存储超级周期"],
+    "利基存储":["montage-interconnect","澜起科技与 AI 互联"],
+    "前道主设备":["semi-equipment","半导体设备学习笔记"],"量测":["semi-equipment","半导体设备学习笔记"],
+    "后道测试":["semi-equipment","半导体设备学习笔记"],"零部件":["semi-equipment","半导体设备学习笔记"],
+    "中国设备双雄":["semi-equipment","半导体设备学习笔记"],"测试与键合":["semi-equipment","半导体设备学习笔记"],
+    "晶圆代工":["chip-manufacturing","芯片制造全解"],"代工与 OSAT":["chip-manufacturing","芯片制造全解"],
+    "CPO 与硅光":["himx-cpo","HIMX 与 CPO 光互连"],"光模块":["himx-cpo","HIMX 与 CPO 光互连"],
+    "交换与连接":["montage-interconnect","澜起科技与 AI 互联"],
+    "海外巨头":["fiber-cable","光纤光缆：从玻璃棒到 AI 算力"],"A股光纤光缆":["fiber-cable","光纤光缆：从玻璃棒到 AI 算力"],
+    "算力芯片":["nvidia-ai-panorama","英伟达与 AI 时代全景"],"连接与定制":["ai-compute","AI 算力投资学习笔记"],
+    "云大厂":["ai-sector-survey","美股 AI 板块深度调研"],"算力云":["ai-sector-survey","美股 AI 板块深度调研"],
+    "服务器整机":["ai-sector-survey","美股 AI 板块深度调研"],"数据中心运营":["ai-sector-survey","美股 AI 板块深度调研"],
+    "谐波":["robots-energy","从人形机器人到功守恒"],"执行器":["robots-energy","从人形机器人到功守恒"],
+    "灵巧手":["robots-energy","从人形机器人到功守恒"],"整机与代工":["robots-energy","从人形机器人到功守恒"],
+    "无人系统":["robots-energy","从人形机器人到功守恒"],
+    "数据与 AI 应用":["ai-software","AI 软件股投资逻辑"],"网络安全":["ai-software","AI 软件股投资逻辑"],
+    "云基础":["ai-software","AI 软件股投资逻辑"],"商业与消费":["ai-software","AI 软件股投资逻辑"],
+    "硅片":["shinetsu","信越化学深度解读"],"玻璃基板":["corning-glassbridge","康宁 GlassBridge 玻璃封装"]
+  };
+  function noteFor(code, grp){
+    if(NOTE_CODE[code]) return NOTE_CODE[code];
+    for(const k in NOTE_GRP){ if(grp && grp.includes(k)) return NOTE_GRP[k]; }
+    return null;
+  }
+  function tipHTML(td){
+    const code = codeOf(td), txt = PROFILES[code];
+    if(!txt) return null;
+    const nf = noteFor(code, (td.parentElement.dataset.grp)||"");
+    return txt + (nf ? `<span style="display:block;margin-top:7px;font-size:12px;border-top:1px solid var(--border);padding-top:6px"><a href="articles/${nf[0]}.html" style="color:var(--accent);text-decoration:none">📖 相关笔记：${nf[1]} →</a></span>` : "");
+  }
+  let pinned = false;
   function place(x, y){
     const w = tip.offsetWidth, h = tip.offsetHeight;
     let L = x + 14, T = y + 16;
@@ -448,26 +546,31 @@ let PROFILES = {};
     tip.style.left = L + "px"; tip.style.top = T + "px";
   }
   document.addEventListener("mouseover", e=>{
+    if(pinned) return;
     const td = e.target.closest("td.name"); if(!td) return;
-    const txt = PROFILES[codeOf(td)]; if(!txt) return;
-    tip.innerHTML = txt; tip.style.display = "block";
+    const h = tipHTML(td); if(!h) return;
+    tip.innerHTML = h; tip.style.display = "block"; tip.style.pointerEvents = "none";
     place(e.clientX, e.clientY);
   });
   document.addEventListener("mousemove", e=>{
-    if(tip.style.display !== "block") return;
+    if(pinned || tip.style.display !== "block") return;
     if(!e.target.closest || !e.target.closest("td.name")){ tip.style.display = "none"; return; }
     place(e.clientX, e.clientY);
   });
   document.addEventListener("mouseout", e=>{
+    if(pinned) return;
     if(e.target.closest && e.target.closest("td.name") && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest("td.name")))
       tip.style.display = "none";
   });
-  document.addEventListener("click", e=>{      /* 手机端：点名称显示，点其他处收起 */
+  document.addEventListener("click", e=>{      /* 点名称固定浮窗（可点相关笔记链接），点其他处收起 */
+    if(e.target.closest && e.target.closest("#stip")) return;   /* 点浮窗内链接不收起 */
     const td = e.target.closest("td.name");
-    if(td && PROFILES[codeOf(td)]){
-      tip.innerHTML = PROFILES[codeOf(td)]; tip.style.display = "block";
+    const h = td ? tipHTML(td) : null;
+    if(h){
+      tip.innerHTML = h; tip.style.display = "block"; tip.style.pointerEvents = "auto";
+      pinned = true;
       place(e.clientX||20, e.clientY||100);
-    } else tip.style.display = "none";
+    } else { tip.style.display = "none"; pinned = false; }
   });
 })();
 

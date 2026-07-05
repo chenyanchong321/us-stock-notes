@@ -85,6 +85,36 @@
      "ath_floor": 0
     },
     {
+     "name": "美债10年收益率",
+     "code": "US10Y",
+     "market": "宏观",
+     "yahoo": "^TNX",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "美元指数",
+     "code": "DXY",
+     "market": "宏观",
+     "yahoo": "DX-Y.NYB",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "布伦特原油",
+     "code": "BRENT",
+     "market": "商品",
+     "yahoo": "BZ=F",
+     "currency": "$",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "上证指数",
      "code": "SHCOMP",
      "market": "A股 指数",
@@ -224,6 +254,14 @@
      "codes": [
       "VIX",
       "VXN"
+     ]
+    },
+    {
+     "name": "宏观锚（利率·美元·原油）",
+     "codes": [
+      "US10Y",
+      "DXY",
+      "BRENT"
      ]
     },
     {
@@ -1567,6 +1605,62 @@
      "ath_floor": 0
     },
     {
+     "name": "超微电脑",
+     "code": "SMCI",
+     "market": "美股",
+     "yahoo": "SMCI",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 5.9,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "鸿海精密",
+     "code": "2317",
+     "market": "台股",
+     "yahoo": "2317.TW",
+     "currency": "NT$",
+     "mcap_base": {
+      "prefix": "NT$",
+      "yi": 138.6,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "广达电脑",
+     "code": "2382",
+     "market": "台股",
+     "yahoo": "2382.TW",
+     "currency": "NT$",
+     "mcap_base": {
+      "prefix": "NT$",
+      "yi": 38.6,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "纬创资通",
+     "code": "3231",
+     "market": "台股",
+     "yahoo": "3231.TW",
+     "currency": "NT$",
+     "mcap_base": {
+      "prefix": "NT$",
+      "yi": 29.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "易昆尼克斯（Equinix）",
      "code": "EQIX",
      "market": "美股",
@@ -1630,11 +1724,15 @@
      ]
     },
     {
-     "name": "服务器整机",
+     "name": "服务器整机与 ODM",
      "codes": [
       "DELL",
       "HPE",
-      "00992"
+      "00992",
+      "SMCI",
+      "2317",
+      "2382",
+      "3231"
      ]
     },
     {
