@@ -95,6 +95,10 @@ def main():
     sections_out = []
     for sec in watch["sections"]:
         rows = []
+        gmap = {}
+        for g in sec.get("groups", []):
+            for c in g["codes"]:
+                gmap[c] = g["name"]
         for it in sec["items"]:
             sym = it["yahoo"]
             if sym not in cache:
@@ -103,7 +107,7 @@ def main():
             fetched = cache[sym]
             if fetched is None:
                 rows.append([it["name"], it["code"], it["market"], "获取失败",
-                             "-", "-", 0.0, "-", "-", "-", "-", "-"])
+                             "-", "-", 0.0, "-", "-", "-", "-", "-", gmap.get(it["code"], "")])
                 continue
             pairs, hist_max = fetched
             price = pairs[-1][1]
@@ -128,7 +132,7 @@ def main():
             rows.append([it["name"], it["code"], it["market"],
                          fmt_mcap(it, price),
                          fmt_price(cur, ath), fmt_price(cur, price),
-                         round(dd, 1), m1, m3, m6, ytd, y1])
+                         round(dd, 1), m1, m3, m6, ytd, y1, gmap.get(it["code"], "")])
             print(f"  {it['code']:>10} {it['name'][:12]:<14} 现价 {price:,.2f}  回撤 {dd:.1f}%")
         sections_out.append({"sec": sec["name"], "rows": rows})
 

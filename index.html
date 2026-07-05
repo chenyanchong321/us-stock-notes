@@ -79,6 +79,11 @@ td.name .mkt{margin-left:6px;background:var(--panel2);border-radius:4px;padding:
 .neg{color:var(--down)}
 .flat{color:var(--text2)}
 
+/* 分组标题行 */
+tr.grp td{background:var(--panel2);color:var(--text2);font-size:12px;font-weight:600;padding:6px 14px;text-align:left;letter-spacing:.5px}
+.sidebar a.sub{padding:4px 18px 4px 36px;font-size:12px;color:var(--text2)}
+.sidebar a.sub:hover{color:var(--text)}
+
 /* 深回撤高亮 */
 .deep{color:var(--gold);font-weight:600}
 
@@ -212,14 +217,25 @@ function renderDash(quotes){
     const id = "sec"+i;
     const nums = s.rows.map(r=>r[6]).filter(v=>typeof v==="number");
     const avgDD = nums.length ? (nums.reduce((a,b)=>a+b,0)/nums.length).toFixed(1) : "–";
+    let body="", lastG="", gi=0, subnav="";
+    s.rows.forEach(r=>{
+      const g=r[12]||"";
+      if(g && g!==lastG){
+        const gid=`${id}-g${gi++}`;
+        body+=`<tr class="grp" id="${gid}"><td colspan="${COLS.length}">▸ ${g}</td></tr>`;
+        subnav+=`<a class="sub" href="#${gid}">↳ ${g}</a>`;
+        lastG=g;
+      }
+      body+=rowHTML(r);
+    });
     navEl.insertAdjacentHTML("beforeend",
-      `<a href="#${id}" data-sec="${id}">${s.sec}<span class="cnt">${s.rows.length}</span></a>`);
+      `<a href="#${id}" data-sec="${id}">${s.sec}<span class="cnt">${s.rows.length}</span></a>`+subnav);
     secEl.insertAdjacentHTML("beforeend",`
       <div class="section" id="${id}" data-idx="${i}">
         <div class="section-head"><h2>${s.sec}</h2><span class="n">${s.rows.length} 个标的</span><span class="avg">板块平均回撤 ${avgDD}%</span></div>
         <div class="tbl-wrap"><table>
           <thead><tr>${COLS.map((c,ci)=>`<th data-ci="${ci}">${c}</th>`).join("")}</tr></thead>
-          <tbody>${s.rows.map(rowHTML).join("")}</tbody>
+          <tbody>${body}</tbody>
         </table></div>
       </div>`);
   });
@@ -266,6 +282,7 @@ function applyFilter(){
   document.querySelectorAll("#view-dash .section").forEach(sec=>{
     let vis = 0;
     sec.querySelectorAll("tbody tr").forEach(tr=>{
+      if(!tr.dataset.key){ tr.classList.toggle("hidden", q!==""); return; }
       const hit = !q || tr.dataset.key.includes(q);
       tr.classList.toggle("hidden",!hit);
       if(hit) vis++;

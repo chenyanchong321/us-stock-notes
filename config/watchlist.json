@@ -735,6 +735,20 @@
      "ath_floor": 25.09
     },
     {
+     "name": "曦智科技",
+     "code": "01879",
+     "market": "港股",
+     "yahoo": "1879.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 4500,
+      "approx": true
+     },
+     "mcap_base_price": 351.8,
+     "ath_floor": 0
+    },
+    {
      "name": "AXT Inc",
      "code": "AXTI",
      "market": "美股",
@@ -774,16 +788,6 @@
       "approx": false
      },
      "mcap_base_price": 196.79,
-     "ath_floor": 0
-    },
-    {
-     "name": "光模块2x ETF（Tuttle）",
-     "code": "FOTO",
-     "market": "美股 ETF",
-     "yahoo": "FOTO",
-     "currency": "$",
-     "mcap_base": null,
-     "mcap_base_price": 20.84,
      "ath_floor": 0
     },
     {
@@ -899,18 +903,74 @@
      "ath_floor": 0
     },
     {
-     "name": "曦智科技",
-     "code": "01879",
-     "market": "港股",
-     "yahoo": "1879.HK",
-     "currency": "HK$",
-     "mcap_base": {
-      "prefix": "HK$",
-      "yi": 4500,
-      "approx": true
-     },
-     "mcap_base_price": 351.8,
+     "name": "光模块2x ETF（Tuttle）",
+     "code": "FOTO",
+     "market": "美股 ETF",
+     "yahoo": "FOTO",
+     "currency": "$",
+     "mcap_base": null,
+     "mcap_base_price": 20.84,
      "ath_floor": 0
+    }
+   ],
+   "groups": [
+    {
+     "name": "光模块与光器件",
+     "codes": [
+      "LITE",
+      "COHR",
+      "AAOI",
+      "FN",
+      "MTSI",
+      "CIEN",
+      "VIAV",
+      "POET"
+     ]
+    },
+    {
+     "name": "交换与连接芯片",
+     "codes": [
+      "ANET",
+      "ALAB",
+      "CRDO",
+      "MRVL",
+      "APH",
+      "NOK"
+     ]
+    },
+    {
+     "name": "CPO 与硅光",
+     "codes": [
+      "HIMX",
+      "01879"
+     ]
+    },
+    {
+     "name": "衬底与化合物材料",
+     "codes": [
+      "AXTI",
+      "SIVEF",
+      "GLW"
+     ]
+    },
+    {
+     "name": "A股光模块军团",
+     "codes": [
+      "300308",
+      "300502",
+      "300394",
+      "002281",
+      "688498",
+      "300620",
+      "300548",
+      "300570"
+     ]
+    },
+    {
+     "name": "杠杆 ETF",
+     "codes": [
+      "FOTO"
+     ]
     }
    ]
   },
@@ -1084,6 +1144,35 @@
      },
      "mcap_base_price": 120.95,
      "ath_floor": 233.67
+    }
+   ],
+   "groups": [
+    {
+     "name": "国际巨头（InP 老牌）",
+     "codes": [
+      "COHR",
+      "LITE",
+      "5802",
+      "5801"
+     ]
+    },
+    {
+     "name": "A股光芯片",
+     "codes": [
+      "688498",
+      "688048",
+      "688313",
+      "002281",
+      "000988",
+      "600105"
+     ]
+    },
+    {
+     "name": "上游衬底与自研交叉",
+     "codes": [
+      "AXTI",
+      "AAOI"
+     ]
     }
    ]
   },
