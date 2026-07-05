@@ -71,6 +71,50 @@ def fmt_price(cur, v):
         return f"{cur}{v:,.2f}"
     return f"{cur}{v:.2f}" if v >= 1 else f"{cur}{v:.3f}"
 
+def fetch_pe_map(symbols):
+    """批量获取 TTM 市盈率。v7 quote 接口需 cookie+crumb；失败则整体降级为空（前端显示—）。"""
+    pe = {}
+    import urllib.request as ur
+    opener = ur.build_opener(ur.HTTPCookieProcessor())
+    opener.addheaders = list(UA.items())
+    try:
+        opener.open("https://fc.yahoo.com", timeout=15).read(0)  # 种 cookie（返回404无妨）
+    except Exception:
+        pass
+    try:
+        crumb = opener.open("https://query1.finance.yahoo.com/v1/test/getcrumb", timeout=15).read().decode()
+    except Exception as e:
+        print(f"::warning::PE 获取降级（crumb 失败: {e}），本次 PE 列为空")
+        return pe
+    syms = list(dict.fromkeys(symbols))
+    for i in range(0, len(syms), 40):
+        chunk = syms[i:i+40]
+        url = ("https://query1.finance.yahoo.com/v7/finance/quote?symbols="
+               + urllib.parse.quote(",".join(chunk)) + "&crumb=" + urllib.parse.quote(crumb))
+        try:
+            j = json.load(opener.open(url, timeout=20))
+            for q in j.get("quoteResponse", {}).get("result", []):
+                v = q.get("trailingPE")
+                if v is None and q.get("epsTrailingTwelveMonths") and q.get("regularMarketPrice"):
+                    eps = q["epsTrailingTwelveMonths"]
+                    if eps > 0:
+                        v = q["regularMarketPrice"] / eps
+                if v is not None and 0 < v < 100000:
+                    pe[q["symbol"]] = round(v, 1)
+        except Exception as e:
+            print(f"  !! PE 批次 {i//40} 失败: {e}", file=sys.stderr)
+        time.sleep(0.5)
+    print(f"PE 覆盖 {len(pe)}/{len(syms)} 个代码")
+    return pe
+
+def pos_52w(pairs, ts_1y):
+    """现价在近52周高低点区间的位置（0-100，越高越贴近高点）"""
+    win = [c for t, c in pairs if t >= ts_1y] or [c for _, c in pairs]
+    hi, lo = max(win), min(win)
+    if hi == lo:
+        return 50.0
+    return round((pairs[-1][1] - lo) / (hi - lo) * 100, 0)
+
 def fmt_mcap(item, price):
     mb = item.get("mcap_base")
     if not mb:
@@ -91,6 +135,9 @@ def main():
     ts_1y = int((now - datetime.timedelta(days=365)).timestamp())
     ts_ytd = int(datetime.datetime(now.year, 1, 1, tzinfo=datetime.timezone.utc).timestamp())  # 基准=上年最后一个收盘
 
+    all_syms = [it["yahoo"] for sec in watch["sections"] for it in sec["items"]]
+    pe_map = fetch_pe_map(all_syms)
+
     cache = {}
     sections_out = []
     for sec in watch["sections"]:
@@ -107,7 +154,7 @@ def main():
             fetched = cache[sym]
             if fetched is None:
                 rows.append([it["name"], it["code"], it["market"], "获取失败",
-                             "-", "-", 0.0, "-", "-", "-", "-", "-", gmap.get(it["code"], "")])
+                             "-", "-", 0.0, "-", "-", "-", "-", "-", gmap.get(it["code"], ""), None, None])
                 continue
             pairs, hist_max = fetched
             price = pairs[-1][1]
@@ -132,7 +179,8 @@ def main():
             rows.append([it["name"], it["code"], it["market"],
                          fmt_mcap(it, price),
                          fmt_price(cur, ath), fmt_price(cur, price),
-                         round(dd, 1), m1, m3, m6, ytd, y1, gmap.get(it["code"], "")])
+                         round(dd, 1), m1, m3, m6, ytd, y1, gmap.get(it["code"], ""),
+                         pe_map.get(sym), pos_52w(pairs, ts_1y)])
             print(f"  {it['code']:>10} {it['name'][:12]:<14} 现价 {price:,.2f}  回撤 {dd:.1f}%")
         sections_out.append({"sec": sec["name"], "rows": rows})
 
