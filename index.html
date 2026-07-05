@@ -80,6 +80,10 @@ td.name{text-align:left;max-width:150px;white-space:normal;line-height:1.4}
 th:first-child,td.name{position:sticky;left:0;z-index:3;background:var(--panel)}
 tr:hover td.name{background:var(--panel2)}
 tr.grp td .glabel{position:sticky;left:14px;display:inline-block}
+/* 有买点的重点标的：金色星标+左边条 */
+tr.buy td.name{box-shadow:inset 3px 0 0 var(--gold)}
+tr.buy td.name .cn::before{content:"★ ";color:var(--gold);font-size:11px}
+tr.buy .buyline{color:var(--gold)!important}
 td.name .cn{font-weight:500;display:block}
 td.name .sub{font-size:11px;color:var(--text2);white-space:nowrap}
 td.name .mkt{margin-left:6px;background:var(--panel2);border-radius:4px;padding:0 5px}
@@ -227,11 +231,11 @@ function posCell(v, rng){
 }
 function priceCell(r){
   const b = BUY[r[1]];
-  const buyLine = b ? `<span style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">买点 ${b}</span>` : "";
+  const buyLine = b ? `<span class="buyline" style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">买点 ${b}</span>` : "";
   return `<span style="display:block">${r[5]}</span>${buyLine}`;
 }
 function rowHTML(r){
-  return `<tr data-key="${(r[0]+r[1]).toLowerCase()}">
+  return `<tr class="${BUY[r[1]]?"buy":""}" data-key="${(r[0]+r[1]).toLowerCase()}">
     <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
     <td>${r[3]}</td><td>${r[4]}</td><td>${priceCell(r)}</td>
     <td>${posCell(r[14], r[15])}</td>
