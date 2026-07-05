@@ -99,11 +99,15 @@ tr.buy .buyline.hit{color:var(--up)!important;font-weight:600}
   .tab{padding:0 8px;font-size:13px}
   #searchwrap{flex:1 1 110px;min-width:90px}
   .mobile-only{display:block}
-  /* 跳转板块：固定悬浮在底部，随时可连续跳转 */
-  #secjump{position:fixed;left:12px;right:12px;bottom:12px;z-index:180;width:auto;
-    background:var(--panel);color:var(--accent);border:1px solid var(--accent);border-radius:10px;
-    padding:10px 12px;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.5)}
-  #footer{padding-bottom:70px}
+  /* 搜索框 16px 防 iOS 自动放大 */
+  #search{font-size:16px;padding:8px 30px 8px 12px}
+  /* 跳转板块：底部居中悬浮胶囊，随时可连续跳转 */
+  #secjump{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:180;
+    width:min(88%,320px);background:rgba(22,27,36,.94);color:var(--text);
+    border:1px solid var(--border);border-radius:99px;padding:10px 18px;font-size:14px;
+    box-shadow:0 6px 20px rgba(0,0,0,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    appearance:none;-webkit-appearance:none;text-align:center;text-align-last:center}
+  #footer{padding-bottom:76px}
 }
 td.name .cn{font-weight:500;display:block}
 td.name .sub{font-size:11px;color:var(--text2);white-space:nowrap}
@@ -133,9 +137,12 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 .note-cat h3{font-size:16px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .note-cat h3 .n{font-size:12px;color:var(--text2);font-weight:400}
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;transition:.15s}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;transition:.15s;color:inherit;text-decoration:none;cursor:pointer;position:relative}
 .card:hover{border-color:var(--accent);transform:translateY(-2px)}
-.card .t{font-size:15px;font-weight:600;line-height:1.4}
+.card::after{content:"→";position:absolute;right:16px;bottom:12px;color:var(--border);font-size:15px;transition:.15s}
+.card:hover::after{color:var(--accent)}
+.card:hover .t{color:var(--accent)}
+.card .t{font-size:15px;font-weight:600;line-height:1.4;transition:.15s}
 .card .d{font-size:13px;color:var(--text2);line-height:1.6;flex:1}
 .card .meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .card .date{font-size:11px;color:var(--text2)}
@@ -173,7 +180,7 @@ body.resizing{user-select:none;cursor:col-resize}
     <div class="tab" data-view="notes">📚 学习笔记</div>
   </div>
   <div id="searchwrap">
-    <input id="search" type="text" placeholder="🔍 搜索名称 / 代码，如 NVDA、紫金…">
+    <input id="search" type="search" enterkeyhint="search" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="🔍 搜索名称 / 代码，如 NVDA、紫金…">
     <span id="search-clear" title="清空">✕</span>
   </div>
   <div class="slogan">看得懂的数据 · 讲得清的知识</div>
@@ -398,14 +405,11 @@ function renderNotes(cfg){
       <div class="note-cat" id="${id}">
         <h3>${c.cat}<span class="n">${c.items.length} 篇</span></h3>
         <div class="cards">${c.items.map(n=>`
-          <div class="card">
+          <a class="card" href="${n.page}">
             <div class="t">${n.t}</div>
             <div class="meta"><span class="date">${n.date}</span>${n.tags.map(t=>`<span class="tag">${t}</span>`).join("")}</div>
             <div class="d">${n.d}</div>
-            <div class="btns">
-              <a class="btn pri" href="${n.page}">📖 阅读全文</a>
-            </div>
-          </div>`).join("")}
+          </a>`).join("")}
         </div>
       </div>`);
   });
