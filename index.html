@@ -245,8 +245,8 @@ body.resizing{user-select:none;cursor:col-resize}
       <p>这里的每一篇笔记，都是我和 AI 一起把一个知识点掰开揉碎的过程记录——大量示意图，用费曼学习法讲到"小白也能懂"。看懂产业的底层逻辑，再去看行情数据，判断才有根。文章为网页版，电脑和手机都能舒适阅读，每篇文内可下载 PDF 存档。</p>
     </div>
     <div class="view-toggle">
-      <button id="vt-cat" class="on">📂 分类视图</button>
-      <button id="vt-tl">🕒 时间线</button>
+      <button id="vt-tl">时间线</button>
+      <button id="vt-cat">分类视图</button>
     </div>
     <div id="note-cats"></div>
     <div id="note-timeline" class="hidden"></div>
@@ -435,7 +435,6 @@ function renderNotes(cfg){
         <h3>${c.cat}<span class="n">${c.items.length} 篇</span></h3>
         <div class="cards">${c.items.map(n=>`
           <a class="card" href="${n.page}">
-            <div class="thumb${n.img?(n.img.endsWith(".svg")?" svgt":""):" fallback"}">${n.img?`<img src="${n.img}" loading="lazy" alt="">`:`<span class="emo">${[...c.cat][0]}</span>`}</div>
             <div class="body">
               <div class="t">${n.t}</div>
               <div class="meta"><span class="date">${n.date}</span>${n.tags.map(t=>`<span class="tag">${t}</span>`).join("")}</div>
