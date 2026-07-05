@@ -64,11 +64,11 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 /* 表格 */
 .tbl-wrap{background:var(--panel);border:1px solid var(--border);border-radius:10px}
 table{width:100%;border-collapse:collapse;white-space:nowrap}
-th{font-size:12px;color:var(--text2);text-align:right;padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;background:var(--panel);position:sticky;top:var(--header-h);z-index:5}
+th{font-size:12px;color:var(--text2);text-align:right;padding:9px 9px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;background:var(--panel);position:sticky;top:var(--header-h);z-index:5}
 th:first-child{text-align:left}
 th:hover{color:var(--text)}
 th .arrow{font-size:10px;margin-left:3px;color:var(--accent)}
-td{padding:9px 14px;text-align:right;border-bottom:1px solid rgba(36,44,59,.5);font-variant-numeric:tabular-nums}
+td{padding:8px 9px;text-align:right;border-bottom:1px solid rgba(36,44,59,.5);font-variant-numeric:tabular-nums}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:var(--panel2)}
 td.name{text-align:left;max-width:150px;white-space:normal;line-height:1.4}
@@ -115,6 +115,10 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 #resizer{position:fixed;top:var(--header-h);bottom:0;left:calc(var(--sidebar-w) - 3px);width:6px;cursor:col-resize;z-index:150;background:transparent;transition:background .15s}
 #resizer:hover,#resizer.on{background:var(--accent)}
 body.resizing{user-select:none;cursor:col-resize}
+@media(max-width:1080px){
+  .tbl-wrap{overflow-x:auto}
+  th{position:static}
+}
 @media(max-width:860px){#resizer{display:none}}
 
 .hidden{display:none!important}
