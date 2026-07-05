@@ -3304,6 +3304,20 @@
      "ath_floor": 80.08
     },
     {
+     "name": "EQT（天然气）",
+     "code": "EQT",
+     "market": "美股",
+     "yahoo": "EQT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 340,
+      "approx": true
+     },
+     "mcap_base_price": 56.61,
+     "ath_floor": 0
+    },
+    {
      "name": "华能国际",
      "code": "600011",
      "market": "A股",
@@ -3552,7 +3566,8 @@
       "CLS",
       "ECL",
       "CCJ",
-      "WMB"
+      "WMB",
+      "EQT"
      ]
     },
     {
