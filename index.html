@@ -470,7 +470,9 @@ function renderNotes(cfg){
   }
   vtc.addEventListener("click",()=>setNotesView("cat"));
   vtt.addEventListener("click",()=>setNotesView("tl"));
-  try{ if(localStorage.getItem("notesView")==="tl") setNotesView("tl"); }catch(e){}
+  /* 默认时间线；用户手动切过分类则记住 */
+  let nv="tl"; try{ nv=localStorage.getItem("notesView")||"tl"; }catch(e){}
+  setNotesView(nv);
 }
 
 /* ===== 悬浮表头（任意宽度吸顶，横滚同步） ===== */
