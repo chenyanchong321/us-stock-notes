@@ -528,6 +528,48 @@
      "ath_floor": 0
     },
     {
+     "name": "江波龙",
+     "code": "301308",
+     "market": "A股",
+     "yahoo": "301308.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2854,
+      "approx": true
+     },
+     "mcap_base_price": 679.6,
+     "ath_floor": 0
+    },
+    {
+     "name": "佰维存储",
+     "code": "688525",
+     "market": "A股",
+     "yahoo": "688525.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1344,
+      "approx": true
+     },
+     "mcap_base_price": 285.41,
+     "ath_floor": 0
+    },
+    {
+     "name": "兆易创新",
+     "code": "603986",
+     "market": "A股",
+     "yahoo": "603986.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 3117,
+      "approx": true
+     },
+     "mcap_base_price": 445.02,
+     "ath_floor": 0
+    },
+    {
      "name": "兆易创新",
      "code": "03986",
      "market": "港股",
@@ -583,8 +625,16 @@
      ]
     },
     {
+     "name": "存储模组（A股）",
+     "codes": [
+      "301308",
+      "688525"
+     ]
+    },
+    {
      "name": "利基存储与接口芯片",
      "codes": [
+      "603986",
       "03986",
       "06809"
      ]
