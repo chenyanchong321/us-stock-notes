@@ -2215,8 +2215,92 @@
    ]
   },
   {
-   "name": "10 碳化硅（SiC与宽禁带功率）",
+   "name": "10 800VDC 功率半导体（SiC · GaN）",
    "items": [
+    {
+     "name": "天岳先进",
+     "code": "688234",
+     "market": "A股",
+     "yahoo": "688234.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 626,
+      "approx": true
+     },
+     "mcap_base_price": 145.6,
+     "ath_floor": 0
+    },
+    {
+     "name": "晶升股份",
+     "code": "688478",
+     "market": "A股",
+     "yahoo": "688478.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 97,
+      "approx": true
+     },
+     "mcap_base_price": 72.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "露笑科技",
+     "code": "002617",
+     "market": "A股",
+     "yahoo": "002617.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 146,
+      "approx": true
+     },
+     "mcap_base_price": 9.15,
+     "ath_floor": 0
+    },
+    {
+     "name": "晶盛机电",
+     "code": "300316",
+     "market": "A股",
+     "yahoo": "300316.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 664,
+      "approx": true
+     },
+     "mcap_base_price": 51.08,
+     "ath_floor": 0
+    },
+    {
+     "name": "Coherent",
+     "code": "COHR",
+     "market": "美股",
+     "yahoo": "COHR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 652.2,
+      "approx": false
+     },
+     "mcap_base_price": 333.36,
+     "ath_floor": 440.0
+    },
+    {
+     "name": "Aehr Test",
+     "code": "AEHR",
+     "market": "美股",
+     "yahoo": "AEHR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 21,
+      "approx": false
+     },
+     "mcap_base_price": 69.96,
+     "ath_floor": 0
+    },
     {
      "name": "意法半导体",
      "code": "STM",
@@ -2260,20 +2344,6 @@
      "ath_floor": 0
     },
     {
-     "name": "Wolfspeed",
-     "code": "WOLF",
-     "market": "美股",
-     "yahoo": "WOLF",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 28,
-      "approx": true
-     },
-     "mcap_base_price": 40.0,
-     "ath_floor": 0
-    },
-    {
      "name": "罗姆半导体",
      "code": "6963",
      "market": "日股",
@@ -2288,46 +2358,18 @@
      "ath_floor": 0
     },
     {
-     "name": "Coherent",
-     "code": "COHR",
+     "name": "Wolfspeed",
+     "code": "WOLF",
      "market": "美股",
-     "yahoo": "COHR",
+     "yahoo": "WOLF",
      "currency": "$",
      "mcap_base": {
       "prefix": "$",
-      "yi": 652.2,
-      "approx": false
+      "yi": 28,
+      "approx": true
      },
-     "mcap_base_price": 333.36,
-     "ath_floor": 440.0
-    },
-    {
-     "name": "Aehr Test",
-     "code": "AEHR",
-     "market": "美股",
-     "yahoo": "AEHR",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 21,
-      "approx": false
-     },
-     "mcap_base_price": 69.96,
+     "mcap_base_price": 40.0,
      "ath_floor": 0
-    },
-    {
-     "name": "时代电气",
-     "code": "688187",
-     "market": "A股",
-     "yahoo": "688187.SS",
-     "currency": "¥",
-     "mcap_base": {
-      "prefix": "¥",
-      "yi": 780.4,
-      "approx": false
-     },
-     "mcap_base_price": 57.49,
-     "ath_floor": 92.6
     },
     {
      "name": "斯达半导",
@@ -2341,165 +2383,6 @@
       "approx": true
      },
      "mcap_base_price": 129.35,
-     "ath_floor": 0
-    },
-    {
-     "name": "三安光电",
-     "code": "600703",
-     "market": "A股",
-     "yahoo": "600703.SS",
-     "currency": "¥",
-     "mcap_base": {
-      "prefix": "¥",
-      "yi": 912,
-      "approx": true
-     },
-     "mcap_base_price": 18.23,
-     "ath_floor": 0
-    },
-    {
-     "name": "天岳先进",
-     "code": "688234",
-     "market": "A股",
-     "yahoo": "688234.SS",
-     "currency": "¥",
-     "mcap_base": {
-      "prefix": "¥",
-      "yi": 626,
-      "approx": true
-     },
-     "mcap_base_price": 145.6,
-     "ath_floor": 0
-    },
-    {
-     "name": "晶盛机电",
-     "code": "300316",
-     "market": "A股",
-     "yahoo": "300316.SZ",
-     "currency": "¥",
-     "mcap_base": {
-      "prefix": "¥",
-      "yi": 664,
-      "approx": true
-     },
-     "mcap_base_price": 51.08,
-     "ath_floor": 0
-    },
-    {
-     "name": "晶升股份",
-     "code": "688478",
-     "market": "A股",
-     "yahoo": "688478.SS",
-     "currency": "¥",
-     "mcap_base": {
-      "prefix": "¥",
-      "yi": 97,
-      "approx": true
-     },
-     "mcap_base_price": 72.0,
-     "ath_floor": 0
-    },
-    {
-     "name": "露笑科技",
-     "code": "002617",
-     "market": "A股",
-     "yahoo": "002617.SZ",
-     "currency": "¥",
-     "mcap_base": {
-      "prefix": "¥",
-      "yi": 146,
-      "approx": true
-     },
-     "mcap_base_price": 9.15,
-     "ath_floor": 0
-    }
-   ]
-  },
-  {
-   "name": "11 800VDC 电力电子与功率半导体",
-   "items": [
-    {
-     "name": "纳微半导体",
-     "code": "NVTS",
-     "market": "美股",
-     "yahoo": "NVTS",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 35.2,
-      "approx": false
-     },
-     "mcap_base_price": 14.46,
-     "ath_floor": 34.17
-    },
-    {
-     "name": "英诺赛科",
-     "code": "02577",
-     "market": "港股",
-     "yahoo": "2577.HK",
-     "currency": "HK$",
-     "mcap_base": {
-      "prefix": "HK$",
-      "yi": 534,
-      "approx": false
-     },
-     "mcap_base_price": 60.65,
-     "ath_floor": 0
-    },
-    {
-     "name": "英飞凌 ADR",
-     "code": "IFNNY",
-     "market": "美股 OTC",
-     "yahoo": "IFNNY",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 1120,
-      "approx": false
-     },
-     "mcap_base_price": 86.175,
-     "ath_floor": 0
-    },
-    {
-     "name": "安森美半导体",
-     "code": "ON",
-     "market": "美股",
-     "yahoo": "ON",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 383,
-      "approx": false
-     },
-     "mcap_base_price": 91.22,
-     "ath_floor": 0
-    },
-    {
-     "name": "德州仪器",
-     "code": "TXN",
-     "market": "美股",
-     "yahoo": "TXN",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 2667,
-      "approx": false
-     },
-     "mcap_base_price": 293.08,
-     "ath_floor": 0
-    },
-    {
-     "name": "Monolithic Power",
-     "code": "MPWR",
-     "market": "美股",
-     "yahoo": "MPWR",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 631,
-      "approx": false
-     },
-     "mcap_base_price": 1288.16,
      "ath_floor": 0
     },
     {
@@ -2529,6 +2412,76 @@
      },
      "mcap_base_price": 37.54,
      "ath_floor": 75.0
+    },
+    {
+     "name": "纳微半导体",
+     "code": "NVTS",
+     "market": "美股",
+     "yahoo": "NVTS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 35.2,
+      "approx": false
+     },
+     "mcap_base_price": 14.46,
+     "ath_floor": 34.17
+    },
+    {
+     "name": "英诺赛科",
+     "code": "02577",
+     "market": "港股",
+     "yahoo": "2577.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 534,
+      "approx": false
+     },
+     "mcap_base_price": 60.65,
+     "ath_floor": 0
+    },
+    {
+     "name": "三安光电",
+     "code": "600703",
+     "market": "A股",
+     "yahoo": "600703.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 912,
+      "approx": true
+     },
+     "mcap_base_price": 18.23,
+     "ath_floor": 0
+    },
+    {
+     "name": "德州仪器",
+     "code": "TXN",
+     "market": "美股",
+     "yahoo": "TXN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2667,
+      "approx": false
+     },
+     "mcap_base_price": 293.08,
+     "ath_floor": 0
+    },
+    {
+     "name": "Monolithic Power",
+     "code": "MPWR",
+     "market": "美股",
+     "yahoo": "MPWR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 631,
+      "approx": false
+     },
+     "mcap_base_price": 1288.16,
+     "ath_floor": 0
     },
     {
      "name": "伊顿",
@@ -2572,10 +2525,59 @@
      "mcap_base_price": 136.855,
      "ath_floor": 0
     }
+   ],
+   "groups": [
+    {
+     "name": "SiC 衬底 · 设备 · 测试",
+     "codes": [
+      "688234",
+      "688478",
+      "002617",
+      "300316",
+      "COHR",
+      "AEHR"
+     ]
+    },
+    {
+     "name": "SiC 功率器件（IDM 与模块）",
+     "codes": [
+      "STM",
+      "IFNNY",
+      "ON",
+      "6963",
+      "WOLF",
+      "603290",
+      "688187",
+      "03898"
+     ]
+    },
+    {
+     "name": "GaN 阵营",
+     "codes": [
+      "NVTS",
+      "02577",
+      "600703"
+     ]
+    },
+    {
+     "name": "电源管理芯片",
+     "codes": [
+      "TXN",
+      "MPWR"
+     ]
+    },
+    {
+     "name": "电力设备与整机集成",
+     "codes": [
+      "ETN",
+      "VRT",
+      "FLEX"
+     ]
+    }
    ]
   },
   {
-   "name": "12 光纤与光缆",
+   "name": "11 光纤与光缆",
    "items": [
     {
      "name": "康宁",
@@ -2748,7 +2750,7 @@
    ]
   },
   {
-   "name": "13 PCB",
+   "name": "12 PCB",
    "items": [
     {
      "name": "胜宏科技",
@@ -2823,7 +2825,7 @@
    ]
   },
   {
-   "name": "14 能源、电力与资源现金流",
+   "name": "13 能源、电力与资源现金流",
    "items": [
     {
      "name": "Constellation Energy",
@@ -3216,7 +3218,7 @@
    ]
   },
   {
-   "name": "15 软件与 SaaS",
+   "name": "14 软件与 SaaS",
    "items": [
     {
      "name": "微软",
@@ -3655,7 +3657,7 @@
    ]
   },
   {
-   "name": "16 机器人、汽车零部件与无人系统",
+   "name": "15 机器人、汽车零部件与无人系统",
    "items": [
     {
      "name": "哈默纳科机电",
@@ -3758,7 +3760,7 @@
    ]
   },
   {
-   "name": "17 中国互联网、AI 应用与主题 ETF",
+   "name": "16 中国互联网、AI 应用与主题 ETF",
    "items": [
     {
      "name": "腾讯控股",
@@ -3811,7 +3813,7 @@
    ]
   },
   {
-   "name": "18 贵金属与有色金属",
+   "name": "17 贵金属与有色金属",
    "items": [
     {
      "name": "黄金 / 美元",
@@ -3994,7 +3996,7 @@
    ]
   },
   {
-   "name": "19 加密资产",
+   "name": "18 加密资产",
    "items": [
     {
      "name": "比特币",
