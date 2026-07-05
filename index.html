@@ -98,8 +98,12 @@ tr.buy .buyline.hit{color:var(--up)!important;font-weight:600}
   #header .logo span{display:none}
   .tab{padding:0 8px;font-size:13px}
   #searchwrap{flex:1 1 110px;min-width:90px}
-  .mobile-only{display:block;width:100%}
-  #secjump{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:14px;width:100%}
+  .mobile-only{display:block}
+  /* 跳转板块：固定悬浮在底部，随时可连续跳转 */
+  #secjump{position:fixed;left:12px;right:12px;bottom:12px;z-index:180;width:auto;
+    background:var(--panel);color:var(--accent);border:1px solid var(--accent);border-radius:10px;
+    padding:10px 12px;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.5)}
+  #footer{padding-bottom:70px}
 }
 td.name .cn{font-weight:500;display:block}
 td.name .sub{font-size:11px;color:var(--text2);white-space:nowrap}
@@ -224,7 +228,7 @@ body.resizing{user-select:none;cursor:col-resize}
 ===================================================================== */
 let DATA = [];
 
-const COLS = ["名称","市值","历史高点","现价","52周位","高点跌幅","近1月","近3月","近半年","年初至今","近1年","PE"];
+const COLS = ["名称","市值","历史高点","现价","52周位","高点跌幅","近1月","近3月","近半年","年初至今","近1年"];
 let BUY = {};
 
 function fmtPct(v){
@@ -258,8 +262,9 @@ function buyHit(r){
 function priceCell(r){
   const b = BUY[r[1]];
   const hit = buyHit(r);
+  const pe = (typeof r[13]==="number") ? ` <span style="font-size:11px;color:var(--text2)">(PE ${r[13].toFixed(1)})</span>` : "";
   const buyLine = b ? `<span class="buyline${hit?" hit":""}" style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">${hit?"🎯":""}买点 ${b}</span>` : "";
-  return `<span style="display:block">${r[5]}</span>${buyLine}`;
+  return `<span style="display:block;white-space:nowrap">${r[5]}${pe}</span>${buyLine}`;
 }
 function rowHTML(r, grp){
   return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${grp||""}" data-key="${(r[0]+r[1]).toLowerCase()}">
@@ -269,7 +274,6 @@ function rowHTML(r, grp){
     <td>${ddCell(r[6])}</td>
     <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
     <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td>
-    <td>${peCell(r[13])}</td>
   </tr>`;
 }
 
@@ -312,7 +316,7 @@ function renderDash(quotes){
   document.getElementById("st-up1m").textContent = Math.round(up1m/all.length*100)+"%";
 
   /* 排序 */
-  const SORT_MAP = {0:0,1:3,2:4,3:5,4:14,5:6,6:7,7:8,8:9,9:10,10:11,11:13};
+  const SORT_MAP = {0:0,1:3,2:4,3:5,4:14,5:6,6:7,7:8,8:9,9:10,10:11};
   document.querySelectorAll("#view-dash th").forEach(th=>{
     th.addEventListener("click",()=>{
       const ci = +th.dataset.ci;
@@ -595,13 +599,19 @@ let PROFILES = {};
   document.getElementById("loading").remove();
   document.getElementById("view-dash").classList.remove("hidden");
 
-  /* 视图切换 */
+  /* 视图切换（记住上次页签，并同步 URL 防止刷新跳走） */
   document.querySelectorAll(".tab").forEach(tab=>{
     tab.addEventListener("click",()=>{
       document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===tab));
       document.getElementById("view-dash").classList.toggle("hidden",tab.dataset.view!=="dash");
       document.getElementById("view-notes").classList.toggle("hidden",tab.dataset.view!=="notes");
       document.getElementById("searchwrap").style.display = tab.dataset.view==="dash" ? "" : "none";
+      try{ localStorage.setItem("lastView", tab.dataset.view); }catch(e){}
+      const u = new URL(location.href);
+      if(tab.dataset.view==="notes") u.searchParams.set("view","notes");
+      else u.searchParams.delete("view");
+      u.hash="";
+      history.replaceState(null,"",u);
       window.scrollTo(0,0);
     });
   });
@@ -616,8 +626,10 @@ let PROFILES = {};
     });
   })();
 
-  /* URL 参数直达笔记库（文章页"返回"用） */
-  if(new URLSearchParams(location.search).get("view")==="notes"){
+  /* 初始页签：URL 明确指定 > 上次停留 > 默认数据面板 */
+  const wantView = new URLSearchParams(location.search).get("view")
+                || (function(){ try{ return localStorage.getItem("lastView"); }catch(e){ return null; } })();
+  if(wantView==="notes"){
     document.querySelector('.tab[data-view="notes"]').click();
   }
 
