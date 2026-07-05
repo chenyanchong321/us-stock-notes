@@ -201,7 +201,8 @@ body.resizing{user-select:none;cursor:col-resize}
 ===================================================================== */
 let DATA = [];
 
-const COLS = ["名称","市值","历史高点","现价","高点跌幅","近1月","近3月","近半年","年初至今","近1年","PE","52周位"];
+const COLS = ["名称","市值","历史高点","现价","52周位","高点跌幅","近1月","近3月","近半年","年初至今","近1年","PE"];
+let BUY = {};
 
 function fmtPct(v){
   if(v==null) return `<span class="flat">–</span>`;
@@ -221,17 +222,23 @@ function peCell(v){
 function posCell(v, rng){
   if(typeof v!=="number") return `<span class="flat">–</span>`;
   const c = v>=80 ? "var(--gold)" : v<=20 ? "var(--accent)" : "var(--text2)";
-  const top = rng ? `<span style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">${rng}</span>` : "";
-  return `${top}<span style="color:${c};font-weight:600">${Math.round(v)}%</span>`;
+  const bottom = rng ? `<span style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">${rng}</span>` : "";
+  return `<span style="display:block;color:${c};font-weight:600">${Math.round(v)}%</span>${bottom}`;
+}
+function priceCell(r){
+  const b = BUY[r[1]];
+  const buyLine = b ? `<span style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">买点 ${b}</span>` : "";
+  return `<span style="display:block">${r[5]}</span>${buyLine}`;
 }
 function rowHTML(r){
   return `<tr data-key="${(r[0]+r[1]).toLowerCase()}">
     <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
-    <td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td>
+    <td>${r[3]}</td><td>${r[4]}</td><td>${priceCell(r)}</td>
+    <td>${posCell(r[14], r[15])}</td>
     <td>${ddCell(r[6])}</td>
     <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
     <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td>
-    <td>${peCell(r[13])}</td><td>${posCell(r[14], r[15])}</td>
+    <td>${peCell(r[13])}</td>
   </tr>`;
 }
 
@@ -274,7 +281,7 @@ function renderDash(quotes){
   document.getElementById("st-up1m").textContent = Math.round(up1m/all.length*100)+"%";
 
   /* 排序 */
-  const SORT_MAP = {0:0,1:3,2:4,3:5,4:6,5:7,6:8,7:9,8:10,9:11,10:13,11:14};
+  const SORT_MAP = {0:0,1:3,2:4,3:5,4:14,5:6,6:7,7:8,8:9,9:10,10:11,11:13};
   document.querySelectorAll("#view-dash th").forEach(th=>{
     th.addEventListener("click",()=>{
       const ci = +th.dataset.ci;
@@ -464,10 +471,12 @@ let PROFILES = {};
 (async ()=>{
   try{
     const bust = "?t=" + Math.floor(Date.now()/60000);
-    const [quotes, notesCfg] = await Promise.all([
+    const [quotes, notesCfg, buyCfg] = await Promise.all([
       fetch("data/quotes.json"+bust).then(r=>r.json()),
-      fetch("config/notes.json"+bust).then(r=>r.json())
+      fetch("config/notes.json"+bust).then(r=>r.json()),
+      fetch("config/buypoints.json"+bust).then(r=>r.ok?r.json():{}).catch(()=>({}))
     ]);
+    BUY = buyCfg || {};
     fetch("config/profiles.json"+bust).then(r=>r.ok?r.json():{}).then(p=>{ PROFILES = p || {}; }).catch(()=>{});
     renderDash(quotes);
     renderNotes(notesCfg);
