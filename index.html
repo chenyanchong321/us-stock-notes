@@ -218,10 +218,11 @@ function peCell(v){
   if(typeof v!=="number") return `<span class="flat">–</span>`;
   return `<span class="flat" style="color:var(--text)">${v.toFixed(1)}</span>`;
 }
-function posCell(v){
+function posCell(v, rng){
   if(typeof v!=="number") return `<span class="flat">–</span>`;
   const c = v>=80 ? "var(--gold)" : v<=20 ? "var(--accent)" : "var(--text2)";
-  return `<span style="color:${c}">${Math.round(v)}%</span>`;
+  const top = rng ? `<span style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">${rng}</span>` : "";
+  return `${top}<span style="color:${c};font-weight:600">${Math.round(v)}%</span>`;
 }
 function rowHTML(r){
   return `<tr data-key="${(r[0]+r[1]).toLowerCase()}">
@@ -230,7 +231,7 @@ function rowHTML(r){
     <td>${ddCell(r[6])}</td>
     <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
     <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td>
-    <td>${peCell(r[13])}</td><td>${posCell(r[14])}</td>
+    <td>${peCell(r[13])}</td><td>${posCell(r[14], r[15])}</td>
   </tr>`;
 }
 

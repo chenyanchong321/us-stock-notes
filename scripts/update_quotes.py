@@ -107,13 +107,21 @@ def fetch_pe_map(symbols):
     print(f"PE 覆盖 {len(pe)}/{len(syms)} 个代码")
     return pe
 
-def pos_52w(pairs, ts_1y):
-    """现价在近52周高低点区间的位置（0-100，越高越贴近高点）"""
+def _num(v):
+    if v >= 10000:
+        return f"{v:,.0f}"
+    if v >= 100:
+        return f"{v:,.1f}"
+    return f"{v:.2f}" if v >= 1 else f"{v:.3f}"
+
+def pos_52w(pairs, ts_1y, cur):
+    """现价在近52周高低点区间的位置（0-100）＋区间字符串「低–高」"""
     win = [c for t, c in pairs if t >= ts_1y] or [c for _, c in pairs]
     hi, lo = max(win), min(win)
+    rng = f"{cur}{_num(lo)}–{_num(hi)}"
     if hi == lo:
-        return 50.0
-    return round((pairs[-1][1] - lo) / (hi - lo) * 100, 0)
+        return 50.0, rng
+    return round((pairs[-1][1] - lo) / (hi - lo) * 100, 0), rng
 
 def fmt_mcap(item, price):
     mb = item.get("mcap_base")
@@ -154,7 +162,7 @@ def main():
             fetched = cache[sym]
             if fetched is None:
                 rows.append([it["name"], it["code"], it["market"], "获取失败",
-                             "-", "-", 0.0, "-", "-", "-", "-", "-", gmap.get(it["code"], ""), None, None])
+                             "-", "-", 0.0, "-", "-", "-", "-", "-", gmap.get(it["code"], ""), None, None, None])
                 continue
             pairs, hist_max = fetched
             price = pairs[-1][1]
@@ -180,7 +188,7 @@ def main():
                          fmt_mcap(it, price),
                          fmt_price(cur, ath), fmt_price(cur, price),
                          round(dd, 1), m1, m3, m6, ytd, y1, gmap.get(it["code"], ""),
-                         pe_map.get(sym), pos_52w(pairs, ts_1y)])
+                         pe_map.get(sym), *pos_52w(pairs, ts_1y, cur)])
             print(f"  {it['code']:>10} {it['name'][:12]:<14} 现价 {price:,.2f}  回撤 {dd:.1f}%")
         sections_out.append({"sec": sec["name"], "rows": rows})
 
