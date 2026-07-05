@@ -4157,6 +4157,34 @@
      "ath_floor": 714.9
     },
     {
+     "name": "阿里巴巴",
+     "code": "09988",
+     "market": "港股",
+     "yahoo": "9988.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 28500,
+      "approx": true
+     },
+     "mcap_base_price": 150.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "拼多多",
+     "code": "PDD",
+     "market": "美股",
+     "yahoo": "PDD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1680,
+      "approx": true
+     },
+     "mcap_base_price": 120.0,
+     "ath_floor": 0
+    },
+    {
      "name": "智谱",
      "code": "02513",
      "market": "港股",
@@ -4169,6 +4197,20 @@
      },
      "mcap_base_price": 1793.0,
      "ath_floor": 2980.0
+    },
+    {
+     "name": "泡泡玛特",
+     "code": "09992",
+     "market": "港股",
+     "yahoo": "9992.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 3350,
+      "approx": true
+     },
+     "mcap_base_price": 250.0,
+     "ath_floor": 0
     },
     {
      "name": "AI 人工智能 ETF",
@@ -4189,6 +4231,30 @@
      "mcap_base": null,
      "mcap_base_price": 2.04,
      "ath_floor": 2.266
+    }
+   ],
+   "groups": [
+    {
+     "name": "平台巨头",
+     "codes": [
+      "00700",
+      "09988",
+      "PDD"
+     ]
+    },
+    {
+     "name": "AI 应用与新消费",
+     "codes": [
+      "02513",
+      "09992"
+     ]
+    },
+    {
+     "name": "主题 ETF",
+     "codes": [
+      "512930",
+      "159819"
+     ]
     }
    ]
   },
