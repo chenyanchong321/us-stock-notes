@@ -522,232 +522,8 @@
    ]
   },
   {
-   "name": "05 光连接（光模块、CPO与光器件）",
+   "name": "05 光连接与光模块（衬底→芯片→模块→CPO）",
    "items": [
-    {
-     "name": "Lumentum",
-     "code": "LITE",
-     "market": "美股",
-     "yahoo": "LITE",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 566.6,
-      "approx": false
-     },
-     "mcap_base_price": 728.32,
-     "ath_floor": 1085.68
-    },
-    {
-     "name": "Coherent",
-     "code": "COHR",
-     "market": "美股",
-     "yahoo": "COHR",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 652.2,
-      "approx": false
-     },
-     "mcap_base_price": 333.36,
-     "ath_floor": 440.0
-    },
-    {
-     "name": "Applied Optoelectronics",
-     "code": "AAOI",
-     "market": "美股",
-     "yahoo": "AAOI",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 97.0,
-      "approx": false
-     },
-     "mcap_base_price": 120.95,
-     "ath_floor": 233.67
-    },
-    {
-     "name": "Fabrinet",
-     "code": "FN",
-     "market": "美股",
-     "yahoo": "FN",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 180,
-      "approx": false
-     },
-     "mcap_base_price": 499.61,
-     "ath_floor": 0
-    },
-    {
-     "name": "MACOM",
-     "code": "MTSI",
-     "market": "美股",
-     "yahoo": "MTSI",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 235,
-      "approx": false
-     },
-     "mcap_base_price": 322.26,
-     "ath_floor": 0
-    },
-    {
-     "name": "Ciena",
-     "code": "CIEN",
-     "market": "美股",
-     "yahoo": "CIEN",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 613,
-      "approx": false
-     },
-     "mcap_base_price": 422.46,
-     "ath_floor": 0
-    },
-    {
-     "name": "Viavi Solutions",
-     "code": "VIAV",
-     "market": "美股",
-     "yahoo": "VIAV",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 94,
-      "approx": false
-     },
-     "mcap_base_price": 41.66,
-     "ath_floor": 0
-    },
-    {
-     "name": "POET Technologies",
-     "code": "POET",
-     "market": "美股",
-     "yahoo": "POET",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 6.6,
-      "approx": false
-     },
-     "mcap_base_price": 8.76,
-     "ath_floor": 0
-    },
-    {
-     "name": "Arista Networks",
-     "code": "ANET",
-     "market": "美股",
-     "yahoo": "ANET",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 2016,
-      "approx": false
-     },
-     "mcap_base_price": 159.99,
-     "ath_floor": 0
-    },
-    {
-     "name": "Astera Labs",
-     "code": "ALAB",
-     "market": "美股",
-     "yahoo": "ALAB",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 671,
-      "approx": false
-     },
-     "mcap_base_price": 406.42,
-     "ath_floor": 0
-    },
-    {
-     "name": "Credo Technology",
-     "code": "CRDO",
-     "market": "美股",
-     "yahoo": "CRDO",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 451.1,
-      "approx": false
-     },
-     "mcap_base_price": 241.91,
-     "ath_floor": 308.67
-    },
-    {
-     "name": "迈威尔科技",
-     "code": "MRVL",
-     "market": "美股",
-     "yahoo": "MRVL",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 2147.7,
-      "approx": false
-     },
-     "mcap_base_price": 245.29,
-     "ath_floor": 329.88
-    },
-    {
-     "name": "安费诺",
-     "code": "APH",
-     "market": "美股",
-     "yahoo": "APH",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 1992,
-      "approx": false
-     },
-     "mcap_base_price": 164.59,
-     "ath_floor": 0
-    },
-    {
-     "name": "诺基亚",
-     "code": "NOK",
-     "market": "美股 ADR",
-     "yahoo": "NOK",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 673.8,
-      "approx": false
-     },
-     "mcap_base_price": 12.07,
-     "ath_floor": 62.5
-    },
-    {
-     "name": "奇景光电",
-     "code": "HIMX",
-     "market": "美股 ADR",
-     "yahoo": "HIMX",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 22.9,
-      "approx": false
-     },
-     "mcap_base_price": 13.15,
-     "ath_floor": 25.09
-    },
-    {
-     "name": "曦智科技",
-     "code": "01879",
-     "market": "港股",
-     "yahoo": "1879.HK",
-     "currency": "HK$",
-     "mcap_base": {
-      "prefix": "HK$",
-      "yi": 4500,
-      "approx": true
-     },
-     "mcap_base_price": 351.8,
-     "ath_floor": 0
-    },
     {
      "name": "AXT Inc",
      "code": "AXTI",
@@ -790,193 +566,6 @@
      "mcap_base_price": 196.79,
      "ath_floor": 0
     },
-    {
-     "name": "中际旭创",
-     "code": "300308",
-     "market": "A股",
-     "yahoo": "300308.SZ",
-     "currency": "¥",
-     "mcap_base": {
-      "prefix": "¥",
-      "yi": 12500,
-      "approx": true
-     },
-     "mcap_base_price": 1116.0,
-     "ath_floor": 0
-    },
-    {
-     "name": "新易盛",
-     "code": "300502",
-     "market": "A股",
-     "yahoo": "300502.SZ",
-     "currency": "¥",
-     "mcap_base": {
-      "prefix": "¥",
-      "yi": 3735,
-      "approx": true
-     },
-     "mcap_base_price": 526.0,
-     "ath_floor": 0
-    },
-    {
-     "name": "天孚通信",
-     "code": "300394",
-     "market": "A股",
-     "yahoo": "300394.SZ",
-     "currency": "¥",
-     "mcap_base": {
-      "prefix": "¥",
-      "yi": 975,
-      "approx": true
-     },
-     "mcap_base_price": 250.1,
-     "ath_floor": 0
-    },
-    {
-     "name": "光迅科技",
-     "code": "002281",
-     "market": "A股",
-     "yahoo": "002281.SZ",
-     "currency": "¥",
-     "mcap_base": {
-      "prefix": "¥",
-      "yi": 1717,
-      "approx": true
-     },
-     "mcap_base_price": 217.33,
-     "ath_floor": 0
-    },
-    {
-     "name": "源杰科技",
-     "code": "688498",
-     "market": "A股",
-     "yahoo": "688498.SS",
-     "currency": "¥",
-     "mcap_base": {
-      "prefix": "¥",
-      "yi": 1427,
-      "approx": true
-     },
-     "mcap_base_price": 1659.23,
-     "ath_floor": 0
-    },
-    {
-     "name": "光库科技",
-     "code": "300620",
-     "market": "A股",
-     "yahoo": "300620.SZ",
-     "currency": "¥",
-     "mcap_base": {
-      "prefix": "¥",
-      "yi": 781,
-      "approx": true
-     },
-     "mcap_base_price": 312.25,
-     "ath_floor": 0
-    },
-    {
-     "name": "长芯博创",
-     "code": "300548",
-     "market": "A股",
-     "yahoo": "300548.SZ",
-     "currency": "¥",
-     "mcap_base": {
-      "prefix": "¥",
-      "yi": 508,
-      "approx": true
-     },
-     "mcap_base_price": 221.01,
-     "ath_floor": 0
-    },
-    {
-     "name": "太辰光",
-     "code": "300570",
-     "market": "A股",
-     "yahoo": "300570.SZ",
-     "currency": "¥",
-     "mcap_base": {
-      "prefix": "¥",
-      "yi": 545,
-      "approx": true
-     },
-     "mcap_base_price": 237.12,
-     "ath_floor": 0
-    },
-    {
-     "name": "光模块2x ETF（Tuttle）",
-     "code": "FOTO",
-     "market": "美股 ETF",
-     "yahoo": "FOTO",
-     "currency": "$",
-     "mcap_base": null,
-     "mcap_base_price": 20.84,
-     "ath_floor": 0
-    }
-   ],
-   "groups": [
-    {
-     "name": "光模块与光器件",
-     "codes": [
-      "LITE",
-      "COHR",
-      "AAOI",
-      "FN",
-      "MTSI",
-      "CIEN",
-      "VIAV",
-      "POET"
-     ]
-    },
-    {
-     "name": "交换与连接芯片",
-     "codes": [
-      "ANET",
-      "ALAB",
-      "CRDO",
-      "MRVL",
-      "APH",
-      "NOK"
-     ]
-    },
-    {
-     "name": "CPO 与硅光",
-     "codes": [
-      "HIMX",
-      "01879"
-     ]
-    },
-    {
-     "name": "衬底与化合物材料",
-     "codes": [
-      "AXTI",
-      "SIVEF",
-      "GLW"
-     ]
-    },
-    {
-     "name": "A股光模块军团",
-     "codes": [
-      "300308",
-      "300502",
-      "300394",
-      "002281",
-      "688498",
-      "300620",
-      "300548",
-      "300570"
-     ]
-    },
-    {
-     "name": "杠杆 ETF",
-     "codes": [
-      "FOTO"
-     ]
-    }
-   ]
-  },
-  {
-   "name": "06 光芯片与激光器",
-   "items": [
     {
      "name": "Coherent",
      "code": "COHR",
@@ -1076,20 +665,6 @@
      "ath_floor": 0
     },
     {
-     "name": "光迅科技",
-     "code": "002281",
-     "market": "A股",
-     "yahoo": "002281.SZ",
-     "currency": "¥",
-     "mcap_base": {
-      "prefix": "¥",
-      "yi": 1717,
-      "approx": true
-     },
-     "mcap_base_price": 217.33,
-     "ath_floor": 0
-    },
-    {
      "name": "华工科技",
      "code": "000988",
      "market": "A股",
@@ -1118,20 +693,6 @@
      "ath_floor": 0
     },
     {
-     "name": "AXT Inc",
-     "code": "AXTI",
-     "market": "美股",
-     "yahoo": "AXTI",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 37.1,
-      "approx": false
-     },
-     "mcap_base_price": 56.62,
-     "ath_floor": 143.16
-    },
-    {
      "name": "Applied Optoelectronics",
      "code": "AAOI",
      "market": "美股",
@@ -1144,11 +705,309 @@
      },
      "mcap_base_price": 120.95,
      "ath_floor": 233.67
+    },
+    {
+     "name": "Fabrinet",
+     "code": "FN",
+     "market": "美股",
+     "yahoo": "FN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 180,
+      "approx": false
+     },
+     "mcap_base_price": 499.61,
+     "ath_floor": 0
+    },
+    {
+     "name": "MACOM",
+     "code": "MTSI",
+     "market": "美股",
+     "yahoo": "MTSI",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 235,
+      "approx": false
+     },
+     "mcap_base_price": 322.26,
+     "ath_floor": 0
+    },
+    {
+     "name": "Ciena",
+     "code": "CIEN",
+     "market": "美股",
+     "yahoo": "CIEN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 613,
+      "approx": false
+     },
+     "mcap_base_price": 422.46,
+     "ath_floor": 0
+    },
+    {
+     "name": "Viavi Solutions",
+     "code": "VIAV",
+     "market": "美股",
+     "yahoo": "VIAV",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 94,
+      "approx": false
+     },
+     "mcap_base_price": 41.66,
+     "ath_floor": 0
+    },
+    {
+     "name": "POET Technologies",
+     "code": "POET",
+     "market": "美股",
+     "yahoo": "POET",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 6.6,
+      "approx": false
+     },
+     "mcap_base_price": 8.76,
+     "ath_floor": 0
+    },
+    {
+     "name": "中际旭创",
+     "code": "300308",
+     "market": "A股",
+     "yahoo": "300308.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 12500,
+      "approx": true
+     },
+     "mcap_base_price": 1116.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "新易盛",
+     "code": "300502",
+     "market": "A股",
+     "yahoo": "300502.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 3735,
+      "approx": true
+     },
+     "mcap_base_price": 526.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "天孚通信",
+     "code": "300394",
+     "market": "A股",
+     "yahoo": "300394.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 975,
+      "approx": true
+     },
+     "mcap_base_price": 250.1,
+     "ath_floor": 0
+    },
+    {
+     "name": "光迅科技",
+     "code": "002281",
+     "market": "A股",
+     "yahoo": "002281.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1717,
+      "approx": true
+     },
+     "mcap_base_price": 217.33,
+     "ath_floor": 0
+    },
+    {
+     "name": "光库科技",
+     "code": "300620",
+     "market": "A股",
+     "yahoo": "300620.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 781,
+      "approx": true
+     },
+     "mcap_base_price": 312.25,
+     "ath_floor": 0
+    },
+    {
+     "name": "长芯博创",
+     "code": "300548",
+     "market": "A股",
+     "yahoo": "300548.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 508,
+      "approx": true
+     },
+     "mcap_base_price": 221.01,
+     "ath_floor": 0
+    },
+    {
+     "name": "太辰光",
+     "code": "300570",
+     "market": "A股",
+     "yahoo": "300570.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 545,
+      "approx": true
+     },
+     "mcap_base_price": 237.12,
+     "ath_floor": 0
+    },
+    {
+     "name": "奇景光电",
+     "code": "HIMX",
+     "market": "美股 ADR",
+     "yahoo": "HIMX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 22.9,
+      "approx": false
+     },
+     "mcap_base_price": 13.15,
+     "ath_floor": 25.09
+    },
+    {
+     "name": "曦智科技",
+     "code": "01879",
+     "market": "港股",
+     "yahoo": "1879.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 4500,
+      "approx": true
+     },
+     "mcap_base_price": 351.8,
+     "ath_floor": 0
+    },
+    {
+     "name": "Arista Networks",
+     "code": "ANET",
+     "market": "美股",
+     "yahoo": "ANET",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2016,
+      "approx": false
+     },
+     "mcap_base_price": 159.99,
+     "ath_floor": 0
+    },
+    {
+     "name": "Astera Labs",
+     "code": "ALAB",
+     "market": "美股",
+     "yahoo": "ALAB",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 671,
+      "approx": false
+     },
+     "mcap_base_price": 406.42,
+     "ath_floor": 0
+    },
+    {
+     "name": "Credo Technology",
+     "code": "CRDO",
+     "market": "美股",
+     "yahoo": "CRDO",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 451.1,
+      "approx": false
+     },
+     "mcap_base_price": 241.91,
+     "ath_floor": 308.67
+    },
+    {
+     "name": "迈威尔科技",
+     "code": "MRVL",
+     "market": "美股",
+     "yahoo": "MRVL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2147.7,
+      "approx": false
+     },
+     "mcap_base_price": 245.29,
+     "ath_floor": 329.88
+    },
+    {
+     "name": "安费诺",
+     "code": "APH",
+     "market": "美股",
+     "yahoo": "APH",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1992,
+      "approx": false
+     },
+     "mcap_base_price": 164.59,
+     "ath_floor": 0
+    },
+    {
+     "name": "诺基亚",
+     "code": "NOK",
+     "market": "美股 ADR",
+     "yahoo": "NOK",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 673.8,
+      "approx": false
+     },
+     "mcap_base_price": 12.07,
+     "ath_floor": 62.5
+    },
+    {
+     "name": "光模块2x ETF（Tuttle）",
+     "code": "FOTO",
+     "market": "美股 ETF",
+     "yahoo": "FOTO",
+     "currency": "$",
+     "mcap_base": null,
+     "mcap_base_price": 20.84,
+     "ath_floor": 0
     }
    ],
    "groups": [
     {
-     "name": "国际巨头（InP 老牌）",
+     "name": "上游衬底与材料",
+     "codes": [
+      "AXTI",
+      "SIVEF",
+      "GLW"
+     ]
+    },
+    {
+     "name": "光芯片与激光器 · 国际巨头",
      "codes": [
       "COHR",
       "LITE",
@@ -1157,27 +1016,66 @@
      ]
     },
     {
-     "name": "A股光芯片",
+     "name": "光芯片与激光器 · A股",
      "codes": [
       "688498",
       "688048",
       "688313",
-      "002281",
       "000988",
       "600105"
      ]
     },
     {
-     "name": "上游衬底与自研交叉",
+     "name": "光模块与光器件 · 海外",
      "codes": [
-      "AXTI",
-      "AAOI"
+      "AAOI",
+      "FN",
+      "MTSI",
+      "CIEN",
+      "VIAV",
+      "POET"
+     ]
+    },
+    {
+     "name": "A股光模块军团",
+     "codes": [
+      "300308",
+      "300502",
+      "300394",
+      "002281",
+      "300620",
+      "300548",
+      "300570"
+     ]
+    },
+    {
+     "name": "CPO 与硅光",
+     "codes": [
+      "HIMX",
+      "01879"
+     ]
+    },
+    {
+     "name": "交换与连接芯片",
+     "codes": [
+      "ANET",
+      "ALAB",
+      "CRDO",
+      "MRVL",
+      "APH",
+      "NOK"
+     ]
+    },
+    {
+     "name": "杠杆 ETF",
+     "codes": [
+      "FOTO"
      ]
     }
    ]
   },
   {
-   "name": "07 云与 AI 算力数据中心",
+   "name": "06 云与 AI 算力数据中心",
    "items": [
     {
      "name": "微软",
@@ -1392,7 +1290,7 @@
    ]
   },
   {
-   "name": "08 半导体设备",
+   "name": "07 半导体设备",
    "items": [
     {
      "name": "阿斯麦",
@@ -1747,7 +1645,7 @@
    ]
   },
   {
-   "name": "09 半导体材料",
+   "name": "08 半导体材料",
    "items": [
     {
      "name": "信越化学",
@@ -1976,7 +1874,7 @@
    ]
   },
   {
-   "name": "10 封装测试（OSAT与测试设备）",
+   "name": "09 封装测试（OSAT与测试设备）",
    "items": [
     {
      "name": "台积电",
@@ -2317,7 +2215,7 @@
    ]
   },
   {
-   "name": "11 碳化硅（SiC与宽禁带功率）",
+   "name": "10 碳化硅（SiC与宽禁带功率）",
    "items": [
     {
      "name": "意法半导体",
@@ -2518,7 +2416,7 @@
    ]
   },
   {
-   "name": "12 800VDC 电力电子与功率半导体",
+   "name": "11 800VDC 电力电子与功率半导体",
    "items": [
     {
      "name": "纳微半导体",
@@ -2677,7 +2575,7 @@
    ]
   },
   {
-   "name": "13 光纤与光缆",
+   "name": "12 光纤与光缆",
    "items": [
     {
      "name": "康宁",
@@ -2850,7 +2748,7 @@
    ]
   },
   {
-   "name": "14 PCB",
+   "name": "13 PCB",
    "items": [
     {
      "name": "胜宏科技",
@@ -2925,7 +2823,7 @@
    ]
   },
   {
-   "name": "15 能源、电力与资源现金流",
+   "name": "14 能源、电力与资源现金流",
    "items": [
     {
      "name": "Constellation Energy",
@@ -3318,7 +3216,7 @@
    ]
   },
   {
-   "name": "16 软件与 SaaS",
+   "name": "15 软件与 SaaS",
    "items": [
     {
      "name": "微软",
@@ -3757,7 +3655,7 @@
    ]
   },
   {
-   "name": "17 机器人、汽车零部件与无人系统",
+   "name": "16 机器人、汽车零部件与无人系统",
    "items": [
     {
      "name": "哈默纳科机电",
@@ -3860,7 +3758,7 @@
    ]
   },
   {
-   "name": "18 中国互联网、AI 应用与主题 ETF",
+   "name": "17 中国互联网、AI 应用与主题 ETF",
    "items": [
     {
      "name": "腾讯控股",
@@ -3913,7 +3811,7 @@
    ]
   },
   {
-   "name": "19 贵金属与有色金属",
+   "name": "18 贵金属与有色金属",
    "items": [
     {
      "name": "黄金 / 美元",
@@ -4096,7 +3994,7 @@
    ]
   },
   {
-   "name": "20 加密资产",
+   "name": "19 加密资产",
    "items": [
     {
      "name": "比特币",
