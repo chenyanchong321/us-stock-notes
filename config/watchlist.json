@@ -2,8 +2,168 @@
  "site": "烟囱的美股学习笔记",
  "sections": [
   {
-   "name": "01 核心指数与行业 ETF",
+   "name": "01 指数与行业 ETF",
    "items": [
+    {
+     "name": "标普500指数",
+     "code": "SPX",
+     "market": "美股 指数",
+     "yahoo": "^GSPC",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "道琼斯指数",
+     "code": "DJI",
+     "market": "美股 指数",
+     "yahoo": "^DJI",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "纳斯达克综合",
+     "code": "IXIC",
+     "market": "美股 指数",
+     "yahoo": "^IXIC",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "纳斯达克100",
+     "code": "NDX",
+     "market": "美股 指数",
+     "yahoo": "^NDX",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "费城半导体指数",
+     "code": "SOX",
+     "market": "美股 指数",
+     "yahoo": "^SOX",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "罗素2000",
+     "code": "RUT",
+     "market": "美股 指数",
+     "yahoo": "^RUT",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "纳斯达克中国金龙",
+     "code": "HXC",
+     "market": "美股 指数",
+     "yahoo": "^HXC",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "标普500波动率VIX",
+     "code": "VIX",
+     "market": "美股 指数",
+     "yahoo": "^VIX",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "纳指100波动率VXN",
+     "code": "VXN",
+     "market": "美股 指数",
+     "yahoo": "^VXN",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "上证指数",
+     "code": "SHCOMP",
+     "market": "A股 指数",
+     "yahoo": "000001.SS",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "沪深300",
+     "code": "000300",
+     "market": "A股 指数",
+     "yahoo": "000300.SS",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "恒生指数",
+     "code": "HSI",
+     "market": "港股 指数",
+     "yahoo": "^HSI",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "恒生科技指数",
+     "code": "HSTECH",
+     "market": "港股 指数",
+     "yahoo": "^HSTECH",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "恒生国企指数",
+     "code": "HSCE",
+     "market": "港股 指数",
+     "yahoo": "^HSCE",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "日经225",
+     "code": "N225",
+     "market": "日股 指数",
+     "yahoo": "^N225",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "韩国综合KOSPI",
+     "code": "KOSPI",
+     "market": "韩国 指数",
+     "yahoo": "^KS11",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
     {
      "name": "纳指100ETF（Invesco QQQ）",
      "code": "QQQ",
@@ -17,20 +177,6 @@
      },
      "mcap_base_price": 712.6,
      "ath_floor": 748.65
-    },
-    {
-     "name": "半导体ETF（iShares SOXX）",
-     "code": "SOXX",
-     "market": "美股 ETF",
-     "yahoo": "SOXX",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 361.3,
-      "approx": false
-     },
-     "mcap_base_price": 566.32,
-     "ath_floor": 655.95
     },
     {
      "name": "标普500ETF（SPDR SPY）",
@@ -47,24 +193,59 @@
      "ath_floor": 760.4
     },
     {
-     "name": "上证指数",
-     "code": "SHCOMP",
-     "market": "A股 指数",
-     "yahoo": "000001.SS",
-     "currency": "",
-     "mcap_base": null,
-     "mcap_base_price": 1.0,
-     "ath_floor": 0
+     "name": "半导体ETF（iShares SOXX）",
+     "code": "SOXX",
+     "market": "美股 ETF",
+     "yahoo": "SOXX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 361.3,
+      "approx": false
+     },
+     "mcap_base_price": 566.32,
+     "ath_floor": 655.95
+    }
+   ],
+   "groups": [
+    {
+     "name": "美股指数",
+     "codes": [
+      "SPX",
+      "DJI",
+      "IXIC",
+      "NDX",
+      "SOX",
+      "RUT",
+      "HXC"
+     ]
     },
     {
-     "name": "恒生指数",
-     "code": "HSI",
-     "market": "港股 指数",
-     "yahoo": "^HSI",
-     "currency": "",
-     "mcap_base": null,
-     "mcap_base_price": 1.0,
-     "ath_floor": 0
+     "name": "波动率（恐慌指数）",
+     "codes": [
+      "VIX",
+      "VXN"
+     ]
+    },
+    {
+     "name": "中国与亚太指数",
+     "codes": [
+      "SHCOMP",
+      "000300",
+      "HSI",
+      "HSTECH",
+      "HSCE",
+      "N225",
+      "KOSPI"
+     ]
+    },
+    {
+     "name": "宽基与行业 ETF",
+     "codes": [
+      "QQQ",
+      "SPY",
+      "SOXX"
+     ]
     }
    ]
   },
@@ -4459,6 +4640,34 @@
    "name": "16 机器人、汽车零部件与无人系统",
    "items": [
     {
+     "name": "优必选",
+     "code": "09880",
+     "market": "港股",
+     "yahoo": "9880.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 4.5,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "蓝思科技",
+     "code": "300433",
+     "market": "A股",
+     "yahoo": "300433.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 50.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "哈默纳科机电",
      "code": "6324",
      "market": "日本",
@@ -4473,18 +4682,18 @@
      "ath_floor": 9510.0
     },
     {
-     "name": "拓普集团",
-     "code": "601689",
+     "name": "绿的谐波",
+     "code": "688017",
      "market": "A股",
-     "yahoo": "601689.SS",
+     "yahoo": "688017.SS",
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 1085.0,
-      "approx": false
+      "yi": 1.7,
+      "approx": true
      },
-     "mcap_base_price": 62.43,
-     "ath_floor": 86.88
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
     },
     {
      "name": "三花智控",
@@ -4515,18 +4724,18 @@
      "ath_floor": 46.48
     },
     {
-     "name": "鸣志电器",
-     "code": "603728",
+     "name": "拓普集团",
+     "code": "601689",
      "market": "A股",
-     "yahoo": "603728.SS",
+     "yahoo": "601689.SS",
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 284.9,
+      "yi": 1085.0,
       "approx": false
      },
-     "mcap_base_price": 68.02,
-     "ath_floor": 92.5
+     "mcap_base_price": 62.43,
+     "ath_floor": 86.88
     },
     {
      "name": "恒立液压",
@@ -4543,6 +4752,48 @@
      "ath_floor": 137.66
     },
     {
+     "name": "鸣志电器",
+     "code": "603728",
+     "market": "A股",
+     "yahoo": "603728.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 284.9,
+      "approx": false
+     },
+     "mcap_base_price": 68.02,
+     "ath_floor": 92.5
+    },
+    {
+     "name": "兆威机电",
+     "code": "003021",
+     "market": "A股",
+     "yahoo": "003021.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2.4,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "兆威机电",
+     "code": "02692",
+     "market": "港股",
+     "yahoo": "2692.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 2.4,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "AeroVironment",
      "code": "AVAV",
      "market": "美股",
@@ -4555,6 +4806,45 @@
      },
      "mcap_base_price": 190.89,
      "ath_floor": 417.86
+    }
+   ],
+   "groups": [
+    {
+     "name": "整机与代工",
+     "codes": [
+      "09880",
+      "300433"
+     ]
+    },
+    {
+     "name": "谐波减速器",
+     "codes": [
+      "6324",
+      "688017"
+     ]
+    },
+    {
+     "name": "执行器·丝杠·热管理",
+     "codes": [
+      "002050",
+      "02050",
+      "601689",
+      "601100"
+     ]
+    },
+    {
+     "name": "灵巧手与微传动",
+     "codes": [
+      "603728",
+      "003021",
+      "02692"
+     ]
+    },
+    {
+     "name": "无人系统",
+     "codes": [
+      "AVAV"
+     ]
     }
    ]
   },

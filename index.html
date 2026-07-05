@@ -226,8 +226,8 @@ function peCell(v){
 function posCell(v, rng){
   if(typeof v!=="number") return `<span class="flat">–</span>`;
   const c = v>=80 ? "var(--gold)" : v<=20 ? "var(--accent)" : "var(--text2)";
-  const bottom = rng ? `<span style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">${rng}</span>` : "";
-  return `<span style="display:block;color:${c};font-weight:600">${Math.round(v)}%</span>${bottom}`;
+  const range = rng ? `<span style="color:var(--text2)">${rng}</span>` : "";
+  return `<span style="white-space:nowrap">${range}<span style="color:${c};font-weight:600">（${Math.round(v)}%）</span></span>`;
 }
 function priceCell(r){
   const b = BUY[r[1]];
