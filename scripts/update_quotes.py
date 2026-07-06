@@ -162,7 +162,7 @@ def main():
             fetched = cache[sym]
             if fetched is None:
                 rows.append([it["name"], it["code"], it["market"], "获取失败",
-                             "-", "-", 0.0, "-", "-", "-", "-", "-", gmap.get(it["code"], ""), None, None, None])
+                             "-", "-", 0.0, "-", "-", "-", "-", "-", gmap.get(it["code"], ""), None, None, None, None])
                 continue
             pairs, hist_max = fetched
             price = pairs[-1][1]
@@ -188,7 +188,8 @@ def main():
                          fmt_mcap(it, price),
                          fmt_price(cur, ath), fmt_price(cur, price),
                          round(dd, 1), m1, m3, m6, ytd, y1, gmap.get(it["code"], ""),
-                         pe_map.get(sym), *pos_52w(pairs, ts_1y, cur)])
+                         pe_map.get(sym), *pos_52w(pairs, ts_1y, cur),
+                         round(pct(pairs[-1][1], pairs[-2][1]), 2) if len(pairs) >= 2 else None])
             print(f"  {it['code']:>10} {it['name'][:12]:<14} 现价 {price:,.2f}  回撤 {dd:.1f}%")
         sections_out.append({"sec": sec["name"], "rows": rows})
 
