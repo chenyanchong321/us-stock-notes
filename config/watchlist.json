@@ -5138,6 +5138,20 @@
      "ath_floor": 2980.0
     },
     {
+     "name": "MiniMax",
+     "code": "00100",
+     "market": "港股",
+     "yahoo": "0100.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 2.8,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "泡泡玛特",
      "code": "09992",
      "market": "港股",
@@ -5185,6 +5199,7 @@
      "name": "AI 应用与新消费",
      "codes": [
       "02513",
+      "00100",
       "09992"
      ]
     },
