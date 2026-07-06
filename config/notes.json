@@ -4,6 +4,19 @@
    "cat": "🧠 AI 与算力投资",
    "items": [
     {
+     "t": "AI 内存与推理时代学习笔记：HBM/HBF/HBS 三部曲与受益者图谱",
+     "date": "2026-07-07",
+     "ts": "2026-07-07 02:20",
+     "tags": [
+      "HBM",
+      "HBF",
+      "推理时代",
+      "金正浩"
+     ],
+     "d": "从「HBM之父」金正浩访谈出发：训练与推理的瓶颈之辨、内存三部曲路线图、Physical AI 两头吃内存、受益者全图谱。",
+     "page": "articles/ai-memory-inference.html"
+    },
+    {
      "t": "AI 硬件涨价链学习笔记：800V、MLCC、超级电容与 PCB/CCL",
      "date": "2026-07-06",
      "tags": [
