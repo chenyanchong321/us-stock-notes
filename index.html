@@ -26,7 +26,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 
 /* ========== 顶部栏 ========== */
 #header{position:fixed;top:0;left:0;right:0;height:var(--header-h);background:var(--panel);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:28px;z-index:200}
-#header .logo{font-size:17px;font-weight:700}
+#header .logo{font-size:17px;font-weight:700;cursor:pointer;user-select:none}
+#header .logo:hover span{filter:brightness(1.2)}
 #header .logo span{color:var(--accent)}
 .tabs{display:flex;gap:4px;height:100%}
 .tab{display:flex;align-items:center;padding:0 18px;color:var(--text2);cursor:pointer;font-size:14px;border-bottom:2px solid transparent;transition:.15s}
@@ -796,6 +797,13 @@ let PROFILES = {};
       history.replaceState(null,"",u);
       window.scrollTo(0,0);
     });
+  });
+
+  /* Logo 点击回主页（数据面板顶部） */
+  document.querySelector("#header .logo").addEventListener("click", ()=>{
+    const inp = document.getElementById("search");
+    if(inp.value){ inp.value=""; inp.dispatchEvent(new Event("input")); document.getElementById("search-clear").style.display="none"; }
+    document.querySelector('.tab[data-view="dash"]').click();
   });
 
   /* 搜索框一键清空 */
