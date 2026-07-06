@@ -304,7 +304,7 @@ function priceCell(r){
   return `<span style="display:block;white-space:nowrap">${r[5]}${pe}</span>${buyLine}`;
 }
 function rowHTML(r, grp){
-  return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${grp||""}" data-key="${(r[0]+r[1]).toLowerCase()}">
+  return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${grp||""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
     <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
     <td>${r[3]}</td><td>${r[4]}</td><td>${priceCell(r)}</td>
     <td>${fmtPct(r[16])}</td>
@@ -382,10 +382,13 @@ function renderDash(quotes){
   /* 搜索 */
   document.getElementById("search").addEventListener("input",applyFilter);
 
-  /* 今日机会：现价进入买点区的标的聚合 */
-  const hits = all.filter(buyHit);
-  if(hits.length){
+  /* 今日机会：现价进入买点区的标的聚合（实时刷新时会重建） */
+  window.buildOpps = function(){
+    const rowsAll = DATA.flatMap(s=>s.rows);
+    const seen = new Set();
+    const hits = rowsAll.filter(r=>{ if(seen.has(r[1])) return false; seen.add(r[1]); return buyHit(r); });
     const el = document.getElementById("opps");
+    if(!hits.length){ el.classList.add("hidden"); return; }
     el.classList.remove("hidden");
     el.innerHTML = `🎯 已进买点区（${hits.length}）：` +
       hits.map(r=>`<a href="#" data-k="${(r[0]+r[1]).toLowerCase()}">${r[0]} ${r[5]}</a>`).join("");
@@ -394,7 +397,8 @@ function renderDash(quotes){
       const tr=document.querySelector(`tr[data-key="${a.dataset.k}"]`);
       if(tr){ tr.scrollIntoView({block:"center"}); tr.style.outline="1px solid var(--up)"; setTimeout(()=>tr.style.outline="",2000); }
     }));
-  }
+  };
+  window.buildOpps();
 
   /* 手机端板块跳转 */
   const sj = document.getElementById("secjump");
@@ -518,6 +522,84 @@ function renderNotes(cfg){
   }
   window.addEventListener("scroll",onScroll,{passive:true});
   window.addEventListener("resize",()=>{ curWrap=null; onScroll(); });
+})();
+
+/* ===== 实时行情：前端直连腾讯行情接口（30秒刷新现价/当日） =====
+   覆盖 A股/港股/美股/主要指数；台日韩股、商品、加密等腾讯不覆盖的保持每日数据。 */
+(function(){
+  function txCode(mkt, c){
+    mkt = mkt || "";
+    if(mkt.indexOf("A股")===0) return /^\d{6}$/.test(c) ? ((c[0]==="6"?"sh":"sz")+c) : null;
+    if(mkt.indexOf("港股")===0) return /^\d{5}$/.test(c) ? "hk"+c : null;
+    if(mkt==="美股"||mkt==="美股 ETF") return /^[A-Z]+$/.test(c) ? "us"+c : null;
+    const IDX={SHCOMP:"sh000001","000300":"sh000300",HSI:"hkHSI",HSCE:"hkHSCE",
+               SPX:"usINX",DJI:"usDJI",IXIC:"usIXIC",NDX:"usNDX",SOX:"usSOX",RUT:"usRUT"};
+    return IDX[c]||null;
+  }
+  function fmtNum(v){
+    if(v>=10000) return v.toLocaleString("en-US",{maximumFractionDigits:0});
+    if(v>=100) return v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+    return v>=1 ? v.toFixed(2) : v.toFixed(3);
+  }
+  let rowsByCode=null;
+  function buildIndex(){
+    rowsByCode={};
+    DATA.forEach(s=>s.rows.forEach(r=>{
+      const sym=txCode(r[2], r[1]);
+      if(!sym) return;
+      (rowsByCode[sym]=rowsByCode[sym]||{code:r[1],rows:[]}).rows.push(r);
+    }));
+  }
+  function applyQuote(sym, price, pct){
+    const ent=rowsByCode[sym]; if(!ent||!price) return;
+    ent.rows.forEach(r=>{
+      const prefix=(String(r[5]).match(/^[^\d.-]*/)||[""])[0];
+      r[5]=prefix+fmtNum(price);
+      r[16]=pct;
+    });
+    document.querySelectorAll(`tr[data-code="${ent.code}"]`).forEach(tr=>{
+      const r=ent.rows[0], tds=tr.children;
+      if(tds.length<6) return;
+      tds[3].innerHTML=priceCell(r);
+      tds[4].innerHTML=fmtPct(pct);
+    });
+  }
+  function parseBatch(syms){
+    let got=0;
+    syms.forEach(sym=>{
+      const v=window["v_"+sym]; if(typeof v!=="string") return;
+      const f=v.split("~");
+      const price=parseFloat(f[3]), pct=parseFloat(f[32]);
+      if(isFinite(price)&&price>0){ applyQuote(sym, price, isFinite(pct)?pct:null); got++; }
+    });
+    return got;
+  }
+  function refresh(){
+    if(document.visibilityState!=="visible") return;
+    if(document.getElementById("view-dash").classList.contains("hidden")) return;
+    if(!rowsByCode) buildIndex();
+    const syms=Object.keys(rowsByCode);
+    let done=0, total=0;
+    for(let i=0;i<syms.length;i+=60){
+      const chunk=syms.slice(i,i+60);
+      const s=document.createElement("script");
+      s.charset="GBK";
+      s.src="https://qt.gtimg.cn/q="+chunk.join(",")+"&_="+Date.now();
+      s.onload=s.onerror=function(){
+        total+=parseBatch(chunk); s.remove();
+        if(++done===Math.ceil(syms.length/60) && total>0){
+          window.buildOpps && window.buildOpps();
+          const t=new Date();
+          const el=document.getElementById("update-time");
+          el.textContent=el.textContent.replace(/ · 实时.*$/,"")+" · 实时 "+
+            `${String(t.getHours()).padStart(2,"0")}:${String(t.getMinutes()).padStart(2,"0")}:${String(t.getSeconds()).padStart(2,"0")}`;
+        }
+      };
+      document.head.appendChild(s);
+    }
+  }
+  window.addEventListener("load",()=>{ setTimeout(refresh,1500); setInterval(refresh,30000); });
+  document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") refresh(); });
 })();
 
 /* ===== 一键回到顶部 ===== */
