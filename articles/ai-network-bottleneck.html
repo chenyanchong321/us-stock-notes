@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 算力网络瓶颈学习笔记：从 MOCVD 到交换机芯片 · 烟囱的美股学习笔记</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<style>
+:root{--bg:#ffffff;--panel:#f6f8fa;--panel2:#eef1f4;--border:#e2e5e9;--text:#1f2328;--text2:#6b7280;--accent:#2563eb;--gold:#b8860b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:16px;line-height:1.85}
+#bar{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);z-index:10}
+#bar .in{max-width:760px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px}
+#bar a{color:var(--text2);text-decoration:none;font-size:14px}
+#bar a:hover{color:var(--accent)}
+#bar .site{margin-left:auto;font-size:13px;color:var(--text2)}
+#bar .site b{color:var(--accent);font-weight:600}
+main{max-width:760px;margin:0 auto;padding:28px 20px 90px}
+.head h1{font-size:26px;line-height:1.4;margin-bottom:12px}
+.meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.meta .date{font-size:13px;color:var(--text2)}
+.meta .tag{font-size:12px;color:var(--accent);background:rgba(74,140,240,.12);border-radius:4px;padding:2px 8px}
+.meta .pdf{font-size:13px;color:var(--text2);text-decoration:none;border:1px solid var(--border);border-radius:6px;padding:3px 10px}
+.meta .pdf:hover{color:var(--text);border-color:var(--text2)}
+.head{border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:26px}
+article h1{font-size:22px;margin:38px 0 14px;line-height:1.4}
+article h2{font-size:20px;margin:34px 0 12px;padding-left:10px;border-left:3px solid var(--accent);line-height:1.4}
+article h3{font-size:17px;margin:26px 0 10px}
+article p{margin:0 0 16px}
+article ul,article ol{margin:0 0 16px 1.4em}
+article li{margin-bottom:6px}
+article img,article svg{max-width:100%;height:auto;border-radius:10px;display:block;margin:18px auto;background:#fff;border:1px solid var(--border)}
+article blockquote{border-left:3px solid var(--gold);background:var(--panel);border-radius:0 8px 8px 0;padding:12px 16px;margin:0 0 16px;color:var(--text2)}
+article table{border-collapse:collapse;width:100%;margin:0 0 18px;font-size:14px;word-break:break-word}
+article th,article td{border:1px solid var(--border);padding:8px 12px;text-align:left}
+article th{background:var(--panel);color:var(--text2)}
+article tr:nth-child(even) td{background:rgba(246,248,250,.7)}
+article code{background:var(--panel2);border-radius:4px;padding:1px 6px;font-size:14px}
+article pre{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:14px;overflow-x:auto;margin:0 0 16px}
+article pre code{background:none;padding:0}
+article a{color:var(--accent)}
+article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+.disclaim{margin-top:50px;padding:14px 18px;background:var(--panel);border:1px solid var(--border);border-radius:10px;font-size:13px;color:var(--text2)}
+</style>
+</head>
+<body>
+<div id="bar"><div class="in">
+  <a href="../index.html?view=notes">← 返回笔记库</a>
+  <span class="site">📓 <b>烟囱</b>的美股学习笔记</span>
+</div></div>
+<main>
+  <div class="head">
+    <h1>AI 算力网络瓶颈学习笔记：从 MOCVD 到交换机芯片</h1>
+    <div class="meta"><span class="date">2026-07-06</span><span class="tag">MOCVD</span><span class="tag">1.6T</span><span class="tag">EML</span><span class="tag">东山精密</span><a class="pdf" href="../notes/AI算力网络瓶颈学习笔记.pdf" download>⬇ 下载 PDF</a></div>
+  </div>
+  <article>
+<p><strong>从 MOCVD 到交换机芯片——沿着东山精密调研纪要找瓶颈</strong></p>
+<p>整理日期：2026 年 7 月 6 日 · 文中数据与格局描述均以此时点为准</p>
+<blockquote>
+<p>阅读提示：本笔记源自一份花旗东山精密调研纪要（2026 年 7 月 5 日）引出的连环追问，按“概念工具箱 → 网络结构 → 研报逻辑 → 公司案例 → 行业格局 → 瓶颈地图 → 设备板块”的认知顺序重组，不按聊天时间线。全书贯穿一套类比：MOCVD 是烤箱，光模块是快递员，交换机芯片是调度员。涉及个股内容仅供学习，不构成投资建议。</p>
+</blockquote>
+<h2 id="目录">目录</h2>
+<p>第一章 概念工具箱：MOCVD——原子级千层蛋糕烤箱</p>
+<p>第二章 数据中心网络：调度员与快递员各就各位</p>
+<p>第三章 研报逻辑拆解：为什么 1.6T 缺货反而推高 800G</p>
+<p>第四章 公司案例：东山精密——从果链多面手到算力链</p>
+<p>第五章 横向格局：全球 EML 激光芯片三梯队</p>
+<p>第六章 寻找瓶颈：AI 网络的两堵墙</p>
+<p>第七章 设备板块：MOCVD 三家上市公司与四轮炒作史</p>
+<p>第八章 全景地图：一张图串起今天的知识</p>
+<p>附录：记忆卡速查表 · 缩写对照表</p>
+<h2 id="第一章-概念工具箱mocvd原子级千层蛋糕烤箱">第一章 概念工具箱：MOCVD——原子级千层蛋糕烤箱</h2>
+<blockquote>
+<p>你当时的问题：这里的核心外延设备 MOCVD 是什么东西啊？费曼科普一下。</p>
+</blockquote>
+<p>MOCVD = Metal-Organic Chemical Vapor Deposition（金属有机化学气相沉积），一句话定义：<strong>一台“用气体在晶圆上一层一层种出半导体材料”的设备</strong>，是造激光器芯片的第一道、也是最卡脖子的一道工序。</p>
+<p>用烤蛋糕来理解。做一颗激光器芯片，先要做出一块“外延片”——一块普通晶圆（饼底），上面长着几十到上百层原子级厚度的半导体薄膜（千层蛋糕）。MOCVD 就是那台烤箱：把含镓、铟、砷等元素的“香精气体”通进 700–1100°C 的反应腔，气体受热分解，金属原子均匀落在晶圆上，一层一层往上长。每一层的配方（材料成分、厚度）都不一样，正是这些精确到单个原子层的差异，决定了芯片能不能发出激光、发什么波长。没有 MOCVD 就没有外延片，激光器、LED 这类光电芯片无从谈起。</p>
+<svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" role="img" font-family="Noto Sans CJK SC,PingFang SC,sans-serif" style="width:100%;height:auto">
+<title>
+MOCVD：从原料气体到AI数据中心
+</title>
+<p><desc>金属有机气体与衬底晶圆进入MOCVD反应腔，逐原子层生长出外延片，再加工成激光器芯片，装入800G光模块，服务AI数据中心。</desc> <rect x="25" y="13" width="12" height="12" rx="2" fill="#F1EFE8" stroke="#B4B2A9"/> <text x="43" y="23" font-size="12" fill="#555">原料</text> <rect x="95" y="13" width="12" height="12" rx="2" fill="#FCF1DC" stroke="#E0B25C"/> <text x="113" y="23" font-size="12" fill="#555">核心设备</text> <rect x="195" y="13" width="12" height="12" rx="2" fill="#E6F1FB" stroke="#85B7EB"/> <text x="213" y="23" font-size="12" fill="#555">产出与下游</text></p>
+<p><rect x="25" y="45" width="160" height="56" rx="8" fill="#F1EFE8" stroke="#B4B2A9"/> <text x="105" y="68" text-anchor="middle" font-size="15" font-weight="600" fill="#444">金属有机气体</text> <text x="105" y="88" text-anchor="middle" font-size="12.5" fill="#666">镓、铟等金属的“香精”</text></p>
+<p><rect x="25" y="119" width="160" height="56" rx="8" fill="#F1EFE8" stroke="#B4B2A9"/> <text x="105" y="142" text-anchor="middle" font-size="15" font-weight="600" fill="#444">衬底晶圆</text> <text x="105" y="162" text-anchor="middle" font-size="12.5" fill="#666">打底用的“饼底”</text></p>
+<p><line x1="185" y1="73" x2="235" y2="73" stroke="#666" stroke-width="1.4"/> <path d="M235 69 L245 73 L235 77 Z" fill="#666"/> <line x1="185" y1="147" x2="235" y2="147" stroke="#666" stroke-width="1.4"/> <path d="M235 143 L245 147 L235 151 Z" fill="#666"/></p>
+<p><rect x="245" y="40" width="210" height="150" rx="10" fill="#FCF1DC" stroke="#E0B25C"/> <text x="350" y="68" text-anchor="middle" font-size="16" font-weight="600" fill="#7A5A10">MOCVD 反应腔</text> <text x="350" y="90" text-anchor="middle" font-size="13" fill="#8A6414">700–1100°C 的“超级烤箱”</text> <text x="350" y="118" text-anchor="middle" font-size="12.5" fill="#8A6414">气体受热分解</text> <text x="350" y="138" text-anchor="middle" font-size="12.5" fill="#8A6414">金属原子落在晶圆上</text> <text x="350" y="158" text-anchor="middle" font-size="12.5" fill="#8A6414">一层一层长，多至上百层</text> <text x="350" y="176" text-anchor="middle" font-size="12.5" fill="#8A6414">每层“配方”都不同</text></p>
+<p><line x1="455" y1="115" x2="505" y2="115" stroke="#666" stroke-width="1.4"/> <path d="M505 111 L515 115 L505 119 Z" fill="#666"/></p>
+<p><rect x="515" y="80" width="160" height="70" rx="8" fill="#E6F1FB" stroke="#85B7EB"/> <text x="595" y="108" text-anchor="middle" font-size="15" font-weight="600" fill="#134A80">外延片</text> <text x="595" y="130" text-anchor="middle" font-size="12.5" fill="#185FA5">长好“千层蛋糕”的晶圆</text></p>
+<p><path d="M595 150 L595 213 L145 213 L145 240" fill="none" stroke="#666" stroke-width="1.4"/> <path d="M141 240 L145 250 L149 240 Z" fill="#666"/> <text x="370" y="206" text-anchor="middle" font-size="12.5" fill="#555">切割、加工、封装</text></p>
+<p><rect x="60" y="250" width="170" height="62" rx="8" fill="#E6F1FB" stroke="#85B7EB"/> <text x="145" y="274" text-anchor="middle" font-size="15" font-weight="600" fill="#134A80">激光器芯片</text> <text x="145" y="296" text-anchor="middle" font-size="12.5" fill="#185FA5">EML/VCSEL，光模块的心脏</text></p>
+<p><line x1="230" y1="281" x2="280" y2="281" stroke="#666" stroke-width="1.4"/> <path d="M280 277 L290 281 L280 285 Z" fill="#666"/></p>
+<p><rect x="290" y="250" width="180" height="62" rx="8" fill="#E6F1FB" stroke="#85B7EB"/> <text x="380" y="274" text-anchor="middle" font-size="15" font-weight="600" fill="#134A80">800G/1.6T 光模块</text> <text x="380" y="296" text-anchor="middle" font-size="12.5" fill="#185FA5">把电信号变成光信号</text></p>
+<p><line x1="470" y1="281" x2="520" y2="281" stroke="#666" stroke-width="1.4"/> <path d="M520 277 L530 281 L520 285 Z" fill="#666"/></p>
+<rect x="530" y="250" width="150" height="62" rx="8" fill="#E6F1FB" stroke="#85B7EB"/> <text x="605" y="274" text-anchor="middle" font-size="15" font-weight="600" fill="#134A80">AI 数据中心</text> <text x="605" y="296" text-anchor="middle" font-size="12.5" fill="#185FA5">GPU 集群高速互联</text>
+</svg>
+<p>为什么“全球紧缺”？三个原因叠加：其一，玩家极少，高端机型基本被德国爱思强（AIXTRON）和美国 Veeco 两家垄断；其二，交期天生就长，从下单到交付通常接近一年；其三，AI 爆发让所有光模块厂同时去排队买同一种烤箱。</p>
+<p>回到那份调研就通顺了：东山精密想在 2027 年末做到年产 10 亿颗激光器，瓶颈不在厂房和工人，而在烤箱。“2026 年二季度下单、2027 年一季度起分批交付”这个时间差，恰好就是 MOCVD 的交货周期——设备到位的节奏直接决定产能爬坡的节奏，这也是纪要把它放在第一条的原因。</p>
+<p><strong>记忆卡：MOCVD = 造激光器芯片的“原子级千层蛋糕烤箱”，全球只有两三家会造，谁先拿到烤箱，谁先有产能。</strong></p>
+<h2 id="第二章-数据中心网络调度员与快递员各就各位">第二章 数据中心网络：调度员与快递员各就各位</h2>
+<blockquote>
+<p>你当时的问题：1.6T 交换机芯片是光模块里的芯片吗？为什么会受产能瓶颈制约，是谁有了瓶颈？做这种芯片的公司是 Coherent 或者中际旭创吗？</p>
+</blockquote>
+<p>交换机芯片不是光模块里的芯片，它俩是“邻居”，不是“母子”。数据中心里，GPU 服务器之间的数据要经过：光模块（快递员，负责电信号与激光互转，激光器芯片就长在它体内）→ 光纤 → 交换机（分拣中心）。交换机芯片是分拣中心里的<strong>总调度</strong>，决定每个数据包发往哪个口。</p>
+<svg viewBox="0 0 700 315" xmlns="http://www.w3.org/2000/svg" role="img" font-family="Noto Sans CJK SC,PingFang SC,sans-serif" style="width:100%;height:auto">
+<title>
+交换机芯片与光模块在AI数据中心网络中的位置
+</title>
+<p><desc>GPU服务器发出电信号，光模块把电信号变成激光经光纤传输，交换机内的交换机芯片负责总调度；下方是1.6T交换芯片短缺导致800G需求上修的逻辑链。</desc></p>
+<p><rect x="25" y="60" width="140" height="84" rx="8" fill="#F1EFE8" stroke="#B4B2A9"/> <text x="95" y="94" text-anchor="middle" font-size="15" font-weight="600" fill="#444">GPU 服务器</text> <text x="95" y="116" text-anchor="middle" font-size="12.5" fill="#666">发出电信号</text></p>
+<p><line x1="165" y1="102" x2="195" y2="102" stroke="#666" stroke-width="1.4"/> <path d="M195 98 L205 102 L195 106 Z" fill="#666"/></p>
+<p><rect x="205" y="48" width="180" height="108" rx="8" fill="#E6F1FB" stroke="#85B7EB"/> <text x="295" y="76" text-anchor="middle" font-size="15" font-weight="600" fill="#134A80">光模块</text> <text x="295" y="98" text-anchor="middle" font-size="12.5" fill="#185FA5">电信号 ↔︎ 激光互转</text> <text x="295" y="118" text-anchor="middle" font-size="12.5" fill="#185FA5">激光器芯片藏在这里</text> <text x="295" y="138" text-anchor="middle" font-size="12" fill="#185FA5">东山(索尔思)·旭创·Coherent</text></p>
+<p><line x1="385" y1="102" x2="445" y2="102" stroke="#666" stroke-width="1.4" stroke-dasharray="5 3"/> <text x="415" y="92" text-anchor="middle" font-size="12" fill="#555">光纤</text> <path d="M445 98 L455 102 L445 106 Z" fill="#666"/></p>
+<p><rect x="455" y="40" width="222" height="130" rx="10" fill="#FCF1DC" stroke="#E0B25C"/> <text x="566" y="64" text-anchor="middle" font-size="16" font-weight="600" fill="#7A5A10">交换机</text> <rect x="470" y="78" width="192" height="76" rx="6" fill="#FAFAF7" stroke="#999"/> <text x="566" y="102" text-anchor="middle" font-size="14" font-weight="600" fill="#222">交换机芯片（总调度）</text> <text x="566" y="122" text-anchor="middle" font-size="12.5" fill="#555">1.6T 端口靠它支撑</text> <text x="566" y="140" text-anchor="middle" font-size="12.5" fill="#555">博通 TH6 · Marvell · 英伟达</text></p>
+<p><text x="350" y="207" text-anchor="middle" font-size="14" font-weight="600" fill="#222">研报第 2 条的逻辑链</text></p>
+<p><rect x="25" y="228" width="200" height="70" rx="8" fill="#FCEBEB" stroke="#F09595"/> <text x="125" y="254" text-anchor="middle" font-size="14" font-weight="600" fill="#791F1F">1.6T 交换芯片不够用</text> <text x="125" y="276" text-anchor="middle" font-size="12.5" fill="#A32D2D">新一代芯片产能爬坡中</text></p>
+<p><line x1="225" y1="263" x2="250" y2="263" stroke="#666" stroke-width="1.4"/> <path d="M250 259 L260 263 L250 267 Z" fill="#666"/></p>
+<p><rect x="260" y="228" width="190" height="70" rx="8" fill="#F1EFE8" stroke="#B4B2A9"/> <text x="355" y="254" text-anchor="middle" font-size="14" font-weight="600" fill="#444">云厂先用 800G 搭网</text> <text x="355" y="276" text-anchor="middle" font-size="12.5" fill="#666">网络架构“降一代”配置</text></p>
+<p><line x1="450" y1="263" x2="485" y2="263" stroke="#666" stroke-width="1.4"/> <path d="M485 259 L495 263 L485 267 Z" fill="#666"/></p>
+<rect x="495" y="228" width="182" height="70" rx="8" fill="#E6F1FB" stroke="#85B7EB"/> <text x="586" y="254" text-anchor="middle" font-size="14" font-weight="600" fill="#134A80">2027 年 800G 需求上修</text> <text x="586" y="276" text-anchor="middle" font-size="12.5" fill="#185FA5">东山提高 800G 排产占比</text>
+</svg>
+<p>“1.6T”指的是单个端口的速率。要搭 1.6T 网络，得用博通最新一代 Tomahawk 6（单芯片 102.4T 总容量），它 2025 年才开始出货，用台积电先进制程，全球云厂都在抢。所以瓶颈在<strong>博通这一侧及其背后台积电的先进制程产能</strong>，不在光模块厂。</p>
+<p>做交换机芯片的公司：博通（一家独大）、Marvell（Teralynx）、英伟达（Spectrum-X 以太网）、思科（Silicon One，主要自用）。Coherent 和中际旭创是做光模块和激光器的——它们是快递员阵营的玩家，和调度员是上下游配套关系，不是同行。</p>
+<p><strong>记忆卡：交换机芯片是网络的“总调度”（博通垄断），光模块是“快递员”（东山、旭创、Coherent 在做），激光器芯片长在快递员体内。</strong></p>
+<h2 id="第三章-研报逻辑拆解为什么-1.6t-缺货反而推高-800g">第三章 研报逻辑拆解：为什么 1.6T 缺货反而推高 800G</h2>
+<blockquote>
+<p>你当时的问题：“下调网络架构配置”是什么意思？是要砍额度或配比吗？还有，1.6T 调度员不够用，为什么是多雇 800G 快递员——激光到底属于快递员还是调度员？这块你是不是没讲清楚？</p>
+</blockquote>
+<p>第一次讲确实漏了一个关键设定：<strong>快递员也分等级（800G 快递员、1.6T 快递员），且快递员等级必须和调度员的端口匹配</strong>。补上这一环，逻辑分四步走通：</p>
+<p>第一步，云厂商（CSP = Cloud Service Provider，云服务商）要的不是某种快递员，而是总运力——每条链路跑出 1.6T 带宽，这个目标不变。第二步，一个 1.6T 快递员一趟扛 1.6T，一个 800G 快递员一趟扛 800G，但快递员必须插在对应等级的端口上才能干活。第三步，卡点：新一代 1.6T 调度员（交换芯片）缺货，1.6T 快递员就算有货也没口可插。第四步，解法：退回用现役 800G 端口的调度员，<strong>用两个 800G 快递员顶一个 1.6T 快递员的活</strong>——总运力不变，快递员数量翻倍。</p>
+<svg viewBox="0 0 700 305" xmlns="http://www.w3.org/2000/svg" role="img" font-family="Noto Sans CJK SC,PingFang SC,sans-serif" style="width:100%;height:auto">
+<title>
+为什么1.6T交换芯片缺货反而推高800G光模块需求
+</title>
+<p><desc>目标运力不变时有两个方案：方案A直接上1.6T但交换芯片缺货走不通；方案B用现役800G端口交换机，快递员数量翻倍，因此800G光模块需求上修。</desc></p>
+<p><rect x="175" y="15" width="350" height="44" rx="8" fill="#F1EFE8" stroke="#B4B2A9"/> <text x="350" y="42" text-anchor="middle" font-size="14" font-weight="600" fill="#444">目标不变：每条链路都要跑出 1.6T 运力</text></p>
+<p><path d="M350 59 L350 72 L180 72 L180 85" fill="none" stroke="#666" stroke-width="1.4"/> <path d="M350 72 L520 72 L520 85" fill="none" stroke="#666" stroke-width="1.4"/> <path d="M176 85 L180 95 L184 85 Z" fill="#666"/> <path d="M516 85 L520 95 L524 85 Z" fill="#666"/></p>
+<p><rect x="25" y="95" width="310" height="170" rx="10" fill="#FCEBEB" stroke="#F09595"/> <text x="180" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="#791F1F">方案 A：直接上 1.6T</text> <rect x="45" y="138" width="270" height="50" rx="6" fill="#FAFAF7" stroke="#999"/> <text x="180" y="158" text-anchor="middle" font-size="13.5" fill="#222">1.6T 调度员（新一代交换芯片）</text> <text x="180" y="176" text-anchor="middle" font-size="12.5" fill="#A32D2D">缺货：产能爬坡中</text> <rect x="45" y="198" width="270" height="50" rx="6" fill="#FAFAF7" stroke="#999"/> <text x="180" y="218" text-anchor="middle" font-size="13.5" fill="#222">1.6T 快递员（1.6T 光模块）</text> <text x="180" y="236" text-anchor="middle" font-size="12.5" fill="#A32D2D">有货也没用：没有匹配的端口可插</text></p>
+<p><rect x="365" y="95" width="310" height="170" rx="10" fill="#E6F1FB" stroke="#85B7EB"/> <text x="520" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="#134A80">方案 B：先用 800G 搭网（被选中）</text> <rect x="385" y="138" width="270" height="50" rx="6" fill="#FAFAF7" stroke="#999"/> <text x="520" y="158" text-anchor="middle" font-size="13.5" fill="#222">现役调度员（800G 端口）</text> <text x="520" y="176" text-anchor="middle" font-size="12.5" fill="#185FA5">供应成熟、买得到</text> <rect x="385" y="198" width="270" height="50" rx="6" fill="#FAFAF7" stroke="#999"/> <text x="520" y="218" text-anchor="middle" font-size="13.5" fill="#222">800G 快递员 ×2（数量翻倍）</text> <text x="520" y="236" text-anchor="middle" font-size="12.5" fill="#185FA5">凑齐同样运力 → 需求上修</text></p>
+<text x="350" y="292" text-anchor="middle" font-size="12.5" fill="#555">激光器芯片长在“快递员”体内：多雇一个快递员，就多用一颗激光器芯片</text>
+</svg>
+<p>所以“下调网络架构配置”不是砍需求总量，而是<strong>换配方</strong>：原计划 2027 年直接上 1.6T 网络的部分云厂，把组网方案降一代用 800G 搭，1.6T 的量推迟、800G 的量反而上修。东山精密提前把排产往 800G 倾斜，就是在接这个变化。</p>
+<p><strong>记忆卡：运力目标不变，1.6T 调度员缺货 → 网络降级用 800G 端口 → 快递员数量翻倍 → 800G 光模块和激光器芯片需求双双上修。</strong></p>
+<h2 id="第四章-公司案例东山精密从果链多面手到算力链">第四章 公司案例：东山精密——从果链多面手到算力链</h2>
+<blockquote>
+<p>你当时的问题：现在讲的这家公司应该是东山精密吧？它本质上是做高端 PCB 的，是吧？跟胜宏的区别是什么？它说拿下全球 10%–15% 份额，现在的份额都在哪些公司手里？</p>
+</blockquote>
+<p>东山精密不是纯 PCB 公司，这是它和胜宏最大的区别：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>维度</th>
+<th>东山精密</th>
+<th>胜宏科技</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>人设</td>
+<td>并购成长的“多面手”</td>
+<td>单科状元“AI 板卡尖子生”</td>
+</tr>
+<tr class="even">
+<td>主业</td>
+<td>软板 FPC（苹果）＋硬板＋精密结构件（特斯拉）＋光模块和激光芯片（2025 年收购索尔思光电）</td>
+<td>几乎纯高多层硬板</td>
+</tr>
+<tr class="odd">
+<td>AI 故事</td>
+<td>光模块＋自研 EML 激光芯片＋2027 年 AI 硬板产能</td>
+<td>英伟达 GPU 加速卡板核心供应商，2025 年净利大增约 273%（证券时报）</td>
+</tr>
+<tr class="even">
+<td>一句话</td>
+<td>靠收购索尔思从“果链”跳进“算力链”</td>
+<td>AI 红利兑现最早、最纯粹的 PCB 标的</td>
+</tr>
+</tbody>
+</table>
+<p>所以调研纪要同时讲激光器、光模块、PCB 三件事——因为东山这三样都做。它说的“AI 高端 PCB（主打 HLC = High Layer Count，高层数板）拿下全球 10%–15% 份额”是<strong>目标而非现状</strong>：这个市场目前由金像电（台）、沪电股份、TTM（美）、ISU Petasys（韩）、胜宏、深南电路等分食，东山的硬板（Multek）尚排不进第一梯队，2027Q2 产能释放后才开始抢。且行业研判认为 2026 年后高端产能大量释放，可能从卖方市场转向买方市场（钛媒体），这个目标并不轻松。</p>
+<p><strong>记忆卡：东山精密＝果链多面手借索尔思切入算力链，PCB 份额目标是“想要”，激光芯片地位是“已有”；胜宏＝AI 板卡单科状元。</strong></p>
+<h2 id="第五章-横向格局全球-eml-激光芯片三梯队">第五章 横向格局：全球 EML 激光芯片三梯队</h2>
+<blockquote>
+<p>你当时的问题：全球激光芯片的市场格局是怎样的？请针对这些做激光芯片的公司，就其格局、占比和市场份额做一个对比说明。</p>
+</blockquote>
+<p>EML = Electro-absorption Modulated Laser（电吸收调制激光器），是 800G 及以上光模块最主流的激光器芯片。全球格局呈三梯队：</p>
+<svg viewBox="0 0 700 332" xmlns="http://www.w3.org/2000/svg" role="img" font-family="Noto Sans CJK SC,PingFang SC,sans-serif" style="width:100%;height:auto">
+<title>
+全球EML激光芯片市场三梯队格局
+</title>
+<p><desc>第一梯队Lumentum、博通、Coherent、住友电工把持200G高端；第二梯队三菱电机与索尔思（东山精密）；追赶梯队为源杰科技、长光华芯、光迅科技等国产厂商。</desc></p>
+<p><rect x="25" y="25" width="650" height="85" rx="10" fill="#E6F1FB" stroke="#85B7EB"/> <text x="45" y="53" font-size="15" font-weight="600" fill="#134A80">第一梯队：把持 200G 高端</text> <text x="45" y="75" font-size="12.5" fill="#185FA5">对北美云厂议价权强</text> <rect x="270" y="42" width="90" height="42" rx="6" fill="#FAFAF7" stroke="#999"/> <text x="315" y="67" text-anchor="middle" font-size="13" fill="#222">Lumentum</text> <rect x="372" y="42" width="90" height="42" rx="6" fill="#FAFAF7" stroke="#999"/> <text x="417" y="67" text-anchor="middle" font-size="13" fill="#222">博通</text> <rect x="474" y="42" width="90" height="42" rx="6" fill="#FAFAF7" stroke="#999"/> <text x="519" y="67" text-anchor="middle" font-size="13" fill="#222">Coherent</text> <rect x="576" y="42" width="90" height="42" rx="6" fill="#FAFAF7" stroke="#999"/> <text x="621" y="67" text-anchor="middle" font-size="13" fill="#222">住友电工</text></p>
+<p><rect x="25" y="125" width="650" height="85" rx="10" fill="#FCF1DC" stroke="#E0B25C"/> <text x="45" y="153" font-size="15" font-weight="600" fill="#7A5A10">第二梯队：100G 主力，冲刺 200G</text> <text x="45" y="175" font-size="12.5" fill="#8A6414">索尔思＝东山精密子公司</text> <rect x="380" y="142" width="120" height="42" rx="6" fill="#FAFAF7" stroke="#999"/> <text x="440" y="167" text-anchor="middle" font-size="13" fill="#222">三菱电机</text> <rect x="515" y="142" width="140" height="42" rx="6" fill="#FAFAF7" stroke="#999"/> <text x="585" y="167" text-anchor="middle" font-size="13" fill="#222">索尔思（东山）</text></p>
+<p><rect x="25" y="225" width="650" height="85" rx="10" fill="#EAF3DE" stroke="#97C459"/> <text x="45" y="253" font-size="15" font-weight="600" fill="#2F5A0F">追赶梯队：国产替代</text> <text x="45" y="275" font-size="12.5" fill="#3B6D11">100G 已量产，200G 在验证</text> <rect x="350" y="242" width="100" height="42" rx="6" fill="#FAFAF7" stroke="#999"/> <text x="400" y="267" text-anchor="middle" font-size="13" fill="#222">源杰科技</text> <rect x="462" y="242" width="100" height="42" rx="6" fill="#FAFAF7" stroke="#999"/> <text x="512" y="267" text-anchor="middle" font-size="13" fill="#222">长光华芯</text> <rect x="574" y="242" width="100" height="42" rx="6" fill="#FAFAF7" stroke="#999"/> <text x="624" y="267" text-anchor="middle" font-size="13" fill="#222">光迅科技</text></p>
+<text x="350" y="326" text-anchor="middle" font-size="12" fill="#555">2024年全球EML前五（Lumentum/Coherent/三菱/索尔思/博通）合计约76%份额</text>
+</svg>
+<p>关键数字与事实（时点 2024–2026）：据 YHResearch，2024 年全球 EML 前五名 Lumentum、Coherent、三菱电机、索尔思、博通合计约 76% 份额；最高端的 200G EML（1.6T 光模块用）被 Lumentum、博通、住友电工、Coherent 四家把持，对北美云厂议价权强；国产的源杰科技、长光华芯 100G 已量产、200G 在送样验证。</p>
+<p>这正是东山精密收购索尔思的价值：索尔思本身就是全球前五，自研 EML 覆盖 100G 到 1.6T、自供率超 90%（东方财富）——别人缺激光器芯片，它自己家里就有。索尔思 2025 年完成收购并于当年 10 月并表，2026 年 6 月又宣布 12 亿美元扩产光芯片与光模块产能（全球半导体观察）。</p>
+<p><strong>记忆卡：全球 EML 前五合计约 76%，最高端 200G 被美日四强把持，国产在 100G 上车、200G 排队；索尔思＝东山手里现成的前五门票。</strong></p>
+<h2 id="第六章-寻找瓶颈ai-网络的两堵墙">第六章 寻找瓶颈：AI 网络的两堵墙</h2>
+<blockquote>
+<p>你当时的问题：这有点像 GPU 和 HBM 的关系对吧？交换芯片为什么被卡住——究竟是技术问题还是产能问题？瓶颈到底在哪？投资标的是博通、Marvell、思科这三家吗？卡脖子是卡在 MOCVD 这种设备上，还是卡在其他地方？</p>
+</blockquote>
+<p>你的类比成立：GPU 与 HBM（High Bandwidth Memory，高带宽内存）的故事是“算得快、搬得慢”，短板在搬运；网络侧同构——光模块供给相对充足，短板在交换机芯片。<strong>系统总产出由最短的板决定，紧缺和定价权永远出现在短板处</strong>，这就是“AI 投资＝寻找瓶颈”。</p>
+<p>交换芯片卡的是产能不是技术：Tomahawk 6 已经发布出货，但它是一颗用台积电最先进制程做的超大硅基逻辑芯片，博通公开警示台积电产能 2026 年已经触顶、卡住整个供应链咽喉（智通财经）；它要和英伟达 GPU、苹果手机芯片抢同一批 3nm 产能，加上超大芯片良率、224G SerDes（Serializer/Deserializer，串行器/解串器）爬坡，量就是上不来。技术门槛的作用是让玩家极少、供给天然集中；产能排队才是缺货的直接原因。</p>
+<svg viewBox="0 0 700 292" xmlns="http://www.w3.org/2000/svg" role="img" font-family="Noto Sans CJK SC,PingFang SC,sans-serif" style="width:100%;height:auto">
+<title>
+AI网络的两条卡脖子链：交换机芯片与激光器芯片
+</title>
+<p><desc>第一条链：1.6T网络需求到交换机芯片，卡在台积电先进制程产能；第二条链：光模块需求到激光器芯片，卡在MOCVD设备。两条链互不相干。</desc></p>
+<p><text x="25" y="38" font-size="14" font-weight="600" fill="#222">第一堵墙：交换机芯片（硅基逻辑链）</text> <rect x="25" y="50" width="170" height="76" rx="8" fill="#F1EFE8" stroke="#B4B2A9"/> <text x="110" y="80" text-anchor="middle" font-size="14" font-weight="600" fill="#444">1.6T 网络需求</text> <text x="110" y="102" text-anchor="middle" font-size="12.5" fill="#666">云厂商组网升级</text> <line x1="195" y1="88" x2="227" y2="88" stroke="#666" stroke-width="1.4"/> <path d="M227 84 L237 88 L227 92 Z" fill="#666"/> <rect x="237" y="50" width="188" height="76" rx="8" fill="#FCF1DC" stroke="#E0B25C"/> <text x="331" y="80" text-anchor="middle" font-size="14" font-weight="600" fill="#7A5A10">交换机芯片</text> <text x="331" y="102" text-anchor="middle" font-size="12.5" fill="#8A6414">博通 · Marvell · 英伟达</text> <line x1="425" y1="88" x2="460" y2="88" stroke="#666" stroke-width="1.4"/> <path d="M460 84 L470 88 L460 92 Z" fill="#666"/> <rect x="470" y="50" width="205" height="76" rx="8" fill="#FCEBEB" stroke="#F09595"/> <text x="572" y="76" text-anchor="middle" font-size="14" font-weight="600" fill="#791F1F">卡点：先进制程产能</text> <text x="572" y="98" text-anchor="middle" font-size="12.5" fill="#A32D2D">台积电 3nm 产能 2026 触顶</text> <text x="572" y="116" text-anchor="middle" font-size="12.5" fill="#A32D2D">与 GPU、手机芯片抢产能</text></p>
+<p><text x="25" y="158" font-size="14" font-weight="600" fill="#222">第二堵墙：激光器芯片（化合物半导体链）</text> <rect x="25" y="170" width="170" height="76" rx="8" fill="#F1EFE8" stroke="#B4B2A9"/> <text x="110" y="200" text-anchor="middle" font-size="14" font-weight="600" fill="#444">光模块需求</text> <text x="110" y="222" text-anchor="middle" font-size="12.5" fill="#666">800G 出货量暴增</text> <line x1="195" y1="208" x2="227" y2="208" stroke="#666" stroke-width="1.4"/> <path d="M227 204 L237 208 L227 212 Z" fill="#666"/> <rect x="237" y="170" width="188" height="76" rx="8" fill="#E6F1FB" stroke="#85B7EB"/> <text x="331" y="200" text-anchor="middle" font-size="14" font-weight="600" fill="#134A80">激光器芯片（EML）</text> <text x="331" y="222" text-anchor="middle" font-size="12.5" fill="#185FA5">Lumentum · 索尔思(东山)</text> <line x1="425" y1="208" x2="460" y2="208" stroke="#666" stroke-width="1.4"/> <path d="M460 204 L470 208 L460 212 Z" fill="#666"/> <rect x="470" y="170" width="205" height="76" rx="8" fill="#FCEBEB" stroke="#F09595"/> <text x="572" y="196" text-anchor="middle" font-size="14" font-weight="600" fill="#791F1F">卡点：MOCVD 设备</text> <text x="572" y="218" text-anchor="middle" font-size="12.5" fill="#A32D2D">交期约 1 年</text> <text x="572" y="236" text-anchor="middle" font-size="12.5" fill="#A32D2D">全球主力厂商仅两三家</text></p>
+<text x="350" y="280" text-anchor="middle" font-size="12.5" fill="#555">两堵墙互不相干：交换机芯片是硅基芯片，不经过 MOCVD；MOCVD 只卡激光器这条链</text>
+</svg>
+<p>关键澄清：<strong>交换芯片和 MOCVD 完全无关</strong>。交换芯片是硅基芯片，走台积电 CMOS 产线；MOCVD 只用于化合物半导体（InP 磷化铟、GaAs 砷化镓），只卡激光器那条链。两堵墙，各卡各的。</p>
+<p>顺着瓶颈推演的受益环节：博通（NASDAQ: AVGO，一家独大）、Marvell（NASDAQ: MRVL）、英伟达（Spectrum-X）；思科 Silicon One 主要自用，不算纯粹标的。再往上游就是台积电本身。</p>
+<p><strong>记忆卡：AI 投资＝找短板。交换芯片卡在台积电先进制程（受益：博通/Marvell/英伟达），激光器卡在 MOCVD 设备，两堵墙互不相干。</strong></p>
+<h2 id="第七章-设备板块mocvd-三家上市公司与四轮炒作史">第七章 设备板块：MOCVD 三家上市公司与四轮炒作史</h2>
+<blockquote>
+<p>你当时的问题：MOCVD 是不是也算“物理墙”或卡脖子瓶颈？它对应的股票公司有哪些，爱思强、Veeco、中微都上市了吗？这个板块被炒作过吗？</p>
+</blockquote>
+<p>MOCVD 严格说不是“物理墙”——它不是物理定律的极限，而是<strong>设备供给瓶颈</strong>：交期约一年、全球主力两三家，属于“能造但排不上队”的墙，和台积电产能同一性质。三家主要厂商都已上市：</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>公司</th>
+<th>代码</th>
+<th>人设</th>
+<th>强项与 AI 关联</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>爱思强 AIXTRON（德）</td>
+<td>法兰克福 XETRA: AIXA</td>
+<td>高端一哥</td>
+<td>InP/GaAs 激光器 MOCVD 主导，2026 年 5 月获 Lumentum 多台 G10-AsP 订单（华盛通），另有被收购传闻</td>
+</tr>
+<tr class="even">
+<td>Veeco（美）</td>
+<td>NASDAQ: VECO</td>
+<td>老二追赶</td>
+<td>Lumina 平台切入砷/磷体系，光通信产线已导入</td>
+</tr>
+<tr class="odd">
+<td>中微公司 AMEC（中）</td>
+<td>科创板 688012</td>
+<td>国产旗手</td>
+<td>GaN 基（氮化镓，LED/Mini-LED 用）MOCVD 全球领先；但主业是刻蚀设备，InP 高端激光器机型不是主力</td>
+</tr>
+</tbody>
+</table>
+<p>与 AI 激光器最直接相关的是爱思强，Veeco 次之，中微“沾边但不核心”。</p>
+<p>炒作史：这是典型的强周期板块，剧本高度重复。2010–2011 年 LED 照明补贴潮，爱思强、Veeco 暴涨后随 LED 产能过剩暴跌约八成；2017–2018 年 iPhone 3D 传感带火 VCSEL（Vertical-Cavity Surface-Emitting Laser，垂直腔面发射激光器）小炒一轮；2020–2021 年 Mini LED 又一轮；当前是第四轮——InP 扩产景气，卖方 2026 年 4 月起密集发布“MOCVD 设备链机会”报告（爱建证券），光芯片厂集体扩产，800G 及以上光模块出货量预计从 2025 年约 2400 万只增至 2026 年约 6300 万只，下游的 Lumentum 一年涨了约 769%。周期股的老规律：<strong>设备商在下游扩产期最风光，但扩产完成之日往往就是订单断崖之时</strong>——LED 那轮就是这么摔下来的。</p>
+<p><strong>记忆卡：MOCVD 设备股是强周期——LED、VCSEL、Mini LED、AI 光芯片四轮炒作，每一轮“设备热”都以下游扩产过剩收场过。</strong></p>
+<h2 id="第八章-全景地图一张图串起今天的知识">第八章 全景地图：一张图串起今天的知识</h2>
+<p>把今天所有角色放回一条产业链：最上游是 MOCVD 烤箱（第一、七章），烤出外延片、切成 EML 激光器芯片（第五章），装进光模块快递员体内（第二章），快递员配合交换机芯片调度员组网（第二、三章），最终服务 AI 数据中心。链上有两个互不相干的红色卡点（第六章），东山精密（第四章）则横跨激光芯片、光模块、PCB 三个环节。</p>
+<svg viewBox="0 0 700 496" xmlns="http://www.w3.org/2000/svg" role="img" font-family="Noto Sans CJK SC,PingFang SC,sans-serif" style="width:100%;height:auto">
+<title>
+从MOCVD到AI数据中心的全景产业链与两个卡点
+</title>
+<p><desc>MOCVD设备生长外延片和EML激光器芯片，装入光模块，配合交换机芯片组成AI数据中心网络；两个卡点分别是MOCVD设备交期与台积电先进制程产能。</desc></p>
+<p><rect x="80" y="30" width="360" height="62" rx="8" fill="#FCF1DC" stroke="#E0B25C"/> <text x="260" y="56" text-anchor="middle" font-size="15" font-weight="600" fill="#7A5A10">MOCVD 设备（原子级烤箱）</text> <text x="260" y="78" text-anchor="middle" font-size="12.5" fill="#8A6414">爱思强 · Veeco · 中微公司</text> <line x1="440" y1="61" x2="470" y2="61" stroke="#999" stroke-width="1" stroke-dasharray="3 3"/> <rect x="470" y="33" width="205" height="56" rx="8" fill="#FCEBEB" stroke="#F09595"/> <text x="572" y="55" text-anchor="middle" font-size="13.5" font-weight="600" fill="#791F1F">卡点②：设备交期约 1 年</text> <text x="572" y="75" text-anchor="middle" font-size="12" fill="#A32D2D">全球主力仅两三家</text></p>
+<p><line x1="260" y1="92" x2="260" y2="118" stroke="#666" stroke-width="1.4"/> <path d="M256 118 L260 128 L264 118 Z" fill="#666"/></p>
+<p><rect x="80" y="128" width="360" height="62" rx="8" fill="#E6F1FB" stroke="#85B7EB"/> <text x="260" y="154" text-anchor="middle" font-size="15" font-weight="600" fill="#134A80">外延片 → EML 激光器芯片</text> <text x="260" y="176" text-anchor="middle" font-size="12.5" fill="#185FA5">Lumentum · 索尔思(东山) · 源杰等</text></p>
+<p><line x1="260" y1="190" x2="260" y2="216" stroke="#666" stroke-width="1.4"/> <path d="M256 216 L260 226 L264 216 Z" fill="#666"/></p>
+<p><rect x="80" y="226" width="360" height="62" rx="8" fill="#E6F1FB" stroke="#85B7EB"/> <text x="260" y="252" text-anchor="middle" font-size="15" font-weight="600" fill="#134A80">光模块（快递员）</text> <text x="260" y="274" text-anchor="middle" font-size="12.5" fill="#185FA5">东山(索尔思) · 中际旭创 · Coherent</text></p>
+<p><line x1="260" y1="288" x2="260" y2="314" stroke="#666" stroke-width="1.4"/> <path d="M256 314 L260 324 L264 314 Z" fill="#666"/></p>
+<p><rect x="80" y="324" width="360" height="62" rx="8" fill="#FCF1DC" stroke="#E0B25C"/> <text x="260" y="350" text-anchor="middle" font-size="15" font-weight="600" fill="#7A5A10">交换机芯片（调度员）</text> <text x="260" y="372" text-anchor="middle" font-size="12.5" fill="#8A6414">博通 · Marvell · 英伟达</text> <line x1="440" y1="355" x2="470" y2="355" stroke="#999" stroke-width="1" stroke-dasharray="3 3"/> <rect x="470" y="327" width="205" height="56" rx="8" fill="#FCEBEB" stroke="#F09595"/> <text x="572" y="349" text-anchor="middle" font-size="13.5" font-weight="600" fill="#791F1F">卡点①：台积电先进制程</text> <text x="572" y="369" text-anchor="middle" font-size="12" fill="#A32D2D">3nm 产能 2026 触顶</text></p>
+<p><line x1="260" y1="386" x2="260" y2="412" stroke="#666" stroke-width="1.4"/> <path d="M256 412 L260 422 L264 412 Z" fill="#666"/></p>
+<rect x="80" y="422" width="360" height="62" rx="8" fill="#F1EFE8" stroke="#B4B2A9"/> <text x="260" y="448" text-anchor="middle" font-size="15" font-weight="600" fill="#444">AI 数据中心</text> <text x="260" y="470" text-anchor="middle" font-size="12.5" fill="#666">GPU 集群高速互联</text>
+</svg>
+<p>沿链复盘那份调研纪要的三条要点：第 1 条讲 MOCVD 抢设备（图最上端，卡点②）；第 2 条讲 1.6T 交换芯片缺货导致 800G 需求上修（图下方，卡点①传导）；第 3 条讲 AI 高端 PCB 产能 2027Q2 释放（链条之外的另一战场）。一份纪要，三个环节，全部围绕“瓶颈”二字展开——找到瓶颈，就找到了产业叙事的主线。</p>
+<h2 id="附录一记忆卡速查表">附录一：记忆卡速查表</h2>
+<table>
+<thead>
+<tr class="header">
+<th>主题</th>
+<th>一句话</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>MOCVD</td>
+<td>造激光器芯片的“原子级千层蛋糕烤箱”，全球两三家会造，谁先拿到烤箱谁先有产能</td>
+</tr>
+<tr class="even">
+<td>交换机芯片 vs 光模块</td>
+<td>调度员（博通垄断）vs 快递员（东山/旭创/Coherent），激光器芯片长在快递员体内</td>
+</tr>
+<tr class="odd">
+<td>800G 需求上修</td>
+<td>1.6T 调度员缺货 → 降级用 800G 端口 → 快递员数量翻倍 → 光模块与激光器需求双升</td>
+</tr>
+<tr class="even">
+<td>东山精密 vs 胜宏</td>
+<td>果链多面手借索尔思切入算力链 vs AI 板卡单科状元；东山 PCB 份额是“想要”，激光芯片地位是“已有”</td>
+</tr>
+<tr class="odd">
+<td>EML 格局</td>
+<td>前五合计约 76%（2024），200G 高端美日四强把持，国产 100G 上车、200G 排队</td>
+</tr>
+<tr class="even">
+<td>两堵墙</td>
+<td>交换芯片卡台积电先进制程，激光器卡 MOCVD 设备，互不相干；AI 投资＝找短板</td>
+</tr>
+<tr class="odd">
+<td>MOCVD 板块</td>
+<td>强周期设备股，LED/VCSEL/MiniLED/AI 四轮炒作，每轮设备热都以扩产过剩收场过</td>
+</tr>
+</tbody>
+</table>
+<h2 id="附录二缩写对照表">附录二：缩写对照表</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>缩写</th>
+<th>英文全称</th>
+<th>中文</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>MOCVD</td>
+<td>Metal-Organic Chemical Vapor Deposition</td>
+<td>金属有机化学气相沉积</td>
+</tr>
+<tr class="even">
+<td>EML</td>
+<td>Electro-absorption Modulated Laser</td>
+<td>电吸收调制激光器</td>
+</tr>
+<tr class="odd">
+<td>VCSEL</td>
+<td>Vertical-Cavity Surface-Emitting Laser</td>
+<td>垂直腔面发射激光器</td>
+</tr>
+<tr class="even">
+<td>HBM</td>
+<td>High Bandwidth Memory</td>
+<td>高带宽内存</td>
+</tr>
+<tr class="odd">
+<td>CSP</td>
+<td>Cloud Service Provider</td>
+<td>云服务商</td>
+</tr>
+<tr class="even">
+<td>SerDes</td>
+<td>Serializer/Deserializer</td>
+<td>串行器/解串器</td>
+</tr>
+<tr class="odd">
+<td>FPC</td>
+<td>Flexible Printed Circuit</td>
+<td>柔性电路板（软板）</td>
+</tr>
+<tr class="even">
+<td>HLC</td>
+<td>High Layer Count</td>
+<td>高层数板</td>
+</tr>
+<tr class="odd">
+<td>PCB</td>
+<td>Printed Circuit Board</td>
+<td>印制电路板</td>
+</tr>
+<tr class="even">
+<td>InP / GaAs / GaN</td>
+<td>Indium Phosphide / Gallium Arsenide / Gallium Nitride</td>
+<td>磷化铟 / 砷化镓 / 氮化镓</td>
+</tr>
+</tbody>
+</table>
+<p><em>信息时点：2026 年 7 月 6 日整理；主要事实来源：花旗东山精密调研纪要（2026.7.5）、智通财经、芯智讯、电子工程专辑、YHResearch、爱建证券、证券时报、钛媒体、东方财富、华盛通、全球半导体观察。本笔记仅供学习，不构成投资建议。</em></p>
+
+  </article>
+  <div class="disclaim">本文为个人学习笔记，由对话探讨整理而成，仅作知识分享，不构成任何投资建议。</div>
+</main>
+</body>
+</html>
