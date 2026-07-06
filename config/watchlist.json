@@ -135,6 +135,26 @@
      "ath_floor": 0
     },
     {
+     "name": "科创50",
+     "code": "000688",
+     "market": "A股 指数",
+     "yahoo": "000688.SS",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "创业板指",
+     "code": "399006",
+     "market": "A股 指数",
+     "yahoo": "399006.SZ",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "恒生指数",
      "code": "HSI",
      "market": "港股 指数",
@@ -269,6 +289,8 @@
      "codes": [
       "SHCOMP",
       "000300",
+      "000688",
+      "399006",
       "HSI",
       "3033",
       "HSCE",
@@ -3312,6 +3334,20 @@
      "ath_floor": 0
     },
     {
+     "name": "杭电股份",
+     "code": "603618",
+     "market": "A股",
+     "yahoo": "603618.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 6.9,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "信越化学",
      "code": "4063",
      "market": "日股",
@@ -3358,7 +3394,8 @@
       "600487",
       "600522",
       "600498",
-      "00465"
+      "00465",
+      "603618"
      ]
     },
     {
