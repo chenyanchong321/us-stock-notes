@@ -610,6 +610,62 @@
      },
      "mcap_base_price": 434.16,
      "ath_floor": 479.0
+    },
+    {
+     "name": "中芯国际",
+     "code": "688981",
+     "market": "A股",
+     "yahoo": "688981.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 80.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "中芯国际",
+     "code": "00981",
+     "market": "港股",
+     "yahoo": "0981.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 80.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "华虹公司",
+     "code": "688347",
+     "market": "A股",
+     "yahoo": "688347.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 17.2,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "华虹半导体",
+     "code": "01347",
+     "market": "港股",
+     "yahoo": "1347.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 17.2,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
     }
    ],
    "groups": [
@@ -644,7 +700,11 @@
     {
      "name": "晶圆代工",
      "codes": [
-      "TSM"
+      "TSM",
+      "688981",
+      "00981",
+      "688347",
+      "01347"
      ]
     }
    ]
