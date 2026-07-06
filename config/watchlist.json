@@ -710,7 +710,134 @@
    ]
   },
   {
-   "name": "04 存储、硬盘与存储 ETF",
+   "name": "04 CPU 与服务器计算（小阳春）",
+   "items": [
+    {
+     "name": "英特尔",
+     "code": "INTC",
+     "market": "美股",
+     "yahoo": "INTC",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 6048.8,
+      "approx": false
+     },
+     "mcap_base_price": 120.35,
+     "ath_floor": 142.35
+    },
+    {
+     "name": "AMD",
+     "code": "AMD",
+     "market": "美股",
+     "yahoo": "AMD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 8443.6,
+      "approx": false
+     },
+     "mcap_base_price": 517.82,
+     "ath_floor": 584.73
+    },
+    {
+     "name": "Arm Holdings",
+     "code": "ARM",
+     "market": "美股 ADR",
+     "yahoo": "ARM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3367.5,
+      "approx": false
+     },
+     "mcap_base_price": 315.28,
+     "ath_floor": 452.7
+    },
+    {
+     "name": "英伟达",
+     "code": "NVDA",
+     "market": "美股",
+     "yahoo": "NVDA",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 47200.0,
+      "approx": false
+     },
+     "mcap_base_price": 194.83,
+     "ath_floor": 236.54
+    },
+    {
+     "name": "博通",
+     "code": "AVGO",
+     "market": "美股",
+     "yahoo": "AVGO",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 17200.0,
+      "approx": false
+     },
+     "mcap_base_price": 360.45,
+     "ath_floor": 495.0
+    },
+    {
+     "name": "迈威尔科技",
+     "code": "MRVL",
+     "market": "美股",
+     "yahoo": "MRVL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2147.7,
+      "approx": false
+     },
+     "mcap_base_price": 245.29,
+     "ath_floor": 329.88
+    },
+    {
+     "name": "澜起科技",
+     "code": "06809",
+     "market": "港股",
+     "yahoo": "6809.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 4385,
+      "approx": true
+     },
+     "mcap_base_price": 382.6,
+     "ath_floor": 0
+    }
+   ],
+   "groups": [
+    {
+     "name": "x86 双雄",
+     "codes": [
+      "INTC",
+      "AMD"
+     ]
+    },
+    {
+     "name": "ARM 阵营与自研",
+     "codes": [
+      "ARM",
+      "NVDA"
+     ]
+    },
+    {
+     "name": "定制计算与互连配套",
+     "codes": [
+      "AVGO",
+      "MRVL",
+      "06809"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "05 存储、硬盘与存储 ETF",
    "items": [
     {
      "name": "SK海力士",
@@ -963,7 +1090,7 @@
    ]
   },
   {
-   "name": "05 光连接与光模块（衬底→芯片→模块→CPO）",
+   "name": "06 光连接与光模块（衬底→芯片→模块→CPO）",
    "items": [
     {
      "name": "AXT Inc",
@@ -1516,7 +1643,7 @@
    ]
   },
   {
-   "name": "06 云与 AI 算力数据中心",
+   "name": "07 云与 AI 算力数据中心",
    "items": [
     {
      "name": "微软",
@@ -1828,7 +1955,7 @@
    ]
   },
   {
-   "name": "07 半导体设备",
+   "name": "08 半导体设备",
    "items": [
     {
      "name": "阿斯麦",
@@ -2235,7 +2362,7 @@
    ]
   },
   {
-   "name": "08 半导体材料",
+   "name": "09 半导体材料",
    "items": [
     {
      "name": "信越化学",
@@ -2507,7 +2634,7 @@
    ]
   },
   {
-   "name": "09 封装测试（OSAT与测试设备）",
+   "name": "10 封装测试（OSAT与测试设备）",
    "items": [
     {
      "name": "台积电",
@@ -2889,7 +3016,7 @@
    ]
   },
   {
-   "name": "10 800VDC 功率半导体（SiC · GaN）",
+   "name": "11 800VDC 功率半导体（SiC · GaN）",
    "items": [
     {
      "name": "天岳先进",
@@ -3251,7 +3378,7 @@
    ]
   },
   {
-   "name": "11 光纤与光缆",
+   "name": "12 光纤与光缆",
    "items": [
     {
      "name": "康宁",
@@ -3503,7 +3630,7 @@
    ]
   },
   {
-   "name": "12 PCB 与覆铜板（CCL）",
+   "name": "13 PCB 与覆铜板（CCL）",
    "items": [
     {
      "name": "胜宏科技",
@@ -3720,7 +3847,7 @@
    ]
   },
   {
-   "name": "13 被动元件（MLCC · 超级电容）",
+   "name": "14 被动元件（MLCC · 超级电容）",
    "items": [
     {
      "name": "村田制作所",
@@ -3912,7 +4039,7 @@
    ]
   },
   {
-   "name": "14 能源、电力与资源现金流",
+   "name": "15 能源、电力与资源现金流",
    "items": [
     {
      "name": "Constellation Energy",
@@ -4370,7 +4497,7 @@
    ]
   },
   {
-   "name": "15 软件与 SaaS",
+   "name": "16 软件与 SaaS",
    "items": [
     {
      "name": "微软",
@@ -4867,7 +4994,7 @@
    ]
   },
   {
-   "name": "16 机器人、汽车零部件与无人系统",
+   "name": "17 机器人、汽车零部件与无人系统",
    "items": [
     {
      "name": "优必选",
@@ -5079,7 +5206,7 @@
    ]
   },
   {
-   "name": "17 中国互联网、AI 应用与主题 ETF",
+   "name": "18 中国互联网、AI 应用与主题 ETF",
    "items": [
     {
      "name": "腾讯控股",
@@ -5213,7 +5340,7 @@
    ]
   },
   {
-   "name": "18 价值老登（非 AI · 七大板块）",
+   "name": "19 价值老登（非 AI · 七大板块）",
    "items": [
     {
      "name": "三一重工",
@@ -5566,7 +5693,7 @@
    ]
   },
   {
-   "name": "19 贵金属与有色金属",
+   "name": "20 贵金属与有色金属",
    "items": [
     {
      "name": "黄金 / 美元",
@@ -5784,7 +5911,7 @@
    ]
   },
   {
-   "name": "20 加密资产",
+   "name": "21 加密资产",
    "items": [
     {
      "name": "比特币",
