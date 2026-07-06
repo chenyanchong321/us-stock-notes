@@ -4098,6 +4098,20 @@
      "ath_floor": 0
     },
     {
+     "name": "三菱重工",
+     "code": "7011",
+     "market": "日股",
+     "yahoo": "7011.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 33.7,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "Bloom Energy",
      "code": "BE",
      "market": "美股",
@@ -4446,12 +4460,13 @@
    ],
    "groups": [
     {
-     "name": "美股电力与核能",
+     "name": "电力与核能设备（美·日）",
      "codes": [
       "CEG",
       "VST",
       "TLN",
       "GEV",
+      "7011",
       "BE",
       "GNRC",
       "NVT",
