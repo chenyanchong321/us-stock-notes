@@ -58,6 +58,14 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 .stat{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:8px 16px}
 .stat .k{font-size:11px;color:var(--text2)}
 .stat .v{font-size:16px;font-weight:600;margin-top:2px}
+.stat.vc{cursor:pointer;transition:.15s}
+.stat.vc:hover{border-color:var(--accent)}
+.stat.vc.on{border-color:var(--accent);background:rgba(74,140,240,.10)}
+.stat.vc.on .k{color:var(--accent)}
+#flatview .fv-note{font-size:12px;color:var(--text2);margin:0 0 10px}
+#flatview td.sec-tag{font-size:11px;color:var(--text2);text-align:left;max-width:110px;white-space:normal;line-height:1.3}
+.dist-hit{color:var(--up);font-weight:600}
+.dist-far{color:var(--text2)}
 .refresh-note{font-size:12px;color:var(--text2);margin-left:auto}
 
 /* 板块 */
@@ -233,13 +241,18 @@ body.resizing{user-select:none;cursor:col-resize}
   </nav>
   <div class="main">
     <div id="topbar">
-      <div class="stat"><div class="k">观察标的</div><div class="v" id="st-total">–</div></div>
-      <div class="stat"><div class="k">回撤 &gt;30% 标的</div><div class="v" id="st-deep">–</div></div>
+      <div class="stat vc" data-view="all"><div class="k">观察标的</div><div class="v" id="st-total">–</div></div>
+      <div class="stat vc" data-view="focus"><div class="k">⭐ 重点清单</div><div class="v" id="st-focus">–</div></div>
+      <div class="stat vc" data-view="gain"><div class="k">今日涨幅榜</div><div class="v">Top30</div></div>
+      <div class="stat vc" data-view="loss"><div class="k">今日跌幅榜</div><div class="v">Top30</div></div>
+      <div class="stat vc" data-view="dd"><div class="k">回撤榜（&gt;30%）</div><div class="v" id="st-deep">–</div></div>
+      <div class="stat vc" data-view="heat"><div class="k">板块热力</div><div class="v">21</div></div>
       <div class="stat"><div class="k">近1月上涨占比</div><div class="v" id="st-up1m">–</div></div>
       <div class="refresh-note">交易时段每30分钟自动更新 · 市值为估算口径</div>
       <select id="secjump" class="mobile-only"><option value="">📂 跳转板块…</option></select>
       <div id="opps" class="hidden"></div>
     </div>
+    <div id="flatview" class="hidden"></div>
     <div id="sections"></div>
     <div id="no-result">没有匹配的标的</div>
   </div>
@@ -410,6 +423,116 @@ function renderDash(quotes){
     }));
   };
   window.buildOpps();
+
+  /* ===== 视图切换器：全景/重点清单/涨跌幅榜/回撤榜/板块热力 ===== */
+  window.CURVIEW = "all";
+  function buyTh(code){
+    const b = BUY[code];
+    if(!b || b.includes("风险锚") || b.includes("市值")) return null;
+    return parseFloat((b.match(/[\d.]+/)||[])[0]) || null;
+  }
+  function pxOf(r){ return parseFloat(String(r[5]).replace(/[^\d.]/g,"")); }
+  function flatRows(){
+    const seen = new Set(), out = [];
+    DATA.forEach(s=>s.rows.forEach(r=>{
+      if(seen.has(r[1]) || r[3]==="获取失败") return;
+      seen.add(r[1]);
+      out.push({r, sec: s.sec.replace(/^\d+ /,"")});
+    }));
+    return out;
+  }
+  function fvRow(x, extraTd){
+    const r = x.r;
+    return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${r[12]||""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
+      <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
+      <td class="sec-tag">${x.sec}</td>
+      <td>${priceCell(r)}</td>${extraTd||""}
+      <td>${fmtPct(r[16])}</td>
+      <td>${posCell(r[14], r[15])}</td>
+      <td>${ddCell(r[6])}</td>
+      <td>${fmtPct(r[7])}</td><td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td>
+    </tr>`;
+  }
+  const FV_HEAD = (extra)=>`<thead><tr><th style="text-align:left">名称</th><th style="text-align:left">板块</th><th>现价</th>${extra||""}<th>当日</th><th>52周位</th><th>高点跌幅</th><th>近1月</th><th>年初至今</th><th>近1年</th></tr></thead>`;
+  window.buildFlat = function(){
+    const v = window.CURVIEW;
+    const el = document.getElementById("flatview");
+    if(v==="all"){ el.classList.add("hidden"); return; }
+    let title="", note="", head=FV_HEAD(), body="";
+    if(v==="focus"){
+      const list = flatRows().filter(x=>BUY[x.r[1]]);
+      list.forEach(x=>{
+        const th=buyTh(x.r[1]), px=pxOf(x.r);
+        x.dist = (th&&px) ? (px/th-1)*100 : null;
+        x.hit = x.dist!==null && x.dist<=2;
+      });
+      list.sort((a,b)=>{
+        if(a.hit!==b.hit) return a.hit?-1:1;
+        return (a.dist??9e9)-(b.dist??9e9);
+      });
+      title=`⭐ 重点清单（${list.length}）`; note="标注了买点的标的 · 按距买点由近到远排序，🎯已进买点区置顶";
+      head=FV_HEAD(`<th>距买点</th>`);
+      body=list.map(x=>{
+        const d = x.dist===null ? `<span class="flat">–</span>`
+          : x.hit ? `<span class="dist-hit">🎯已触达</span>`
+          : `<span class="dist-far">还差 ${x.dist.toFixed(1)}%</span>`;
+        return fvRow(x, `<td>${d}</td>`);
+      }).join("");
+    }else if(v==="gain"||v==="loss"){
+      const list = flatRows().filter(x=>typeof x.r[16]==="number");
+      list.sort((a,b)=> v==="gain" ? b.r[16]-a.r[16] : a.r[16]-b.r[16]);
+      const top = list.slice(0,30);
+      title = v==="gain" ? "📈 今日涨幅榜 Top30" : "📉 今日跌幅榜 Top30";
+      note = "跨板块去重 · 随实时行情自动刷新";
+      body = top.map(x=>fvRow(x)).join("");
+    }else if(v==="dd"){
+      const list = flatRows().filter(x=>typeof x.r[6]==="number" && x.r[6]<=-30);
+      list.sort((a,b)=>a.r[6]-b.r[6]);
+      title=`🕳 回撤榜（>30%，共${list.length}）`; note="距历史高点回撤最深的在最上面 · 捡深跌前先看简介和买点";
+      body=list.map(x=>fvRow(x)).join("");
+    }else if(v==="heat"){
+      const secs = DATA.map(s=>{
+        const nums=s.rows.filter(r=>typeof r[16]==="number");
+        const avg = nums.length? nums.reduce((a,r)=>a+r[16],0)/nums.length : null;
+        const up = nums.filter(r=>r[16]>0).length;
+        const dds=s.rows.map(r=>r[6]).filter(x=>typeof x==="number");
+        const avgdd = dds.length? dds.reduce((a,b)=>a+b,0)/dds.length : null;
+        return {sec:s.sec, avg, up, n:nums.length, avgdd, idx:DATA.indexOf(s)};
+      }).filter(s=>s.avg!==null);
+      secs.sort((a,b)=>b.avg-a.avg);
+      title="🌡 板块热力（按当日平均涨跌）"; note="点板块名跳到对应板块";
+      head=`<thead><tr><th style="text-align:left">板块</th><th>当日平均</th><th>上涨/家数</th><th>板块平均回撤</th></tr></thead>`;
+      body=secs.map(s=>`<tr>
+        <td class="name" style="max-width:none"><a href="#sec${s.idx}" style="color:var(--accent);text-decoration:none" onclick="document.querySelector('.stat.vc[data-view=all]').click()">${s.sec}</a></td>
+        <td>${fmtPct(Math.round(s.avg*100)/100)}</td>
+        <td><span class="flat">${s.up}/${s.n}</span></td>
+        <td>${ddCell(Math.round(s.avgdd*10)/10)}</td>
+      </tr>`).join("");
+    }
+    el.innerHTML = `<div class="section"><div class="section-head"><h2>${title}</h2></div>
+      <p class="fv-note">${note}</p>
+      <div class="tbl-wrap"><table>${head}<tbody>${body}</tbody></table></div></div>`;
+    el.classList.remove("hidden");
+  };
+  function setView(v){
+    window.CURVIEW = v;
+    document.querySelectorAll(".stat.vc").forEach(c=>c.classList.toggle("on", c.dataset.view===v));
+    document.getElementById("sections").classList.toggle("hidden", v!=="all");
+    document.querySelector(".sidebar").style.opacity = v==="all" ? "" : ".45";
+    if(v!=="all"){
+      const inp=document.getElementById("search");
+      if(inp.value){ inp.value=""; inp.dispatchEvent(new Event("input")); document.getElementById("search-clear").style.display="none"; }
+    }
+    window.buildFlat();
+    window.scrollTo(0,0);
+  }
+  document.querySelectorAll(".stat.vc").forEach(c=>c.addEventListener("click",()=>setView(c.dataset.view)));
+  document.getElementById("st-focus").textContent = Object.keys(BUY).length ?
+    new Set(all.filter(r=>BUY[r[1]]).map(r=>r[1])).size : "–";
+  /* 搜索时自动回全景 */
+  document.getElementById("search").addEventListener("input",()=>{
+    if(window.CURVIEW!=="all" && document.getElementById("search").value) setView("all");
+  });
 
   /* 目录模式：全部展开 / 仅一级板块 */
   (function(){
@@ -615,6 +738,7 @@ function renderNotes(cfg){
         total+=parseBatch(chunk); s.remove();
         if(++done===Math.ceil(syms.length/60) && total>0){
           window.buildOpps && window.buildOpps();
+          if(window.CURVIEW && window.CURVIEW!=="all" && window.buildFlat) window.buildFlat();
           const t=new Date();
           const el=document.getElementById("update-time");
           el.textContent=el.textContent.replace(/ · 实时.*$/,"")+" · 实时 "+
