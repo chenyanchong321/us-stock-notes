@@ -46,7 +46,10 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 /* ========== 主区域 ========== */
 .main{margin-left:var(--sidebar-w);margin-top:var(--header-h);padding:24px 28px 80px}
 
-/* 顶栏统计 */
+/* 顶栏统计（视图切换条：吸顶） */
+#viewbar{position:sticky;top:var(--header-h);z-index:160;display:flex;gap:12px;align-items:center;flex-wrap:wrap;
+  background:var(--bg);padding:12px 0 10px;margin-bottom:6px;border-bottom:1px solid var(--border)}
+@media(max-width:860px){#viewbar{position:static;border-bottom:none}}
 #topbar{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:20px}
 #searchwrap{position:relative;flex:0 1 300px;min-width:150px}
 #search{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:7px 30px 7px 12px;color:var(--text);font-size:13px;outline:none;box-sizing:border-box}
@@ -69,7 +72,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 .refresh-note{font-size:12px;color:var(--text2);margin-left:auto}
 
 /* 板块 */
-.section{margin-bottom:34px;scroll-margin-top:calc(var(--header-h) + 16px)}
+.section{margin-bottom:34px;scroll-margin-top:calc(var(--header-h) + 76px)}
 .section-head{display:flex;align-items:baseline;gap:12px;margin-bottom:10px}
 .section-head h2{font-size:17px}
 .section-head .n{font-size:12px;color:var(--text2)}
@@ -128,7 +131,7 @@ td.name .mkt{margin-left:6px;background:var(--panel2);border-radius:4px;padding:
 .flat{color:var(--text2)}
 
 /* 分组标题行 */
-tr.grp{scroll-margin-top:calc(var(--header-h) + 48px)}
+tr.grp{scroll-margin-top:calc(var(--header-h) + 108px)}
 tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;font-weight:600;padding:9px 14px;text-align:left;letter-spacing:.5px;border-left:3px solid var(--accent)}
 .sidebar a.sub{padding:5px 18px 5px 34px;font-size:12.5px;color:#9fb3d9}
 .sidebar a.sub:hover{color:var(--accent)}
@@ -240,7 +243,7 @@ body.resizing{user-select:none;cursor:col-resize}
     <div id="nav-links"></div>
   </nav>
   <div class="main">
-    <div id="topbar">
+    <div id="viewbar">
       <div class="stat vc" data-view="all"><div class="k">观察标的</div><div class="v" id="st-total">–</div></div>
       <div class="stat vc" data-view="focus"><div class="k">⭐ 重点清单</div><div class="v" id="st-focus">–</div></div>
       <div class="stat vc" data-view="gain"><div class="k">今日涨幅榜</div><div class="v">Top30</div></div>
@@ -249,6 +252,8 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="stat vc" data-view="heat"><div class="k">板块热力</div><div class="v">21</div></div>
       <div class="stat"><div class="k">近1月上涨占比</div><div class="v" id="st-up1m">–</div></div>
       <div class="refresh-note">交易时段每30分钟自动更新 · 市值为估算口径</div>
+    </div>
+    <div id="topbar">
       <select id="secjump" class="mobile-only"><option value="">📂 跳转板块…</option></select>
       <div id="opps" class="hidden"></div>
     </div>
@@ -445,7 +450,6 @@ function renderDash(quotes){
     const r = x.r;
     return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${r[12]||""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
       <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
-      <td class="sec-tag">${x.sec}</td>
       <td>${priceCell(r)}</td>${extraTd||""}
       <td>${fmtPct(r[16])}</td>
       <td>${posCell(r[14], r[15])}</td>
@@ -453,7 +457,7 @@ function renderDash(quotes){
       <td>${fmtPct(r[7])}</td><td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td>
     </tr>`;
   }
-  const FV_HEAD = (extra)=>`<thead><tr><th style="text-align:left">名称</th><th style="text-align:left">板块</th><th>现价</th>${extra||""}<th>当日</th><th>52周位</th><th>高点跌幅</th><th>近1月</th><th>年初至今</th><th>近1年</th></tr></thead>`;
+  const FV_HEAD = (extra)=>`<thead><tr><th style="text-align:left">名称</th><th>现价</th>${extra||""}<th>当日</th><th>52周位</th><th>高点跌幅</th><th>近1月</th><th>年初至今</th><th>近1年</th></tr></thead>`;
   window.buildFlat = function(){
     const v = window.CURVIEW;
     const el = document.getElementById("flatview");
@@ -489,7 +493,8 @@ function renderDash(quotes){
       const list = flatRows().filter(x=>typeof x.r[6]==="number" && x.r[6]<=-30);
       list.sort((a,b)=>a.r[6]-b.r[6]);
       title=`🕳 回撤榜（>30%，共${list.length}）`; note="距历史高点回撤最深的在最上面 · 捡深跌前先看简介和买点";
-      body=list.map(x=>fvRow(x)).join("");
+      head=FV_HEAD(`<th>历史高点</th>`);
+      body=list.map(x=>fvRow(x, `<td>${x.r[4]}</td>`)).join("");
     }else if(v==="heat"){
       const secs = DATA.map(s=>{
         const nums=s.rows.filter(r=>typeof r[16]==="number");
@@ -501,7 +506,7 @@ function renderDash(quotes){
       }).filter(s=>s.avg!==null);
       secs.sort((a,b)=>b.avg-a.avg);
       title="🌡 板块热力（按当日平均涨跌）"; note="点板块名跳到对应板块";
-      head=`<thead><tr><th style="text-align:left">板块</th><th>当日平均</th><th>上涨/家数</th><th>板块平均回撤</th></tr></thead>`;
+      head=`<thead><tr><th style="text-align:left;min-width:220px">板块</th><th style="min-width:100px">当日平均涨跌</th><th style="min-width:90px">上涨/家数</th><th style="min-width:100px">板块平均回撤</th></tr></thead>`;
       body=secs.map(s=>`<tr>
         <td class="name" style="max-width:none"><a href="#sec${s.idx}" style="color:var(--accent);text-decoration:none" onclick="document.querySelector('.stat.vc[data-view=all]').click()">${s.sec}</a></td>
         <td>${fmtPct(Math.round(s.avg*100)/100)}</td>
@@ -509,9 +514,10 @@ function renderDash(quotes){
         <td>${ddCell(Math.round(s.avgdd*10)/10)}</td>
       </tr>`).join("");
     }
+    const tstyle = v==="heat" ? ' style="width:auto;min-width:540px"' : '';
     el.innerHTML = `<div class="section"><div class="section-head"><h2>${title}</h2></div>
       <p class="fv-note">${note}</p>
-      <div class="tbl-wrap"><table>${head}<tbody>${body}</tbody></table></div></div>`;
+      <div class="tbl-wrap"><table${tstyle}>${head}<tbody>${body}</tbody></table></div></div>`;
     el.classList.remove("hidden");
   };
   function setView(v){
@@ -630,7 +636,13 @@ function renderNotes(cfg){
 /* ===== 悬浮表头（任意宽度吸顶，横滚同步） ===== */
 (function(){
   const fh=document.createElement("div"); fh.id="floatHead"; document.body.appendChild(fh);
-  const TOP=56; let curWrap=null;
+  let curWrap=null;
+  function topOf(){   /* 顶栏 + 吸顶视图条 的总高度 */
+    const vb=document.getElementById("viewbar");
+    const sticky = vb && getComputedStyle(vb).position==="sticky";
+    return 56 + (sticky ? vb.offsetHeight : 0);
+  }
+  let TOP = 56;
   function syncX(){
     if(!(curWrap&&fh.firstChild)) return;
     fh.firstChild.style.transform=`translateX(${-curWrap.scrollLeft}px)`;
@@ -655,6 +667,7 @@ function renderNotes(cfg){
     syncX();
   }
   function onScroll(){
+    TOP = topOf();
     let found=null;
     for(const wrap of document.querySelectorAll("#view-dash:not(.hidden) .tbl-wrap")){
       const r=wrap.getBoundingClientRect();
