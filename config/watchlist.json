@@ -3408,6 +3408,34 @@
      "ath_floor": 0
     },
     {
+     "name": "大族激光",
+     "code": "002008",
+     "market": "A股",
+     "yahoo": "002008.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 10.5,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "合盛硅业",
+     "code": "603260",
+     "market": "A股",
+     "yahoo": "603260.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 11.8,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "信越化学",
      "code": "4063",
      "market": "日股",
@@ -3456,6 +3484,13 @@
       "600498",
       "00465",
       "603618"
+     ]
+    },
+    {
+     "name": "跨界新玩家（供给观察）",
+     "codes": [
+      "002008",
+      "603260"
      ]
     },
     {
