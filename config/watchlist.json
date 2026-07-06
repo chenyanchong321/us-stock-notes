@@ -135,21 +135,21 @@
      "ath_floor": 0
     },
     {
-     "name": "科创50",
-     "code": "000688",
-     "market": "A股 指数",
-     "yahoo": "000688.SS",
-     "currency": "",
+     "name": "科创50ETF（华夏）",
+     "code": "588000",
+     "market": "A股 ETF",
+     "yahoo": "588000.SS",
+     "currency": "¥",
      "mcap_base": null,
      "mcap_base_price": 1.0,
      "ath_floor": 0
     },
     {
-     "name": "创业板指",
-     "code": "399006",
-     "market": "A股 指数",
-     "yahoo": "399006.SZ",
-     "currency": "",
+     "name": "创业板ETF（易方达）",
+     "code": "159915",
+     "market": "A股 ETF",
+     "yahoo": "159915.SZ",
+     "currency": "¥",
      "mcap_base": null,
      "mcap_base_price": 1.0,
      "ath_floor": 0
@@ -289,8 +289,8 @@
      "codes": [
       "SHCOMP",
       "000300",
-      "000688",
-      "399006",
+      "588000",
+      "159915",
       "HSI",
       "3033",
       "HSCE",

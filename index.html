@@ -550,13 +550,13 @@ function renderNotes(cfg){
 /* ===== 实时行情：前端直连腾讯行情接口（30秒刷新现价/当日） =====
    覆盖 A股/港股/美股/主要指数；台日韩股、商品、加密等腾讯不覆盖的保持每日数据。 */
 (function(){
-  const IDX={SHCOMP:"sh000001","000300":"sh000300","000688":"sh000688","399006":"sz399006",
+  const IDX={SHCOMP:"sh000001","000300":"sh000300",
              HSI:"hkHSI",HSCE:"hkHSCE",SPX:"usINX",DJI:"usDJI",IXIC:"usIXIC",NDX:"usNDX",SOX:"usSOX",RUT:"usRUT"};
   function txCode(mkt, c){
     mkt = mkt || "";
     if(IDX[c]) return IDX[c];                     /* 指数映射优先（沪深300等在沪不在深） */
     if(mkt.indexOf("指数")>=0) return null;
-    if(mkt.indexOf("A股")===0) return /^\d{6}$/.test(c) ? ((c[0]==="6"?"sh":"sz")+c) : null;
+    if(mkt.indexOf("A股")===0) return /^\d{6}$/.test(c) ? (((c[0]==="6"||c[0]==="5")?"sh":"sz")+c) : null;
     if(mkt.indexOf("港股")===0) return /^\d{5}$/.test(c) ? "hk"+c : null;
     if(mkt==="美股"||mkt==="美股 ETF") return /^[A-Z]+$/.test(c) ? "us"+c : null;
     return null;
