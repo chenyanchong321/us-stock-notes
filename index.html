@@ -250,7 +250,6 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="stat vc" data-view="loss"><div class="k">今日跌幅榜</div><div class="v">Top30</div></div>
       <div class="stat vc" data-view="dd"><div class="k">回撤榜（&gt;30%）</div><div class="v" id="st-deep">–</div></div>
       <div class="stat vc" data-view="heat"><div class="k">板块热力</div><div class="v">21</div></div>
-      <div class="stat"><div class="k">近1月上涨占比</div><div class="v" id="st-up1m">–</div></div>
       <div class="refresh-note">交易时段每30分钟自动更新 · 市值为估算口径</div>
     </div>
     <div id="topbar">
@@ -379,8 +378,6 @@ function renderDash(quotes){
   const all = DATA.flatMap(s=>s.rows);
   document.getElementById("st-total").textContent = all.length;
   document.getElementById("st-deep").textContent = all.filter(r=>typeof r[6]==="number"&&r[6]<=-30).length;
-  const up1m = all.filter(r=>typeof r[7]==="number"&&r[7]>0).length;
-  document.getElementById("st-up1m").textContent = Math.round(up1m/all.length*100)+"%";
 
   /* 排序 */
   const SORT_MAP = {0:0,1:3,2:4,3:5,4:16,5:14,6:6,7:7,8:8,9:9,10:10,11:11};
