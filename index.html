@@ -478,7 +478,7 @@ function renderNotes(cfg){
 
   /* 时间线视图 */
   const flat = cfg.cats.flatMap(c=>c.items.map(n=>({...n, cat:c.cat})));
-  flat.sort((a,b)=>b.date.localeCompare(a.date));
+  flat.sort((a,b)=>(b.ts||b.date).localeCompare(a.ts||a.date));   /* 按发布时刻倒序（ts 精确到分） */
   let tl="", lastM="";
   flat.forEach(n=>{
     const m=n.date.slice(0,7);

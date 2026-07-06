@@ -14,7 +14,8 @@
      ],
      "d": "从一篇「涨价单」文章追问出的产业链通识课：一阶/二阶受益、被动件原理、MLCC 千层饼、超容保命、CCL 面粉与四条链全景。",
      "page": "articles/ai-hardware-price-chain.html",
-     "img": "assets/thumbs/ai-hardware-price-chain.svg"
+     "img": "assets/thumbs/ai-hardware-price-chain.svg",
+     "ts": "2026-07-06 04:40"
     },
     {
      "t": "AI 投资的物理墙：从三种材料到九堵墙的全景框架",
@@ -39,7 +40,8 @@
       "SiC"
      ],
      "d": "主篇读后追问实录：带隙的电子公寓类比、光芯片十二家竞对全景、碳化硅三层楼对比。",
-     "page": "articles/physical-walls-supplement.html"
+     "page": "articles/physical-walls-supplement.html",
+     "ts": "2026-07-06 00:30"
     },
     {
      "t": "模型厂调研与存储层级：从预训练到冷热调配",
@@ -241,7 +243,8 @@
      ],
      "d": "拆解《EQT 深度研究》的逻辑骨架：亏不了钱的底子、AI 缺电四步链、估值传导壁垒、四情景赔率与两套操作方案。",
      "page": "articles/eqt-report.html",
-     "img": "assets/thumbs/eqt-report.svg"
+     "img": "assets/thumbs/eqt-report.svg",
+     "ts": "2026-07-06 01:10"
     },
     {
      "t": "时代电气学习笔记",
@@ -279,7 +282,8 @@
       "收敛比"
      ],
      "d": "由长飞大跌引出的产业链课：AI 数据中心的钱花在哪、NVLink 铜背板的国境线、存储涨价为何挤压柜外、砍配比跌的是什么。",
-     "page": "articles/fiber-datacenter.html"
+     "page": "articles/fiber-datacenter.html",
+     "ts": "2026-07-06 18:05"
     },
     {
      "t": "HIMX 与 CPO 光互连 · 知识沉淀",
