@@ -3173,6 +3173,48 @@
      "ath_floor": 0
     },
     {
+     "name": "华润微",
+     "code": "688396",
+     "market": "A股",
+     "yahoo": "688396.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 13.2,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "士兰微",
+     "code": "600460",
+     "market": "A股",
+     "yahoo": "600460.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 14.1,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "扬杰科技",
+     "code": "300373",
+     "market": "A股",
+     "yahoo": "300373.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 5.4,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "斯达半导",
      "code": "603290",
      "market": "A股",
@@ -3285,6 +3327,20 @@
      "ath_floor": 0
     },
     {
+     "name": "Vicor",
+     "code": "VICR",
+     "market": "美股",
+     "yahoo": "VICR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 0.45,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "伊顿",
      "code": "ETN",
      "market": "美股",
@@ -3346,7 +3402,15 @@
       "IFNNY",
       "ON",
       "6963",
-      "WOLF",
+      "WOLF"
+     ]
+    },
+    {
+     "name": "A股功率 IDM（涨价周期）",
+     "codes": [
+      "688396",
+      "600460",
+      "300373",
       "603290",
       "688187",
       "03898"
@@ -3364,7 +3428,8 @@
      "name": "电源管理芯片",
      "codes": [
       "TXN",
-      "MPWR"
+      "MPWR",
+      "VICR"
      ]
     },
     {
