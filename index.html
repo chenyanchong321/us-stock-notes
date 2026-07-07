@@ -1182,7 +1182,8 @@ let PROFILES = {};
   document.addEventListener("click", e=>{      /* 点名称固定浮窗（可点相关笔记链接），点其他处收起 */
     if(e.target.closest && e.target.closest("#stip")) return;   /* 点浮窗内链接不收起 */
     const td = e.target.closest("td.name");
-    const h = td ? tipHTML(td) : null;
+    const tdp = e.target.closest("td.pxc");
+    const h = td ? tipHTML(td) : (tdp ? posTip(tdp.parentElement) : null);
     if(h){
       tip.innerHTML = h; tip.style.display = "block"; tip.style.pointerEvents = "auto";
       pinned = true;
