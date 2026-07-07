@@ -262,8 +262,8 @@ body.resizing{user-select:none;cursor:col-resize}
   <nav class="sidebar">
     <div class="sub" id="update-time">数据加载中…</div>
     <div id="nav-mode">
-      <button id="nm-full" class="on">全部</button>
       <button id="nm-top">仅板块</button>
+      <button id="nm-full">全部</button>
     </div>
     <div id="nav-links"></div>
   </nav>
@@ -696,7 +696,9 @@ function renderDash(quotes){
     }
     bf.addEventListener("click",()=>setMode("full"));
     bt.addEventListener("click",()=>setMode("top"));
-    try{ if(localStorage.getItem("navMode")==="top") setMode("top"); }catch(e){}
+    /* 默认仅板块；用户切过则记住 */
+    let nm="top"; try{ nm=localStorage.getItem("navMode")||"top"; }catch(e){}
+    setMode(nm);
   })();
 
   /* 手机端板块跳转 */
