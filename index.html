@@ -79,7 +79,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 .refresh-note{font-size:12px;color:var(--text2);margin-left:auto}
 
 /* 板块 */
-.section{margin-bottom:34px;scroll-margin-top:calc(var(--header-h) + 76px)}
+.section{margin-bottom:34px;scroll-margin-top:var(--anchor-sec, calc(var(--header-h) + 76px))}
 .section-head{display:flex;align-items:baseline;gap:12px;margin-bottom:10px}
 .section-head h2{font-size:17px}
 .section-head .n{font-size:12px;color:var(--text2)}
@@ -175,7 +175,7 @@ td.name .mkt{margin-left:6px;background:var(--panel2);border-radius:4px;padding:
 .flat{color:var(--text2)}
 
 /* 分组标题行 */
-tr.grp{scroll-margin-top:calc(var(--header-h) + 108px)}
+tr.grp{scroll-margin-top:var(--anchor-grp, calc(var(--header-h) + 108px))}
 tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;font-weight:600;padding:9px 14px;text-align:left;letter-spacing:.5px;border-left:3px solid var(--accent)}
 .sidebar a.sub{padding:5px 18px 5px 34px;font-size:12.5px;color:#9fb3d9}
 .sidebar a.sub:hover{color:var(--accent)}
@@ -981,8 +981,17 @@ function renderNotes(cfg){
     fh.style.top=TOP+"px"; fh.style.left=r.left+"px"; fh.style.width=found.clientWidth+"px";
     syncX();
   }
-  window.addEventListener("scroll",onScroll,{passive:true});
-  window.addEventListener("resize",()=>{ curWrap=null; onScroll(); });
+  let lastOff=0;
+  function setAnchors(){   /* 跳转预留 = 顶栏+视图条+悬浮表头，动态测算防遮挡 */
+    const t=topOf(), fhh=(fh.style.display==="block"&&fh.offsetHeight)||40;
+    if(t===lastOff) return;
+    lastOff=t;
+    document.documentElement.style.setProperty("--anchor-grp",(t+fhh+8)+"px");
+    document.documentElement.style.setProperty("--anchor-sec",(t+14)+"px");
+  }
+  window.addEventListener("scroll",()=>{ onScroll(); setAnchors(); },{passive:true});
+  window.addEventListener("resize",()=>{ curWrap=null; onScroll(); setAnchors(); });
+  window.addEventListener("load",()=>setTimeout(setAnchors,600));
 })();
 
 /* ===== 实时行情：前端直连腾讯行情接口（30秒刷新现价/当日） =====
