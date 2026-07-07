@@ -1130,7 +1130,23 @@ function renderNotes(cfg){
     window.buildOpps && window.buildOpps();
     if(window.CURVIEW && window.CURVIEW!=="all" && window.buildFlat) window.buildFlat();
   }
-  window.addEventListener("load",()=>{ setTimeout(applyExt,800); setTimeout(refresh,1500); setInterval(refresh,30000); });
+  /* 非盘中时段：每10分钟重拉静态数据，长开页面的盘前/盘后价自动跟上（不用手动刷新） */
+  async function refetchStatic(){
+    if(document.visibilityState!=="visible") return;
+    if(usSession()==="盘中") return;   /* 盘中由30秒实时层接管，无需重拉 */
+    try{
+      const q=await fetch("data/quotes.json?x="+Date.now()).then(r=>r.json());
+      const map={};
+      q.sections.forEach(s=>s.rows.forEach(r=>{ map[r[1]]=r; }));
+      DATA.forEach(s=>s.rows.forEach(r=>{
+        const nr=map[r[1]]; if(!nr) return;
+        for(let i=0;i<nr.length;i++) r[i]=nr[i];   /* 原地更新，保持引用 */
+      }));
+      document.getElementById("update-time").textContent="数据更新："+q.updated;
+      applyExt();
+    }catch(e){}
+  }
+  window.addEventListener("load",()=>{ setTimeout(applyExt,800); setTimeout(refresh,1500); setInterval(refresh,30000); setInterval(refetchStatic,600000); });
   document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") refresh(); });
 })();
 
