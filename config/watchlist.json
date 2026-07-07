@@ -247,6 +247,16 @@
      "ath_floor": 655.95
     },
     {
+     "name": "软件ETF（iShares IGV）",
+     "code": "IGV",
+     "market": "美股 ETF",
+     "yahoo": "IGV",
+     "currency": "$",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "中国金龙ETF（PGJ）",
      "code": "PGJ",
      "market": "美股 ETF",
@@ -304,6 +314,7 @@
       "QQQ",
       "SPY",
       "SOXX",
+      "IGV",
       "PGJ"
      ]
     }
