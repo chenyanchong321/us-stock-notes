@@ -109,6 +109,13 @@ tr.buy .buyline.hit{color:var(--up)!important;font-weight:600}
 #opps{width:100%;background:rgba(47,191,113,.08);border:1px solid rgba(47,191,113,.35);border-radius:8px;padding:8px 14px;font-size:13px;color:var(--text);line-height:1.9}
 #opps a{color:var(--up);text-decoration:none;margin-right:12px;white-space:nowrap}
 #opps a:hover{text-decoration:underline}
+/* 区间表现榜周期胶囊 */
+#perfbar{display:flex;gap:8px;align-items:center;margin:2px 0 12px;flex-wrap:wrap}
+.perf-pill{background:var(--panel2);border:1px solid var(--border);color:var(--text2);border-radius:99px;padding:5px 14px;font-size:12.5px;cursor:pointer;white-space:nowrap}
+.perf-pill.on{color:var(--accent);border-color:var(--accent);background:rgba(74,140,240,.10)}
+.perf-pill.dirp.on{color:var(--gold);border-color:var(--gold);background:rgba(212,170,80,.10)}
+.perf-sep{width:1px;height:18px;background:var(--border);margin:0 2px}
+@media(max-width:860px){#perfbar{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:4px}}
 /* 大事件 */
 .ev-main{max-width:860px;margin:0 auto;padding:22px 18px 60px}
 .ev-week{background:rgba(74,140,240,.07);border:1px solid var(--accent);border-radius:12px;padding:14px 16px;margin:16px 0 22px}
@@ -307,6 +314,7 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="stat vc" data-view="focus"><div class="k">⭐ 重点清单</div><div class="v" id="st-focus">–</div></div>
       <div class="stat vc" data-view="gain"><div class="k">今日涨幅榜</div><div class="v">Top30</div></div>
       <div class="stat vc" data-view="loss"><div class="k">今日跌幅榜</div><div class="v">Top30</div></div>
+      <div class="stat vc" data-view="perf"><div class="k">区间表现榜</div><div class="v" id="st-perf">近3月</div></div>
       <div class="stat vc" data-view="alpha"><div class="k">超额榜</div><div class="v">Top30</div></div>
       <div class="stat vc" data-view="dd"><div class="k">回撤榜（&gt;30%）</div><div class="v" id="st-deep">–</div></div>
       <div class="stat vc" data-view="hi"><div class="k">🚀 新高榜（&lt;10%）</div><div class="v" id="st-hi">–</div></div>
@@ -522,6 +530,9 @@ function renderDash(quotes){
 
   /* ===== 视图切换器：全景/重点清单/涨跌幅榜/回撤榜/板块热力 ===== */
   window.CURVIEW = "all";
+  try{ window.PERF_W = localStorage.getItem("perfW") || "m3"; window.PERF_DIR = localStorage.getItem("perfDir") || "gain"; }catch(e){ window.PERF_W="m3"; window.PERF_DIR="gain"; }
+  (function(){ const lab={m1:"近1月",m3:"近3月",m6:"近半年",ytd:"年初至今",y1:"近1年"}[window.PERF_W]||"近3月";
+    const sp=document.getElementById("st-perf"); if(sp) sp.textContent=lab; })();
   function buyTh(code){
     const b = BUY[code];
     if(!b || b.includes("风险锚") || b.includes("市值")) return null;
@@ -613,6 +624,24 @@ function renderDash(quotes){
       title = v==="gain" ? "📈 今日涨幅榜 Top30" : "📉 今日跌幅榜 Top30";
       note = "跨板块去重 · 随实时行情自动刷新";
       body = top.map(x=>fvRow(x)).join("");
+    }else if(v==="perf"){
+      const W={m1:[7,"近1月"],m3:[8,"近3月"],m6:[9,"近半年"],ytd:[10,"年初至今"],y1:[11,"近1年"]};
+      const wk = W[window.PERF_W] ? window.PERF_W : "m3";
+      const dir = window.PERF_DIR==="loss" ? "loss" : "gain";
+      const [ri,wl] = W[wk];
+      const list = flatRows().filter(x=>typeof x.r[ri]==="number");
+      list.sort((a,b)=> dir==="gain" ? b.r[ri]-a.r[ri] : a.r[ri]-b.r[ri]);
+      const top=list.slice(0,30);
+      title=`${dir==="gain"?"🏅":"🥶"} ${wl}${dir==="gain"?"涨幅":"跌幅"}榜 Top30`;
+      note=`按${wl}区间涨跌排序 · 跨板块去重 · 上市不满该窗口的标的不参与`;
+      const pill=(k,lab)=>`<button class="perf-pill${k===wk?" on":""}" data-w="${k}">${lab}</button>`;
+      note += `</p><div id="perfbar">
+        ${pill("m1","近1月")}${pill("m3","近3月")}${pill("m6","近半年")}${pill("ytd","年初至今")}${pill("y1","近1年")}
+        <span class="perf-sep"></span>
+        <button class="perf-pill dirp${dir==="gain"?" on":""}" data-dir="gain">▲ 涨幅</button>
+        <button class="perf-pill dirp${dir==="loss"?" on":""}" data-dir="loss">▼ 跌幅</button>
+      </div><p class="fv-note" style="display:none">`;
+      body=top.map(x=>fvRow(x)).join("");
     }else if(v==="alpha"){
       const list = flatRows().map(x=>({...x, a:alphaOf(x.r, x.sec)}))
         .filter(x=>x.a && typeof x.a.aytd==="number" && !/ETF|指数|商品|外汇/.test(String(x.r[2])));
@@ -665,6 +694,13 @@ function renderDash(quotes){
       <p class="fv-note">${note}</p>
       <div class="tbl-wrap"><table${tstyle}>${head}<tbody>${body}</tbody></table></div></div>`;
     el.classList.remove("hidden");
+    el.querySelectorAll(".perf-pill").forEach(b=>b.addEventListener("click",()=>{
+      if(b.dataset.w){ window.PERF_W=b.dataset.w; try{localStorage.setItem("perfW",b.dataset.w);}catch(e){} }
+      if(b.dataset.dir){ window.PERF_DIR=b.dataset.dir; try{localStorage.setItem("perfDir",b.dataset.dir);}catch(e){} }
+      const lab={m1:"近1月",m3:"近3月",m6:"近半年",ytd:"年初至今",y1:"近1年"}[window.PERF_W||"m3"];
+      const sp=document.getElementById("st-perf"); if(sp) sp.textContent=lab;
+      window.buildFlat();
+    }));
     el.querySelectorAll(".heat-lead").forEach(a=>a.addEventListener("click",e=>{
       e.preventDefault();
       setView("all");
