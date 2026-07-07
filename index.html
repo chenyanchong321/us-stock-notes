@@ -869,18 +869,47 @@ function renderNotes(cfg){
       (rowsByCode[sym]=rowsByCode[sym]||{code:r[1],rows:[]}).rows.push(r);
     }));
   }
+  function parseNum(s){ const m=String(s).replace(/[,，]/g,"").match(/-?\d+(\.\d+)?/); return m?parseFloat(m[0]):null; }
   function applyQuote(sym, price, pct){
     const ent=rowsByCode[sym]; if(!ent||!price) return;
     ent.rows.forEach(r=>{
       const prefix=(String(r[5]).match(/^[^\d.-]*/)||[""])[0];
+      const prev=parseNum(r[5]);
+      /* 市值 = 旧市值 × 新价/旧价（锚点推导） */
+      if(prev && typeof r[3]==="string" && r[3].includes("亿")){
+        const mPre=(r[3].match(/^[^\d.]*/)||[""])[0];
+        let v=parseNum(r[3]);
+        if(v!==null){ v = v*(r[3].includes("万亿")?10000:1)*price/prev;
+          r[3]= mPre + (v>=10000 ? (v/10000).toFixed(2)+"万亿" : v.toFixed(1)+"亿"); }
+      }
+      /* 回撤 = 现价/历史高点 −1（盘中新高则抬升高点） */
+      let ath=parseNum(r[4]);
+      if(ath!==null && typeof r[6]==="number"){
+        if(price>ath){ ath=price; r[4]=prefix+fmtNum(price); }
+        r[6]=Math.round((price/ath-1)*1000)/10;
+      }
+      /* 52周位随现价实时推导，边界随价扩展 */
+      if(typeof r[15]==="string" && r[15].includes("–")){
+        const parts=r[15].split("–");
+        const lo0=parseNum(parts[0]), hi0=parseNum(parts[1]);
+        if(lo0!==null && hi0!==null){
+          const lo=Math.min(lo0,price), hi=Math.max(hi0,price);
+          r[15]=prefix+fmtNum(lo)+"–"+fmtNum(hi);
+          r[14]= hi>lo ? Math.round((price-lo)/(hi-lo)*100) : 50;
+        }
+      }
       r[5]=prefix+fmtNum(price);
       r[16]=pct;
     });
-    document.querySelectorAll(`tr[data-code="${ent.code}"]`).forEach(tr=>{
+    document.querySelectorAll(`#sections tr[data-code="${ent.code}"]`).forEach(tr=>{
       const r=ent.rows[0], tds=tr.children;
-      if(tds.length<6) return;
+      if(tds.length<7) return;
+      tds[1].textContent=r[3];
+      tds[2].textContent=r[4];
       tds[3].innerHTML=priceCell(r);
-      tds[4].innerHTML=fmtPct(pct);
+      tds[4].innerHTML=fmtPct(r[16]);
+      tds[5].innerHTML=posCell(r[14], r[15]);
+      tds[6].innerHTML=ddCell(r[6]);
     });
   }
   function parseBatch(syms){
