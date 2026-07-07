@@ -998,16 +998,9 @@ function renderNotes(cfg){
     syms.forEach(sym=>{
       const v=window["v_"+sym]; if(typeof v!=="string") return;
       const f=v.split("~");
-      let price=parseFloat(f[3]), pct=parseFloat(f[32]);
-      /* 美股盘前/盘后：常规行情停在昨收，但买一/卖一是延长时段的实时盘口，取中间价 */
-      if(sym.slice(0,2)==="us" && (ses==="盘前"||ses==="盘后")){
-        const bid=parseFloat(f[9]), ask=parseFloat(f[19]);
-        if(bid>0 && ask>0 && Math.abs(ask-bid)/ask<0.06){
-          const mid=(bid+ask)/2;
-          if(isFinite(price)&&price>0) pct=(mid/price-1)*100;
-          price=mid;
-        }
-      }
+      /* 美股非常规时段：腾讯网页源为延时冻结口径，跳过，改由流水线的 Yahoo 盘前/盘后价承接 */
+      if(sym.slice(0,2)==="us" && ses!=="盘中") return;
+      const price=parseFloat(f[3]), pct=parseFloat(f[32]);
       if(isFinite(price)&&price>0){ applyQuote(sym, price, isFinite(pct)?pct:null); got++; }
     });
     return got;
@@ -1030,7 +1023,7 @@ function renderNotes(cfg){
           if(window.CURVIEW && window.CURVIEW!=="all" && window.buildFlat) window.buildFlat();
           const t=new Date();
           const ses = usSession();
-          const usNote = ses==="盘前" ? " · 美股盘前" : ses==="盘后" ? " · 美股盘后" : ses===null ? " · 美股休市(昨收)" : "";
+          const usNote = ses==="盘前" ? " · 美股盘前(半小时档)" : ses==="盘后" ? " · 美股盘后(半小时档)" : ses===null ? " · 美股休市" : "";
           const el=document.getElementById("update-time");
           el.textContent=el.textContent.replace(/ · 实时.*$/,"")+" · 实时 "+
             `${String(t.getHours()).padStart(2,"0")}:${String(t.getMinutes()).padStart(2,"0")}:${String(t.getSeconds()).padStart(2,"0")}`+usNote;
@@ -1039,7 +1032,20 @@ function renderNotes(cfg){
       document.head.appendChild(s);
     }
   }
-  window.addEventListener("load",()=>{ setTimeout(refresh,1500); setInterval(refresh,30000); });
+  function applyExt(){   /* 流水线抓的 Yahoo 盘前/盘后价（30分钟档），非盘中时段接管美股显示 */
+    if(usSession()==="盘中") return;
+    if(!rowsByCode) buildIndex();
+    DATA.forEach(s=>s.rows.forEach(r=>{
+      const e=r[17];
+      if(!e || !e.px) return;
+      const sym=txCode(r[2], r[1]);
+      if(!sym || sym.slice(0,2)!=="us" || !rowsByCode[sym]) return;
+      applyQuote(sym, e.px, (typeof e.pct==="number") ? Math.round(e.pct*100)/100 : null);
+    }));
+    window.buildOpps && window.buildOpps();
+    if(window.CURVIEW && window.CURVIEW!=="all" && window.buildFlat) window.buildFlat();
+  }
+  window.addEventListener("load",()=>{ setTimeout(applyExt,800); setTimeout(refresh,1500); setInterval(refresh,30000); });
   document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") refresh(); });
 })();
 
@@ -1233,7 +1239,7 @@ let PROFILES = {};
     const dLo=(px&&lo)?((px/lo-1)*100).toFixed(1):null;
     const pct=Math.round(r[14]);
     const c = pct>=80?"var(--gold)":pct<=20?"var(--accent)":"var(--text)";
-    return `<b>52周区间</b>　${r[15]}
+    return `<b>52周位置</b>
       <span style="display:block;margin:7px 0 5px;height:5px;border-radius:3px;background:var(--border);position:relative">
         <span style="position:absolute;left:${Math.min(97,Math.max(0,pct))}%;top:-3px;width:11px;height:11px;border-radius:50%;background:${c};transform:translateX(-50%)"></span>
       </span>
