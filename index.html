@@ -86,8 +86,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 .section-head .avg{font-size:12px;color:var(--text2)}
 
 /* 表格 */
-.tbl-wrap{background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow-x:auto;width:fit-content;max-width:100%}
-table{width:auto;min-width:100%;border-collapse:collapse;white-space:nowrap}
+.tbl-wrap{background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;white-space:nowrap}
+th.fill,td.fill{width:100%;padding:0;cursor:default}
 th{font-size:12px;color:var(--text2);text-align:right;padding:9px 13px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;background:var(--panel)}
 th:first-child{text-align:left}
 th:hover{color:var(--text)}
@@ -394,7 +395,7 @@ function fmtPct(v){
   if(v==null) return `<span class="flat">–</span>`;
   if(typeof v==="string"){
     const m=v.match(/^上市后\s*(.+)$/);
-    if(m) return `<span class="flat" style="cursor:help" title="上市时间不满该窗口 · 上市至今 ${m[1]}">／</span>`;
+    if(m) return `<span class="flat ipoflag" data-tip="上市时间不满该窗口 · 上市至今 <b>${m[1]}</b>">／</span>`;
     return `<span class="flat">${v}</span>`;
   }
   const cls = v>0 ? "pos" : v<0 ? "neg" : "flat";
@@ -446,7 +447,7 @@ function rowHTML(r, grp){
     <td>${fmtPct(r[16])}</td>
     <td>${fmtPct(r[18])}</td>
     <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
-    <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td>
+    <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td><td class="fill"></td>
   </tr>`;
 }
 
@@ -464,7 +465,7 @@ function renderDash(quotes){
       const g=r[12]||"";
       if(g && g!==lastG){
         const gid=`${id}-g${gi++}`;
-        body+=`<tr class="grp" id="${gid}"><td colspan="${COLS.length}"><span class="glabel">▸ ${g}</span></td></tr>`;
+        body+=`<tr class="grp" id="${gid}"><td colspan="${COLS.length+1}"><span class="glabel">▸ ${g}</span></td></tr>`;
         subnav+=`<a class="sub" href="#${gid}">↳ ${g}</a>`;
         lastG=g;
       }
@@ -476,7 +477,7 @@ function renderDash(quotes){
       <div class="section" id="${id}" data-idx="${i}">
         <div class="section-head"><h2>${s.sec}</h2><span class="n">${s.rows.length} 个标的</span><span class="avg">板块平均回撤 ${avgDD}%</span></div>
         <div class="tbl-wrap"><table>
-          <thead><tr>${COLS.map((c,ci)=>`<th data-ci="${ci}">${c}</th>`).join("")}</tr></thead>
+          <thead><tr>${COLS.map((c,ci)=>`<th data-ci="${ci}">${c}</th>`).join("")}<th class="fill"></th></tr></thead>
           <tbody>${body}</tbody>
         </table></div>
       </div>`);
@@ -614,10 +615,10 @@ function renderDash(quotes){
       <td>${fmtPct(r[16])}</td>
       <td>${fmtPct(r[18])}</td>
       <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
-      <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td>
+      <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td><td class="fill"></td>
     </tr>`;
   }
-  const FV_HEAD = (extra, pxLabel)=>`<thead><tr><th style="text-align:left">名称</th><th>市值</th><th>${pxLabel||"现价 / 52周区间"}</th>${extra||""}<th>历史高点 / 距高点</th><th>当日</th><th>近1周</th><th>近1月</th><th>近3月</th><th>近半年</th><th>年初至今</th><th>近1年</th></tr></thead>`;
+  const FV_HEAD = (extra, pxLabel)=>`<thead><tr><th style="text-align:left">名称</th><th>市值</th><th>${pxLabel||"现价 / 52周区间"}</th>${extra||""}<th>历史高点 / 距高点</th><th>当日</th><th>近1周</th><th>近1月</th><th>近3月</th><th>近半年</th><th>年初至今</th><th>近1年</th><th class="fill"></th></tr></thead>`;
   window.buildFlat = function(){
     const v = window.CURVIEW;
     const el = document.getElementById("flatview");
@@ -705,7 +706,7 @@ function renderDash(quotes){
       }).filter(Boolean);
       secs.sort((a,b)=>b.med-a.med);
       title="🌡 板块热力（按当日中位涨跌）"; note="中位数抗极端值 · 领涨可点击直达 · 分化=板块内最强减最弱（越大越撕裂）";
-      head=`<thead><tr><th style="text-align:left;min-width:200px">板块</th><th style="min-width:88px">当日中位</th><th style="min-width:80px">上涨/家数</th><th style="min-width:130px">领涨</th><th style="min-width:70px">分化</th><th style="min-width:96px">板块平均回撤</th></tr></thead>`;
+      head=`<thead><tr><th style="text-align:left;min-width:200px">板块</th><th style="min-width:88px">当日中位</th><th style="min-width:80px">上涨/家数</th><th style="min-width:130px">领涨</th><th style="min-width:70px">分化</th><th style="min-width:96px">板块平均回撤</th><th class="fill"></th></tr></thead>`;
       body=secs.map(s=>{
         const mix = s.sec.includes("价值老登") ? ` <span style="font-size:10px;color:var(--text2);border:1px solid var(--border);border-radius:4px;padding:0 4px">混合</span>` : "";
         const rangeCls = s.range>=15 ? "deep" : "flat";
@@ -715,10 +716,10 @@ function renderDash(quotes){
         <td><span class="flat">${s.up}/${s.n}</span></td>
         <td><a href="#" class="heat-lead" data-jump="${s.lead[1]}" style="color:var(--up);text-decoration:none;white-space:nowrap">${s.lead[0].slice(0,7)} ${s.lead[16]>0?"+":""}${s.lead[16].toFixed(1)}%</a></td>
         <td><span class="${rangeCls}">${s.range.toFixed(0)}pp</span></td>
-        <td>${ddCell(Math.round(s.avgdd*10)/10)}</td>
+        <td>${ddCell(Math.round(s.avgdd*10)/10)}</td><td class="fill"></td>
       </tr>`;}).join("");
     }
-    const tstyle = v==="heat" ? ' style="width:auto;min-width:680px"' : '';
+    const tstyle = '';
     el.innerHTML = `<div class="section"><div class="section-head"><h2>${title}</h2></div>
       <p class="fv-note">${note}</p>
       <div class="tbl-wrap"><table${tstyle}>${head}<tbody>${body}</tbody></table></div></div>`;
@@ -1318,6 +1319,8 @@ let PROFILES = {};
   }
   document.addEventListener("mouseover", e=>{
     if(pinned) return;
+    const ip = e.target.closest(".ipoflag");
+    if(ip){ tip.innerHTML=ip.dataset.tip; tip.style.display="block"; tip.style.pointerEvents="none"; place(e.clientX, e.clientY); return; }
     const tdp = e.target.closest("td.pxc");
     if(tdp){
       const h2 = posTip(tdp.parentElement);
@@ -1331,19 +1334,20 @@ let PROFILES = {};
   });
   document.addEventListener("mousemove", e=>{
     if(pinned || tip.style.display !== "block") return;
-    if(!e.target.closest || !(e.target.closest("td.name")||e.target.closest("td.pxc"))){ tip.style.display = "none"; return; }
+    if(!e.target.closest || !(e.target.closest("td.name")||e.target.closest("td.pxc")||e.target.closest(".ipoflag"))){ tip.style.display = "none"; return; }
     place(e.clientX, e.clientY);
   });
   document.addEventListener("mouseout", e=>{
     if(pinned) return;
-    if(e.target.closest && (e.target.closest("td.name")||e.target.closest("td.pxc")) && !(e.relatedTarget && e.relatedTarget.closest && (e.relatedTarget.closest("td.name")||e.relatedTarget.closest("td.pxc"))))
+    if(e.target.closest && (e.target.closest("td.name")||e.target.closest("td.pxc")||e.target.closest(".ipoflag")) && !(e.relatedTarget && e.relatedTarget.closest && (e.relatedTarget.closest("td.name")||e.relatedTarget.closest("td.pxc")||e.relatedTarget.closest(".ipoflag"))))
       tip.style.display = "none";
   });
   document.addEventListener("click", e=>{      /* 点名称固定浮窗（可点相关笔记链接），点其他处收起 */
     if(e.target.closest && e.target.closest("#stip")) return;   /* 点浮窗内链接不收起 */
     const td = e.target.closest("td.name");
     const tdp = e.target.closest("td.pxc");
-    const h = td ? tipHTML(td) : (tdp ? posTip(tdp.parentElement) : null);
+    const ipc = e.target.closest(".ipoflag");
+    const h = td ? tipHTML(td) : (tdp ? posTip(tdp.parentElement) : (ipc ? ipc.dataset.tip : null));
     if(h){
       tip.innerHTML = h; tip.style.display = "block"; tip.style.pointerEvents = "auto";
       pinned = true;
