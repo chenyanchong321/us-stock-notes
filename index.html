@@ -1005,7 +1005,7 @@ function renderNotes(cfg){
     if(mkt.indexOf("指数")>=0) return null;
     if(mkt.indexOf("A股")===0) return /^\d{6}$/.test(c) ? (((c[0]==="6"||c[0]==="5")?"sh":"sz")+c) : null;
     if(mkt.indexOf("港股")===0) return /^\d{5}$/.test(c) ? "hk"+c : null;
-    if(mkt==="美股"||mkt==="美股 ETF") return /^[A-Z]+$/.test(c) ? "us"+c : null;
+    if(mkt.indexOf("美股")===0) return /^[A-Z]+$/.test(c) ? "us"+c : null;   /* 含 ADR/OTC，腾讯没有的代码会自然落空不报错 */
     if(mkt.indexOf("日")===0) return /^[0-9A-Z]{4}$/.test(c) ? "jp"+c : null;
     if(mkt.indexOf("韩国")===0) return "kr"+c.replace(/\.KS$/,"");
     return null;
@@ -1133,7 +1133,6 @@ function renderNotes(cfg){
   /* 非盘中时段：每10分钟重拉静态数据，长开页面的盘前/盘后价自动跟上（不用手动刷新） */
   async function refetchStatic(){
     if(document.visibilityState!=="visible") return;
-    if(usSession()==="盘中") return;   /* 盘中由30秒实时层接管，无需重拉 */
     try{
       const q=await fetch("data/quotes.json?x="+Date.now()).then(r=>r.json());
       const map={};
@@ -1143,7 +1142,8 @@ function renderNotes(cfg){
         for(let i=0;i<nr.length;i++) r[i]=nr[i];   /* 原地更新，保持引用 */
       }));
       document.getElementById("update-time").textContent="数据更新："+q.updated;
-      applyExt();
+      if(usSession()==="盘中") refresh();   /* 盘中：马上让实时层盖回最新价，避免短暂回跳 */
+      else applyExt();
     }catch(e){}
   }
   window.addEventListener("load",()=>{ setTimeout(applyExt,800); setTimeout(refresh,1500); setInterval(refresh,30000); setInterval(refetchStatic,600000); });
