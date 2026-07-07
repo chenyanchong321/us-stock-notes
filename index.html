@@ -624,7 +624,10 @@ function renderDash(quotes){
     window.buildFlat();
     window.scrollTo(0,0);
   }
-  document.querySelectorAll(".stat.vc[data-view]").forEach(c=>c.addEventListener("click",()=>setView(c.dataset.view)));
+  document.querySelectorAll(".stat.vc[data-view]").forEach(c=>c.addEventListener("click",()=>{
+    /* 再点一次当前选中的榜单卡 = 取消选中回全景（开关逻辑） */
+    setView(window.CURVIEW===c.dataset.view ? "all" : c.dataset.view);
+  }));
 
   /* 市场筛选 + 全景入口二合一（全景+榜单+热力+机会条全局过滤） */
   window.setDashView = setView;
@@ -658,7 +661,9 @@ function renderDash(quotes){
       try{ localStorage.setItem("mkt", m); }catch(e){}
       applyFilter();
       window.buildOpps && window.buildOpps();
-      setView("all");     /* 选市场即回全景，兼任全景入口 */
+      /* 市场=滤镜，视图=镜头：切市场保持当前视图，只刷新数据 */
+      if(window.CURVIEW!=="all") window.buildFlat();
+      else setView("all");
     }
     window.setMktCardOn = on=>card.classList.toggle("on", on);
     window.setMkt = setMkt;
