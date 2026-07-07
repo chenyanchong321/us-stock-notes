@@ -493,29 +493,47 @@ function renderDash(quotes){
       head=FV_HEAD(`<th>历史高点</th>`);
       body=list.map(x=>fvRow(x, `<td>${x.r[4]}</td>`)).join("");
     }else if(v==="heat"){
-      const secs = DATA.map(s=>{
-        const nums=s.rows.filter(r=>typeof r[16]==="number");
-        const avg = nums.length? nums.reduce((a,r)=>a+r[16],0)/nums.length : null;
+      const secs = DATA.filter(s=>!s.sec.includes("指数与行业")).map(s=>{
+        /* 只统计个股：剔除 ETF/指数/商品类，消掉数字污染 */
+        const nums=s.rows.filter(r=>typeof r[16]==="number" && !/ETF|指数|商品|外汇/.test(String(r[2])));
+        if(!nums.length) return null;
+        const vals=nums.map(r=>r[16]).sort((a,b)=>a-b);
+        const med = vals.length%2 ? vals[(vals.length-1)/2] : (vals[vals.length/2-1]+vals[vals.length/2])/2;
         const up = nums.filter(r=>r[16]>0).length;
+        const lead = nums.reduce((a,r)=>r[16]>a[16]?r:a);
+        const range = vals[vals.length-1]-vals[0];
         const dds=s.rows.map(r=>r[6]).filter(x=>typeof x==="number");
         const avgdd = dds.length? dds.reduce((a,b)=>a+b,0)/dds.length : null;
-        return {sec:s.sec, avg, up, n:nums.length, avgdd, idx:DATA.indexOf(s)};
-      }).filter(s=>s.avg!==null);
-      secs.sort((a,b)=>b.avg-a.avg);
-      title="🌡 板块热力（按当日平均涨跌）"; note="点板块名跳到对应板块";
-      head=`<thead><tr><th style="text-align:left;min-width:220px">板块</th><th style="min-width:100px">当日平均涨跌</th><th style="min-width:90px">上涨/家数</th><th style="min-width:100px">板块平均回撤</th></tr></thead>`;
-      body=secs.map(s=>`<tr>
-        <td class="name" style="max-width:none"><a href="#sec${s.idx}" style="color:var(--accent);text-decoration:none" onclick="document.querySelector('.stat.vc[data-view=all]').click()">${s.sec}</a></td>
-        <td>${fmtPct(Math.round(s.avg*100)/100)}</td>
+        return {sec:s.sec, med, up, n:nums.length, lead, range, avgdd, idx:DATA.indexOf(s)};
+      }).filter(Boolean);
+      secs.sort((a,b)=>b.med-a.med);
+      title="🌡 板块热力（按当日中位涨跌）"; note="中位数抗极端值 · 领涨可点击直达 · 分化=板块内最强减最弱（越大越撕裂）";
+      head=`<thead><tr><th style="text-align:left;min-width:200px">板块</th><th style="min-width:88px">当日中位</th><th style="min-width:80px">上涨/家数</th><th style="min-width:130px">领涨</th><th style="min-width:70px">分化</th><th style="min-width:96px">板块平均回撤</th></tr></thead>`;
+      body=secs.map(s=>{
+        const mix = s.sec.includes("价值老登") ? ` <span style="font-size:10px;color:var(--text2);border:1px solid var(--border);border-radius:4px;padding:0 4px">混合</span>` : "";
+        const rangeCls = s.range>=15 ? "deep" : "flat";
+        return `<tr>
+        <td class="name" style="max-width:none"><a href="#sec${s.idx}" style="color:var(--accent);text-decoration:none" onclick="document.querySelector('.stat.vc[data-view=all]').click()">${s.sec}</a>${mix}</td>
+        <td>${fmtPct(Math.round(s.med*100)/100)}</td>
         <td><span class="flat">${s.up}/${s.n}</span></td>
+        <td><a href="#" class="heat-lead" data-jump="${s.lead[1]}" style="color:var(--up);text-decoration:none;white-space:nowrap">${s.lead[0].slice(0,7)} ${s.lead[16]>0?"+":""}${s.lead[16].toFixed(1)}%</a></td>
+        <td><span class="${rangeCls}">${s.range.toFixed(0)}pp</span></td>
         <td>${ddCell(Math.round(s.avgdd*10)/10)}</td>
-      </tr>`).join("");
+      </tr>`;}).join("");
     }
-    const tstyle = v==="heat" ? ' style="width:auto;min-width:540px"' : '';
+    const tstyle = v==="heat" ? ' style="width:auto;min-width:680px"' : '';
     el.innerHTML = `<div class="section"><div class="section-head"><h2>${title}</h2></div>
       <p class="fv-note">${note}</p>
       <div class="tbl-wrap"><table${tstyle}>${head}<tbody>${body}</tbody></table></div></div>`;
     el.classList.remove("hidden");
+    el.querySelectorAll(".heat-lead").forEach(a=>a.addEventListener("click",e=>{
+      e.preventDefault();
+      setView("all");
+      setTimeout(()=>{
+        const tr=document.querySelector(`tr[data-code="${a.dataset.jump}"]`);
+        if(tr){ tr.scrollIntoView({block:"center"}); tr.style.outline="1px solid var(--up)"; setTimeout(()=>tr.style.outline="",2000); }
+      },120);
+    }));
   };
   function setView(v){
     window.CURVIEW = v;
