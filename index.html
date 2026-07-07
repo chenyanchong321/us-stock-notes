@@ -140,11 +140,13 @@ tr.ev-flash td{animation:evflash 2.4s ease-out}
 .mobile-only{display:none}
 .tab{white-space:nowrap}
 @media(max-width:860px){
-  #header{padding:0 10px;gap:8px}
-  #header .logo{font-size:14px}
+  :root{--header-h:94px}
+  #header{padding:4px 10px 0;gap:8px;height:auto;min-height:var(--header-h);flex-wrap:wrap;align-content:flex-start}
+  #header .logo{font-size:14px;height:44px;display:flex;align-items:center}
   #header .logo span{display:none}
-  .tab{padding:0 8px;font-size:13px}
-  #searchwrap{flex:1 1 110px;min-width:90px}
+  .tabs{order:3;width:100%;height:42px;overflow-x:auto;-webkit-overflow-scrolling:touch;justify-content:space-around}
+  .tab{padding:0 8px;font-size:13px;flex:0 0 auto}
+  #searchwrap{flex:1 1 110px;min-width:90px;height:44px;display:flex;align-items:center}
   .mobile-only{display:block}
   /* 搜索框 16px 防 iOS 自动放大；占位文字缩小与顶栏协调 */
   #search{font-size:16px;padding:8px 30px 8px 12px}
@@ -181,6 +183,8 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 
 /* 深回撤高亮 */
 .deep{color:var(--gold);font-weight:600}
+.ddsev{color:var(--down);font-weight:700}
+.ddmild{color:var(--gold)}
 
 /* ========== 术语词典 ========== */
 .dict-main{max-width:880px;margin:calc(var(--header-h) + 24px) auto 80px;padding:0 20px}
@@ -305,6 +309,7 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="stat vc" data-view="loss"><div class="k">今日跌幅榜</div><div class="v">Top30</div></div>
       <div class="stat vc" data-view="alpha"><div class="k">超额榜</div><div class="v">Top30</div></div>
       <div class="stat vc" data-view="dd"><div class="k">回撤榜（&gt;30%）</div><div class="v" id="st-deep">–</div></div>
+      <div class="stat vc" data-view="hi"><div class="k">🚀 新高榜（&lt;10%）</div><div class="v" id="st-hi">–</div></div>
       <div class="stat vc" data-view="heat"><div class="k">板块热力</div><div class="v">21</div></div>
       <div class="refresh-note">交易时段每30分钟自动更新 · 市值为估算口径</div>
     </div>
@@ -386,7 +391,7 @@ function fmtPct(v){
 }
 function ddCell(v){
   if(typeof v!=="number") return `<span class="flat">–</span>`;
-  return `<span class="${v<=-30?"deep":"neg"}">${v.toFixed(1)}%</span>`;
+  return `<span class="${v<=-30?"ddsev":"ddmild"}">${v.toFixed(1)}%</span>`;
 }
 function athCell(r){
   return `<span style="display:block;white-space:nowrap">${r[4]}</span><span style="display:block;font-size:11px">${ddCell(r[6])}</span>`;
@@ -466,6 +471,7 @@ function renderDash(quotes){
 
   const all = DATA.flatMap(s=>s.rows);
   document.getElementById("st-deep").textContent = all.filter(r=>typeof r[6]==="number"&&r[6]<=-30).length;
+  document.getElementById("st-hi").textContent = all.filter(r=>typeof r[6]==="number"&&r[6]>=-10).length;
 
   /* 排序 */
   const SORT_MAP = {0:0,1:3,2:5,3:6,4:16,5:7,6:8,7:9,8:10,9:11};   /* 3列按距高点跌幅排序 */
@@ -615,6 +621,11 @@ function renderDash(quotes){
       title="🏆 超额榜 Top30（相对各自大盘）"; note="超额 = 个股涨幅 − 对应基准（A股vs沪深300 · 美股vs标普 · 港股科技vs恒生科技/传统vs恒指 · 日vs日经 · 韩vs KOSPI · 台vs加权）· 注：基准为大盘宽基，中小盘股与指数权重股的超额会有一定偏差，看方向别抠精度";
       head=FV_HEAD(`<th>超额YTD</th><th>超额近1年</th>`);
       body=top.map(x=>fvRow(x, `<td>${ppCell(x.a.aytd)}</td><td>${ppCell(x.a.ay1)}</td>`)).join("");
+    }else if(v==="hi"){
+      const list = flatRows().filter(x=>typeof x.r[6]==="number" && x.r[6]>=-10);
+      list.sort((a,b)=>b.r[6]-a.r[6]);
+      title=`🚀 新高榜（距历史高点不足10%，共${list.length}）`; note="离历史新高一步之遥 · 强者恒强，但追高前先看简介、估值和买点";
+      body=list.map(x=>fvRow(x)).join("");
     }else if(v==="dd"){
       const list = flatRows().filter(x=>typeof x.r[6]==="number" && x.r[6]<=-30);
       list.sort((a,b)=>a.r[6]-b.r[6]);
@@ -969,12 +980,34 @@ function renderNotes(cfg){
       tds[4].innerHTML=fmtPct(r[16]);
     });
   }
+  function usSession(){   /* 纽约时区判定，自动处理夏令时 */
+    try{
+      const p=new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",hour12:false,weekday:"short",hour:"2-digit",minute:"2-digit"}).formatToParts(new Date());
+      const g=n=>p.find(x=>x.type===n).value;
+      if(g("weekday")==="Sat"||g("weekday")==="Sun") return null;
+      const m=(+g("hour"))*60+(+g("minute"));
+      if(m>=240&&m<570) return "盘前";
+      if(m>=570&&m<960) return "盘中";
+      if(m>=960&&m<1200) return "盘后";
+    }catch(e){}
+    return null;
+  }
   function parseBatch(syms){
     let got=0;
+    const ses=usSession();
     syms.forEach(sym=>{
       const v=window["v_"+sym]; if(typeof v!=="string") return;
       const f=v.split("~");
-      const price=parseFloat(f[3]), pct=parseFloat(f[32]);
+      let price=parseFloat(f[3]), pct=parseFloat(f[32]);
+      /* 美股盘前/盘后：常规行情停在昨收，但买一/卖一是延长时段的实时盘口，取中间价 */
+      if(sym.slice(0,2)==="us" && (ses==="盘前"||ses==="盘后")){
+        const bid=parseFloat(f[9]), ask=parseFloat(f[19]);
+        if(bid>0 && ask>0 && Math.abs(ask-bid)/ask<0.06){
+          const mid=(bid+ask)/2;
+          if(isFinite(price)&&price>0) pct=(mid/price-1)*100;
+          price=mid;
+        }
+      }
       if(isFinite(price)&&price>0){ applyQuote(sym, price, isFinite(pct)?pct:null); got++; }
     });
     return got;
@@ -996,8 +1029,8 @@ function renderNotes(cfg){
           window.buildOpps && window.buildOpps();
           if(window.CURVIEW && window.CURVIEW!=="all" && window.buildFlat) window.buildFlat();
           const t=new Date();
-          const us = (typeof mktStatus==="function") ? mktStatus("美股") : null;
-          const usNote = (us && !us.o) ? " · 美股休市(昨收)" : "";
+          const ses = usSession();
+          const usNote = ses==="盘前" ? " · 美股盘前" : ses==="盘后" ? " · 美股盘后" : ses===null ? " · 美股休市(昨收)" : "";
           const el=document.getElementById("update-time");
           el.textContent=el.textContent.replace(/ · 实时.*$/,"")+" · 实时 "+
             `${String(t.getHours()).padStart(2,"0")}:${String(t.getMinutes()).padStart(2,"0")}:${String(t.getSeconds()).padStart(2,"0")}`+usNote;
