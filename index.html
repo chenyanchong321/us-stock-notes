@@ -941,9 +941,11 @@ function renderNotes(cfg){
           window.buildOpps && window.buildOpps();
           if(window.CURVIEW && window.CURVIEW!=="all" && window.buildFlat) window.buildFlat();
           const t=new Date();
+          const us = (typeof mktStatus==="function") ? mktStatus("美股") : null;
+          const usNote = (us && !us.o) ? " · 美股休市(昨收)" : "";
           const el=document.getElementById("update-time");
           el.textContent=el.textContent.replace(/ · 实时.*$/,"")+" · 实时 "+
-            `${String(t.getHours()).padStart(2,"0")}:${String(t.getMinutes()).padStart(2,"0")}:${String(t.getSeconds()).padStart(2,"0")}`;
+            `${String(t.getHours()).padStart(2,"0")}:${String(t.getMinutes()).padStart(2,"0")}:${String(t.getSeconds()).padStart(2,"0")}`+usNote;
         }
       };
       document.head.appendChild(s);
