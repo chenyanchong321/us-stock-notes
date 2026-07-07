@@ -437,8 +437,11 @@ function priceCell(r, mode){
   return `<span style="display:block;white-space:nowrap">${r[5]}</span>${sub}`;
 }
 function mcapCell(r){
-  const pe = (typeof r[13]==="number") ? `<span style="display:block;font-size:11px;color:var(--text2)">PE ${r[13].toFixed(1)}</span>` : "";
-  return `${r[3]}${pe}`;
+  let pe="";
+  if(typeof r[13]==="number") pe=`PE ${r[13].toFixed(1)}`;
+  else if(typeof r[19]==="number") pe=`远期PE ${r[19].toFixed(1)}`;   /* 亏损公司用下一年预期利润估值 */
+  const sub = pe ? `<span style="display:block;font-size:11px;color:var(--text2)">${pe}</span>` : "";
+  return `${r[3]}${sub}`;
 }
 function rowHTML(r, grp){
   return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${grp||""}" data-code="${r[1]}" data-mkt="${r[2]||""}" data-key="${(r[0]+r[1]).toLowerCase()}">
@@ -536,7 +539,7 @@ function renderDash(quotes){
 
   /* ===== 视图切换器：全景/重点清单/涨跌幅榜/回撤榜/板块热力 ===== */
   window.CURVIEW = "all";
-  try{ window.PERF_W = localStorage.getItem("perfW") || "m3"; window.PERF_DIR = localStorage.getItem("perfDir") || "gain"; }catch(e){ window.PERF_W="m3"; window.PERF_DIR="gain"; }
+  try{ window.PERF_W = localStorage.getItem("perfW") || "m3"; window.PERF_DIR = localStorage.getItem("perfDir") || "gain"; window.HEAT_W = localStorage.getItem("heatW") || "d"; }catch(e){ window.PERF_W="m3"; window.PERF_DIR="gain"; window.HEAT_W="d"; }
   (function(){ const lab={w1:"近1周",m1:"近1月",m3:"近3月",m6:"近半年",ytd:"年初至今",y1:"近1年"}[window.PERF_W]||"近3月";
     const sp=document.getElementById("st-perf"); if(sp) sp.textContent=lab; })();
   function buyTh(code){
@@ -691,22 +694,27 @@ function renderDash(quotes){
       title=`🕳 回撤榜（>30%，共${list.length}）`; note="距历史高点回撤最深的在最上面 · 捡深跌前先看简介和买点";
       body=list.map(x=>fvRow(x)).join("");
     }else if(v==="heat"){
+      const HW={d:[16,"当日"],w1:[18,"近1周"],m1:[7,"近1月"]};
+      const hk = HW[window.HEAT_W] ? window.HEAT_W : "d";
+      const [hi,hl] = HW[hk];
       const secs = DATA.filter(s=>!s.sec.includes("指数与行业")).map(s=>{
         /* 只统计个股：剔除 ETF/指数/商品类，消掉数字污染 */
-        const nums=s.rows.filter(r=>typeof r[16]==="number" && !/ETF|指数|商品|外汇/.test(String(r[2])) && mktOk(r[2]));
+        const nums=s.rows.filter(r=>typeof r[hi]==="number" && !/ETF|指数|商品|外汇/.test(String(r[2])) && mktOk(r[2]));
         if(!nums.length) return null;
-        const vals=nums.map(r=>r[16]).sort((a,b)=>a-b);
+        const vals=nums.map(r=>r[hi]).sort((a,b)=>a-b);
         const med = vals.length%2 ? vals[(vals.length-1)/2] : (vals[vals.length/2-1]+vals[vals.length/2])/2;
-        const up = nums.filter(r=>r[16]>0).length;
-        const lead = nums.reduce((a,r)=>r[16]>a[16]?r:a);
+        const up = nums.filter(r=>r[hi]>0).length;
+        const lead = nums.reduce((a,r)=>r[hi]>a[hi]?r:a);
         const range = vals[vals.length-1]-vals[0];
         const dds=s.rows.map(r=>r[6]).filter(x=>typeof x==="number");
         const avgdd = dds.length? dds.reduce((a,b)=>a+b,0)/dds.length : null;
         return {sec:s.sec, med, up, n:nums.length, lead, range, avgdd, idx:DATA.indexOf(s)};
       }).filter(Boolean);
       secs.sort((a,b)=>b.med-a.med);
-      title="🌡 板块热力（按当日中位涨跌）"; note="中位数抗极端值 · 领涨可点击直达 · 分化=板块内最强减最弱（越大越撕裂）";
-      head=`<thead><tr><th style="text-align:left;min-width:200px">板块</th><th style="min-width:88px">当日中位</th><th style="min-width:80px">上涨/家数</th><th style="min-width:130px">领涨</th><th style="min-width:70px">分化</th><th style="min-width:96px">板块平均回撤</th><th class="fill"></th></tr></thead>`;
+      title=`🌡 板块热力（按${hl}中位涨跌）`; note="中位数抗极端值 · 领涨可点击直达 · 分化=板块内最强减最弱（越大越撕裂）";
+      const hpill=(k,lab)=>`<button class="perf-pill${k===hk?" on":""}" data-hw="${k}">${lab}</button>`;
+      note += `</p><div id="perfbar">${hpill("d","当日")}${hpill("w1","近1周")}${hpill("m1","近1月")}</div><p class="fv-note" style="display:none">`;
+      head=`<thead><tr><th style="text-align:left;min-width:200px">板块</th><th style="min-width:88px">${hl}中位</th><th style="min-width:80px">上涨/家数</th><th style="min-width:130px">领涨</th><th style="min-width:70px">分化</th><th style="min-width:96px">板块平均回撤</th><th class="fill"></th></tr></thead>`;
       body=secs.map(s=>{
         const mix = s.sec.includes("价值老登") ? ` <span style="font-size:10px;color:var(--text2);border:1px solid var(--border);border-radius:4px;padding:0 4px">混合</span>` : "";
         const rangeCls = s.range>=15 ? "deep" : "flat";
@@ -714,7 +722,7 @@ function renderDash(quotes){
         <td class="name" style="max-width:none"><a href="#sec${s.idx}" style="color:var(--accent);text-decoration:none" onclick="window.setDashView&&window.setDashView('all')">${s.sec}</a>${mix}</td>
         <td>${fmtPct(Math.round(s.med*100)/100)}</td>
         <td><span class="flat">${s.up}/${s.n}</span></td>
-        <td><a href="#" class="heat-lead" data-jump="${s.lead[1]}" style="color:var(--up);text-decoration:none;white-space:nowrap">${s.lead[0].slice(0,7)} ${s.lead[16]>0?"+":""}${s.lead[16].toFixed(1)}%</a></td>
+        <td><a href="#" class="heat-lead" data-jump="${s.lead[1]}" style="color:var(--up);text-decoration:none;white-space:nowrap">${s.lead[0].slice(0,7)} ${s.lead[hi]>0?"+":""}${s.lead[hi].toFixed(1)}%</a></td>
         <td><span class="${rangeCls}">${s.range.toFixed(0)}pp</span></td>
         <td>${ddCell(Math.round(s.avgdd*10)/10)}</td><td class="fill"></td>
       </tr>`;}).join("");
@@ -725,6 +733,7 @@ function renderDash(quotes){
       <div class="tbl-wrap"><table${tstyle}>${head}<tbody>${body}</tbody></table></div></div>`;
     el.classList.remove("hidden");
     el.querySelectorAll(".perf-pill").forEach(b=>b.addEventListener("click",()=>{
+      if(b.dataset.hw){ window.HEAT_W=b.dataset.hw; try{localStorage.setItem("heatW",b.dataset.hw);}catch(e){} }
       if(b.dataset.w){ window.PERF_W=b.dataset.w; try{localStorage.setItem("perfW",b.dataset.w);}catch(e){} }
       if(b.dataset.dir){ window.PERF_DIR=b.dataset.dir; try{localStorage.setItem("perfDir",b.dataset.dir);}catch(e){} }
       const lab={w1:"近1周",m1:"近1月",m3:"近3月",m6:"近半年",ytd:"年初至今",y1:"近1年"}[window.PERF_W||"m3"];
@@ -928,10 +937,11 @@ function renderNotes(cfg){
 (function(){
   const fh=document.createElement("div"); fh.id="floatHead"; document.body.appendChild(fh);
   let curWrap=null;
-  function topOf(){   /* 顶栏 + 吸顶视图条 的总高度 */
+  function topOf(){   /* 顶栏 + 吸顶视图条 的总高度（头高实测，手机端两行头为94px） */
+    const hh=(document.getElementById("header")||{}).offsetHeight || 56;
     const vb=document.getElementById("viewbar");
     const sticky = vb && getComputedStyle(vb).position==="sticky";
-    return 56 + (sticky ? vb.offsetHeight : 0);
+    return hh + (sticky ? vb.offsetHeight : 0);
   }
   let TOP = 56;
   function syncX(){
@@ -1374,6 +1384,23 @@ let PROFILES = {};
     renderDash(quotes);
     renderNotes(notesCfg);
     try{ renderEvents(evCfg, evAuto); }catch(e){ console.warn("events:", e); }
+    /* 数据健康：静态指标超时提示（工作日>4小时，周末>26小时） */
+    try{
+      const m=quotes.updated.match(/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/);
+      if(m){
+        const upd=new Date(`${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:00+08:00`);
+        const hrs=(Date.now()-upd)/36e5;
+        const bj=new Date(Date.now()+8*36e5); const dow=bj.getUTCDay();
+        const lim=(dow===0||dow===6)?26:4;
+        if(hrs>lim){
+          const w=document.createElement("div");
+          w.id="stale-warn";
+          w.style.cssText="margin:0 0 14px;padding:10px 14px;border:1px solid var(--gold);border-radius:10px;background:rgba(212,170,80,.08);color:var(--gold);font-size:12.5px";
+          w.textContent=`⚠️ 静态数据已 ${Math.round(hrs)} 小时未更新（涨跌区间/PE等可能滞后，现价仍为实时），若持续请检查数据流水线`;
+          const tb=document.getElementById("topbar"); tb.parentElement.insertBefore(w, tb);
+        }
+      }
+    }catch(e){}
   }catch(e){
     document.getElementById("loading").textContent =
       "数据加载失败：" + e.message + "（本地直接双击打开时请用本地服务器，如 python3 -m http.server）";

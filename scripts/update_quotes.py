@@ -77,6 +77,7 @@ def fetch_pe_map(symbols):
     pe = {}
     earn = {}   # sym -> (unix_ts, is_estimate)
     ext = {}    # sym -> {"px","pct","st"} 美股盘前/盘后（30分钟档）
+    fpe = {}    # sym -> 远期PE（亏损公司估值补位）
     import urllib.request as ur
     opener = ur.build_opener(ur.HTTPCookieProcessor())
     opener.addheaders = list(UA.items())
@@ -104,6 +105,9 @@ def fetch_pe_map(symbols):
                         v = q["regularMarketPrice"] / eps
                 if v is not None and 0 < v < 100000:
                     pe[q["symbol"]] = round(v, 1)
+                fv = q.get("forwardPE")
+                if fv is not None and 0 < fv < 100000:
+                    fpe[q["symbol"]] = round(fv, 1)
                 st = q.get("marketState", "")
                 if st.startswith("PRE") and q.get("preMarketPrice"):
                     ext[q["symbol"]] = {"px": q["preMarketPrice"], "pct": q.get("preMarketChangePercent"), "st": "盘前"}
@@ -119,7 +123,7 @@ def fetch_pe_map(symbols):
             print(f"  !! PE 批次 {i//40} 失败: {e}", file=sys.stderr)
         time.sleep(0.5)
     print(f"PE 覆盖 {len(pe)}/{len(syms)} 个代码，财报日 {len(earn)} 个，盘前后价 {len(ext)} 个")
-    return pe, earn, ext
+    return pe, earn, ext, fpe
 
 def _num(v):
     if v >= 10000:
@@ -159,7 +163,7 @@ def main():
     ts_ytd = int(datetime.datetime(now.year, 1, 1, tzinfo=datetime.timezone.utc).timestamp())  # 基准=上年最后一个收盘
 
     all_syms = [it["yahoo"] for sec in watch["sections"] for it in sec["items"]]
-    pe_map, earn_map, ext_map = fetch_pe_map(all_syms)
+    pe_map, earn_map, ext_map, fpe_map = fetch_pe_map(all_syms)
 
     cache = {}
     sections_out = []
@@ -177,7 +181,7 @@ def main():
             fetched = cache[sym]
             if fetched is None:
                 rows.append([it["name"], it["code"], it["market"], "获取失败",
-                             "-", "-", 0.0, "-", "-", "-", "-", "-", gmap.get(it["code"], ""), None, None, None, None, None, None])
+                             "-", "-", 0.0, "-", "-", "-", "-", "-", gmap.get(it["code"], ""), None, None, None, None, None, None, None])
                 continue
             pairs, hist_max = fetched
             price = pairs[-1][1]
@@ -207,7 +211,7 @@ def main():
                          pe_map.get(sym), *pos_52w(pairs, ts_1y, cur),
                          round(pct(pairs[-1][1], pairs[-2][1]), 2) if len(pairs) >= 2 else None,
                          ext_map.get(sym) if it["market"].startswith("美股") else None,
-                         w1])
+                         w1, fpe_map.get(sym)])
             print(f"  {it['code']:>10} {it['name'][:12]:<14} 现价 {price:,.2f}  回撤 {dd:.1f}%")
         sections_out.append({"sec": sec["name"], "rows": rows})
 
