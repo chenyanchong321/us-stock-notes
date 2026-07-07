@@ -334,7 +334,7 @@ body.resizing{user-select:none;cursor:col-resize}
 ===================================================================== */
 let DATA = [];
 
-const COLS = ["名称","市值","历史高点","现价","当日","52周位","高点跌幅","近1月","近3月","近半年","年初至今","近1年"];
+const COLS = ["名称","市值","历史高点","现价","当日","高点跌幅","近1月","近3月","近半年","年初至今","近1年"];
 let BUY = {};
 
 function fmtPct(v){
@@ -375,9 +375,8 @@ function priceCell(r){
 function rowHTML(r, grp){
   return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${grp||""}" data-code="${r[1]}" data-mkt="${r[2]||""}" data-key="${(r[0]+r[1]).toLowerCase()}">
     <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
-    <td>${r[3]}</td><td>${r[4]}</td><td>${priceCell(r)}</td>
+    <td>${r[3]}</td><td>${r[4]}</td><td class="pxc">${priceCell(r)}</td>
     <td>${fmtPct(r[16])}</td>
-    <td>${posCell(r[14], r[15])}</td>
     <td>${ddCell(r[6])}</td>
     <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
     <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td>
@@ -420,7 +419,7 @@ function renderDash(quotes){
   document.getElementById("st-deep").textContent = all.filter(r=>typeof r[6]==="number"&&r[6]<=-30).length;
 
   /* 排序 */
-  const SORT_MAP = {0:0,1:3,2:4,3:5,4:16,5:14,6:6,7:7,8:8,9:9,10:10,11:11};
+  const SORT_MAP = {0:0,1:3,2:4,3:5,4:16,5:6,6:7,7:8,8:9,9:10,10:11};
   document.querySelectorAll("#view-dash th").forEach(th=>{
     th.addEventListener("click",()=>{
       const ci = +th.dataset.ci;
@@ -515,14 +514,13 @@ function renderDash(quotes){
     const r = x.r;
     return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${r[12]||""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
       <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
-      <td>${priceCell(r)}</td>${extraTd||""}
+      <td class="pxc">${priceCell(r)}</td>${extraTd||""}
       <td>${fmtPct(r[16])}</td>
-      <td>${posCell(r[14], r[15])}</td>
       <td>${ddCell(r[6])}</td>
       <td>${fmtPct(r[7])}</td><td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td>
     </tr>`;
   }
-  const FV_HEAD = (extra)=>`<thead><tr><th style="text-align:left">名称</th><th>现价</th>${extra||""}<th>当日</th><th>52周位</th><th>高点跌幅</th><th>近1月</th><th>年初至今</th><th>近1年</th></tr></thead>`;
+  const FV_HEAD = (extra)=>`<thead><tr><th style="text-align:left">名称</th><th>现价</th>${extra||""}<th>当日</th><th>高点跌幅</th><th>近1月</th><th>年初至今</th><th>近1年</th></tr></thead>`;
   window.buildFlat = function(){
     const v = window.CURVIEW;
     const el = document.getElementById("flatview");
@@ -910,13 +908,12 @@ function renderNotes(cfg){
     });
     document.querySelectorAll(`#sections tr[data-code="${ent.code}"]`).forEach(tr=>{
       const r=ent.rows[0], tds=tr.children;
-      if(tds.length<7) return;
+      if(tds.length<6) return;
       tds[1].textContent=r[3];
       tds[2].textContent=r[4];
       tds[3].innerHTML=priceCell(r);
       tds[4].innerHTML=fmtPct(r[16]);
-      tds[5].innerHTML=posCell(r[14], r[15]);
-      tds[6].innerHTML=ddCell(r[6]);
+      tds[5].innerHTML=ddCell(r[6]);
     });
   }
   function parseBatch(syms){
@@ -1138,8 +1135,33 @@ let PROFILES = {};
     if(T + h > innerHeight - 8) T = Math.max(8, y - h - 12);
     tip.style.left = L + "px"; tip.style.top = T + "px";
   }
+  function posTip(tr){
+    const code=tr.dataset.code; if(!code) return null;
+    let r=null;
+    for(const s of DATA){ for(const x of s.rows){ if(x[1]===code){ r=x; break; } } if(r) break; }
+    if(!r || typeof r[14]!=="number" || typeof r[15]!=="string") return null;
+    const parts=r[15].split("–");
+    const num=s=>{const m=String(s).replace(/[,，]/g,"").match(/[\d.]+/);return m?parseFloat(m[0]):null;};
+    const lo=num(parts[0]), hi=num(parts[1]), px=num(r[5]);
+    const dHi=(px&&hi)?((px/hi-1)*100).toFixed(1):null;
+    const dLo=(px&&lo)?((px/lo-1)*100).toFixed(1):null;
+    const pct=Math.round(r[14]);
+    const c = pct>=80?"var(--gold)":pct<=20?"var(--accent)":"var(--text)";
+    return `<b>52周区间</b>　${r[15]}
+      <span style="display:block;margin:7px 0 5px;height:5px;border-radius:3px;background:var(--border);position:relative">
+        <span style="position:absolute;left:${Math.min(97,Math.max(0,pct))}%;top:-3px;width:11px;height:11px;border-radius:50%;background:${c};transform:translateX(-50%)"></span>
+      </span>
+      <span style="color:${c};font-weight:600">当前位 ${pct}%</span>
+      <span style="display:block;margin-top:5px;font-size:12px;color:var(--text2)">距52周高点 ${dHi}% · 距52周低点 +${dLo}%</span>`;
+  }
   document.addEventListener("mouseover", e=>{
     if(pinned) return;
+    const tdp = e.target.closest("td.pxc");
+    if(tdp){
+      const h2 = posTip(tdp.parentElement);
+      if(h2){ tip.innerHTML=h2; tip.style.display="block"; tip.style.pointerEvents="none"; place(e.clientX, e.clientY); }
+      return;
+    }
     const td = e.target.closest("td.name"); if(!td) return;
     const h = tipHTML(td); if(!h) return;
     tip.innerHTML = h; tip.style.display = "block"; tip.style.pointerEvents = "none";
@@ -1147,12 +1169,12 @@ let PROFILES = {};
   });
   document.addEventListener("mousemove", e=>{
     if(pinned || tip.style.display !== "block") return;
-    if(!e.target.closest || !e.target.closest("td.name")){ tip.style.display = "none"; return; }
+    if(!e.target.closest || !(e.target.closest("td.name")||e.target.closest("td.pxc"))){ tip.style.display = "none"; return; }
     place(e.clientX, e.clientY);
   });
   document.addEventListener("mouseout", e=>{
     if(pinned) return;
-    if(e.target.closest && e.target.closest("td.name") && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest("td.name")))
+    if(e.target.closest && (e.target.closest("td.name")||e.target.closest("td.pxc")) && !(e.relatedTarget && e.relatedTarget.closest && (e.relatedTarget.closest("td.name")||e.relatedTarget.closest("td.pxc"))))
       tip.style.display = "none";
   });
   document.addEventListener("click", e=>{      /* 点名称固定浮窗（可点相关笔记链接），点其他处收起 */
