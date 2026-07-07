@@ -155,6 +155,23 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 /* 深回撤高亮 */
 .deep{color:var(--gold);font-weight:600}
 
+/* ========== 术语词典 ========== */
+.dict-main{max-width:880px;margin:calc(var(--header-h) + 24px) auto 80px;padding:0 20px}
+.dict-head{margin-bottom:16px}
+#dict-search{width:100%;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:15px;outline:none;margin-bottom:12px;box-sizing:border-box}
+#dict-search:focus{border-color:var(--accent)}
+#dict-cats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+#dict-cats button,#dict-az button{background:var(--panel);border:1px solid var(--border);color:var(--text2);border-radius:99px;padding:5px 13px;font-size:12.5px;cursor:pointer}
+#dict-cats button.on,#dict-az button.on{color:var(--accent);border-color:var(--accent);background:rgba(74,140,240,.08)}
+#dict-az{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:18px}
+#dict-az button{padding:3px 9px;font-size:12px;border-radius:6px}
+.gcat{font-size:15px;font-weight:600;color:var(--accent);margin:24px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.gterm{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:13px 16px;margin-bottom:10px}
+.gterm .gt{font-size:15px;font-weight:600}
+.gterm .gf{font-size:12px;color:var(--text2);margin:2px 0 6px}
+.gterm .gd{font-size:13.5px;color:var(--text);line-height:1.7;opacity:.92}
+@media(max-width:860px){.dict-main{padding:0 14px}}
+
 /* ========== 学习笔记卡片 ========== */
 .notes-intro{background:linear-gradient(135deg,rgba(74,140,240,.12),rgba(232,182,76,.08));border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:26px}
 .notes-intro h2{font-size:18px;margin-bottom:6px}
@@ -228,6 +245,7 @@ body.resizing{user-select:none;cursor:col-resize}
   <div class="tabs">
     <div class="tab active" data-view="dash">📊 数据面板</div>
     <div class="tab" data-view="notes">📚 学习笔记</div>
+    <div class="tab" data-view="dict">📖 术语词典</div>
   </div>
   <div id="searchwrap">
     <input id="search" type="search" enterkeyhint="search" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="🔍 搜索名称 / 代码，如 NVDA、紫金…">
@@ -288,6 +306,19 @@ body.resizing{user-select:none;cursor:col-resize}
     </div>
     <div id="note-cats"></div>
     <div id="note-timeline" class="hidden"></div>
+  </div>
+</div>
+
+<div id="view-dict" class="hidden">
+  <div class="dict-main">
+    <div class="dict-head">
+      <h2 style="font-size:18px">📖 术语词典 <span id="dict-n" style="font-size:12px;color:var(--text2);font-weight:400"></span></h2>
+      <p style="font-size:12.5px;color:var(--text2);margin-top:4px">AI 投资黑话速查 · 每条都用大白话和类比讲透 · 与学习笔记同一套解释体系</p>
+    </div>
+    <input id="dict-search" type="search" placeholder="🔍 搜索术语，如 HBM、收敛比、赔率…">
+    <div id="dict-cats"></div>
+    <div id="dict-az"></div>
+    <div id="dict-list"></div>
   </div>
 </div>
 
@@ -572,7 +603,16 @@ function renderDash(quotes){
       return seen.size;
     }
     const CNT={}; MKTS.forEach(m=>CNT[m]=countOf(m==="全部"?"":m));
-    menu.innerHTML = MKTS.map(m=>`<button data-m="${m==="全部"?"":m}">${m}（${CNT[m]}）</button>`).join("");
+    function renderMenu(){
+      menu.innerHTML = MKTS.map(m=>{
+        const st = window.mktStatus ? mktStatus(m) : null;
+        const dot = st ? (st.o?`<span style="color:var(--up)">●盘中</span>`:`<span style="color:var(--text2)">○休市</span>`) : "";
+        const hrs = st ? `<span style="display:block;font-size:10.5px;color:var(--text2)">${st.h}</span>` : "";
+        return `<button data-m="${m==="全部"?"":m}" style="min-width:190px"><span style="display:flex;justify-content:space-between;gap:10px"><span>${m}（${CNT[m]}）</span>${dot}</span>${hrs}</button>`;
+      }).join("");
+      menu.querySelectorAll("button").forEach(b=>b.classList.toggle("on", b.dataset.m===window.CURMKT));
+    }
+    renderMenu();
     function setMkt(m){
       window.CURMKT = m;
       cur.textContent = `${m||"全部"} ${CNT[m||"全部"]}`;
@@ -590,6 +630,7 @@ function renderDash(quotes){
     });
     card.addEventListener("click",e=>{
       if(e.target.closest("#mktmenu")) return;
+      if(menu.classList.contains("hidden")) renderMenu();   /* 打开时刷新开盘状态 */
       menu.classList.toggle("hidden");
     });
     document.addEventListener("click",e=>{ if(!e.target.closest("#mktcard")) menu.classList.add("hidden"); });
@@ -843,6 +884,67 @@ function renderNotes(cfg){
   document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") refresh(); });
 })();
 
+/* ===== 术语词典 ===== */
+function renderDict(g){
+  const catsEl=document.getElementById("dict-cats"), azEl=document.getElementById("dict-az"),
+        listEl=document.getElementById("dict-list"), inp=document.getElementById("dict-search");
+  document.getElementById("dict-n").textContent = `${g.terms.length} 条 · 持续更新`;
+  let curCat="", curAz="";
+  catsEl.innerHTML = `<button data-c="" class="on">全部</button>` + g.cats.map(c=>`<button data-c="${c}">${c}</button>`).join("");
+  const letters=[...new Set(g.terms.map(t=>{const ch=t.t[0].toUpperCase();return /[A-Z]/.test(ch)?ch:"中";}))].sort();
+  azEl.innerHTML = `<button data-a="" class="on">全部</button>` + letters.map(l=>`<button data-a="${l}">${l}</button>`).join("");
+  function letterOf(t){ const ch=t.t[0].toUpperCase(); return /[A-Z]/.test(ch)?ch:"中"; }
+  function render(){
+    const q=inp.value.trim().toLowerCase();
+    let list=g.terms.filter(t=>
+      (!curCat || t.c===curCat) &&
+      (!curAz || letterOf(t)===curAz) &&
+      (!q || (t.t+" "+(t.f||"")+" "+t.d).toLowerCase().includes(q)));
+    let html="", lastC="";
+    list.forEach(t=>{
+      if(t.c!==lastC){ html+=`<div class="gcat">${t.c}</div>`; lastC=t.c; }
+      html+=`<div class="gterm"><div class="gt">${t.t}</div>${t.f?`<div class="gf">${t.f}</div>`:""}<div class="gd">${t.d}</div></div>`;
+    });
+    listEl.innerHTML = html || `<p style="color:var(--text2);text-align:center;padding:40px">没有匹配的词条</p>`;
+  }
+  catsEl.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+    curCat=b.dataset.c; catsEl.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b)); render();});
+  azEl.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+    curAz=b.dataset.a; azEl.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b)); render();});
+  inp.addEventListener("input",render);
+  render();
+}
+
+/* ===== 市场开盘状态（北京时间；美股自动判夏令时） ===== */
+function mktStatus(m){
+  const now=new Date();
+  const bj=new Date(now.getTime()+(480+now.getTimezoneOffset())*60000);
+  const dow=bj.getDay(), mins=bj.getHours()*60+bj.getMinutes();
+  const wd = dow>=1&&dow<=5;
+  const inR=(a,b)=>mins>=a&&mins<b;
+  function usDst(){
+    const y=bj.getFullYear();
+    const nthSun=(mo,n)=>{ const d=new Date(y,mo,1); return 1+((7-d.getDay())%7)+7*(n-1); };
+    const today=new Date(y,bj.getMonth(),bj.getDate());
+    return today>=new Date(y,2,nthSun(2,2)) && today<new Date(y,10,nthSun(10,1));
+  }
+  switch(m){
+    case "A股": return {h:"9:30-11:30 · 13:00-15:00", o: wd&&(inR(570,690)||inR(780,900))};
+    case "港股": return {h:"9:30-12:00 · 13:00-16:00", o: wd&&(inR(570,720)||inR(780,960))};
+    case "美股": {
+      const dst=usDst();
+      const h= dst?"21:30-次日4:00（夏令）":"22:30-次日5:00（冬令）";
+      const s=dst?1290:1350, e=dst?240:300;
+      const nyWd = (mins<e ? (dow>=2&&dow<=6) : wd);
+      return {h, o: nyWd&&(mins>=s||mins<e)};
+    }
+    case "日股": return {h:"8:00-10:30 · 11:30-14:00", o: wd&&(inR(480,630)||inR(690,840))};
+    case "韩股": return {h:"8:00-14:30", o: wd&&inR(480,870)};
+    case "台股": return {h:"9:00-13:30", o: wd&&inR(540,810)};
+  }
+  return null;
+}
+
 /* ===== 一键回到顶部 ===== */
 (function(){
   const b=document.createElement("button");
@@ -980,12 +1082,14 @@ let PROFILES = {};
 (async ()=>{
   try{
     const bust = "?t=" + Math.floor(Date.now()/60000);
-    const [quotes, notesCfg, buyCfg] = await Promise.all([
+    const [quotes, notesCfg, buyCfg, glossary] = await Promise.all([
       fetch("data/quotes.json"+bust).then(r=>r.json()),
       fetch("config/notes.json"+bust).then(r=>r.json()),
-      fetch("config/buypoints.json"+bust).then(r=>r.ok?r.json():{}).catch(()=>({}))
+      fetch("config/buypoints.json"+bust).then(r=>r.ok?r.json():{}).catch(()=>({})),
+      fetch("config/glossary.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null)
     ]);
     BUY = buyCfg || {};
+    if(glossary) renderDict(glossary);
     fetch("config/profiles.json"+bust).then(r=>r.ok?r.json():{}).then(p=>{ PROFILES = p || {}; }).catch(()=>{});
     renderDash(quotes);
     renderNotes(notesCfg);
@@ -1000,13 +1104,15 @@ let PROFILES = {};
   /* 视图切换（记住上次页签，并同步 URL 防止刷新跳走） */
   document.querySelectorAll(".tab").forEach(tab=>{
     tab.addEventListener("click",()=>{
+      const v = tab.dataset.view;
       document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===tab));
-      document.getElementById("view-dash").classList.toggle("hidden",tab.dataset.view!=="dash");
-      document.getElementById("view-notes").classList.toggle("hidden",tab.dataset.view!=="notes");
-      document.getElementById("searchwrap").style.display = tab.dataset.view==="dash" ? "" : "none";
-      try{ localStorage.setItem("lastView", tab.dataset.view); }catch(e){}
+      document.getElementById("view-dash").classList.toggle("hidden",v!=="dash");
+      document.getElementById("view-notes").classList.toggle("hidden",v!=="notes");
+      document.getElementById("view-dict").classList.toggle("hidden",v!=="dict");
+      document.getElementById("searchwrap").style.display = v==="dash" ? "" : "none";
+      try{ localStorage.setItem("lastView", v); }catch(e){}
       const u = new URL(location.href);
-      if(tab.dataset.view==="notes") u.searchParams.set("view","notes");
+      if(v!=="dash") u.searchParams.set("view",v);
       else u.searchParams.delete("view");
       u.hash="";
       history.replaceState(null,"",u);
@@ -1042,8 +1148,8 @@ let PROFILES = {};
   /* 初始页签：URL 明确指定 > 上次停留 > 默认数据面板 */
   const wantView = new URLSearchParams(location.search).get("view")
                 || (function(){ try{ return localStorage.getItem("lastView"); }catch(e){ return null; } })();
-  if(wantView==="notes"){
-    document.querySelector('.tab[data-view="notes"]').click();
+  if(wantView==="notes"||wantView==="dict"){
+    document.querySelector(`.tab[data-view="${wantView}"]`).click();
   }
 
   /* 滚动高亮导航 */
