@@ -205,6 +205,16 @@
      "ath_floor": 0
     },
     {
+     "name": "台湾加权指数",
+     "code": "TWII",
+     "market": "台股 指数",
+     "yahoo": "^TWII",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "纳指100ETF（Invesco QQQ）",
      "code": "QQQ",
      "market": "美股 ETF",
@@ -305,7 +315,8 @@
       "3033",
       "HSCE",
       "N225",
-      "KOSPI"
+      "KOSPI",
+      "TWII"
      ]
     },
     {

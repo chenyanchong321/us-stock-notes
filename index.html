@@ -275,6 +275,7 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="stat vc" data-view="focus"><div class="k">⭐ 重点清单</div><div class="v" id="st-focus">–</div></div>
       <div class="stat vc" data-view="gain"><div class="k">今日涨幅榜</div><div class="v">Top30</div></div>
       <div class="stat vc" data-view="loss"><div class="k">今日跌幅榜</div><div class="v">Top30</div></div>
+      <div class="stat vc" data-view="alpha"><div class="k">超额榜</div><div class="v">Top30</div></div>
       <div class="stat vc" data-view="dd"><div class="k">回撤榜（&gt;30%）</div><div class="v" id="st-deep">–</div></div>
       <div class="stat vc" data-view="heat"><div class="k">板块热力</div><div class="v">21</div></div>
       <div class="refresh-note">交易时段每30分钟自动更新 · 市值为估算口径</div>
@@ -482,6 +483,34 @@ function renderDash(quotes){
     }));
     return out;
   }
+  /* 各市场基准指数（超额收益锚，丹萍：锚必须匹配到位） */
+  const BENCH_MAP={"A股":"000300","港股":"HSI","美股":"SPX","日":"N225","韩":"KOSPI","台股":"TWII"};
+  window.benchOf = function(mkt){
+    mkt=String(mkt||"");
+    let code=null, label=null;
+    if(mkt.startsWith("A股")) code="000300",label="沪深300";
+    else if(mkt.startsWith("港股")) code="HSI",label="恒生指数";
+    else if(mkt.startsWith("美股")) code="SPX",label="标普500";
+    else if(mkt[0]==="日") code="N225",label="日经225";
+    else if(mkt.startsWith("韩")) code="KOSPI",label="KOSPI";
+    else if(mkt.startsWith("台股")) code="TWII",label="台湾加权";
+    if(!code) return null;
+    for(const s of DATA) for(const r of s.rows) if(r[1]===code)
+      return {label, ytd:(typeof r[10]==="number"?r[10]:null), y1:(typeof r[11]==="number"?r[11]:null)};
+    return null;
+  };
+  function alphaOf(r){
+    const b=window.benchOf(r[2]);
+    if(!b) return null;
+    const aytd=(typeof r[10]==="number"&&b.ytd!==null)?r[10]-b.ytd:null;
+    const ay1=(typeof r[11]==="number"&&b.y1!==null)?r[11]-b.y1:null;
+    return {b, aytd, ay1};
+  }
+  function ppCell(v){
+    if(typeof v!=="number") return `<span class="flat">–</span>`;
+    const cls=v>0?"pos":v<0?"neg":"flat";
+    return `<span class="${cls}">${v>0?"+":""}${v.toFixed(0)}pp</span>`;
+  }
   function fvRow(x, extraTd){
     const r = x.r;
     return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${r[12]||""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
@@ -525,6 +554,14 @@ function renderDash(quotes){
       title = v==="gain" ? "📈 今日涨幅榜 Top30" : "📉 今日跌幅榜 Top30";
       note = "跨板块去重 · 随实时行情自动刷新";
       body = top.map(x=>fvRow(x)).join("");
+    }else if(v==="alpha"){
+      const list = flatRows().map(x=>({...x, a:alphaOf(x.r)}))
+        .filter(x=>x.a && typeof x.a.aytd==="number" && !/ETF|指数|商品|外汇/.test(String(x.r[2])));
+      list.sort((a,b)=>b.a.aytd-a.a.aytd);
+      const top=list.slice(0,30);
+      title="🏆 超额榜 Top30（相对各自大盘）"; note="超额 = 个股涨幅 − 对应市场基准（A股vs沪深300 · 美股vs标普 · 港股vs恒指 · 日vs日经 · 韩vs KOSPI · 台vs加权）· 跑赢的是 α，随大盘的是 β";
+      head=FV_HEAD(`<th>超额YTD</th><th>超额近1年</th>`);
+      body=top.map(x=>fvRow(x, `<td>${ppCell(x.a.aytd)}</td><td>${ppCell(x.a.ay1)}</td>`)).join("");
     }else if(v==="dd"){
       const list = flatRows().filter(x=>typeof x.r[6]==="number" && x.r[6]<=-30);
       list.sort((a,b)=>a.r[6]-b.r[6]);
@@ -1038,8 +1075,21 @@ let PROFILES = {};
   function tipHTML(td){
     const code = codeOf(td), txt = PROFILES[code];
     if(!txt) return null;
-    const nf = noteFor(code, (td.parentElement.dataset.grp)||"");
-    return txt + (nf ? `<span style="display:block;margin-top:7px;font-size:12px;border-top:1px solid var(--border);padding-top:6px"><a href="articles/${nf[0]}.html" style="color:var(--accent);text-decoration:none">📖 相关笔记：${nf[1]} →</a></span>` : "");
+    const tr = td.parentElement;
+    let alphaLine = "";
+    try{
+      if(window.benchOf && typeof DATA!=="undefined"){
+        let row=null;
+        for(const s of DATA){ for(const r of s.rows){ if(r[1]===code){ row=r; break; } } if(row) break; }
+        const b = row ? window.benchOf(row[2]) : null;
+        if(row && b && typeof row[10]==="number" && b.ytd!==null && !/指数|ETF/.test(String(row[2]))){
+          const a = row[10]-b.ytd;
+          alphaLine = `<span style="display:block;margin-top:6px;font-size:12px;color:${a>0?"var(--up)":"var(--down)"}">📊 相对大盘（${b.label}）：YTD ${a>0?"+":""}${a.toFixed(0)}pp ${a>0?"跑赢":"跑输"}</span>`;
+        }
+      }
+    }catch(e){}
+    const nf = noteFor(code, tr.dataset.grp||"");
+    return txt + alphaLine + (nf ? `<span style="display:block;margin-top:7px;font-size:12px;border-top:1px solid var(--border);padding-top:6px"><a href="articles/${nf[0]}.html" style="color:var(--accent);text-decoration:none">📖 相关笔记：${nf[1]} →</a></span>` : "");
   }
   let pinned = false;
   function place(x, y){
