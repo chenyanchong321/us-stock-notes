@@ -661,6 +661,7 @@ function renderDash(quotes){
       setView("all");     /* 选市场即回全景，兼任全景入口 */
     }
     window.setMktCardOn = on=>card.classList.toggle("on", on);
+    window.setMkt = setMkt;
     menu.addEventListener("click",e=>{
       const b=e.target.closest("button"); if(!b) return;
       e.stopPropagation(); setMkt(b.dataset.m);
@@ -1170,11 +1171,13 @@ let PROFILES = {};
     });
   });
 
-  /* Logo 点击回主页（数据面板顶部） */
+  /* Logo 点击回主页：数据面板 + 市场全景（重置市场筛选）+ 清空搜索 */
   document.querySelector("#header .logo").addEventListener("click", ()=>{
     const inp = document.getElementById("search");
     if(inp.value){ inp.value=""; inp.dispatchEvent(new Event("input")); document.getElementById("search-clear").style.display="none"; }
     document.querySelector('.tab[data-view="dash"]').click();
+    if(window.CURMKT && window.setMkt) window.setMkt("");
+    else if(window.setDashView) window.setDashView("all");
   });
 
   /* 搜索框一键清空 */
