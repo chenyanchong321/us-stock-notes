@@ -693,6 +693,8 @@ function renderNotes(cfg){
     if(mkt.indexOf("A股")===0) return /^\d{6}$/.test(c) ? (((c[0]==="6"||c[0]==="5")?"sh":"sz")+c) : null;
     if(mkt.indexOf("港股")===0) return /^\d{5}$/.test(c) ? "hk"+c : null;
     if(mkt==="美股"||mkt==="美股 ETF") return /^[A-Z]+$/.test(c) ? "us"+c : null;
+    if(mkt.indexOf("日")===0) return /^[0-9A-Z]{4}$/.test(c) ? "jp"+c : null;
+    if(mkt.indexOf("韩国")===0) return "kr"+c.replace(/\.KS$/,"");
     return null;
   }
   function fmtNum(v){
