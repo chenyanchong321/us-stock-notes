@@ -72,8 +72,10 @@ def fmt_price(cur, v):
     return f"{cur}{v:.2f}" if v >= 1 else f"{cur}{v:.3f}"
 
 def fetch_pe_map(symbols):
-    """批量获取 TTM 市盈率。v7 quote 接口需 cookie+crumb；失败则整体降级为空（前端显示—）。"""
+    """批量获取 TTM 市盈率 + 下次财报日（同一响应顺带取出，零额外请求）。
+    v7 quote 接口需 cookie+crumb；失败则整体降级为空（前端显示—）。"""
     pe = {}
+    earn = {}   # sym -> (unix_ts, is_estimate)
     import urllib.request as ur
     opener = ur.build_opener(ur.HTTPCookieProcessor())
     opener.addheaders = list(UA.items())
@@ -101,11 +103,17 @@ def fetch_pe_map(symbols):
                         v = q["regularMarketPrice"] / eps
                 if v is not None and 0 < v < 100000:
                     pe[q["symbol"]] = round(v, 1)
+                ets = q.get("earningsTimestamp") or q.get("earningsTimestampStart")
+                if ets:
+                    est = bool(q.get("isEarningsDateEstimate")) or (
+                        q.get("earningsTimestampStart") and q.get("earningsTimestampEnd")
+                        and q["earningsTimestampStart"] != q["earningsTimestampEnd"])
+                    earn[q["symbol"]] = (ets, bool(est))
         except Exception as e:
             print(f"  !! PE 批次 {i//40} 失败: {e}", file=sys.stderr)
         time.sleep(0.5)
-    print(f"PE 覆盖 {len(pe)}/{len(syms)} 个代码")
-    return pe
+    print(f"PE 覆盖 {len(pe)}/{len(syms)} 个代码，财报日覆盖 {len(earn)} 个")
+    return pe, earn
 
 def _num(v):
     if v >= 10000:
@@ -144,7 +152,7 @@ def main():
     ts_ytd = int(datetime.datetime(now.year, 1, 1, tzinfo=datetime.timezone.utc).timestamp())  # 基准=上年最后一个收盘
 
     all_syms = [it["yahoo"] for sec in watch["sections"] for it in sec["items"]]
-    pe_map = fetch_pe_map(all_syms)
+    pe_map, earn_map = fetch_pe_map(all_syms)
 
     cache = {}
     sections_out = []
@@ -197,6 +205,23 @@ def main():
            "sections": sections_out}
     (ROOT / "data/quotes.json").write_text(
         json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
+    # ==== 财报日历（自动层）====
+    seen_ev, ev_rows = set(), []
+    for sec in watch["sections"]:
+        for it in sec["items"]:
+            sym = it["yahoo"]
+            if it["code"] in seen_ev or sym not in earn_map:
+                continue
+            seen_ev.add(it["code"])
+            ets, est = earn_map[sym]
+            if not (ts_now - 86400 <= ets <= ts_now + 120 * 86400):
+                continue   # 只留未来120天（含今天）
+            d = datetime.datetime.fromtimestamp(ets, datetime.timezone(datetime.timedelta(hours=8))).strftime("%Y-%m-%d")
+            ev_rows.append({"d": d, "code": it["code"], "name": it["name"], "est": est})
+    ev_rows.sort(key=lambda x: x["d"])
+    (ROOT / "data/events.json").write_text(
+        json.dumps({"updated": out["updated"], "earnings": ev_rows}, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"财报日历：未来120天 {len(ev_rows)} 场")
     rows_all = [r for s in sections_out for r in s["rows"]]
     fails = sum(1 for r in rows_all if r[3] == "获取失败")
     flat_1m = sum(1 for r in rows_all if r[7] == 0.0)

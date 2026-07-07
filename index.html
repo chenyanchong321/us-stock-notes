@@ -109,6 +109,33 @@ tr.buy .buyline.hit{color:var(--up)!important;font-weight:600}
 #opps{width:100%;background:rgba(47,191,113,.08);border:1px solid rgba(47,191,113,.35);border-radius:8px;padding:8px 14px;font-size:13px;color:var(--text);line-height:1.9}
 #opps a{color:var(--up);text-decoration:none;margin-right:12px;white-space:nowrap}
 #opps a:hover{text-decoration:underline}
+/* 大事件 */
+.ev-main{max-width:860px;margin:0 auto;padding:22px 18px 60px}
+.ev-week{background:rgba(74,140,240,.07);border:1px solid var(--accent);border-radius:12px;padding:14px 16px;margin:16px 0 22px}
+.ev-week h3{font-size:14px;color:var(--accent);margin-bottom:8px}
+.ev-month{margin-top:22px}
+.ev-month>h3{font-size:14px;color:var(--text2);letter-spacing:1px;border-bottom:1px solid var(--border);padding-bottom:6px}
+.ev-item{display:flex;gap:12px;padding:11px 4px;border-bottom:1px solid rgba(255,255,255,.04);align-items:baseline}
+.ev-date{flex:0 0 74px;font-variant-numeric:tabular-nums;color:var(--text2);font-size:13px}
+.ev-date b{color:var(--text);font-size:14px}
+.ev-cnt{flex:1;min-width:0}
+.ev-t{font-size:14px}
+.ev-why{font-size:12px;color:var(--text2);margin-top:3px;line-height:1.5}
+.evtag{display:inline-block;font-size:11px;border-radius:4px;padding:1px 7px;margin-right:8px;vertical-align:1px}
+.evtag.earn{background:rgba(74,140,240,.15);color:var(--accent)}
+.evtag.macro{background:rgba(232,90,90,.15);color:#e88}
+.evtag.ipo{background:rgba(212,170,80,.18);color:var(--gold)}
+.evtag.prod{background:rgba(80,190,120,.15);color:var(--up)}
+.ev-code{display:inline-block;font-size:11px;background:var(--panel2);border:1px solid var(--border);border-radius:5px;padding:1px 7px;margin:4px 6px 0 0;color:var(--text2);cursor:pointer}
+.ev-code:hover{color:var(--accent);border-color:var(--accent)}
+.ev-cd{font-size:11px;color:var(--gold);margin-left:8px}
+.ev-past{opacity:.45}
+.ev-est{font-size:11px;color:var(--text2)}
+#ev-toggle-past{background:none;border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:6px 16px;font-size:12px;cursor:pointer;margin-top:18px}
+#evweek{font-size:12.5px;color:var(--gold);cursor:pointer;white-space:nowrap;padding:4px 0}
+#evweek:hover{text-decoration:underline}
+tr.ev-flash td{animation:evflash 2.4s ease-out}
+@keyframes evflash{0%{background:rgba(212,170,80,.28)}100%{background:transparent}}
 /* 手机端 */
 .mobile-only{display:none}
 .tab{white-space:nowrap}
@@ -244,6 +271,7 @@ body.resizing{user-select:none;cursor:col-resize}
   <div class="logo">📓 烟囱<span>的美股学习笔记</span></div>
   <div class="tabs">
     <div class="tab active" data-view="dash">📊 数据面板</div>
+    <div class="tab" data-view="events">📅 大事件</div>
     <div class="tab" data-view="notes">📚 学习笔记</div>
     <div class="tab" data-view="dict">📖 术语词典</div>
   </div>
@@ -283,10 +311,22 @@ body.resizing{user-select:none;cursor:col-resize}
     <div id="topbar">
       <select id="secjump" class="mobile-only"><option value="">📂 跳转板块…</option></select>
       <div id="opps" class="hidden"></div>
+      <div id="evweek" class="hidden"></div>
     </div>
     <div id="flatview" class="hidden"></div>
     <div id="sections"></div>
     <div id="no-result">没有匹配的标的</div>
+  </div>
+</div>
+
+<!-- ================= 视图：大事件 ================= -->
+<div id="view-events" class="hidden">
+  <div class="ev-main">
+    <div class="ev-head">
+      <h2 style="font-size:18px">📅 大事件日历 <span id="ev-n" style="font-size:12px;color:var(--text2);font-weight:400"></span></h2>
+      <p style="font-size:12.5px;color:var(--text2);margin-top:4px">财报日自动抓取（估算日期标"约"）· 宏观为美联储/劳工统计局官方日程 · 点关联标的直达行情</p>
+    </div>
+    <div id="ev-body">加载中…</div>
   </div>
 </div>
 
@@ -1207,14 +1247,17 @@ let PROFILES = {};
 (async ()=>{
   try{
     const bust = "?t=" + Math.floor(Date.now()/60000);
-    const [quotes, notesCfg, buyCfg, glossary] = await Promise.all([
+    const [quotes, notesCfg, buyCfg, glossary, evCfg, evAuto] = await Promise.all([
       fetch("data/quotes.json"+bust).then(r=>r.json()),
       fetch("config/notes.json"+bust).then(r=>r.json()),
       fetch("config/buypoints.json"+bust).then(r=>r.ok?r.json():{}).catch(()=>({})),
-      fetch("config/glossary.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null)
+      fetch("config/glossary.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null),
+      fetch("config/events.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null),
+      fetch("data/events.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null)
     ]);
     BUY = buyCfg || {};
     if(glossary) renderDict(glossary);
+    try{ renderEvents(evCfg, evAuto); }catch(e){ console.warn("events:", e); }
     fetch("config/profiles.json"+bust).then(r=>r.ok?r.json():{}).then(p=>{ PROFILES = p || {}; }).catch(()=>{});
     renderDash(quotes);
     renderNotes(notesCfg);
@@ -1226,12 +1269,82 @@ let PROFILES = {};
   document.getElementById("loading").remove();
   document.getElementById("view-dash").classList.remove("hidden");
 
+  /* ============ 大事件日历 ============ */
+  function renderEvents(cfg, auto){
+    const body = document.getElementById("ev-body");
+    if(!body) return;
+    const TAG = {"财报":["earn","🟦 财报"],"宏观":["macro","🟥 宏观"],"上市":["ipo","🟨 上市·IPO"],"产品":["prod","🟩 产品·发布"]};
+    let evs = [];
+    (cfg && cfg.items || []).forEach(e=>evs.push({...e}));
+    (auto && auto.earnings || []).forEach(e=>evs.push({d:e.d, type:"财报", t:`${e.name} 财报${e.est?"（约）":""}`, codes:[e.code], est:e.est}));
+    if(!evs.length){ body.textContent="暂无事件数据（等下一次数据更新）"; return; }
+    evs.sort((a,b)=>a.d<b.d?-1:1);
+    const today = new Date(); today.setHours(0,0,0,0);
+    const dstr = d=>{const p=d.split("-");return `${+p[1]}月${+p[2]}日`;};
+    const dow = d=>"日一二三四五六"[new Date(d+"T00:00:00+08:00").getDay()];
+    const days = d=>Math.round((new Date(d+"T00:00:00+08:00") - today)/86400000);
+    const item = (e, past)=>{
+      const [cls,lab] = TAG[e.type]||["earn",e.type];
+      const dd = days(e.d);
+      const cd = (!past && dd>=0 && dd<=7) ? `<span class="ev-cd">${dd===0?"就是今天":"还有 "+dd+" 天"}</span>` : "";
+      const codes = (e.codes||[]).map(c=>{
+        let nm=c; for(const s of DATA){ for(const r of s.rows){ if(r[1]===c){ nm=r[0]; break; } } }
+        return `<span class="ev-code" data-jump="${c}">${nm}</span>`;
+      }).join("");
+      return `<div class="ev-item${past?" ev-past":""}">
+        <div class="ev-date"><b>${dstr(e.d)}</b> 周${dow(e.d)}</div>
+        <div class="ev-cnt"><span class="evtag ${cls}">${lab}</span><span class="ev-t">${e.t}</span>${cd}
+          ${e.why?`<div class="ev-why">${e.why}</div>`:""}${codes?`<div>${codes}</div>`:""}
+        </div></div>`;
+    };
+    const fut = evs.filter(e=>days(e.d)>=0), past = evs.filter(e=>days(e.d)<0 && days(e.d)>=-45).reverse();
+    const week = fut.filter(e=>days(e.d)<=7);
+    let h = "";
+    if(week.length) h += `<div class="ev-week"><h3>⏰ 未来 7 天（${week.length} 件）</h3>${week.map(e=>item(e,false)).join("")}</div>`;
+    const bym = {};
+    fut.forEach(e=>{ const k=e.d.slice(0,7); (bym[k]=bym[k]||[]).push(e); });
+    Object.keys(bym).sort().forEach(k=>{
+      const p=k.split("-");
+      h += `<div class="ev-month"><h3>${+p[0]}年${+p[1]}月（${bym[k].length} 件）</h3>${bym[k].map(e=>item(e,false)).join("")}</div>`;
+    });
+    if(past.length){
+      h += `<button id="ev-toggle-past">▸ 回看已过去的事件（${past.length}）</button><div id="ev-pastbox" class="hidden">${past.map(e=>item(e,true)).join("")}</div>`;
+    }
+    body.innerHTML = h;
+    document.getElementById("ev-n").textContent = `未来 ${fut.length} 件`;
+    const tg = document.getElementById("ev-toggle-past");
+    if(tg) tg.addEventListener("click",()=>{
+      const bx=document.getElementById("ev-pastbox");
+      const on=bx.classList.toggle("hidden");
+      tg.textContent = (on?"▸":"▾")+` 回看已过去的事件（${past.length}）`;
+    });
+    body.querySelectorAll(".ev-code").forEach(el=>el.addEventListener("click",()=>jumpToCode(el.dataset.jump)));
+    /* 数据面板顶部：本周大事入口 */
+    const ew = document.getElementById("evweek");
+    if(ew && week.length){
+      ew.textContent = `📅 本周大事 ${week.length} 件：` + week.slice(0,3).map(e=>e.t).join(" · ") + (week.length>3?" …":"") + " →";
+      ew.classList.remove("hidden");
+      ew.addEventListener("click",()=>document.querySelector('.tab[data-view="events"]').click());
+    }
+  }
+  function jumpToCode(code){
+    document.querySelector('.tab[data-view="dash"]').click();
+    if(window.CURVIEW!=="all" && window.setDashView) window.setDashView("all");
+    setTimeout(()=>{
+      const tr = document.querySelector(`#sections tr[data-code="${code}"]`);
+      if(!tr) return;
+      tr.scrollIntoView({block:"center"});
+      tr.classList.remove("ev-flash"); void tr.offsetWidth; tr.classList.add("ev-flash");
+    }, 60);
+  }
+
   /* 视图切换（记住上次页签，并同步 URL 防止刷新跳走） */
   document.querySelectorAll(".tab").forEach(tab=>{
     tab.addEventListener("click",()=>{
       const v = tab.dataset.view;
       document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===tab));
       document.getElementById("view-dash").classList.toggle("hidden",v!=="dash");
+      document.getElementById("view-events").classList.toggle("hidden",v!=="events");
       document.getElementById("view-notes").classList.toggle("hidden",v!=="notes");
       document.getElementById("view-dict").classList.toggle("hidden",v!=="dict");
       document.getElementById("searchwrap").style.display = v==="dash" ? "" : "none";
