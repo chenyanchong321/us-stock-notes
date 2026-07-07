@@ -334,7 +334,7 @@ body.resizing{user-select:none;cursor:col-resize}
 ===================================================================== */
 let DATA = [];
 
-const COLS = ["名称","市值","现价","历史高点","高点跌幅","当日","近1月","近3月","近半年","年初至今","近1年"];
+const COLS = ["名称","市值","现价 / 52周区间","历史高点","高点跌幅","当日","近1月","近3月","近半年","年初至今","近1年"];
 let BUY = {};
 
 function fmtPct(v){
@@ -371,7 +371,7 @@ function priceCell(r, mode){
     const b = BUY[r[1]], hit = buyHit(r);
     sub = b ? `<span class="buyline${hit?" hit":""}" style="display:block;font-size:11px;color:var(--text2);white-space:normal;max-width:170px;margin-left:auto;line-height:1.45">${hit?"🎯":""}买点 ${b}</span>` : "";
   }else if(typeof r[15]==="string" && r[15]){
-    sub = `<span style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">52周 ${r[15]}</span>`;
+    sub = `<span style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">${r[15]}</span>`;
   }
   return `<span style="display:block;white-space:nowrap">${r[5]}</span>${sub}`;
 }
@@ -534,7 +534,7 @@ function renderDash(quotes){
       <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td>
     </tr>`;
   }
-  const FV_HEAD = (extra)=>`<thead><tr><th style="text-align:left">名称</th><th>市值</th><th>现价</th>${extra||""}<th>历史高点</th><th>高点跌幅</th><th>当日</th><th>近1月</th><th>近3月</th><th>近半年</th><th>年初至今</th><th>近1年</th></tr></thead>`;
+  const FV_HEAD = (extra, pxLabel)=>`<thead><tr><th style="text-align:left">名称</th><th>市值</th><th>${pxLabel||"现价 / 52周区间"}</th>${extra||""}<th>历史高点</th><th>高点跌幅</th><th>当日</th><th>近1月</th><th>近3月</th><th>近半年</th><th>年初至今</th><th>近1年</th></tr></thead>`;
   window.buildFlat = function(){
     const v = window.CURVIEW;
     const el = document.getElementById("flatview");
@@ -552,7 +552,7 @@ function renderDash(quotes){
         return (a.dist??9e9)-(b.dist??9e9);
       });
       title=`⭐ 重点清单（${list.length}）`; note="标注了买点的标的 · 按距买点由近到远排序，🎯已进买点区置顶";
-      head=FV_HEAD(`<th>距买点</th>`);
+      head=FV_HEAD(`<th>距买点</th>`, "现价 / 买点");
       body=list.map(x=>{
         const d = x.dist===null ? `<span class="flat">–</span>`
           : x.hit ? `<span class="dist-hit">🎯已触达</span>`
