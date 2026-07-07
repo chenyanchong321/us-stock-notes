@@ -334,7 +334,7 @@ body.resizing{user-select:none;cursor:col-resize}
 ===================================================================== */
 let DATA = [];
 
-const COLS = ["名称","市值","现价 / 52周区间","历史高点","高点跌幅","当日","近1月","近3月","近半年","年初至今","近1年"];
+const COLS = ["名称","市值","现价 / 52周区间","历史高点 / 距高点","当日","近1月","近3月","近半年","年初至今","近1年"];
 let BUY = {};
 
 function fmtPct(v){
@@ -347,6 +347,9 @@ function fmtPct(v){
 function ddCell(v){
   if(typeof v!=="number") return `<span class="flat">–</span>`;
   return `<span class="${v<=-30?"deep":"neg"}">${v.toFixed(1)}%</span>`;
+}
+function athCell(r){
+  return `<span style="display:block;white-space:nowrap">${r[4]}</span><span style="display:block;font-size:11px">${ddCell(r[6])}</span>`;
 }
 function peCell(v){
   if(typeof v!=="number") return `<span class="flat">–</span>`;
@@ -382,8 +385,7 @@ function mcapCell(r){
 function rowHTML(r, grp){
   return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${grp||""}" data-code="${r[1]}" data-mkt="${r[2]||""}" data-key="${(r[0]+r[1]).toLowerCase()}">
     <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
-    <td>${mcapCell(r)}</td><td class="pxc">${priceCell(r)}</td><td>${r[4]}</td>
-    <td>${ddCell(r[6])}</td>
+    <td>${mcapCell(r)}</td><td class="pxc">${priceCell(r)}</td><td>${athCell(r)}</td>
     <td>${fmtPct(r[16])}</td>
     <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
     <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td>
@@ -426,7 +428,7 @@ function renderDash(quotes){
   document.getElementById("st-deep").textContent = all.filter(r=>typeof r[6]==="number"&&r[6]<=-30).length;
 
   /* 排序 */
-  const SORT_MAP = {0:0,1:3,2:5,3:4,4:6,5:16,6:7,7:8,8:9,9:10,10:11};
+  const SORT_MAP = {0:0,1:3,2:5,3:6,4:16,5:7,6:8,7:9,8:10,9:11};   /* 3列按距高点跌幅排序 */
   document.querySelectorAll("#view-dash th").forEach(th=>{
     th.addEventListener("click",()=>{
       const ci = +th.dataset.ci;
@@ -527,14 +529,13 @@ function renderDash(quotes){
       <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
       <td>${mcapCell(r)}</td>
       <td class="pxc">${priceCell(r, mode)}</td>${extraTd||""}
-      <td>${r[4]}</td>
-      <td>${ddCell(r[6])}</td>
+      <td>${athCell(r)}</td>
       <td>${fmtPct(r[16])}</td>
       <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
       <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td>
     </tr>`;
   }
-  const FV_HEAD = (extra, pxLabel)=>`<thead><tr><th style="text-align:left">名称</th><th>市值</th><th>${pxLabel||"现价 / 52周区间"}</th>${extra||""}<th>历史高点</th><th>高点跌幅</th><th>当日</th><th>近1月</th><th>近3月</th><th>近半年</th><th>年初至今</th><th>近1年</th></tr></thead>`;
+  const FV_HEAD = (extra, pxLabel)=>`<thead><tr><th style="text-align:left">名称</th><th>市值</th><th>${pxLabel||"现价 / 52周区间"}</th>${extra||""}<th>历史高点 / 距高点</th><th>当日</th><th>近1月</th><th>近3月</th><th>近半年</th><th>年初至今</th><th>近1年</th></tr></thead>`;
   window.buildFlat = function(){
     const v = window.CURVIEW;
     const el = document.getElementById("flatview");
@@ -921,12 +922,11 @@ function renderNotes(cfg){
     });
     document.querySelectorAll(`#sections tr[data-code="${ent.code}"]`).forEach(tr=>{
       const r=ent.rows[0], tds=tr.children;
-      if(tds.length<6) return;
+      if(tds.length<5) return;
       tds[1].innerHTML=mcapCell(r);
       tds[2].innerHTML=priceCell(r);
-      tds[3].textContent=r[4];
-      tds[4].innerHTML=ddCell(r[6]);
-      tds[5].innerHTML=fmtPct(r[16]);
+      tds[3].innerHTML=athCell(r);
+      tds[4].innerHTML=fmtPct(r[16]);
     });
   }
   function parseBatch(syms){
