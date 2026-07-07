@@ -369,7 +369,7 @@ function priceCell(r){
   const b = BUY[r[1]];
   const hit = buyHit(r);
   const pe = (typeof r[13]==="number") ? ` <span style="font-size:11px;color:var(--text2)">(PE ${r[13].toFixed(1)})</span>` : "";
-  const buyLine = b ? `<span class="buyline${hit?" hit":""}" style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">${hit?"🎯":""}买点 ${b}</span>` : "";
+  const buyLine = b ? `<span class="buyline${hit?" hit":""}" style="display:block;font-size:11px;color:var(--text2);white-space:normal;max-width:170px;margin-left:auto;line-height:1.45">${hit?"🎯":""}买点 ${b}</span>` : "";
   return `<span style="display:block;white-space:nowrap">${r[5]}${pe}</span>${buyLine}`;
 }
 function rowHTML(r, grp){
