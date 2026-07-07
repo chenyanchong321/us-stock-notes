@@ -365,17 +365,24 @@ function buyHit(r){
   const px = parseFloat(String(r[5]).replace(/[^\d.]/g,""));
   return !!(th && px && px <= th*1.02);
 }
-function priceCell(r){
-  const b = BUY[r[1]];
-  const hit = buyHit(r);
-  const pe = (typeof r[13]==="number") ? ` <span style="font-size:11px;color:var(--text2)">(PE ${r[13].toFixed(1)})</span>` : "";
-  const buyLine = b ? `<span class="buyline${hit?" hit":""}" style="display:block;font-size:11px;color:var(--text2);white-space:normal;max-width:170px;margin-left:auto;line-height:1.45">${hit?"🎯":""}买点 ${b}</span>` : "";
-  return `<span style="display:block;white-space:nowrap">${r[5]}${pe}</span>${buyLine}`;
+function priceCell(r, mode){
+  let sub = "";
+  if(mode==="buy"){
+    const b = BUY[r[1]], hit = buyHit(r);
+    sub = b ? `<span class="buyline${hit?" hit":""}" style="display:block;font-size:11px;color:var(--text2);white-space:normal;max-width:170px;margin-left:auto;line-height:1.45">${hit?"🎯":""}买点 ${b}</span>` : "";
+  }else if(typeof r[15]==="string" && r[15]){
+    sub = `<span style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">52周 ${r[15]}</span>`;
+  }
+  return `<span style="display:block;white-space:nowrap">${r[5]}</span>${sub}`;
+}
+function mcapCell(r){
+  const pe = (typeof r[13]==="number") ? `<span style="display:block;font-size:11px;color:var(--text2)">PE ${r[13].toFixed(1)}</span>` : "";
+  return `${r[3]}${pe}`;
 }
 function rowHTML(r, grp){
   return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${grp||""}" data-code="${r[1]}" data-mkt="${r[2]||""}" data-key="${(r[0]+r[1]).toLowerCase()}">
     <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
-    <td>${r[3]}</td><td class="pxc">${priceCell(r)}</td><td>${r[4]}</td>
+    <td>${mcapCell(r)}</td><td class="pxc">${priceCell(r)}</td><td>${r[4]}</td>
     <td>${ddCell(r[6])}</td>
     <td>${fmtPct(r[16])}</td>
     <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
@@ -484,11 +491,15 @@ function renderDash(quotes){
   }
   /* 各市场基准指数（超额收益锚，丹萍：锚必须匹配到位） */
   const BENCH_MAP={"A股":"000300","港股":"HSI","美股":"SPX","日":"N225","韩":"KOSPI","台股":"TWII"};
-  window.benchOf = function(mkt){
+  const HK_TRAD = /能源|电力|资源|价值老登|贵金属|有色/;   /* 传统行业板块→恒指；其余港股→恒生科技 */
+  window.benchOf = function(mkt, sec){
     mkt=String(mkt||"");
     let code=null, label=null;
     if(mkt.startsWith("A股")) code="000300",label="沪深300";
-    else if(mkt.startsWith("港股")) code="HSI",label="恒生指数";
+    else if(mkt.startsWith("港股")){
+      if(sec && !HK_TRAD.test(String(sec))) code="3033",label="恒生科技";
+      else code="HSI",label="恒生指数";
+    }
     else if(mkt.startsWith("美股")) code="SPX",label="标普500";
     else if(mkt[0]==="日") code="N225",label="日经225";
     else if(mkt.startsWith("韩")) code="KOSPI",label="KOSPI";
@@ -498,8 +509,8 @@ function renderDash(quotes){
       return {label, ytd:(typeof r[10]==="number"?r[10]:null), y1:(typeof r[11]==="number"?r[11]:null)};
     return null;
   };
-  function alphaOf(r){
-    const b=window.benchOf(r[2]);
+  function alphaOf(r, sec){
+    const b=window.benchOf(r[2], sec);
     if(!b) return null;
     const aytd=(typeof r[10]==="number"&&b.ytd!==null)?r[10]-b.ytd:null;
     const ay1=(typeof r[11]==="number"&&b.y1!==null)?r[11]-b.y1:null;
@@ -510,12 +521,12 @@ function renderDash(quotes){
     const cls=v>0?"pos":v<0?"neg":"flat";
     return `<span class="${cls}">${v>0?"+":""}${v.toFixed(0)}pp</span>`;
   }
-  function fvRow(x, extraTd){
+  function fvRow(x, extraTd, mode){
     const r = x.r;
     return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${r[12]||""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
       <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
-      <td>${r[3]}</td>
-      <td class="pxc">${priceCell(r)}</td>${extraTd||""}
+      <td>${mcapCell(r)}</td>
+      <td class="pxc">${priceCell(r, mode)}</td>${extraTd||""}
       <td>${r[4]}</td>
       <td>${ddCell(r[6])}</td>
       <td>${fmtPct(r[16])}</td>
@@ -546,7 +557,7 @@ function renderDash(quotes){
         const d = x.dist===null ? `<span class="flat">–</span>`
           : x.hit ? `<span class="dist-hit">🎯已触达</span>`
           : `<span class="dist-far">还差 ${x.dist.toFixed(1)}%</span>`;
-        return fvRow(x, `<td>${d}</td>`);
+        return fvRow(x, `<td>${d}</td>`, "buy");
       }).join("");
     }else if(v==="gain"||v==="loss"){
       const list = flatRows().filter(x=>typeof x.r[16]==="number");
@@ -556,11 +567,11 @@ function renderDash(quotes){
       note = "跨板块去重 · 随实时行情自动刷新";
       body = top.map(x=>fvRow(x)).join("");
     }else if(v==="alpha"){
-      const list = flatRows().map(x=>({...x, a:alphaOf(x.r)}))
+      const list = flatRows().map(x=>({...x, a:alphaOf(x.r, x.sec)}))
         .filter(x=>x.a && typeof x.a.aytd==="number" && !/ETF|指数|商品|外汇/.test(String(x.r[2])));
       list.sort((a,b)=>b.a.aytd-a.a.aytd);
       const top=list.slice(0,30);
-      title="🏆 超额榜 Top30（相对各自大盘）"; note="超额 = 个股涨幅 − 对应市场基准（A股vs沪深300 · 美股vs标普 · 港股vs恒指 · 日vs日经 · 韩vs KOSPI · 台vs加权）· 跑赢的是 α，随大盘的是 β";
+      title="🏆 超额榜 Top30（相对各自大盘）"; note="超额 = 个股涨幅 − 对应基准（A股vs沪深300 · 美股vs标普 · 港股科技vs恒生科技/传统vs恒指 · 日vs日经 · 韩vs KOSPI · 台vs加权）· 注：基准为大盘宽基，中小盘股与指数权重股的超额会有一定偏差，看方向别抠精度";
       head=FV_HEAD(`<th>超额YTD</th><th>超额近1年</th>`);
       body=top.map(x=>fvRow(x, `<td>${ppCell(x.a.aytd)}</td><td>${ppCell(x.a.ay1)}</td>`)).join("");
     }else if(v==="dd"){
@@ -911,7 +922,7 @@ function renderNotes(cfg){
     document.querySelectorAll(`#sections tr[data-code="${ent.code}"]`).forEach(tr=>{
       const r=ent.rows[0], tds=tr.children;
       if(tds.length<6) return;
-      tds[1].textContent=r[3];
+      tds[1].innerHTML=mcapCell(r);
       tds[2].innerHTML=priceCell(r);
       tds[3].textContent=r[4];
       tds[4].innerHTML=ddCell(r[6]);
@@ -1117,9 +1128,9 @@ let PROFILES = {};
     let alphaLine = "";
     try{
       if(window.benchOf && typeof DATA!=="undefined"){
-        let row=null;
-        for(const s of DATA){ for(const r of s.rows){ if(r[1]===code){ row=r; break; } } if(row) break; }
-        const b = row ? window.benchOf(row[2]) : null;
+        let row=null, rsec="";
+        for(const s of DATA){ for(const r of s.rows){ if(r[1]===code){ row=r; rsec=s.sec; break; } } if(row) break; }
+        const b = row ? window.benchOf(row[2], rsec) : null;
         if(row && b && typeof row[10]==="number" && b.ytd!==null && !/指数|ETF/.test(String(row[2]))){
           const a = row[10]-b.ytd;
           alphaLine = `<span style="display:block;margin-top:6px;font-size:12px;color:${a>0?"var(--up)":"var(--down)"}">📊 相对大盘（${b.label}）：YTD ${a>0?"+":""}${a.toFixed(0)}pp ${a>0?"跑赢":"跑输"}</span>`;
