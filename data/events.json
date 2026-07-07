@@ -1,10 +1,16 @@
 {
- "updated": "2026-07-07 20:53 北京时间",
+ "updated": "2026-07-07 23:29 北京时间",
  "earnings": [
   {
    "d": "2026-07-15",
    "code": "ASML",
    "name": "阿斯麦",
+   "est": false
+  },
+  {
+   "d": "2026-07-15",
+   "code": "AEHR",
+   "name": "Aehr Test",
    "est": false
   },
   {
@@ -81,6 +87,12 @@
   },
   {
    "d": "2026-07-28",
+   "code": "AMKR",
+   "name": "艾马克技术（Amkor）",
+   "est": false
+  },
+  {
+   "d": "2026-07-28",
    "code": "NVTS",
    "name": "纳微半导体",
    "est": false
@@ -101,6 +113,12 @@
    "d": "2026-07-29",
    "code": "NXPI",
    "name": "恩智浦",
+   "est": false
+  },
+  {
+   "d": "2026-07-29",
+   "code": "005930",
+   "name": "三星电子",
    "est": false
   },
   {
@@ -221,6 +239,12 @@
    "d": "2026-08-04",
    "code": "4062",
    "name": "揖斐电（IBIDEN）",
+   "est": false
+  },
+  {
+   "d": "2026-08-04",
+   "code": "Q",
+   "name": "Qnity Electronics",
    "est": false
   },
   {
