@@ -1836,6 +1836,20 @@
      "ath_floor": 0
     },
     {
+     "name": "浪潮信息",
+     "code": "000977",
+     "market": "A股",
+     "yahoo": "000977.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 970,
+      "approx": true
+     },
+     "mcap_base_price": 66,
+     "ath_floor": 0
+    },
+    {
      "name": "超微电脑",
      "code": "SMCI",
      "market": "美股",
@@ -1960,6 +1974,7 @@
       "DELL",
       "HPE",
       "00992",
+      "000977",
       "SMCI",
       "2317",
       "2382",
