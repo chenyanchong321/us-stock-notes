@@ -151,6 +151,7 @@ def main():
     watch = json.loads((ROOT / "config/watchlist.json").read_text(encoding="utf-8"))
     now = datetime.datetime.now(datetime.timezone.utc)
     ts_now = int(now.timestamp())
+    ts_1w = int((now - datetime.timedelta(days=7)).timestamp())
     ts_1m = int((now - datetime.timedelta(days=30)).timestamp())
     ts_3m = int((now - datetime.timedelta(days=91)).timestamp())
     ts_6m = int((now - datetime.timedelta(days=182)).timestamp())
@@ -176,7 +177,7 @@ def main():
             fetched = cache[sym]
             if fetched is None:
                 rows.append([it["name"], it["code"], it["market"], "获取失败",
-                             "-", "-", 0.0, "-", "-", "-", "-", "-", gmap.get(it["code"], ""), None, None, None, None, None])
+                             "-", "-", 0.0, "-", "-", "-", "-", "-", gmap.get(it["code"], ""), None, None, None, None, None, None])
                 continue
             pairs, hist_max = fetched
             price = pairs[-1][1]
@@ -192,6 +193,7 @@ def main():
                     return f"上市后 {'+' if v >= 0 else ''}{v:.1f}%"
                 return round(pct(price, base), 1)
 
+            w1 = window(ts_1w, "1w")
             m1 = window(ts_1m, "1m")
             m3 = window(ts_3m, "3m")
             m6 = window(ts_6m, "6m")
@@ -204,7 +206,8 @@ def main():
                          round(dd, 1), m1, m3, m6, ytd, y1, gmap.get(it["code"], ""),
                          pe_map.get(sym), *pos_52w(pairs, ts_1y, cur),
                          round(pct(pairs[-1][1], pairs[-2][1]), 2) if len(pairs) >= 2 else None,
-                         ext_map.get(sym) if it["market"].startswith("美股") else None])
+                         ext_map.get(sym) if it["market"].startswith("美股") else None,
+                         w1])
             print(f"  {it['code']:>10} {it['name'][:12]:<14} 现价 {price:,.2f}  回撤 {dd:.1f}%")
         sections_out.append({"sec": sec["name"], "rows": rows})
 

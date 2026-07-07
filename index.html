@@ -387,7 +387,7 @@ body.resizing{user-select:none;cursor:col-resize}
 ===================================================================== */
 let DATA = [];
 
-const COLS = ["名称","市值","现价 / 52周区间","历史高点 / 距高点","当日","近1月","近3月","近半年","年初至今","近1年"];
+const COLS = ["名称","市值","现价 / 52周区间","历史高点 / 距高点","当日","近1周","近1月","近3月","近半年","年初至今","近1年"];
 let BUY = {};
 
 function fmtPct(v){
@@ -531,7 +531,7 @@ function renderDash(quotes){
   /* ===== 视图切换器：全景/重点清单/涨跌幅榜/回撤榜/板块热力 ===== */
   window.CURVIEW = "all";
   try{ window.PERF_W = localStorage.getItem("perfW") || "m3"; window.PERF_DIR = localStorage.getItem("perfDir") || "gain"; }catch(e){ window.PERF_W="m3"; window.PERF_DIR="gain"; }
-  (function(){ const lab={m1:"近1月",m3:"近3月",m6:"近半年",ytd:"年初至今",y1:"近1年"}[window.PERF_W]||"近3月";
+  (function(){ const lab={w1:"近1周",m1:"近1月",m3:"近3月",m6:"近半年",ytd:"年初至今",y1:"近1年"}[window.PERF_W]||"近3月";
     const sp=document.getElementById("st-perf"); if(sp) sp.textContent=lab; })();
   function buyTh(code){
     const b = BUY[code];
@@ -568,12 +568,31 @@ function renderDash(quotes){
       return {label, ytd:(typeof r[10]==="number"?r[10]:null), y1:(typeof r[11]==="number"?r[11]:null)};
     return null;
   };
+  /* 赛道基准（丹萍两步框架第②层：个股 vs 所在赛道指数） */
+  const SEC_BENCH=[
+    [/半导体芯片|CPU|存储|光连接|半导体设备|半导体材料|封装测试|功率半导体|PCB|被动元件/, "SOX", "费城半导体"],
+    [/软件与 SaaS/, "IGV", "软件IGV"],
+    [/中国互联网/, "PGJ", "中概互联"],
+    [/加密资产/, "BTC", "比特币"],
+    [/美股七巨头|云与 AI/, "NDX", "纳指100"]
+  ];
+  function secBenchOf(sec){
+    sec=String(sec||"");
+    for(const [re,code,label] of SEC_BENCH){
+      if(!re.test(sec)) continue;
+      for(const s of DATA) for(const r of s.rows) if(r[1]===code)
+        return {label, ytd:(typeof r[10]==="number"?r[10]:null), y1:(typeof r[11]==="number"?r[11]:null)};
+    }
+    return null;
+  }
   function alphaOf(r, sec){
     const b=window.benchOf(r[2], sec);
     if(!b) return null;
     const aytd=(typeof r[10]==="number"&&b.ytd!==null)?r[10]-b.ytd:null;
     const ay1=(typeof r[11]==="number"&&b.y1!==null)?r[11]-b.y1:null;
-    return {b, aytd, ay1};
+    const sb=secBenchOf(sec);
+    const sytd=(sb&&typeof r[10]==="number"&&sb.ytd!==null)?r[10]-sb.ytd:null;
+    return {b, aytd, ay1, sb, sytd};
   }
   function ppCell(v){
     if(typeof v!=="number") return `<span class="flat">–</span>`;
@@ -588,11 +607,12 @@ function renderDash(quotes){
       <td class="pxc">${priceCell(r, mode)}</td>${extraTd||""}
       <td>${athCell(r)}</td>
       <td>${fmtPct(r[16])}</td>
+      <td>${fmtPct(r[18])}</td>
       <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
       <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td>
     </tr>`;
   }
-  const FV_HEAD = (extra, pxLabel)=>`<thead><tr><th style="text-align:left">名称</th><th>市值</th><th>${pxLabel||"现价 / 52周区间"}</th>${extra||""}<th>历史高点 / 距高点</th><th>当日</th><th>近1月</th><th>近3月</th><th>近半年</th><th>年初至今</th><th>近1年</th></tr></thead>`;
+  const FV_HEAD = (extra, pxLabel)=>`<thead><tr><th style="text-align:left">名称</th><th>市值</th><th>${pxLabel||"现价 / 52周区间"}</th>${extra||""}<th>历史高点 / 距高点</th><th>当日</th><th>近1周</th><th>近1月</th><th>近3月</th><th>近半年</th><th>年初至今</th><th>近1年</th></tr></thead>`;
   window.buildFlat = function(){
     const v = window.CURVIEW;
     const el = document.getElementById("flatview");
@@ -625,7 +645,7 @@ function renderDash(quotes){
       note = "跨板块去重 · 随实时行情自动刷新";
       body = top.map(x=>fvRow(x)).join("");
     }else if(v==="perf"){
-      const W={m1:[7,"近1月"],m3:[8,"近3月"],m6:[9,"近半年"],ytd:[10,"年初至今"],y1:[11,"近1年"]};
+      const W={w1:[18,"近1周"],m1:[7,"近1月"],m3:[8,"近3月"],m6:[9,"近半年"],ytd:[10,"年初至今"],y1:[11,"近1年"]};
       const wk = W[window.PERF_W] ? window.PERF_W : "m3";
       const dir = window.PERF_DIR==="loss" ? "loss" : "gain";
       const [ri,wl] = W[wk];
@@ -636,7 +656,7 @@ function renderDash(quotes){
       note=`按${wl}区间涨跌排序 · 跨板块去重 · 上市不满该窗口的标的不参与`;
       const pill=(k,lab)=>`<button class="perf-pill${k===wk?" on":""}" data-w="${k}">${lab}</button>`;
       note += `</p><div id="perfbar">
-        ${pill("m1","近1月")}${pill("m3","近3月")}${pill("m6","近半年")}${pill("ytd","年初至今")}${pill("y1","近1年")}
+        ${pill("w1","近1周")}${pill("m1","近1月")}${pill("m3","近3月")}${pill("m6","近半年")}${pill("ytd","年初至今")}${pill("y1","近1年")}
         <span class="perf-sep"></span>
         <button class="perf-pill dirp${dir==="gain"?" on":""}" data-dir="gain">▲ 涨幅</button>
         <button class="perf-pill dirp${dir==="loss"?" on":""}" data-dir="loss">▼ 跌幅</button>
@@ -645,11 +665,15 @@ function renderDash(quotes){
     }else if(v==="alpha"){
       const list = flatRows().map(x=>({...x, a:alphaOf(x.r, x.sec)}))
         .filter(x=>x.a && typeof x.a.aytd==="number" && !/ETF|指数|商品|外汇/.test(String(x.r[2])));
-      list.sort((a,b)=>b.a.aytd-a.a.aytd);
+      list.sort((a,b)=>((b.a.sytd??b.a.aytd)-(a.a.sytd??a.a.aytd)));
       const top=list.slice(0,30);
-      title="🏆 超额榜 Top30（相对各自大盘）"; note="超额 = 个股涨幅 − 对应基准（A股vs沪深300 · 美股vs标普 · 港股科技vs恒生科技/传统vs恒指 · 日vs日经 · 韩vs KOSPI · 台vs加权）· 注：基准为大盘宽基，中小盘股与指数权重股的超额会有一定偏差，看方向别抠精度";
-      head=FV_HEAD(`<th>超额YTD</th><th>超额近1年</th>`);
-      body=top.map(x=>fvRow(x, `<td>${ppCell(x.a.aytd)}</td><td>${ppCell(x.a.ay1)}</td>`)).join("");
+      title="🏆 超额榜 Top30（两步框架）"; note="第一列 vs赛道 = 个股 − 所在赛道指数（半导体系vs费城半导体 · 软件vsIGV · 中国互联网vs中概互联 · 加密vs比特币 · 巨头/云vs纳指100，为全球行业口径）→ 这才是个股 alpha；第二列 vs大盘 = 个股 − 所在市场宽基 → 市场层面超额。两列都为正标🏆双强；无干净赛道指数的板块显示 —，按 vs大盘参与排序（YTD口径）";
+      head=FV_HEAD(`<th>vs赛道</th><th>vs大盘</th>`);
+      body=top.map(x=>{
+        const both = typeof x.a.sytd==="number" && x.a.sytd>0 && typeof x.a.aytd==="number" && x.a.aytd>0;
+        const sCell = x.a.sytd==null ? `<span class="flat">–</span>` : (both?"🏆":"")+ppCell(x.a.sytd);
+        return fvRow(x, `<td style="white-space:nowrap">${sCell}</td><td>${ppCell(x.a.aytd)}</td>`);
+      }).join("");
     }else if(v==="hi"){
       const list = flatRows().filter(x=>typeof x.r[6]==="number" && x.r[6]>=-10);
       list.sort((a,b)=>b.r[6]-a.r[6]);
@@ -697,7 +721,7 @@ function renderDash(quotes){
     el.querySelectorAll(".perf-pill").forEach(b=>b.addEventListener("click",()=>{
       if(b.dataset.w){ window.PERF_W=b.dataset.w; try{localStorage.setItem("perfW",b.dataset.w);}catch(e){} }
       if(b.dataset.dir){ window.PERF_DIR=b.dataset.dir; try{localStorage.setItem("perfDir",b.dataset.dir);}catch(e){} }
-      const lab={m1:"近1月",m3:"近3月",m6:"近半年",ytd:"年初至今",y1:"近1年"}[window.PERF_W||"m3"];
+      const lab={w1:"近1周",m1:"近1月",m3:"近3月",m6:"近半年",ytd:"年初至今",y1:"近1年"}[window.PERF_W||"m3"];
       const sp=document.getElementById("st-perf"); if(sp) sp.textContent=lab;
       window.buildFlat();
     }));
@@ -1248,7 +1272,12 @@ let PROFILES = {};
         const b = row ? window.benchOf(row[2], rsec) : null;
         if(row && b && typeof row[10]==="number" && b.ytd!==null && !/指数|ETF/.test(String(row[2]))){
           const a = row[10]-b.ytd;
-          alphaLine = `<span style="display:block;margin-top:6px;font-size:12px;color:${a>0?"var(--up)":"var(--down)"}">📊 相对大盘（${b.label}）：YTD ${a>0?"+":""}${a.toFixed(0)}pp ${a>0?"跑赢":"跑输"}</span>`;
+          const sb = (typeof secBenchOf==="function") ? secBenchOf(rsec) : null;
+          const sa = (sb && sb.ytd!==null) ? row[10]-sb.ytd : null;
+          const seg = v=>`${v>0?"+":""}${v.toFixed(0)}pp`;
+          alphaLine = sa!==null
+            ? `<span style="display:block;margin-top:6px;font-size:12px"><span style="color:${sa>0?"var(--up)":"var(--down)"}">📊 vs赛道（${sb.label}）${seg(sa)}</span> · <span style="color:${a>0?"var(--up)":"var(--down)"}">vs大盘（${b.label}）${seg(a)}</span>${sa>0&&a>0?" 🏆双强":""}</span>`
+            : `<span style="display:block;margin-top:6px;font-size:12px;color:${a>0?"var(--up)":"var(--down)"}">📊 相对大盘（${b.label}）：YTD ${a>0?"+":""}${a.toFixed(0)}pp ${a>0?"跑赢":"跑输"}</span>`;
         }
       }
     }catch(e){}
