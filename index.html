@@ -1257,10 +1257,10 @@ let PROFILES = {};
     ]);
     BUY = buyCfg || {};
     if(glossary) renderDict(glossary);
-    try{ renderEvents(evCfg, evAuto); }catch(e){ console.warn("events:", e); }
     fetch("config/profiles.json"+bust).then(r=>r.ok?r.json():{}).then(p=>{ PROFILES = p || {}; }).catch(()=>{});
     renderDash(quotes);
     renderNotes(notesCfg);
+    try{ renderEvents(evCfg, evAuto); }catch(e){ console.warn("events:", e); }
   }catch(e){
     document.getElementById("loading").textContent =
       "数据加载失败：" + e.message + "（本地直接双击打开时请用本地服务器，如 python3 -m http.server）";
