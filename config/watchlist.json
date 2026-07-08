@@ -5709,6 +5709,20 @@
      "ath_floor": 0
     },
     {
+     "name": "宁德时代",
+     "code": "03750",
+     "market": "港股",
+     "yahoo": "3750.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 45.8,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 794.5
+    },
+    {
      "name": "比亚迪",
      "code": "002594",
      "market": "A股",
@@ -5830,6 +5844,7 @@
      "name": "储能与锂（量／价分开）",
      "codes": [
       "300750",
+      "03750",
       "002594",
       "300274",
       "605117",

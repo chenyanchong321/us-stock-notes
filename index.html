@@ -1426,22 +1426,41 @@ let PROFILES = {};
     if(!r) return null;
     const L=ladderOf(r); if(!L) return null;
     const md = (typeof r[6]==="number") ? -r[6] : null;
-    const items = L.steps.map(s=>({retr:s.p, price:s.price, cur:false}));
-    if(md!==null) items.push({retr:md, price:r[5], cur:true});
+    const ath = parseNum(r[4]), cur = parseCur(r[4]);
+    const fmt=v=> v>=10000?v.toLocaleString('en',{maximumFractionDigits:0}) : v>=100?v.toFixed(2):v.toFixed(v>=1?2:3);
+    const items = L.steps.map(s=>({retr:s.p, price:s.price, kind:"step"}));
+    if(md!==null) items.push({retr:md, price:r[5], kind:"cur"});
+    // 买点插入：解析 BUY[code] 里的价格（"330-350"/"600左右"/"37以下（…）"），换算跌幅插档
+    const b = (typeof BUY!=="undefined") && BUY[code];
+    if(b && ath && !/风险锚/.test(b)){
+      const head=b.split("（")[0].split("·")[0];   // 去掉括号/圆点后的注释（日期、市值锚等）
+      const nums=(head.match(/[\d.]+/g)||[]).map(parseFloat).filter(x=>x>0 && x<ath*1.2);
+      const uniq=[...new Set(nums)];
+      uniq.forEach((bp,i)=>{
+        const retr=(1-bp/ath)*100;
+        const lab=uniq.length>1?`买点${["①","②","③","④"][i]||(i+1)}`:"买点";
+        items.push({retr, price:cur+fmt(bp), kind:"buy", lab});
+      });
+    }
     items.sort((a,b)=>a.retr-b.retr);
     const rows=items.map(it=>{
-      if(it.cur){
+      if(it.kind==="cur"){
         return `<tr style="color:var(--gold);font-weight:700;border-top:1px solid var(--gold);border-bottom:1px solid var(--gold)">
           <td style="padding:4px 16px 4px 0">−${it.retr.toFixed(1)}%</td>
           <td style="padding:4px 0;text-align:right">${it.price} (现价)</td></tr>`;
+      }
+      if(it.kind==="buy"){
+        return `<tr style="color:var(--up);font-weight:600">
+          <td style="padding:3px 16px 3px 0">🎯 −${it.retr.toFixed(1)}%</td>
+          <td style="padding:3px 0;text-align:right">${it.price} (${it.lab})</td></tr>`;
       }
       const passed = md!==null && it.retr < md;
       const nm = passed ? "color:var(--text2);opacity:.55" : "";
       return `<tr style="${nm}"><td style="padding:2px 16px 2px 0">−${it.retr}%</td><td style="padding:2px 0;text-align:right">${it.price}</td></tr>`;
     }).join("");
     return `<b>🪜 回撤台阶</b>　<span style="color:var(--text2);font-size:12px">ATH ${L.ath}</span>
-      <table style="margin-top:6px;font-size:12.5px;border-collapse:collapse;min-width:180px">${rows}</table>
-      <div style="margin-top:5px;font-size:11px;color:var(--text2)">金色＝现价所在档 · 灰色＝已跌破</div>`;
+      <table style="margin-top:6px;font-size:12.5px;border-collapse:collapse;min-width:190px">${rows}</table>
+      <div style="margin-top:5px;font-size:11px;color:var(--text2)">金色＝现价 · 绿色🎯＝建议买点 · 灰色＝已跌破</div>`;
   }
   document.addEventListener("mouseover", e=>{
     if(pinned) return;
