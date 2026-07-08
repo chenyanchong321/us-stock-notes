@@ -461,6 +461,12 @@ function mcapCell(r){
   const sub = pe ? `<span style="display:block;font-size:11px;color:var(--text2)">${pe}</span>` : "";
   return `${r[3]}${sub}`;
 }
+/* 市值排序键：把"$4.90万亿""$5427.6亿"折算成同一量纲(亿)，无法解析的沉底 */
+function mcapVal(r){
+  const s=r[3]; if(typeof s!=="string") return -1;
+  const m=s.replace(/[,，]/g,"").match(/-?\d+(\.\d+)?/); if(!m) return -1;
+  return parseFloat(m[0])*(s.includes("万亿")?10000:1);
+}
 function rowHTML(r, grp){
   return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${grp||""}" data-code="${r[1]}" data-mkt="${r[2]||""}" data-key="${(r[0]+r[1]).toLowerCase()}">
     <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
@@ -479,6 +485,14 @@ function renderDash(quotes){
   const navEl = document.getElementById("nav-links");
   DATA.forEach((s,i)=>{
     const id = "sec"+i;
+    /* 默认排序：子分组内部按市值高→低，子分组块保持首次出现的先后顺序 */
+    const gOrder={}; let gseq=0;
+    s.rows.forEach(r=>{ const g=r[12]||""; if(!(g in gOrder)) gOrder[g]=gseq++; });
+    s.rows.sort((a,b)=>{
+      const ga=gOrder[a[12]||""], gb=gOrder[b[12]||""];
+      if(ga!==gb) return ga-gb;
+      return mcapVal(b)-mcapVal(a);
+    });
     const nums = s.rows.map(r=>r[6]).filter(v=>typeof v==="number");
     const avgDD = nums.length ? (nums.reduce((a,b)=>a+b,0)/nums.length).toFixed(1) : "–";
     let body="", lastG="", gi=0, subnav="";
@@ -522,13 +536,17 @@ function renderDash(quotes){
       th.dataset.asc = asc?"1":"0";
       th.insertAdjacentHTML("beforeend",`<span class="arrow">${asc?"▲":"▼"}</span>`);
       const rows = [...DATA[secIdx].rows];
-      rows.sort((a,b)=>{
-        let x=a[ri], y=b[ri];
-        if(typeof x==="string"&&typeof y==="string") return asc?x.localeCompare(y,"zh"):y.localeCompare(x,"zh");
-        if(typeof x==="string") return 1;
-        if(typeof y==="string") return -1;
-        return asc?x-y:y-x;
-      });
+      if(ci===1){   /* 市值列：按数值大小排（默认已高→低，点击切低→高） */
+        rows.sort((a,b)=> asc ? mcapVal(a)-mcapVal(b) : mcapVal(b)-mcapVal(a));
+      } else {
+        rows.sort((a,b)=>{
+          let x=a[ri], y=b[ri];
+          if(typeof x==="string"&&typeof y==="string") return asc?x.localeCompare(y,"zh"):y.localeCompare(x,"zh");
+          if(typeof x==="string") return 1;
+          if(typeof y==="string") return -1;
+          return asc?x-y:y-x;
+        });
+      }
       tbody.innerHTML = rows.map(r=>rowHTML(r, r[12])).join("");
       applyFilter();
     });
