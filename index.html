@@ -1436,7 +1436,7 @@ let PROFILES = {};
     if(b && ath && !/风险锚/.test(b)){
       const head=b.split("（")[0].split("·")[0];   // 去掉括号/圆点后的注释（日期、市值锚等）
       const nums=(head.match(/[\d.]+/g)||[]).map(parseFloat).filter(x=>x>0 && x<ath*1.2);
-      const uniq=[...new Set(nums)];
+      const uniq=[...new Set(nums)].sort((a,b)=>b-a);   // 价格从高到低：先跌到的高价=买点①
       uniq.forEach((bp,i)=>{
         const retr=(1-bp/ath)*100;
         const lab=uniq.length>1?`买点${["①","②","③","④"][i]||(i+1)}`:"买点";
