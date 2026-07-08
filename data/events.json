@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-09 03:54 北京时间",
+ "updated": "2026-07-09 04:00 北京时间",
  "earnings": [
   {
    "d": "2026-07-15",
@@ -180,6 +180,12 @@
    "code": "QCOM",
    "name": "高通",
    "est": false
+  },
+  {
+   "d": "2026-07-30",
+   "code": "APLD",
+   "name": "Applied Digital",
+   "est": true
   },
   {
    "d": "2026-07-30",
