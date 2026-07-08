@@ -461,11 +461,23 @@ function mcapCell(r){
   const sub = pe ? `<span style="display:block;font-size:11px;color:var(--text2)">${pe}</span>` : "";
   return `${r[3]}${sub}`;
 }
-/* 市值排序键：把"$4.90万亿""$5427.6亿"折算成同一量纲(亿)，无法解析的沉底 */
+/* 各币种对美元汇率（1本币=?美元，粗略即可，只影响排名不影响展示；口径约2026年中） */
+const FX2USD = {USD:1, HKD:1/7.8, CNY:1/7.2, JPY:1/158, KRW:1/1370, TWD:1/32};
+function curOf(mkt){
+  const m = String(mkt||"");
+  if(m.startsWith("港股")) return "HKD";
+  if(m.startsWith("A股"))  return "CNY";
+  if(m.startsWith("日股")||m.startsWith("日本")) return "JPY";
+  if(m.startsWith("韩"))   return "KRW";
+  if(m.startsWith("台股")) return "TWD";
+  return "USD";   /* 美股/加密/外汇/其它默认按美元 */
+}
+/* 市值排序键：先把"$4.90万亿""¥5427.6亿"统一到"亿本币"，再按市场对应汇率折成"亿美元"，无法解析的沉底 */
 function mcapVal(r){
   const s=r[3]; if(typeof s!=="string") return -1;
   const m=s.replace(/[,，]/g,"").match(/-?\d+(\.\d+)?/); if(!m) return -1;
-  return parseFloat(m[0])*(s.includes("万亿")?10000:1);
+  const local = parseFloat(m[0])*(s.includes("万亿")?10000:1);
+  return local*(FX2USD[curOf(r[2])]||1);
 }
 function rowHTML(r, grp){
   return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${grp||""}" data-code="${r[1]}" data-mkt="${r[2]||""}" data-key="${(r[0]+r[1]).toLowerCase()}">
@@ -500,7 +512,7 @@ function renderDash(quotes){
       const g=r[12]||"";
       if(g && g!==lastG){
         const gid=`${id}-g${gi++}`;
-        body+=`<tr class="grp" id="${gid}"><td colspan="${COLS.length+1}"><span class="glabel">▸ ${g}</span></td></tr>`;
+        body+=`<tr class="grp" id="${gid}" data-grp="${g}"><td colspan="${COLS.length+1}"><span class="glabel">▸ ${g}</span></td></tr>`;
         subnav+=`<a class="sub" href="#${gid}">↳ ${g}</a>`;
         lastG=g;
       }
@@ -920,12 +932,17 @@ function applyFilter(){
   const filtering = q!=="" || !!window.CURMKT;
   let any = false;
   document.querySelectorAll("#view-dash #sections .section").forEach(sec=>{
-    let vis = 0;
+    let vis = 0; const visGroups = new Set();
     sec.querySelectorAll("tbody tr").forEach(tr=>{
+      if(tr.classList.contains("grp")) return;   /* 分组标题行下面单独处理 */
       if(!tr.dataset.key){ tr.classList.toggle("hidden", filtering); return; }
       const hit = (!q || tr.dataset.key.includes(q)) && mktOk(tr.dataset.mkt);
       tr.classList.toggle("hidden",!hit);
-      if(hit) vis++;
+      if(hit){ vis++; if(tr.dataset.grp) visGroups.add(tr.dataset.grp); }
+    });
+    /* 分组分隔线：该组下还有可见成员就保留，否则一并隐藏 */
+    sec.querySelectorAll("tbody tr.grp").forEach(g=>{
+      g.classList.toggle("hidden", !visGroups.has(g.dataset.grp));
     });
     sec.classList.toggle("hidden",vis===0);
     if(vis) any = true;
