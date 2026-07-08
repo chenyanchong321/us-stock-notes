@@ -650,7 +650,7 @@ function renderDash(quotes){
       const list = flatRows().filter(x=>BUY[x.r[1]]);
       list.forEach(x=>{
         const th=buyTh(x.r[1]), px=pxOf(x.r);
-        x.dist = (th&&px) ? (px/th-1)*100 : null;
+        x.dist = (th&&px) ? (1-th/px)*100 : null;   // 从现价还需下跌到买点的幅度
         x.hit = x.dist!==null && x.dist<=2;
       });
       list.sort((a,b)=>{
@@ -1413,7 +1413,7 @@ let PROFILES = {};
     const th = (b.includes("风险锚")||b.includes("市值")) ? null : (parseFloat((b.match(/[\d.]+/)||[])[0]) || null);
     let line2 = "";
     if(th && px){
-      const dist = (px/th-1)*100;
+      const dist = (1-th/px)*100;   // 从现价还需下跌到买点的幅度
       line2 = dist<=2
         ? `<span style="display:block;margin-top:6px;color:var(--up);font-weight:600">🎯 已进买点区（现价 ${r[5]}）</span>`
         : `<span style="display:block;margin-top:6px;font-size:12px;color:var(--text2)">现价 ${r[5]} · 距买点还差 <b style="color:var(--gold)">${dist.toFixed(1)}%</b></span>`;
