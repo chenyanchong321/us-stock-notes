@@ -439,8 +439,8 @@ function posCell(v, rng){
 }
 function buyHit(r){
   const b = BUY[r[1]];
-  if(!b || b.includes("风险锚") || b.includes("市值")) return false;
-  const th = parseFloat((b.match(/[\d.]+/)||[])[0]);
+  if(!b || b.includes("风险锚")) return false;
+  const th = parseFloat((b.split("（")[0].split("·")[0].match(/[\d.]+/)||[])[0]);
   const px = parseFloat(String(r[5]).replace(/[^\d.]/g,""));
   return !!(th && px && px <= th*1.02);
 }
@@ -562,8 +562,9 @@ function renderDash(quotes){
     const sp=document.getElementById("st-perf"); if(sp) sp.textContent=lab; })();
   function buyTh(code){
     const b = BUY[code];
-    if(!b || b.includes("风险锚") || b.includes("市值")) return null;
-    return parseFloat((b.match(/[\d.]+/)||[])[0]) || null;
+    if(!b || b.includes("风险锚")) return null;
+    const head=b.split("（")[0].split("·")[0];
+    return parseFloat((head.match(/[\d.]+/)||[])[0]) || null;
   }
   function pxOf(r){ return parseFloat(String(r[5]).replace(/[^\d.]/g,"")); }
   function flatRows(){
