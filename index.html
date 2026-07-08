@@ -1359,6 +1359,7 @@ let PROFILES = {};
     if(tdp){
       const h2 = posTip(tdp.parentElement);
       if(h2){ tip.innerHTML=h2; tip.style.display="block"; tip.style.pointerEvents="none"; place(e.clientX, e.clientY); }
+      else tip.style.display="none";   /* 无买点的行：把上一行残留的浮窗收掉，防"粘卡" */
       return;
     }
     const td = e.target.closest("td.name"); if(!td) return;
