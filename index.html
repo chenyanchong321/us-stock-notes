@@ -1416,7 +1416,9 @@ let PROFILES = {};
         const upd=new Date(`${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:00+08:00`);
         const hrs=(Date.now()-upd)/36e5;
         const bj=new Date(Date.now()+8*36e5); const dow=bj.getUTCDay();
-        const lim=(dow===0||dow===6)?26:4;
+        const hh=bj.getUTCHours();
+        /* 交易活跃时段（北京8-24点工作日）收紧到1.5小时，其余工作日时段4小时，周末26小时 */
+        const lim=(dow===0||dow===6)?26:(hh>=8?1.5:4);
         if(hrs>lim){
           const w=document.createElement("div");
           w.id="stale-warn";
