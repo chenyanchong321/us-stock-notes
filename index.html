@@ -319,6 +319,7 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="stat vc" data-view="alpha"><div class="k">超额榜</div><div class="v">Top30</div></div>
       <div class="stat vc" data-view="dd"><div class="k">回撤榜（&gt;30%）</div><div class="v" id="st-deep">–</div></div>
       <div class="stat vc" data-view="hi"><div class="k">🚀 新高榜（&lt;10%）</div><div class="v" id="st-hi">–</div></div>
+      <div class="stat vc" data-view="ladder"><div class="k">🪜 回撤阶梯</div><div class="v">全表</div></div>
       <div class="stat vc" data-view="heat"><div class="k">板块热力</div><div class="v">21</div></div>
       <div class="refresh-note">交易时段每30分钟自动更新 · 市值为估算口径</div>
     </div>
@@ -406,6 +407,22 @@ function ddCell(v){
   if(typeof v!=="number") return `<span class="flat">–</span>`;
   return `<span class="${v<=-30?"ddsev":"ddmild"}">${v.toFixed(1)}%</span>`;
 }
+function parseCur(s){ const m=String(s).match(/^([^\d.-]*)/); return m?m[1]:""; }
+function parseNum(s){ const m=String(s).replace(/[,，]/g,"").match(/[\d.]+/); return m?parseFloat(m[0]):null; }
+function ladderOf(r){   /* 从历史高点往下 −30%~−80% 的价格台阶 */
+  const ath=parseNum(r[4]), px=parseNum(r[5]), cur=parseCur(r[4]);
+  if(!ath||!px) return null;
+  const md = (typeof r[6]==="number") ? -r[6] : null;   // 当前回撤幅度(正数)
+  const fmt=v=> v>=10000?v.toLocaleString('en',{maximumFractionDigits:0}) : v>=100?v.toFixed(2):v.toFixed(v>=1?2:3);
+  const steps=[30,40,50,60,70,80].map(p=>{
+    const price=ath*(1-p/100);
+    const dist=(price/px-1)*100;   // 现价到该档还需变动%
+    const active = md!==null && md>=p && md<p+10;   // 当前所处台阶
+    const passed = md!==null && md>=p+10;            // 已跌破(更深)
+    return {p, price:cur+fmt(price), dist, active, passed};
+  });
+  return {ath:r[4], px:r[5], cur, steps, md};
+}
 function athCell(r){
   return `<span style="display:block;white-space:nowrap">${r[4]}</span><span style="display:block;font-size:11px">${ddCell(r[6])}</span>`;
 }
@@ -446,7 +463,7 @@ function mcapCell(r){
 function rowHTML(r, grp){
   return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${grp||""}" data-code="${r[1]}" data-mkt="${r[2]||""}" data-key="${(r[0]+r[1]).toLowerCase()}">
     <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
-    <td>${mcapCell(r)}</td><td class="pxc">${priceCell(r)}</td><td>${athCell(r)}</td>
+    <td>${mcapCell(r)}</td><td class="pxc">${priceCell(r)}</td><td class="athc">${athCell(r)}</td>
     <td>${fmtPct(r[16])}</td>
     <td>${fmtPct(r[18])}</td>
     <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
@@ -614,7 +631,7 @@ function renderDash(quotes){
       <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
       <td>${mcapCell(r)}</td>
       <td class="pxc">${priceCell(r, mode)}</td>${extraTd||""}
-      <td>${athCell(r)}</td>
+      <td class="athc">${athCell(r)}</td>
       <td>${fmtPct(r[16])}</td>
       <td>${fmtPct(r[18])}</td>
       <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
@@ -693,6 +710,19 @@ function renderDash(quotes){
       list.sort((a,b)=>a.r[6]-b.r[6]);
       title=`🕳 回撤榜（>30%，共${list.length}）`; note="距历史高点回撤最深的在最上面 · 捡深跌前先看简介和买点";
       body=list.map(x=>fvRow(x)).join("");
+    }else if(v==="ladder"){
+      const list=flatRows().map(x=>({x, L:ladderOf(x.r)})).filter(o=>o.L && !/指数/.test(String(o.x.r[2])));
+      list.sort((a,b)=>(a.x.r[6]??0)-(b.x.r[6]??0));   // 回撤最深在上
+      title="🪜 回撤阶梯（全表横向对比）"; note="每档＝历史高点往下的价格（−30%~−80%）· 金色▸＝该标的当前所处台阶 · 灰色＝已跌破 · 想看单只的详细\"距现价\"移到该行「历史高点」列悬停";
+      head=`<thead><tr><th style="text-align:left">名称</th><th>现价</th><th>历史高点</th><th>−30%</th><th>−40%</th><th>−50%</th><th>−60%</th><th>−70%</th><th>−80%</th><th class="fill"></th></tr></thead>`;
+      body=list.map(o=>{
+        const r=o.x.r;
+        const cells=o.L.steps.map(s=>{
+          const st = s.active?'color:var(--gold);font-weight:700' : s.passed?'color:var(--text2);opacity:.5' : 'color:var(--text)';
+          return `<td style="${st}">${s.active?"▸":""}${s.price}</td>`;
+        }).join("");
+        return `<tr data-code="${r[1]}"><td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td><td>${r[5]}</td><td>${r[4]}<span style="display:block;font-size:11px">${ddCell(r[6])}</span></td>${cells}<td class="fill"></td></tr>`;
+      }).join("");
     }else if(v==="heat"){
       const HW={d:[16,"当日"],w1:[18,"近1周"],m1:[7,"近1月"]};
       const hk = HW[window.HEAT_W] ? window.HEAT_W : "d";
@@ -1383,10 +1413,28 @@ let PROFILES = {};
         ? `<span style="display:block;margin-top:6px;color:var(--up);font-weight:600">🎯 已进买点区（现价 ${r[5]}）</span>`
         : `<span style="display:block;margin-top:6px;font-size:12px;color:var(--text2)">现价 ${r[5]} · 距买点还差 <b style="color:var(--gold)">${dist.toFixed(1)}%</b></span>`;
     }
-    return `<b>🎯 买点</b>　${b}${line2}`;
+    return `<b>🎯 买点</b>　<span style="color:var(--gold);font-weight:700">${b}</span>${line2}`;
+  }
+  function athTip(tr){   /* 历史高点悬停＝回撤台阶表 */
+    const code=tr.dataset.code; if(!code) return null;
+    let r=null;
+    for(const s of DATA){ for(const x of s.rows){ if(x[1]===code){ r=x; break; } } if(r) break; }
+    if(!r) return null;
+    const L=ladderOf(r); if(!L) return null;
+    const rows=L.steps.map(s=>{
+      const mark = s.active ? '<span style="color:var(--gold)">▸</span>' : "　";
+      const nm = s.active ? "font-weight:700;color:var(--gold)" : s.passed ? "color:var(--text2);opacity:.6" : "";
+      const distTxt = s.dist>=0 ? `<span style="color:var(--up)">还需 +${s.dist.toFixed(0)}%</span>` : `<span style="color:var(--down)">还需 ${s.dist.toFixed(0)}%</span>`;
+      return `<tr style="${nm}"><td style="padding:2px 10px 2px 0">${mark} −${s.p}%</td><td style="padding:2px 12px 2px 0;text-align:right">${s.price}</td><td style="padding:2px 0;font-size:11px">${distTxt}</td></tr>`;
+    }).join("");
+    return `<b>🪜 回撤台阶</b>　<span style="color:var(--text2);font-size:12px">历史高点 ${L.ath}</span>
+      <table style="margin-top:6px;font-size:12.5px;border-collapse:collapse">${rows}</table>
+      <div style="margin-top:5px;font-size:11px;color:var(--text2)">▸ 当前所处台阶 · "还需"＝现价到该档需涨/跌幅度</div>`;
   }
   document.addEventListener("mouseover", e=>{
     if(pinned) return;
+    const ath = e.target.closest("td.athc");
+    if(ath){ const h3=athTip(ath.parentElement); if(h3){ tip.innerHTML=h3; tip.style.display="block"; tip.style.pointerEvents="none"; place(e.clientX,e.clientY);} else tip.style.display="none"; return; }
     const ip = e.target.closest(".ipoflag");
     if(ip){ tip.innerHTML=ip.dataset.tip; tip.style.display="block"; tip.style.pointerEvents="none"; place(e.clientX, e.clientY); return; }
     const tdp = e.target.closest("td.pxc");
@@ -1403,20 +1451,21 @@ let PROFILES = {};
   });
   document.addEventListener("mousemove", e=>{
     if(pinned || tip.style.display !== "block") return;
-    if(!e.target.closest || !(e.target.closest("td.name")||e.target.closest("td.pxc")||e.target.closest(".ipoflag"))){ tip.style.display = "none"; return; }
+    if(!e.target.closest || !(e.target.closest("td.name")||e.target.closest("td.pxc")||e.target.closest("td.athc")||e.target.closest(".ipoflag"))){ tip.style.display = "none"; return; }
     place(e.clientX, e.clientY);
   });
   document.addEventListener("mouseout", e=>{
     if(pinned) return;
-    if(e.target.closest && (e.target.closest("td.name")||e.target.closest("td.pxc")||e.target.closest(".ipoflag")) && !(e.relatedTarget && e.relatedTarget.closest && (e.relatedTarget.closest("td.name")||e.relatedTarget.closest("td.pxc")||e.relatedTarget.closest(".ipoflag"))))
+    if(e.target.closest && (e.target.closest("td.name")||e.target.closest("td.pxc")||e.target.closest("td.athc")||e.target.closest(".ipoflag")) && !(e.relatedTarget && e.relatedTarget.closest && (e.relatedTarget.closest("td.name")||e.relatedTarget.closest("td.pxc")||e.relatedTarget.closest("td.athc")||e.relatedTarget.closest(".ipoflag"))))
       tip.style.display = "none";
   });
   document.addEventListener("click", e=>{      /* 点名称固定浮窗（可点相关笔记链接），点其他处收起 */
     if(e.target.closest && e.target.closest("#stip")) return;   /* 点浮窗内链接不收起 */
     const td = e.target.closest("td.name");
     const tdp = e.target.closest("td.pxc");
+    const tda = e.target.closest("td.athc");
     const ipc = e.target.closest(".ipoflag");
-    const h = td ? tipHTML(td) : (tdp ? posTip(tdp.parentElement) : (ipc ? ipc.dataset.tip : null));
+    const h = td ? tipHTML(td) : (tdp ? posTip(tdp.parentElement) : (tda ? athTip(tda.parentElement) : (ipc ? ipc.dataset.tip : null)));
     if(h){
       tip.innerHTML = h; tip.style.display = "block"; tip.style.pointerEvents = "auto";
       pinned = true;
