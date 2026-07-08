@@ -1090,6 +1090,17 @@ function renderNotes(cfg){
     });
     return got;
   }
+  let lastLiveAt=0;
+  function usNoteFor(ses){
+    if((ses==="盘前"||ses==="盘后") && lastLiveAt && Date.now()-lastLiveAt<90000) return ` · 美股${ses}(分钟档)`;
+    return ses==="盘前" ? " · 美股盘前(半小时档)" : ses==="盘后" ? " · 美股盘后(半小时档)" : ses===null ? " · 美股休市" : "";
+  }
+  function markRealtime(note){
+    const t=new Date();
+    const el=document.getElementById("update-time");
+    el.textContent=el.textContent.replace(/ · 实时.*$/,"")+" · 实时 "+
+      `${String(t.getHours()).padStart(2,"0")}:${String(t.getMinutes()).padStart(2,"0")}:${String(t.getSeconds()).padStart(2,"0")}`+note;
+  }
   function refresh(){
     if(document.visibilityState!=="visible") return;
     if(document.getElementById("view-dash").classList.contains("hidden")) return;
@@ -1106,12 +1117,8 @@ function renderNotes(cfg){
         if(++done===Math.ceil(syms.length/60) && total>0){
           window.buildOpps && window.buildOpps();
           if(window.CURVIEW && window.CURVIEW!=="all" && window.buildFlat) window.buildFlat();
-          const t=new Date();
           const ses = usSession();
-          const usNote = ses==="盘前" ? " · 美股盘前(半小时档)" : ses==="盘后" ? " · 美股盘后(半小时档)" : ses===null ? " · 美股休市" : "";
-          const el=document.getElementById("update-time");
-          el.textContent=el.textContent.replace(/ · 实时.*$/,"")+" · 实时 "+
-            `${String(t.getHours()).padStart(2,"0")}:${String(t.getMinutes()).padStart(2,"0")}:${String(t.getSeconds()).padStart(2,"0")}`+usNote;
+          markRealtime(usNoteFor(ses));
         }
       };
       document.head.appendChild(s);
@@ -1130,6 +1137,33 @@ function renderNotes(cfg){
     window.buildOpps && window.buildOpps();
     if(window.CURVIEW && window.CURVIEW!=="all" && window.buildFlat) window.buildFlat();
   }
+  async function applyLive(){   /* ECS 同源分钟级 live.json：只在美股盘前/盘后覆盖美股显示；GitHub Pages 404 静默降级 */
+    const ses=usSession();
+    if(ses!=="盘前" && ses!=="盘后") return;
+    if(document.visibilityState!=="visible") return;
+    if(!rowsByCode) buildIndex();
+    try{
+      const r=await fetch("data/live.json?x="+Date.now(), {cache:"no-store"});
+      if(!r.ok) return;
+      const j=await r.json();
+      if(!j || !j.q || !j.t || Date.now()/1000-j.t>240) return;   /* 只接受4分钟内的新鲜数据 */
+      let got=0;
+      Object.entries(j.q).forEach(([code,v])=>{
+        const sym="us"+String(code).toUpperCase();
+        if(!rowsByCode[sym] || !v) return;
+        const price=Number(v.p), pct=Number(v.c);
+        if(isFinite(price)&&price>0){
+          applyQuote(sym, price, isFinite(pct)?Math.round(pct*100)/100:null);
+          got++;
+        }
+      });
+      if(!got) return;
+      lastLiveAt=Date.now();
+      window.buildOpps && window.buildOpps();
+      if(window.CURVIEW && window.CURVIEW!=="all" && window.buildFlat) window.buildFlat();
+      markRealtime(usNoteFor(ses));
+    }catch(e){}
+  }
   /* 非盘中时段：每10分钟重拉静态数据，长开页面的盘前/盘后价自动跟上（不用手动刷新） */
   async function refetchStatic(){
     if(document.visibilityState!=="visible") return;
@@ -1143,11 +1177,11 @@ function renderNotes(cfg){
       }));
       document.getElementById("update-time").textContent="数据更新："+q.updated;
       if(usSession()==="盘中") refresh();   /* 盘中：马上让实时层盖回最新价，避免短暂回跳 */
-      else applyExt();
+      else { applyExt(); applyLive(); }
     }catch(e){}
   }
-  window.addEventListener("load",()=>{ setTimeout(applyExt,800); setTimeout(refresh,1500); setInterval(refresh,30000); setInterval(refetchStatic,600000); });
-  document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") refresh(); });
+  window.addEventListener("load",()=>{ setTimeout(applyExt,800); setTimeout(applyLive,1000); setTimeout(refresh,1500); setInterval(refresh,30000); setInterval(applyLive,60000); setInterval(refetchStatic,600000); });
+  document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"){ refresh(); applyLive(); } });
 })();
 
 /* ===== 术语词典 ===== */
