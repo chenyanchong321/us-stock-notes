@@ -89,7 +89,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 .tbl-wrap{background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow-x:auto}
 table{width:100%;border-collapse:collapse;white-space:nowrap}
 th.fill,td.fill{width:100%;padding:0;cursor:default}
-th{font-size:12px;color:var(--text2);text-align:right;padding:9px 13px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;background:var(--panel)}
+th{font-size:12px;color:var(--text);font-weight:600;text-align:right;padding:9px 13px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;background:var(--panel)}
 th:first-child{text-align:left}
 th:hover{color:var(--text)}
 th .arrow{font-size:10px;margin-left:3px;color:var(--accent)}
@@ -321,7 +321,7 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="stat vc" data-view="hi"><div class="k">🚀 新高榜（&lt;10%）</div><div class="v" id="st-hi">–</div></div>
       <div class="stat vc" data-view="ladder"><div class="k">🪜 回撤阶梯</div><div class="v">全表</div></div>
       <div class="stat vc" data-view="heat"><div class="k">板块热力</div><div class="v">21</div></div>
-      <div class="refresh-note">交易时段每30分钟自动更新 · 市值为估算口径</div>
+      <div class="refresh-note">盘中现价30秒实时 · 美股盘前盘后约1分钟 · 其余指标数分钟刷新 · 市值为估算口径</div>
     </div>
     <div id="topbar">
       <select id="secjump" class="mobile-only"><option value="">📂 跳转板块…</option></select>
@@ -711,10 +711,11 @@ function renderDash(quotes){
       title=`🕳 回撤榜（>30%，共${list.length}）`; note="距历史高点回撤最深的在最上面 · 捡深跌前先看简介和买点";
       body=list.map(x=>fvRow(x)).join("");
     }else if(v==="ladder"){
+      const asc = window.LADDER_ASC===true;   // false=回撤深在上(默认)，true=回撤浅在上
       const list=flatRows().map(x=>({x, L:ladderOf(x.r)})).filter(o=>o.L && !/指数/.test(String(o.x.r[2])));
-      list.sort((a,b)=>(a.x.r[6]??0)-(b.x.r[6]??0));   // 回撤最深在上
-      title="🪜 回撤阶梯（全表横向对比）"; note="每档＝历史高点往下的价格（−30%~−80%）· 金色▸＝该标的当前所处台阶 · 灰色＝已跌破 · 想看单只的详细\"距现价\"移到该行「历史高点」列悬停";
-      head=`<thead><tr><th style="text-align:left">名称</th><th>现价</th><th>历史高点</th><th>−30%</th><th>−40%</th><th>−50%</th><th>−60%</th><th>−70%</th><th>−80%</th><th class="fill"></th></tr></thead>`;
+      list.sort((a,b)=> asc ? (b.x.r[6]??-999)-(a.x.r[6]??-999) : (a.x.r[6]??0)-(b.x.r[6]??0));
+      title="🪜 回撤阶梯（全表横向对比）"; note=`每档＝历史高点往下的价格（−30%~−80%）· 金色▸＝当前所处台阶 · 灰色＝已跌破 · 点「历史高点」表头切换排序（现为${asc?"回撤浅→深":"回撤深→浅"}）· 单只详细移到该行「历史高点」列悬停`;
+      head=`<thead><tr><th style="text-align:left">名称</th><th>现价</th><th id="ladder-sort" style="cursor:pointer;color:var(--accent)">历史高点 ${asc?"▲":"▼"}</th><th>−30%</th><th>−40%</th><th>−50%</th><th>−60%</th><th>−70%</th><th>−80%</th><th class="fill"></th></tr></thead>`;
       body=list.map(o=>{
         const r=o.x.r;
         const cells=o.L.steps.map(s=>{
@@ -770,6 +771,8 @@ function renderDash(quotes){
       const sp=document.getElementById("st-perf"); if(sp) sp.textContent=lab;
       window.buildFlat();
     }));
+    const ls=document.getElementById("ladder-sort");
+    if(ls) ls.addEventListener("click",()=>{ window.LADDER_ASC=!(window.LADDER_ASC===true); window.buildFlat(); });
     el.querySelectorAll(".heat-lead").forEach(a=>a.addEventListener("click",e=>{
       e.preventDefault();
       setView("all");
