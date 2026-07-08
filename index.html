@@ -1419,21 +1419,32 @@ let PROFILES = {};
     }
     return `<b>🎯 买点</b>　<span style="color:var(--gold);font-weight:700">${b}</span>${line2}`;
   }
-  function athTip(tr){   /* 历史高点悬停＝回撤台阶表 */
+  function athTip(tr){   /* 历史高点悬停＝回撤台阶表（现价作为一档插入，金色分界） */
     const code=tr.dataset.code; if(!code) return null;
     let r=null;
     for(const s of DATA){ for(const x of s.rows){ if(x[1]===code){ r=x; break; } } if(r) break; }
     if(!r) return null;
     const L=ladderOf(r); if(!L) return null;
-    const rows=L.steps.map(s=>{
-      const mark = s.active ? '<span style="color:var(--gold)">▸</span>' : "　";
-      const nm = s.active ? "font-weight:700;color:var(--gold)" : s.passed ? "color:var(--text2);opacity:.6" : "";
-      const distTxt = s.dist>=0 ? `<span style="color:var(--up)">还需 +${s.dist.toFixed(0)}%</span>` : `<span style="color:var(--down)">还需 ${s.dist.toFixed(0)}%</span>`;
-      return `<tr style="${nm}"><td style="padding:2px 10px 2px 0">${mark} −${s.p}%</td><td style="padding:2px 12px 2px 0;text-align:right">${s.price}</td><td style="padding:2px 0;font-size:11px">${distTxt}</td></tr>`;
+    const md = (typeof r[6]==="number") ? -r[6] : null;   // 当前回撤幅度(正数)
+    // 台阶项：现价 + 六个回撤档，按回撤幅度升序（浅→深，从上到下）
+    const items = L.steps.map(s=>({retr:s.p, price:s.price, dist:s.dist, cur:false}));
+    if(md!==null) items.push({retr:md, price:r[5], pct:r[6], cur:true});
+    items.sort((a,b)=>a.retr-b.retr);
+    const rows=items.map(it=>{
+      if(it.cur){
+        return `<tr style="color:var(--gold);font-weight:700;border-top:1px solid var(--gold);border-bottom:1px solid var(--gold)">
+          <td style="padding:4px 10px 4px 0">▸ 现价</td>
+          <td style="padding:4px 12px 4px 0;text-align:right">${it.price}</td>
+          <td style="padding:4px 0;font-size:11.5px">跌 ${it.retr.toFixed(1)}%</td></tr>`;
+      }
+      const passed = md!==null && it.retr < md;   // 已跌破(在现价上方)→灰
+      const nm = passed ? "color:var(--text2);opacity:.55" : "";
+      const distTxt = it.dist>=0 ? `<span style="color:var(--up)">还需 +${it.dist.toFixed(0)}%</span>` : `<span style="color:var(--down)">还需 ${it.dist.toFixed(0)}%</span>`;
+      return `<tr style="${nm}"><td style="padding:2px 10px 2px 22px">−${it.retr}%</td><td style="padding:2px 12px 2px 0;text-align:right">${it.price}</td><td style="padding:2px 0;font-size:11px">${distTxt}</td></tr>`;
     }).join("");
     return `<b>🪜 回撤台阶</b>　<span style="color:var(--text2);font-size:12px">历史高点 ${L.ath}</span>
       <table style="margin-top:6px;font-size:12.5px;border-collapse:collapse">${rows}</table>
-      <div style="margin-top:5px;font-size:11px;color:var(--text2)">▸ 当前所处台阶 · "还需"＝现价到该档需涨/跌幅度</div>`;
+      <div style="margin-top:5px;font-size:11px;color:var(--text2)">金色＝现价所在位置 · 灰色档＝已跌破 · "还需"＝现价到该档需涨/跌幅度</div>`;
   }
   document.addEventListener("mouseover", e=>{
     if(pinned) return;
