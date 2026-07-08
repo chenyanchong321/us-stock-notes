@@ -22,6 +22,7 @@
   --header-h:56px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
+html,body{overflow-x:hidden;overscroll-behavior-x:none;max-width:100%}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:14px}
 
 /* ========== 顶部栏 ========== */
@@ -273,7 +274,7 @@ body.resizing{user-select:none;cursor:col-resize}
 
 @media(max-width:860px){
   .sidebar{display:none}
-  .main,#footer{margin-left:0;padding-left:16px;padding-right:16px}
+  .main,#footer{margin-left:0;padding-left:16px;padding-right:16px;min-width:0;max-width:100%;box-sizing:border-box}
 }
 </style>
 </head>
