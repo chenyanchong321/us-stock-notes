@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-09 06:06 北京时间",
+ "updated": "2026-07-09 06:12 北京时间",
  "earnings": [
   {
    "d": "2026-07-15",
@@ -35,6 +35,12 @@
    "d": "2026-07-22",
    "code": "EQT",
    "name": "EQT（天然气）",
+   "est": false
+  },
+  {
+   "d": "2026-07-23",
+   "code": "GOOGL",
+   "name": "谷歌（Alphabet）",
    "est": false
   },
   {
@@ -159,6 +165,12 @@
   },
   {
    "d": "2026-07-29",
+   "code": "FLEX",
+   "name": "伟创力",
+   "est": false
+  },
+  {
+   "d": "2026-07-29",
    "code": "2383",
    "name": "台光电子",
    "est": false
@@ -167,6 +179,12 @@
    "d": "2026-07-29",
    "code": "BE",
    "name": "Bloom Energy",
+   "est": false
+  },
+  {
+   "d": "2026-07-30",
+   "code": "MSFT",
+   "name": "微软",
    "est": false
   },
   {
@@ -191,6 +209,18 @@
    "d": "2026-07-30",
    "code": "EQIX",
    "name": "易昆尼克斯（Equinix）",
+   "est": false
+  },
+  {
+   "d": "2026-07-30",
+   "code": "LRCX",
+   "name": "泛林集团",
+   "est": false
+  },
+  {
+   "d": "2026-07-30",
+   "code": "FORM",
+   "name": "FormFactor",
    "est": false
   },
   {
@@ -285,8 +315,20 @@
   },
   {
    "d": "2026-08-05",
+   "code": "AMD",
+   "name": "AMD",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
    "code": "ANET",
    "name": "Arista Networks",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
+   "code": "ALAB",
+   "name": "Astera Labs",
    "est": false
   },
   {
