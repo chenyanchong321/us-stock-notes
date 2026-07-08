@@ -4368,6 +4368,20 @@
      "ath_floor": 0
     },
     {
+     "name": "大唐发电",
+     "code": "00991",
+     "market": "港股",
+     "yahoo": "0991.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 577.0,
+      "approx": true
+     },
+     "mcap_base_price": 3.12,
+     "ath_floor": 0
+    },
+    {
      "name": "华电能源",
      "code": "600726",
      "market": "A股",
@@ -4585,6 +4599,7 @@
       "600011",
       "00902",
       "601991",
+      "00991",
       "600726",
       "00836",
       "00883",
@@ -5582,6 +5597,20 @@
      "ath_floor": 0
     },
     {
+     "name": "大唐发电",
+     "code": "00991",
+     "market": "港股",
+     "yahoo": "0991.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 577.0,
+      "approx": true
+     },
+     "mcap_base_price": 3.12,
+     "ath_floor": 0
+    },
+    {
      "name": "华能国际",
      "code": "00902",
      "market": "港股",
@@ -5783,6 +5812,7 @@
      "name": "电力（煤电剪刀差）",
      "codes": [
       "601991",
+      "00991",
       "00902",
       "600900"
      ]
