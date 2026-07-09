@@ -166,14 +166,33 @@ crontab 追加（保留已有的 us-stock-trigger 行！）：
 - 全程零现金成本（用已付费的 ECS + 免费 Let's Encrypt 证书）。
 
 ## 八、验证清单（做完逐项打勾）
-- [ ] 步骤0：盘前时段实测新浪/Yahoo，确定数据源（待北京时间 16:00-21:30 对照富途复验；当前非盘前窗口，不能打勾）
+- [x] 步骤0：**2026-07-09 16:08（盘前窗口内）实测完成 → 结论：新浪不可用，必须换 Yahoo**
 - [x] 步骤1：nginx+git 装好，网站克隆到 /var/www/us-stock
 - [x] 步骤2：nginx 配置 + 重启 OK
 - [x] 步骤3：us-live.sh + 两条 cron（未覆盖 us-stock-trigger；us-stock-sync 改用 codeload tarball 同步 GitHub main，避开 ECS git/TLS 不稳定）
 - [x] 步骤4：index.html 加 applyLive() 并推送
 - [x] 步骤5：stock.ziyuanai.top A 记录 → 118.31.109.150
 - [x] 步骤6：安全组 80/443 + certbot HTTPS
-- [ ] 验收：关梯子秒开 https + 盘前分钟级（https、DNS、live.json 分钟级已验；盘前富途对照待步骤0窗口）
+- [ ] 验收：关梯子秒开 https ✅ + 盘前分钟级 ❌（https、DNS、live.json 分钟级链路均已验；但 live.json 内容是昨收，见步骤0）
+
+### 步骤0 实测结论（2026-07-09 16:08，盘前窗口内，DRAM 对照富途）
+| 来源 | DRAM 报价 | 判定 |
+|---|---|---|
+| 富途牛牛（基准） | 62.89（盘前） | — |
+| 新浪 `live.json` | 62.04 | ❌ 就是昨收 |
+| Yahoo 流水线 `r[17]` | 61.92，`st:"盘前"` | ✅ 真盘前，但快照于 16:00，滞后 8 分钟 |
+
+- **判定证据**：live.json 的 143 只美股里，**137 只的价格与涨跌幅和昨收完全一致**（其余 6 只仅小数取整差异，如 DJI 52348.39 vs 52348）。即新浪 gb_ 的 `[1]当前价` 盘前只返回昨收。
+  同一时刻 Yahoo `r[17]` 有 155 只带 `st:"盘前"`，且**全部 ≠ 昨收**（NVDA 盘前 204.985 vs 昨收 204.12）。
+- **副作用（已修）**：`applyLive()` 每 60 秒用新浪的昨收覆盖掉 `applyExt()` 已取到的 Yahoo 盘前价，盘前显示反而倒退成昨收。已在前端置 `LIVE_JSON_TRUSTED = false` 关闭该覆盖。
+
+### 待办：把 ECS 的 live.json 数据源换成 Yahoo（换完即恢复分钟档）
+1. 改 `/root/us-live.sh`：改调 `https://query1.finance.yahoo.com/v8/finance/chart/<SYM>?range=1d&interval=1m&includePrePost=true`，
+   取 `chart.result[0].meta.preMarketPrice` / `postMarketPrice`（及对应 previousClose 算涨跌幅）。带 UA + cookie/crumb 缓解 429，参考 `scripts/update_quotes.py` 的 `fetch_pe_map`。
+2. **输出结构保持不变**：`{"t":<unix秒>,"q":{"<CODE>":{"p":<价>,"c":<涨跌幅%>}}}`，前端无需再改。
+3. 前端把 `LIVE_JSON_TRUSTED` 改回 `true`，盘前即回到分钟档。
+4. 自检：`curl -s https://stock.ziyuanai.top/data/live.json | python3 -c "import json,sys;j=json.load(sys.stdin);print(j['q'].get('NVDA'))"`，
+   盘前时段该值应 ≠ 昨收，且随时间跳动。
 
 ### Codex 执行记录（2026-07-08）
 - `https://stock.ziyuanai.top/` 已启用 Let's Encrypt 证书，HTTP 自动 301 到 HTTPS；证书 SAN 为 `DNS:stock.ziyuanai.top`，到期日 2026-10-06。

@@ -322,7 +322,7 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="stat vc" data-view="hi"><div class="k">🚀 新高榜（&lt;10%）</div><div class="v" id="st-hi">–</div></div>
       <div class="stat vc" data-view="ladder"><div class="k">🪜 回撤阶梯</div><div class="v">全表</div></div>
       <div class="stat vc" data-view="heat"><div class="k">板块热力</div><div class="v">21</div></div>
-      <div class="refresh-note">盘中现价30秒实时 · 美股盘前盘后约1分钟 · 其余指标数分钟刷新 · 市值为估算口径</div>
+      <div class="refresh-note">盘中现价30秒实时 · 美股盘前盘后约6分钟 · 其余指标数分钟刷新 · 市值为估算口径</div>
     </div>
     <div id="topbar">
       <select id="secjump" class="mobile-only"><option value="">📂 跳转板块…</option></select>
@@ -1180,7 +1180,7 @@ function renderNotes(cfg){
   let lastLiveAt=0;
   function usNoteFor(ses){
     if((ses==="盘前"||ses==="盘后") && lastLiveAt && Date.now()-lastLiveAt<90000) return ` · 美股${ses}(分钟档)`;
-    return ses==="盘前" ? " · 美股盘前(半小时档)" : ses==="盘后" ? " · 美股盘后(半小时档)" : ses===null ? " · 美股休市" : "";
+    return ses==="盘前" ? " · 美股盘前(6分钟档)" : ses==="盘后" ? " · 美股盘后(6分钟档)" : ses===null ? " · 美股休市" : "";
   }
   function markRealtime(note){
     const t=new Date();
@@ -1224,7 +1224,13 @@ function renderNotes(cfg){
     window.buildOpps && window.buildOpps();
     if(window.CURVIEW && window.CURVIEW!=="all" && window.buildFlat) window.buildFlat();
   }
+  /* 2026-07-09 盘前实测：ECS 的 live.json 由新浪 gb_ 提供，143只里137只的价格与涨跌幅和昨收完全一致
+     （其余6只仅差取整）——新浪盘前不返回盘前价，只返回昨收。而它每60秒会覆盖 applyExt 取到的
+     Yahoo 真实盘前价，导致盘前显示倒退成昨收。故先关闭。
+     待 ECS 的 /root/us-live.sh 数据源从新浪换成 Yahoo（含 includePrePost）后，改回 true 即可恢复分钟档。 */
+  const LIVE_JSON_TRUSTED = false;
   async function applyLive(){   /* ECS 同源分钟级 live.json：只在美股盘前/盘后覆盖美股显示；GitHub Pages 404 静默降级 */
+    if(!LIVE_JSON_TRUSTED) return;
     const ses=usSession();
     if(ses!=="盘前" && ses!=="盘后") return;
     if(document.visibilityState!=="visible") return;
