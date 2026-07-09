@@ -545,6 +545,7 @@ function renderDash(quotes){
   const all = DATA.flatMap(s=>s.rows);
   document.getElementById("st-deep").textContent = all.filter(r=>typeof r[6]==="number"&&r[6]<=-30).length;
   document.getElementById("st-hi").textContent = all.filter(r=>typeof r[6]==="number"&&r[6]>=-10).length;
+  window.snapshotClose && window.snapshotClose();   /* 首屏：趁 r[5] 还是收盘价，存下防呆基准 */
 
   /* 排序 */
   /* 列序号 → quotes 行内字段号。COLS 每次改动务必同步此表（含最后一列，否则该列点了不排序）
@@ -1119,6 +1120,16 @@ function renderNotes(cfg){
     }));
   }
   function parseNum(s){ const m=String(s).replace(/[,，]/g,"").match(/-?\d+(\.\d+)?/); return m?parseFloat(m[0]):null; }
+  /* 快照“流水线写下的收盘价”，作为识破坏数据源的基准。
+     必须在 applyExt/applyLive 覆盖 r[5] 之前调用（renderDash 末尾、refetchStatic 写回之后） */
+  window.CLOSEPX = {};
+  window.snapshotClose = function(){
+    const m = {};
+    DATA.forEach(s=>s.rows.forEach(r=>{
+      if(String(r[2]).indexOf("美股")===0){ const v=parseNum(r[5]); if(v) m[r[1]]=v; }
+    }));
+    window.CLOSEPX = m;
+  };
   function applyQuote(sym, price, pct){
     const ent=rowsByCode[sym]; if(!ent||!price) return;
     ent.rows.forEach(r=>{
@@ -1254,6 +1265,18 @@ function renderNotes(cfg){
       if(!r.ok) return;
       const j=await r.json();
       if(!j || !j.q || !j.t || Date.now()/1000-j.t>240) return;   /* 只接受4分钟内的新鲜数据 */
+      /* 防呆：2026-07-09 新浪源就是这样翻车的——时间戳很新，内容却是昨收。
+         若大批报价与收盘价一模一样，说明该源在盘前不返回盘前价，整批丢弃，退回 applyExt 的 Yahoo 值。 */
+      const closes = window.CLOSEPX || {};
+      let eq=0, tot=0;
+      Object.entries(j.q).forEach(([code,v])=>{
+        const c = closes[code], p = v && Number(v.p);
+        if(c && isFinite(p) && p>0){ tot++; if(Math.abs(p-c) < Math.max(0.005, c*1e-5)) eq++; }
+      });
+      if(tot>=20 && eq/tot>0.7){
+        console.warn(`[applyLive] live.json 疑似昨收快照（${eq}/${tot} 与收盘价相同），已整批忽略`);
+        return;
+      }
       let got=0;
       Object.entries(j.q).forEach(([code,v])=>{
         const sym="us"+String(code).toUpperCase();
@@ -1284,6 +1307,7 @@ function renderNotes(cfg){
         for(let i=0;i<nr.length;i++) r[i]=nr[i];   /* 原地更新，保持引用 */
       }));
       document.getElementById("update-time").textContent="数据更新："+q.updated;
+      window.snapshotClose();   /* 此刻 r[5] 还是流水线的收盘价，先存基准再让实时层覆盖 */
       if(usSession()==="盘中") refresh();   /* 盘中：马上让实时层盖回最新价，避免短暂回跳 */
       else { applyExt(); applyLive(); }
     }catch(e){}
