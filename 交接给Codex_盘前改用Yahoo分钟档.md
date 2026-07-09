@@ -9,7 +9,11 @@
 
 ## 一、一句话说明要做什么
 
-**ECS 上的 `/root/us-live.sh` 目前抓新浪，但新浪在盘前只返回昨收。把它改成抓 Yahoo，`live.json` 的输出格式一个字不变。**
+**ECS 上抓行情的是 `/root/us-live.py`，它目前抓新浪，而新浪在盘前只返回昨收。把它改成抓 Yahoo，`live.json` 的输出格式一个字不变。**
+
+> 注意文件关系：`/root/us-live.sh` 只是个三行包装器（`python3 /root/us-live.py`），
+> **真正的抓取逻辑在 `/root/us-live.py`**，而它由仓库的 `scripts/deploy-ecs-live.sh`
+> 第 53–115 行的 heredoc 生成。你要改的是那段 heredoc。
 
 改完之后，美股盘前/盘后的现价与当日涨跌幅从 6 分钟档变成 1 分钟档。
 
@@ -39,7 +43,22 @@
 
 ## 四、要改的三处
 
-### 改动 1（主要）：重写 `/root/us-live.sh`，数据源 新浪 → Yahoo
+> ### ⚠️ 铁律：改动必须落在 `scripts/deploy-ecs-live.sh` 里，不要手改服务器上的文件
+>
+> ECS 上的 `/root/us-live.py`、`/root/us-live.sh`、nginx 配置和 crontab，
+> **全都是仓库里的 `scripts/deploy-ecs-live.sh` 生成的**
+> （第 53 行 `cat > /root/us-live.py`、第 116 行 `cat > /root/us-live.sh`、第 125 行写 crontab）。
+>
+> 该脚本是**幂等**的（`set -euo pipefail`，全用 `cat >` 覆盖写、`ln -sf`、`mkdir -p`；
+> 重建 crontab 时先 `grep -v` 剔除自己那两行再追加，**不会误删方案A 的 `us-stock-trigger` 闹钟**），
+> 可以放心重复执行。
+>
+> 所以：**改 `scripts/deploy-ecs-live.sh` → commit → 在 ECS 上重跑它**。
+> 这样整台机器的状态永远能从 git 重建，出问题 `git revert` 后重跑即可复原。
+>
+> 如果你直接 ssh 上去手改 `/root/us-live.py`，服务器就和仓库脱节了，那才是真正回不去的状态。
+
+### 改动 1（主要）：改 `scripts/deploy-ecs-live.sh` 第 53–115 行那段生成 `/root/us-live.py` 的 heredoc，数据源 新浪 → Yahoo
 
 **关键约束：`live.json` 输出结构必须保持不变**，前端已按此结构消费：
 
@@ -140,7 +159,37 @@ ECS 上 `crontab -e`，把美股时段两行从 `*/6` 改成 `*/15`：
 
    > 注：前端 `usNoteFor()` 目前硬编码为「6分钟档」。改动 2 之后请一并把它改回按 `lastLiveAt` 判断，显示「分钟档」。
 
-## 七、坑与注意
+## 七、出问题怎么回退（三层，从快到慢）
+
+**第 0 层｜什么都不做，前端自动兜底。**
+如果新的 `live.json` 取到的还是收盘价，前端的防呆守卫会整批丢弃它，自动退回 `applyExt()` 的 Yahoo 值；
+如果 `live.json` 挂了或过期 >240 秒，前端同样忽略。**页面不会显示错价，最多是退回 6 分钟档。**
+
+**第 1 层｜一行开关，2 分钟生效（首选）。**
+把 `index.html` 里的 `LIVE_JSON_TRUSTED` 改回 `false` 并推送。前端立刻不再读 `live.json`，
+盘前完全走 Yahoo 流水线（即今天这个已知正确的状态）。ECS 上的脚本原封不动、继续空转，无副作用。
+
+```bash
+# 或者直接回滚那个提交
+git revert <改动2的commit>
+git push origin main
+```
+
+**第 2 层｜回滚 ECS 脚本。**
+```bash
+git revert <改动1的commit>     # 恢复 deploy-ecs-live.sh 到新浪版
+git push origin main
+# 在 ECS 上重跑，即可把 /root/us-live.sh 和 crontab 一并复原
+bash /var/www/us-stock/scripts/deploy-ecs-live.sh
+```
+（前提是你遵守了上面的铁律：改动落在 `deploy-ecs-live.sh` 里。）
+
+**第 3 层｜crontab 频率回退。**
+若改动 3 做了但想撤，`crontab -e` 把 `*/15` 改回 `*/6` 即可。
+
+**不需要回退的东西**：`quotes.json` 和 `live.json` 都是自动生成的，下一轮流水线/定时器会覆盖，不用管。
+
+## 八、坑与注意
 
 - **不要 commit 任何 token 到公开仓库**（GitHub 扫到会自动吊销）。token 只放 `.git/config` 和 ECS 的 `/root/.gh_token`。
 - 当前 PAT **没有 `workflow` scope**，无法修改 `.github/workflows/` 下的文件。如需改流水线 YAML，得先给 token 补权限。
