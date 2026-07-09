@@ -102,6 +102,9 @@ td.name{text-align:left;max-width:150px;white-space:normal;line-height:1.4}
 th:first-child,td.name{position:sticky;left:0;z-index:3;background:var(--panel)}
 tr:hover td.name{background:var(--panel2)}
 tr.grp td .glabel{position:sticky;left:14px;display:inline-block}
+/* 盘前/盘后角标：提示该价格不是收盘价 */
+.sesbadge{display:inline-block;margin-left:5px;padding:0 4px;border-radius:3px;font-size:10px;line-height:14px;vertical-align:1px;
+  color:var(--gold);border:1px solid var(--gold);opacity:.8;font-weight:500;letter-spacing:.3px}
 /* 有买点的重点标的：金色星标+左边条 */
 tr.buy td.name{box-shadow:inset 3px 0 0 var(--gold)}
 tr.buy td.name .cn::before{content:"★ ";color:var(--gold);font-size:11px}
@@ -454,7 +457,12 @@ function priceCell(r, mode){
   }else if(typeof r[15]==="string" && r[15]){
     sub = `<span style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">${r[15]}</span>`;
   }
-  return `<span style="display:block;white-space:nowrap">${r[5]}</span>${sub}`;
+  /* 盘前/盘后时段，美股现价显示的是 Yahoo 的盘前(后)价而非收盘价 —— 标出来，避免误读为收盘价。
+     盘中不标（此时价格来自腾讯实时）；仅标真正取到了盘前后报价的行 */
+  const ses = window.US_SES;
+  const badge = (String(r[2]).indexOf("美股")===0 && (ses==="盘前"||ses==="盘后") && r[17] && r[17].px)
+    ? `<span class="sesbadge">${ses}</span>` : "";
+  return `<span style="display:block;white-space:nowrap">${r[5]}${badge}</span>${sub}`;
 }
 function mcapCell(r){
   let pe="";
@@ -1153,17 +1161,22 @@ function renderNotes(cfg){
     });
   }
   function usSession(){   /* 纽约时区判定，自动处理夏令时 */
-    try{
-      const p=new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",hour12:false,weekday:"short",hour:"2-digit",minute:"2-digit"}).formatToParts(new Date());
-      const g=n=>p.find(x=>x.type===n).value;
-      if(g("weekday")==="Sat"||g("weekday")==="Sun") return null;
-      const m=(+g("hour"))*60+(+g("minute"));
-      if(m>=240&&m<570) return "盘前";
-      if(m>=570&&m<960) return "盘中";
-      if(m>=960&&m<1200) return "盘后";
-    }catch(e){}
-    return null;
+    const r = (()=>{
+      try{
+        const p=new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",hour12:false,weekday:"short",hour:"2-digit",minute:"2-digit"}).formatToParts(new Date());
+        const g=n=>p.find(x=>x.type===n).value;
+        if(g("weekday")==="Sat"||g("weekday")==="Sun") return null;
+        const m=(+g("hour"))*60+(+g("minute"));
+        if(m>=240&&m<570) return "盘前";
+        if(m>=570&&m<960) return "盘中";
+        if(m>=960&&m<1200) return "盘后";
+      }catch(e){}
+      return null;
+    })();
+    window.US_SES = r;   /* 暴露给 priceCell()：盘前/盘后时在现价旁标注，盘中不标 */
+    return r;
   }
+  usSession();   /* 首屏渲染前先算一次，避免第一帧漏标 */
   function parseBatch(syms){
     let got=0;
     const ses=usSession();
