@@ -1194,7 +1194,7 @@ function renderNotes(cfg){
     syms.forEach(sym=>{
       const v=window["v_"+sym]; if(typeof v!=="string") return;
       const f=v.split("~");
-      /* 美股非常规时段：腾讯网页源为延时冻结口径，跳过，改由流水线的 Yahoo 盘前/盘后价承接 */
+      /* 美股非常规时段：腾讯网页源为延时冻结口径，跳过，改由 Yahoo 盘前/盘后价承接 */
       if(sym.slice(0,2)==="us" && ses!=="盘中") return;
       const price=parseFloat(f[3]), pct=parseFloat(f[32]);
       if(isFinite(price)&&price>0){ applyQuote(sym, price, isFinite(pct)?pct:null); got++; }
@@ -1249,11 +1249,9 @@ function renderNotes(cfg){
     window.buildOpps && window.buildOpps();
     if(window.CURVIEW && window.CURVIEW!=="all" && window.buildFlat) window.buildFlat();
   }
-  /* 2026-07-09 盘前实测：ECS 的 live.json 由新浪 gb_ 提供，143只里137只的价格与涨跌幅和昨收完全一致
-     （其余6只仅差取整）——新浪盘前不返回盘前价，只返回昨收。而它每60秒会覆盖 applyExt 取到的
-     Yahoo 真实盘前价，导致盘前显示倒退成昨收。故先关闭。
-     待 ECS 的 /root/us-live.sh 数据源从新浪换成 Yahoo（含 includePrePost）后，改回 true 即可恢复分钟档。 */
-  const LIVE_JSON_TRUSTED = false;
+  /* 2026-07-09 已将 ECS live.json 数据源从新浪切到 Yahoo 分钟档。
+     下方昨收防呆守卫继续保留：若源头退化成昨收快照，整批丢弃并回退到 applyExt。 */
+  const LIVE_JSON_TRUSTED = true;
   async function applyLive(){   /* ECS 同源分钟级 live.json：只在美股盘前/盘后覆盖美股显示；GitHub Pages 404 静默降级 */
     if(!LIVE_JSON_TRUSTED) return;
     const ses=usSession();
