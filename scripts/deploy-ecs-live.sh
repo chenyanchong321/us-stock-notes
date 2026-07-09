@@ -139,12 +139,14 @@ NASDAQ_HEADERS = {
 BATCH_SIZE = 40
 MIN_QUOTES_TO_WRITE = 20
 NASDAQ_WORKERS = int(os.environ.get("NASDAQ_WORKERS", "8"))
+YAHOO_COOLDOWN_SECONDS = int(os.environ.get("YAHOO_COOLDOWN_SECONDS", "3600"))
 
 site_dir = pathlib.Path(os.environ.get("US_STOCK_SITE_DIR", "/var/www/us-stock"))
 out = site_dir / "data" / "live.json"
 watchlist = site_dir / "config" / "watchlist.json"
 crumb_file = pathlib.Path(os.environ.get("YAHOO_CRUMB_FILE", "/root/.yahoo_crumb"))
 cookie_file = pathlib.Path(os.environ.get("YAHOO_COOKIE_FILE", "/root/.yahoo_cookies.txt"))
+cooldown_file = pathlib.Path(os.environ.get("YAHOO_COOLDOWN_FILE", "/root/.yahoo_cooldown"))
 
 
 class AuthError(Exception):
@@ -196,6 +198,34 @@ def load_auth():
     if crumb and len(jar) > 0:
         return make_opener(jar), crumb
     return refresh_auth()
+
+
+def yahoo_cooldown_remaining():
+    try:
+        last = int(float(cooldown_file.read_text(encoding="utf-8").strip()))
+    except Exception:
+        return 0
+    remaining = last + YAHOO_COOLDOWN_SECONDS - int(time.time())
+    if remaining <= 0:
+        return 0
+    return remaining
+
+
+def mark_yahoo_failure():
+    try:
+        cooldown_file.write_text(str(int(time.time())) + "\n", encoding="utf-8")
+        chmod_private(cooldown_file)
+    except OSError:
+        pass
+
+
+def clear_yahoo_cooldown():
+    try:
+        cooldown_file.unlink()
+    except FileNotFoundError:
+        pass
+    except OSError:
+        pass
 
 
 def as_float(value):
@@ -375,10 +405,15 @@ def collect_nasdaq_quotes(nasdaq_targets):
     return quotes, states, errors
 
 
-def write_live(quotes):
+def write_live(quotes, src):
     tmp = out.with_name(out.name + ".tmp")
     tmp.write_text(
-        json.dumps({"t": int(time.time()), "q": quotes}, ensure_ascii=False, separators=(",", ":")) + "\n",
+        json.dumps(
+            {"t": int(time.time()), "src": src, "n": len(quotes), "q": quotes},
+            ensure_ascii=False,
+            separators=(",", ":"),
+        )
+        + "\n",
         encoding="utf-8",
     )
     tmp.replace(out)
@@ -405,24 +440,32 @@ def main():
     force_nasdaq = os.environ.get("FORCE_NASDAQ_LIVE", "").lower() in {"1", "true", "yes"}
     yahoo_error = None
     if not force_nasdaq:
-        try:
-            opener, crumb = load_auth()
+        remaining = yahoo_cooldown_remaining()
+        if remaining > 0:
+            yahoo_error = f"cooldown {remaining}s"
+            print(f"LIVE_INFO yahoo cooldown={remaining}s; using Nasdaq")
+        else:
             try:
-                quotes, states = collect_quotes(sym_to_codes, opener, crumb)
-            except AuthError:
-                opener, crumb = refresh_auth()
-                quotes, states = collect_quotes(sym_to_codes, opener, crumb)
-            if len(quotes) >= MIN_QUOTES_TO_WRITE:
-                write_live(quotes)
-                print(f"LIVE_OK yahoo quotes={len(quotes)}")
-                return 0
-            print(f"LIVE_WARN yahoo quotes={len(quotes)} states={state_counts(states)}; trying Nasdaq")
-        except urllib.error.HTTPError as exc:
-            yahoo_error = f"HTTP {exc.code}"
-            print(f"LIVE_WARN yahoo {yahoo_error}; trying Nasdaq", file=sys.stderr)
-        except Exception as exc:
-            yahoo_error = str(exc)
-            print(f"LIVE_WARN yahoo: {exc}; trying Nasdaq", file=sys.stderr)
+                opener, crumb = load_auth()
+                try:
+                    quotes, states = collect_quotes(sym_to_codes, opener, crumb)
+                except AuthError:
+                    opener, crumb = refresh_auth()
+                    quotes, states = collect_quotes(sym_to_codes, opener, crumb)
+                if len(quotes) >= MIN_QUOTES_TO_WRITE:
+                    write_live(quotes, "yahoo")
+                    clear_yahoo_cooldown()
+                    print(f"LIVE_OK yahoo quotes={len(quotes)}")
+                    return 0
+                print(f"LIVE_WARN yahoo quotes={len(quotes)} states={state_counts(states)}; trying Nasdaq")
+            except urllib.error.HTTPError as exc:
+                yahoo_error = f"HTTP {exc.code}"
+                mark_yahoo_failure()
+                print(f"LIVE_WARN yahoo {yahoo_error}; trying Nasdaq", file=sys.stderr)
+            except Exception as exc:
+                yahoo_error = str(exc)
+                mark_yahoo_failure()
+                print(f"LIVE_WARN yahoo: {exc}; trying Nasdaq", file=sys.stderr)
 
     if not nasdaq_targets:
         print(f"LIVE_FAIL no Nasdaq fallback targets; yahoo_error={yahoo_error}", file=sys.stderr)
@@ -441,7 +484,7 @@ def main():
         )
         return 0
 
-    write_live(quotes)
+    write_live(quotes, "nasdaq")
     print(f"LIVE_OK nasdaq quotes={len(quotes)} errors={errors}")
     return 0
 
@@ -460,9 +503,12 @@ chmod 700 /root/us-live.sh
 /root/us-live.sh || true
 
 echo "== cron =="
-(crontab -l 2>/dev/null | grep -v 'us-live\|us-stock-sync' || true
- echo '* * * * * /root/us-live.sh  # us-live'
- echo '*/2 * * * * /root/us-stock-sync.sh >> /root/us-sync.log 2>&1  # us-stock-sync') | crontab -
+(crontab -l 2>/dev/null | grep -v 'us-live\|us-stock-sync\|us-stock-trigger.sh' || true
+ echo '* * * * * /root/us-live.sh >> /root/us-live.log 2>&1  # us-live'
+ echo '*/2 * * * * /root/us-stock-sync.sh >> /root/us-sync.log 2>&1  # us-stock-sync'
+ echo '*/15 16-23 * * 1-5 /root/us-stock-trigger.sh >> /root/us-stock-trigger.log 2>&1  # us-stock-trigger-us-pm'
+ echo '*/15 0-8 * * 2-6 /root/us-stock-trigger.sh >> /root/us-stock-trigger.log 2>&1  # us-stock-trigger-us-post'
+ echo '7,37 9-15 * * 1-5 /root/us-stock-trigger.sh >> /root/us-stock-trigger.log 2>&1  # us-stock-trigger-asia') | crontab -
 systemctl enable cron >/dev/null || true
 systemctl restart cron || true
 

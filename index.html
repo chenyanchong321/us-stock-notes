@@ -1204,7 +1204,7 @@ function renderNotes(cfg){
   let lastLiveAt=0;
   function usNoteFor(ses){
     if((ses==="盘前"||ses==="盘后") && lastLiveAt && Date.now()-lastLiveAt<90000) return ` · 美股${ses}(分钟档)`;
-    return ses==="盘前" ? " · 美股盘前(6分钟档)" : ses==="盘后" ? " · 美股盘后(6分钟档)" : ses===null ? " · 美股休市" : "";
+    return ses==="盘前" ? " · 美股盘前(15分钟档)" : ses==="盘后" ? " · 美股盘后(15分钟档)" : ses===null ? " · 美股休市" : "";
   }
   function markRealtime(note){
     const t=new Date();
