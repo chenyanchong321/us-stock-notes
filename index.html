@@ -791,9 +791,16 @@ function renderDash(quotes){
       </tr>`;}).join("");
     }
     const tstyle = '';
+    /* 30秒自动刷新会整段重建本视图，导致手机端横向滚动位置归零。
+       重建前记住滚动位置，重建后还原；仅当仍是同一个榜单时还原（切换榜单则回到最左）。 */
+    const oldWrap = el.querySelector(".tbl-wrap");
+    const sameView = el.dataset.fv === String(window.CURVIEW);
+    const keepSL = (oldWrap && sameView) ? oldWrap.scrollLeft : 0;
     el.innerHTML = `<div class="section"><div class="section-head"><h2>${title}</h2></div>
       <p class="fv-note">${note}</p>
       <div class="tbl-wrap"><table${tstyle}>${head}<tbody>${body}</tbody></table></div></div>`;
+    el.dataset.fv = String(window.CURVIEW);
+    if(keepSL){ const nw = el.querySelector(".tbl-wrap"); if(nw) nw.scrollLeft = keepSL; }
     el.classList.remove("hidden");
     el.querySelectorAll(".perf-pill").forEach(b=>b.addEventListener("click",()=>{
       if(b.dataset.hw){ window.HEAT_W=b.dataset.hw; try{localStorage.setItem("heatW",b.dataset.hw);}catch(e){} }
