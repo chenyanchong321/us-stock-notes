@@ -1224,7 +1224,8 @@ function renderNotes(cfg){
       document.head.appendChild(s);
     }
   }
-  function applyExt(){   /* 流水线抓的 Yahoo 盘前/盘后价（30分钟档），非盘中时段接管美股显示 */
+  function applyExt(){   /* 流水线抓的 Yahoo 盘前/盘后价，非盘中时段接管美股显示。
+                            新鲜度＝流水线触发频率：美股时段由 ECS 定时器每6分钟触发一次（见 CLAUDE.md 方案A） */
     if(usSession()==="盘中") return;
     if(!rowsByCode) buildIndex();
     DATA.forEach(s=>s.rows.forEach(r=>{

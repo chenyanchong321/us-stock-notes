@@ -76,7 +76,7 @@ def fetch_pe_map(symbols):
     v7 quote 接口需 cookie+crumb；失败则整体降级为空（前端显示—）。"""
     pe = {}
     earn = {}   # sym -> (unix_ts, is_estimate)
-    ext = {}    # sym -> {"px","pct","st"} 美股盘前/盘后（30分钟档）
+    ext = {}    # sym -> {"px","pct","st"} 美股盘前/盘后价；新鲜度＝本流水线触发频率（美股时段由 ECS 定时器每6分钟触发）
     fpe = {}    # sym -> 远期PE（亏损公司估值补位）
     import urllib.request as ur
     opener = ur.build_opener(ur.HTTPCookieProcessor())
