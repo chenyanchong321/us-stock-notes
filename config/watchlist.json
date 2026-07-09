@@ -125,10 +125,70 @@
      "ath_floor": 0
     },
     {
+     "name": "深证成指",
+     "code": "399001",
+     "market": "A股 指数",
+     "yahoo": "399001.SZ",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "沪深300",
      "code": "000300",
      "market": "A股 指数",
      "yahoo": "000300.SS",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "上证50",
+     "code": "000016",
+     "market": "A股 指数",
+     "yahoo": "000016.SS",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "科创50",
+     "code": "000688",
+     "market": "A股 指数",
+     "yahoo": "000688.SS",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "创业板指",
+     "code": "399006",
+     "market": "A股 指数",
+     "yahoo": "399006.SZ",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "中证500",
+     "code": "000905",
+     "market": "A股 指数",
+     "yahoo": "000905.SS",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "中证1000",
+     "code": "000852",
+     "market": "A股 指数",
+     "yahoo": "000852.SS",
      "currency": "",
      "mcap_base": null,
      "mcap_base_price": 1.0,
@@ -165,11 +225,11 @@
      "ath_floor": 0
     },
     {
-     "name": "恒生科技ETF（南方）",
-     "code": "3033",
-     "market": "港股 ETF",
-     "yahoo": "3033.HK",
-     "currency": "HK$",
+     "name": "恒生科技指数",
+     "code": "HSTECH",
+     "market": "港股 指数",
+     "yahoo": "^HSTECH",
+     "currency": "",
      "mcap_base": null,
      "mcap_base_price": 1.0,
      "ath_floor": 0
@@ -180,6 +240,16 @@
      "market": "港股 指数",
      "yahoo": "^HSCE",
      "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "恒生科技ETF（南方）",
+     "code": "3033",
+     "market": "港股 ETF",
+     "yahoo": "3033.HK",
+     "currency": "HK$",
      "mcap_base": null,
      "mcap_base_price": 1.0,
      "ath_floor": 0
@@ -308,12 +378,19 @@
      "name": "中国与亚太指数",
      "codes": [
       "SHCOMP",
+      "399001",
       "000300",
+      "000016",
+      "000688",
+      "399006",
+      "000905",
+      "000852",
       "588000",
       "159915",
       "HSI",
-      "3033",
+      "HSTECH",
       "HSCE",
+      "3033",
       "N225",
       "KOSPI",
       "TWII"

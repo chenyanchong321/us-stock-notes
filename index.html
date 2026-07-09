@@ -390,7 +390,9 @@ body.resizing{user-select:none;cursor:col-resize}
 ===================================================================== */
 let DATA = [];
 
-const COLS = ["名称","市值","现价 / 52周区间","回撤 / ATH","当日","近1周","近1月","近3月","近半年","年初至今","近1年"];
+/* 列序＝四个语义块：实时(现价·当日) → 位置(回撤) → 估值(市值·PE) → 历史(近1周~近1年)
+   手机端只看得到前两格，所以把每30秒都在变的活数据放最前，静态的市值往后挪 */
+const COLS = ["名称","现价 / 52周区间","当日","回撤 / ATH","市值","近1周","近1月","近3月","近半年","年初至今","近1年"];
 let BUY = {};
 
 function fmtPct(v){
@@ -482,8 +484,10 @@ function mcapVal(r){
 function rowHTML(r, grp){
   return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${grp||""}" data-code="${r[1]}" data-mkt="${r[2]||""}" data-key="${(r[0]+r[1]).toLowerCase()}">
     <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
-    <td>${mcapCell(r)}</td><td class="pxc">${priceCell(r)}</td><td class="athc">${athCell(r)}</td>
+    <td class="pxc">${priceCell(r)}</td>
     <td>${fmtPct(r[16])}</td>
+    <td class="athc">${athCell(r)}</td>
+    <td>${mcapCell(r)}</td>
     <td>${fmtPct(r[18])}</td>
     <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
     <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td><td class="fill"></td>
@@ -535,11 +539,13 @@ function renderDash(quotes){
   document.getElementById("st-hi").textContent = all.filter(r=>typeof r[6]==="number"&&r[6]>=-10).length;
 
   /* 排序 */
-  const SORT_MAP = {0:0,1:3,2:5,3:6,4:16,5:7,6:8,7:9,8:10,9:11};   /* 3列按距高点跌幅排序 */
+  /* 列序号 → quotes 行内字段号。COLS 每次改动务必同步此表（含最后一列，否则该列点了不排序）
+     4=市值 走 mcapVal 数值排序，不查此表；3列(回撤)按距高点跌幅排序 */
+  const SORT_MAP = {0:0, 1:5, 2:16, 3:6, 5:18, 6:7, 7:8, 8:9, 9:10, 10:11};
   document.querySelectorAll("#view-dash th").forEach(th=>{
     th.addEventListener("click",()=>{
       const ci = +th.dataset.ci;
-      if(!(ci in SORT_MAP)) return;
+      if(ci!==4 && !(ci in SORT_MAP)) return;   /* 4=市值 不查 SORT_MAP，单独走数值排序 */
       const ri = SORT_MAP[ci];
       const table = th.closest("table"), tbody = table.querySelector("tbody");
       const secIdx = +th.closest(".section").dataset.idx;
@@ -548,7 +554,7 @@ function renderDash(quotes){
       th.dataset.asc = asc?"1":"0";
       th.insertAdjacentHTML("beforeend",`<span class="arrow">${asc?"▲":"▼"}</span>`);
       const rows = [...DATA[secIdx].rows];
-      if(ci===1){   /* 市值列：按数值大小排（默认已高→低，点击切低→高） */
+      if(ci===4){   /* 市值列：按折算美元的数值大小排（默认已高→低，点击切低→高） */
         rows.sort((a,b)=> asc ? mcapVal(a)-mcapVal(b) : mcapVal(b)-mcapVal(a));
       } else {
         rows.sort((a,b)=>{
@@ -661,16 +667,16 @@ function renderDash(quotes){
     const r = x.r;
     return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${r[12]||""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
       <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
-      <td>${mcapCell(r)}</td>
       <td class="pxc">${priceCell(r, mode)}</td>${extraTd||""}
-      <td class="athc">${athCell(r)}</td>
       <td>${fmtPct(r[16])}</td>
+      <td class="athc">${athCell(r)}</td>
+      <td>${mcapCell(r)}</td>
       <td>${fmtPct(r[18])}</td>
       <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
       <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td><td class="fill"></td>
     </tr>`;
   }
-  const FV_HEAD = (extra, pxLabel)=>`<thead><tr><th style="text-align:left">名称</th><th>市值</th><th>${pxLabel||"现价 / 52周区间"}</th>${extra||""}<th>回撤 / ATH</th><th>当日</th><th>近1周</th><th>近1月</th><th>近3月</th><th>近半年</th><th>年初至今</th><th>近1年</th><th class="fill"></th></tr></thead>`;
+  const FV_HEAD = (extra, pxLabel)=>`<thead><tr><th style="text-align:left">名称</th><th>${pxLabel||"现价 / 52周区间"}</th>${extra||""}<th>当日</th><th>回撤 / ATH</th><th>市值</th><th>近1周</th><th>近1月</th><th>近3月</th><th>近半年</th><th>年初至今</th><th>近1年</th><th class="fill"></th></tr></thead>`;
   window.buildFlat = function(){
     const v = window.CURVIEW;
     const el = document.getElementById("flatview");
@@ -1074,8 +1080,11 @@ function renderNotes(cfg){
 /* ===== 实时行情：前端直连腾讯行情接口（30秒刷新现价/当日） =====
    覆盖 A股/港股/美股/主要指数；台日韩股、商品、加密等腾讯不覆盖的保持每日数据。 */
 (function(){
-  const IDX={SHCOMP:"sh000001","000300":"sh000300",
-             HSI:"hkHSI",HSCE:"hkHSCE",SPX:"usINX",DJI:"usDJI",IXIC:"usIXIC",NDX:"usNDX",SOX:"usSOX",RUT:"usRUT"};
+  /* 指数必须显式映射：000688/000016 等以 0 开头但在沪不在深，走通用规则会错配成 sz */
+  const IDX={SHCOMP:"sh000001","000300":"sh000300","000016":"sh000016","000688":"sh000688",
+             "000905":"sh000905","000852":"sh000852","399001":"sz399001","399006":"sz399006",
+             HSI:"hkHSI",HSCE:"hkHSCE",HSTECH:"hkHSTECH",
+             SPX:"usINX",DJI:"usDJI",IXIC:"usIXIC",NDX:"usNDX",SOX:"usSOX",RUT:"usRUT"};
   function txCode(mkt, c){
     mkt = mkt || "";
     if(IDX[c]) return IDX[c];                     /* 指数映射优先（沪深300等在沪不在深） */
@@ -1136,10 +1145,11 @@ function renderNotes(cfg){
     document.querySelectorAll(`#sections tr[data-code="${ent.code}"]`).forEach(tr=>{
       const r=ent.rows[0], tds=tr.children;
       if(tds.length<5) return;
-      tds[1].innerHTML=mcapCell(r);
-      tds[2].innerHTML=priceCell(r);
+      /* 下标须与 rowHTML 的 td 顺序一致：1现价 2当日 3回撤 4市值 */
+      tds[1].innerHTML=priceCell(r);
+      tds[2].innerHTML=fmtPct(r[16]);
       tds[3].innerHTML=athCell(r);
-      tds[4].innerHTML=fmtPct(r[16]);
+      tds[4].innerHTML=mcapCell(r);
     });
   }
   function usSession(){   /* 纽约时区判定，自动处理夏令时 */
