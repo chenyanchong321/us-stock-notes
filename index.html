@@ -502,6 +502,30 @@ function rowHTML(r, grp){
   </tr>`;
 }
 
+/* 数据健康告警：流水线若挂掉，页面自己会喊，不指望人去盯时间戳。
+   每次重拉 quotes.json 都复查一次；数据恢复后横幅自动消失（原来只在首屏检查一次，页面开着就永远不弹）。 */
+window.checkStale = function(updatedStr){
+  const old = document.getElementById("stale-warn");
+  if(old) old.remove();
+  try{
+    const m = String(updatedStr||"").match(/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/);
+    if(!m) return;
+    const upd = new Date(`${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:00+08:00`);
+    const hrs = (Date.now()-upd)/36e5;
+    const bj = new Date(Date.now()+8*36e5), dow = bj.getUTCDay(), hh = bj.getUTCHours();
+    /* 交易活跃时段（北京8-24点工作日）收紧到1.5小时，其余工作日时段4小时，周末26小时 */
+    const lim = (dow===0||dow===6) ? 26 : (hh>=8 ? 1.5 : 4);
+    if(hrs <= lim) return;
+    const age = hrs<2 ? `${Math.round(hrs*60)} 分钟` : `${Math.round(hrs)} 小时`;
+    const w = document.createElement("div");
+    w.id = "stale-warn";
+    w.style.cssText = "margin:0 0 14px;padding:10px 14px;border:1px solid var(--gold);border-radius:10px;background:rgba(212,170,80,.08);color:var(--gold);font-size:12.5px";
+    w.textContent = `⚠️ 静态数据已 ${age}未更新（涨跌区间/PE等可能滞后，现价仍为实时），若持续请检查数据流水线`;
+    const tb = document.getElementById("topbar");
+    tb.parentElement.insertBefore(w, tb);
+  }catch(e){}
+};
+
 function renderDash(quotes){
   DATA = quotes.sections;
   document.getElementById("update-time").textContent = "数据更新：" + quotes.updated;
@@ -1310,6 +1334,7 @@ function renderNotes(cfg){
         for(let i=0;i<nr.length;i++) r[i]=nr[i];   /* 原地更新，保持引用 */
       }));
       document.getElementById("update-time").textContent="数据更新："+q.updated;
+      window.checkStale(q.updated);   /* 页面长开时也持续复查：流水线挂了会自动弹横幅，恢复了自动收起 */
       window.snapshotClose();   /* 此刻 r[5] 还是流水线的收盘价，先存基准再让实时层覆盖 */
       if(usSession()==="盘中") refresh();   /* 盘中：马上让实时层盖回最新价，避免短暂回跳 */
       else { applyExt(); applyLive(); }
@@ -1631,25 +1656,7 @@ let PROFILES = {};
     renderDash(quotes);
     renderNotes(notesCfg);
     try{ renderEvents(evCfg, evAuto); }catch(e){ console.warn("events:", e); }
-    /* 数据健康：静态指标超时提示（工作日>4小时，周末>26小时） */
-    try{
-      const m=quotes.updated.match(/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/);
-      if(m){
-        const upd=new Date(`${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:00+08:00`);
-        const hrs=(Date.now()-upd)/36e5;
-        const bj=new Date(Date.now()+8*36e5); const dow=bj.getUTCDay();
-        const hh=bj.getUTCHours();
-        /* 交易活跃时段（北京8-24点工作日）收紧到1.5小时，其余工作日时段4小时，周末26小时 */
-        const lim=(dow===0||dow===6)?26:(hh>=8?1.5:4);
-        if(hrs>lim){
-          const w=document.createElement("div");
-          w.id="stale-warn";
-          w.style.cssText="margin:0 0 14px;padding:10px 14px;border:1px solid var(--gold);border-radius:10px;background:rgba(212,170,80,.08);color:var(--gold);font-size:12.5px";
-          w.textContent=`⚠️ 静态数据已 ${Math.round(hrs)} 小时未更新（涨跌区间/PE等可能滞后，现价仍为实时），若持续请检查数据流水线`;
-          const tb=document.getElementById("topbar"); tb.parentElement.insertBefore(w, tb);
-        }
-      }
-    }catch(e){}
+    window.checkStale(quotes.updated);
   }catch(e){
     document.getElementById("loading").textContent =
       "数据加载失败：" + e.message + "（本地直接双击打开时请用本地服务器，如 python3 -m http.server）";
