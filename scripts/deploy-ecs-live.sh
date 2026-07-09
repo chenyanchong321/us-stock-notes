@@ -117,10 +117,12 @@ systemctl restart nginx
 echo "== live quote script =="
 cat > /root/us-live.py <<'PY'
 #!/usr/bin/env python3
+import concurrent.futures
 import http.cookiejar
 import json
 import os
 import pathlib
+import re
 import sys
 import time
 import urllib.error
@@ -128,8 +130,15 @@ import urllib.parse
 import urllib.request
 
 UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"}
+NASDAQ_HEADERS = {
+    "User-Agent": UA["User-Agent"],
+    "Accept": "application/json,text/plain,*/*",
+    "Origin": "https://www.nasdaq.com",
+    "Referer": "https://www.nasdaq.com/",
+}
 BATCH_SIZE = 40
 MIN_QUOTES_TO_WRITE = 20
+NASDAQ_WORKERS = int(os.environ.get("NASDAQ_WORKERS", "8"))
 
 site_dir = pathlib.Path(os.environ.get("US_STOCK_SITE_DIR", "/var/www/us-stock"))
 out = site_dir / "data" / "live.json"
@@ -196,6 +205,24 @@ def as_float(value):
         return None
 
 
+def as_market_number(value):
+    if isinstance(value, (int, float)):
+        return float(value)
+    if value is None:
+        return None
+    text = str(value).strip()
+    if not text or text.upper() in {"N/A", "NA", "--", "-"}:
+        return None
+    text = text.replace("\u2212", "-").replace(",", "")
+    text = re.sub(r"[^0-9.+-]", "", text)
+    if text in {"", "+", "-", ".", "+.", "-."}:
+        return None
+    try:
+        return float(text)
+    except ValueError:
+        return None
+
+
 def pct_value(q, price, pct_key):
     pct = as_float(q.get(pct_key))
     if pct is not None:
@@ -206,9 +233,27 @@ def pct_value(q, price, pct_key):
     return 0.0
 
 
+def nasdaq_asset_class(market):
+    if "ETF" in market:
+        return "etf"
+    if "\u6307\u6570" in market:
+        return "indexes"
+    if "OTC" in market:
+        return None
+    return "stocks"
+
+
+def nasdaq_symbol(yahoo, code):
+    symbol = str(yahoo or code).strip().upper()
+    if not symbol or symbol.startswith("^"):
+        return None
+    return symbol.replace("-", ".")
+
+
 def load_symbols():
     data = json.loads(watchlist.read_text(encoding="utf-8"))
     sym_to_codes = {}
+    nasdaq_targets = {}
     seen_codes = set()
     for section in data.get("sections", []):
         for item in section.get("items", []):
@@ -221,7 +266,11 @@ def load_symbols():
                 continue
             seen_codes.add(code)
             sym_to_codes.setdefault(yahoo, []).append(code)
-    return sym_to_codes
+            asset_class = nasdaq_asset_class(market)
+            nsymbol = nasdaq_symbol(yahoo, code)
+            if asset_class and nsymbol:
+                nasdaq_targets.setdefault((nsymbol, asset_class), []).append(code)
+    return sym_to_codes, nasdaq_targets
 
 
 def fetch_chunk(opener, crumb, chunk):
@@ -270,10 +319,82 @@ def collect_quotes(sym_to_codes, opener, crumb):
     return quotes, states
 
 
+def fetch_nasdaq_one(symbol, asset_class, codes):
+    url = (
+        "https://api.nasdaq.com/api/quote/"
+        + urllib.parse.quote(symbol, safe="")
+        + "/info?assetclass="
+        + urllib.parse.quote(asset_class, safe="")
+    )
+    req = urllib.request.Request(url, headers=NASDAQ_HEADERS)
+    with urllib.request.urlopen(req, timeout=12) as resp:
+        data = json.load(resp)
+    status = data.get("status", {})
+    if status.get("rCode") != 200:
+        return symbol, None, None, codes, f"rCode={status.get('rCode')}"
+    body = data.get("data") or {}
+    market_status = str(body.get("marketStatus") or "")
+    if "Pre-Market" not in market_status and "After" not in market_status:
+        return symbol, market_status, None, codes, None
+    primary = body.get("primaryData") or {}
+    price = as_market_number(primary.get("lastSalePrice"))
+    pct = as_market_number(primary.get("percentageChange"))
+    if not price or price <= 0:
+        return symbol, market_status, None, codes, "no price"
+    if pct is None:
+        pct = 0.0
+    return symbol, market_status, {"p": round(price, 4), "c": round(pct, 2)}, codes, None
+
+
+def collect_nasdaq_quotes(nasdaq_targets):
+    quotes = {}
+    states = {}
+    errors = 0
+    items = [(symbol, asset, codes) for (symbol, asset), codes in nasdaq_targets.items()]
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, NASDAQ_WORKERS)) as pool:
+        future_map = {
+            pool.submit(fetch_nasdaq_one, symbol, asset, codes): (symbol, asset)
+            for symbol, asset, codes in items
+        }
+        for future in concurrent.futures.as_completed(future_map):
+            symbol, _asset = future_map[future]
+            try:
+                _symbol, market_status, quote, codes, error = future.result()
+            except Exception:
+                errors += 1
+                continue
+            if market_status:
+                states[symbol] = market_status
+            if error:
+                errors += 1
+                continue
+            if not quote:
+                continue
+            for code in codes:
+                quotes[code] = quote
+    return quotes, states, errors
+
+
+def write_live(quotes):
+    tmp = out.with_name(out.name + ".tmp")
+    tmp.write_text(
+        json.dumps({"t": int(time.time()), "q": quotes}, ensure_ascii=False, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
+    tmp.replace(out)
+
+
+def state_counts(states):
+    counts = {}
+    for state in states.values():
+        counts[state] = counts.get(state, 0) + 1
+    return counts
+
+
 def main():
     out.parent.mkdir(parents=True, exist_ok=True)
     try:
-        sym_to_codes = load_symbols()
+        sym_to_codes, nasdaq_targets = load_symbols()
     except Exception as exc:
         print(f"LIVE_FAIL watchlist: {exc}", file=sys.stderr)
         return 1
@@ -281,34 +402,47 @@ def main():
         print("LIVE_SKIP no US symbols")
         return 0
 
-    try:
-        opener, crumb = load_auth()
+    force_nasdaq = os.environ.get("FORCE_NASDAQ_LIVE", "").lower() in {"1", "true", "yes"}
+    yahoo_error = None
+    if not force_nasdaq:
         try:
-            quotes, states = collect_quotes(sym_to_codes, opener, crumb)
-        except AuthError:
-            opener, crumb = refresh_auth()
-            quotes, states = collect_quotes(sym_to_codes, opener, crumb)
-    except urllib.error.HTTPError as exc:
-        print(f"LIVE_FAIL yahoo HTTP {exc.code}; keep previous live.json", file=sys.stderr)
-        return 0 if exc.code == 429 else 1
+            opener, crumb = load_auth()
+            try:
+                quotes, states = collect_quotes(sym_to_codes, opener, crumb)
+            except AuthError:
+                opener, crumb = refresh_auth()
+                quotes, states = collect_quotes(sym_to_codes, opener, crumb)
+            if len(quotes) >= MIN_QUOTES_TO_WRITE:
+                write_live(quotes)
+                print(f"LIVE_OK yahoo quotes={len(quotes)}")
+                return 0
+            print(f"LIVE_WARN yahoo quotes={len(quotes)} states={state_counts(states)}; trying Nasdaq")
+        except urllib.error.HTTPError as exc:
+            yahoo_error = f"HTTP {exc.code}"
+            print(f"LIVE_WARN yahoo {yahoo_error}; trying Nasdaq", file=sys.stderr)
+        except Exception as exc:
+            yahoo_error = str(exc)
+            print(f"LIVE_WARN yahoo: {exc}; trying Nasdaq", file=sys.stderr)
+
+    if not nasdaq_targets:
+        print(f"LIVE_FAIL no Nasdaq fallback targets; yahoo_error={yahoo_error}", file=sys.stderr)
+        return 1
+
+    try:
+        quotes, states, errors = collect_nasdaq_quotes(nasdaq_targets)
     except Exception as exc:
-        print(f"LIVE_FAIL yahoo: {exc}; keep previous live.json", file=sys.stderr)
+        print(f"LIVE_FAIL nasdaq: {exc}; keep previous live.json", file=sys.stderr)
         return 1
 
     if len(quotes) < MIN_QUOTES_TO_WRITE:
-        state_counts = {}
-        for state in states.values():
-            state_counts[state] = state_counts.get(state, 0) + 1
-        print(f"LIVE_SKIP quotes={len(quotes)} states={state_counts}; keep previous live.json")
+        print(
+            f"LIVE_SKIP nasdaq quotes={len(quotes)} states={state_counts(states)} "
+            f"errors={errors}; keep previous live.json"
+        )
         return 0
 
-    tmp = out.with_name(out.name + ".tmp")
-    tmp.write_text(
-        json.dumps({"t": int(time.time()), "q": quotes}, ensure_ascii=False, separators=(",", ":")) + "\n",
-        encoding="utf-8",
-    )
-    tmp.replace(out)
-    print(f"LIVE_OK quotes={len(quotes)}")
+    write_live(quotes)
+    print(f"LIVE_OK nasdaq quotes={len(quotes)} errors={errors}")
     return 0
 
 

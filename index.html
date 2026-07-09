@@ -1249,7 +1249,7 @@ function renderNotes(cfg){
     window.buildOpps && window.buildOpps();
     if(window.CURVIEW && window.CURVIEW!=="all" && window.buildFlat) window.buildFlat();
   }
-  /* 2026-07-09 已将 ECS live.json 数据源从新浪切到 Yahoo 分钟档。
+  /* 2026-07-09 已将 ECS live.json 数据源从新浪切到 Yahoo 分钟档，ECS 403 时用 Nasdaq 兜底。
      下方昨收防呆守卫继续保留：若源头退化成昨收快照，整批丢弃并回退到 applyExt。 */
   const LIVE_JSON_TRUSTED = true;
   async function applyLive(){   /* ECS 同源分钟级 live.json：只在美股盘前/盘后覆盖美股显示；GitHub Pages 404 静默降级 */
