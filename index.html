@@ -1271,7 +1271,8 @@ function renderNotes(cfg){
       markRealtime(usNoteFor(ses));
     }catch(e){}
   }
-  /* 非盘中时段：每10分钟重拉静态数据，长开页面的盘前/盘后价自动跟上（不用手动刷新） */
+  /* 重拉 quotes.json（128KB，约60ms）。盘前/盘后的现价与当日涨跌只能靠它带回来，
+     所以这两个时段必须勤拉；盘中价格走腾讯30秒，静态指标慢点无所谓 */
   async function refetchStatic(){
     if(document.visibilityState!=="visible") return;
     try{
@@ -1287,8 +1288,15 @@ function renderNotes(cfg){
       else { applyExt(); applyLive(); }
     }catch(e){}
   }
-  window.addEventListener("load",()=>{ setTimeout(applyExt,800); setTimeout(applyLive,1000); setTimeout(refresh,1500); setInterval(refresh,30000); setInterval(applyLive,60000); setInterval(refetchStatic,600000); });
-  document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"){ refresh(); applyLive(); } });
+  /* 自适应轮询：盘前/盘后 60 秒（现价靠它），其余时段 10 分钟（只是慢变的统计指标）。
+     原来固定 10 分钟，导致盘前滞后 ＝ 流水线(≤6min) + 浏览器轮询(≤10min) ＝ 最坏 16 分钟 */
+  function scheduleStatic(){
+    const ses = usSession();
+    const gap = (ses==="盘前"||ses==="盘后") ? 60000 : 600000;
+    setTimeout(()=>{ refetchStatic().finally(scheduleStatic); }, gap);
+  }
+  window.addEventListener("load",()=>{ setTimeout(applyExt,800); setTimeout(applyLive,1000); setTimeout(refresh,1500); setInterval(refresh,30000); setInterval(applyLive,60000); scheduleStatic(); });
+  document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"){ refresh(); applyLive(); refetchStatic(); } });
 })();
 
 /* ===== 术语词典 ===== */
