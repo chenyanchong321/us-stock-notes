@@ -1280,6 +1280,11 @@ function renderNotes(cfg){
         const sym="us"+String(code).toUpperCase();
         if(!rowsByCode[sym] || !v) return;
         const price=Number(v.p), pct=Number(v.c);
+        /* 逐只防呆：个股盘前无成交时，数据源（Nasdaq）会退回常规时段数据 —— 价=昨收、涨跌幅=昨日的。
+           这种条目必须跳过，否则会用昨收盖掉 applyExt 已取到的 Yahoo 真盘前价（实测 TLN 即如此）。
+           整批守卫按 70% 阈值判断，拦不住这类少数派，故在此逐只再挡一次。 */
+        const c0 = closes[code];
+        if(c0 && isFinite(price) && Math.abs(price-c0) < Math.max(0.005, c0*1e-5)) return;
         if(isFinite(price)&&price>0){
           applyQuote(sym, price, isFinite(pct)?Math.round(pct*100)/100:null);
           got++;
