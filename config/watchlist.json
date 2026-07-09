@@ -5951,7 +5951,7 @@
     {
      "name": "iShares Gold Trust",
      "code": "IAU",
-     "market": "美股",
+     "market": "美股 ETF",
      "yahoo": "IAU",
      "currency": "$",
      "mcap_base": {
@@ -5975,7 +5975,7 @@
     {
      "name": "VanEck Gold Miners ETF",
      "code": "GDX",
-     "market": "美股",
+     "market": "美股 ETF",
      "yahoo": "GDX",
      "currency": "$",
      "mcap_base": {
@@ -6017,7 +6017,7 @@
     {
      "name": "白银 ETF-iShares Silver Trust",
      "code": "SLV",
-     "market": "美股",
+     "market": "美股 ETF",
      "yahoo": "SLV",
      "currency": "$",
      "mcap_base": {
