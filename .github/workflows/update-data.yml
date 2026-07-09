@@ -24,7 +24,11 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
+      # fetch-depth: 0 = 拉完整历史。默认的浅克隆(depth=1)上跑 git pull --rebase，
+      # 一旦远端有新提交就会失败，这是「提交更新」步骤间歇性挂掉的根因之一。
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -35,9 +39,33 @@ jobs:
 
       - name: 提交更新
         run: |
+          set -euo pipefail
           git config user.name "quotes-bot"
           git config user.email "actions@github.com"
           git add data/
-          git diff --cached --quiet || git commit -m "chore: 更新行情数据 $(date -u +%F)"
-          git pull --rebase origin main
-          git push
+          if git diff --cached --quiet; then
+            echo "数据无变化，跳过提交"
+            exit 0
+          fi
+          git commit -m "chore: 更新行情数据 $(date -u +%F)"
+
+          # 别人（人工或另一轮流水线）在本轮运行期间推了新提交时，push 会因非快进被拒。
+          # 重试 5 次：每次把本轮提交 rebase 到最新 main 之上再推。
+          # rebase 用 -X theirs：冲突时保留正在重放的提交（＝本轮刚抓到的新行情），
+          # 因为 data/ 只由本流水线生成，新数据永远该覆盖旧数据。
+          for i in 1 2 3 4 5; do
+            if git push origin HEAD:main; then
+              echo "推送成功（第 $i 次尝试）"
+              exit 0
+            fi
+            echo "推送被拒（远端有新提交），rebase 后重试 $i/5"
+            git fetch origin main
+            if ! git rebase -X theirs origin/main; then
+              git rebase --abort || true
+              echo "rebase 失败，放弃本轮（下一轮会重新生成数据）"
+              exit 1
+            fi
+            sleep $((i * 3))
+          done
+          echo "5 次推送均失败"
+          exit 1
