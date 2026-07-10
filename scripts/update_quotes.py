@@ -51,46 +51,19 @@ def fetch_series(sym, rng, itv, retries=3):
                 return None
             time.sleep(2 * (i + 1))
 
-TX_KLINE = ("https://web.ifzq.gtimg.cn/appstock/app/fqkline/get"
-            "?param={code},day,,,1800,qfq")
-
-def fetch_series_tencent(tx_code):
-    """腾讯日K兜底。Yahoo 对部分 A股/港股指数（科创50、创业板指、上证50、中证500、
-    中证1000、恒生科技指数）没有历史，甚至没有该代码；腾讯全都有。
-    只对 A股/港股 有效——实测腾讯的美股日K只返回2根，日/韩/台各只有1根。"""
-    try:
-        req = urllib.request.Request(TX_KLINE.format(code=tx_code), headers=UA)
-        with urllib.request.urlopen(req, timeout=20) as r:
-            j = json.load(r)
-        d = j["data"][tx_code]
-        arr = d.get("qfqday") or d.get("day") or []
-        pairs = []
-        for row in arr:
-            # row = [日期, 开, 收, 高, 低, 量]
-            t = int(datetime.datetime.strptime(row[0], "%Y-%m-%d")
-                    .replace(tzinfo=datetime.timezone.utc).timestamp())
-            c = float(row[2])
-            if c > 0:
-                pairs.append((t, c))
-        return pairs or None
-    except Exception as e:
-        print(f"  !! 腾讯K线 {tx_code}: {e}", file=sys.stderr)
-        return None
-
-def fetch_history(sym, tx_code=None):
+def fetch_history(sym):
     """近5年日线（算涨跌幅） + 全历史月线（算历史高点），规避 Yahoo 对老股票
     range=max 时悄悄降级粒度/截断近期数据的问题。
-    Yahoo 拿不到或只拿到寥寥几根时，若配置了 tx（腾讯代码）则回退到腾讯日K。"""
+
+    不设「换数据源兜底」：Yahoo 覆盖全部 6 个市场。历史上两次「Yahoo 拿不到」都是我们自己的错
+    ——一次是盲目优先 adjclose（指数的 adjclose 几乎全 null），一次是代码写错（^HSTECH 应为 HSTECH.HK）。
+    兜底只会把「我们写错了」伪装成「数据源不给力」，让真因永远查不出来。拿不到就报错，去查原因。"""
     daily = fetch_series(sym, "5y", "1d")
     monthly = fetch_series(sym, "max", "1mo")
-    if (daily is None or len(daily) < 30) and tx_code:
-        tx = fetch_series_tencent(tx_code)
-        if tx and len(tx) > len(daily or []):
-            print(f"  ~~ {sym} 用腾讯日K兜底（Yahoo 仅 {len(daily or [])} 根 → 腾讯 {len(tx)} 根）")
-            daily = tx
-            monthly = None
     if daily is None:
         return None
+    if len(daily) < 30:
+        print(f"  !! {sym} 日线仅 {len(daily)} 根，疑似代码或字段有误，请排查", file=sys.stderr)
     hist_max = max(c for _, c in daily)
     if monthly:
         hist_max = max(hist_max, max(c for _, c in monthly))
@@ -247,7 +220,7 @@ def main():
         for it in sec["items"]:
             sym = it["yahoo"]
             if sym not in cache:
-                cache[sym] = fetch_history(sym, it.get("tx"))   # tx＝腾讯代码，Yahoo 拿不到历史时兜底
+                cache[sym] = fetch_history(sym)
                 time.sleep(0.4)  # 温和限速
             fetched = cache[sym]
             if fetched is None:

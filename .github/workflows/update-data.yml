@@ -12,6 +12,13 @@ on:
     - cron: "7,37 8-12 * * 1-5"   # 美股盘前（北京16-21时）
     - cron: "7,37 21-23 * * 1-5"  # 美股盘后深段（北京05-08时）
   workflow_dispatch: {}   # 支持手动触发
+  # 改了标的清单或抓取脚本就立刻重跑，不必等下一次定时闹钟（改完等15分钟才看到结果太痛苦）
+  push:
+    branches: [main]
+    paths:
+      - "config/watchlist.json"
+      - "config/buypoints.json"
+      - "scripts/update_quotes.py"
 
 concurrency:
   group: update-data
