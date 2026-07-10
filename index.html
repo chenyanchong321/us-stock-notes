@@ -402,7 +402,7 @@ let DATA = [];
 
 /* 列序＝四个语义块：实时(现价·当日) → 位置(回撤) → 估值(市值·PE) → 历史(近1周~近1年)
    手机端只看得到前两格，所以把每30秒都在变的活数据放最前，静态的市值往后挪 */
-const COLS = ["名称","现价 / 52周区间","当日","回撤 / ATH","市值","近1周","近1月","近3月","近半年","年初至今","近1年"];
+const COLS = ["名称","现价 / 近一年","当日","回撤 / ATH","市值","近1周","近1月","近3月","近半年","年初至今","近1年"];
 let BUY = {};
 
 function fmtPct(v){
@@ -479,8 +479,9 @@ function priceCell(r, mode){
   if(mode==="buy"){
     const b = BUY[r[1]], hit = buyHit(r);
     sub = b ? `<span class="buyline${hit?" hit":""}" style="display:block;font-size:11px;color:var(--text2);white-space:normal;max-width:170px;margin-left:auto;line-height:1.45">${hit?"🎯":""}买点 ${buyLabel(b)}</span>` : "";
-  }else if(typeof r[15]==="string" && r[15]){
-    sub = `<span style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">${r[15]}</span>`;
+  }else{
+    /* 现价第二行改放「近1年涨跌」（用户最关注），带涨跌色；52周区间挪进悬停浮窗 */
+    sub = `<span style="display:block;font-size:12px;white-space:nowrap">${fmtPct(r[11])}</span>`;
   }
   /* 盘前/盘后时段，美股现价显示的是 Yahoo 的盘前(后)价而非收盘价 —— 标出来，避免误读为收盘价。
      盘中不标（此时价格来自腾讯实时）；仅标真正取到了盘前后报价的行 */
@@ -495,7 +496,15 @@ function mcapCell(r){
   let pe="";
   if(typeof r[13]==="number") pe=`PE ${r[13].toFixed(1)}`;
   else if(typeof r[19]==="number") pe=`远期PE ${r[19].toFixed(1)}`;   /* 亏损公司用下一年预期利润估值 */
-  const sub = pe ? `<span style="display:block;font-size:11px;color:var(--text2)">${pe}</span>` : "";
+  /* 非美元个股：本币市值下面直接给美元市值（用户最关注，比 PE 有用），放在 PE 前、PE 缩暗让位 */
+  let usd="";
+  if(needUSD(r)){ const yi=mcapVal(r); if(yi>0) usd = yi>=10000 ? `$${(yi/10000).toFixed(2)}万亿` : `$${yi.toFixed(1)}亿`; }
+  let sub="";
+  if(usd||pe){
+    const u = usd ? `<b style="color:var(--text2);font-weight:600">${usd}</b>` : "";
+    const p = pe  ? `<span style="opacity:.65${usd?";margin-left:6px":""}">${pe}</span>` : "";
+    sub = `<span style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">${u}${p}</span>`;
+  }
   return `${r[3]}${sub}`;
 }
 /* 各币种对美元汇率（1本币=?美元，粗略即可，只影响排名不影响展示；口径约2026年中） */
@@ -555,7 +564,7 @@ function rowHTML(r, grp){
     <td class="pxc">${priceCell(r)}</td>
     <td>${fmtPct(r[16])}</td>
     <td class="athc">${athCell(r)}</td>
-    <td class="mcapc">${mcapCell(r)}</td>
+    <td>${mcapCell(r)}</td>
     <td>${fmtPct(r[18])}</td>
     <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
     <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td><td class="fill"></td>
@@ -763,13 +772,13 @@ function renderDash(quotes){
       <td class="pxc">${priceCell(r, mode)}</td>${extraTd||""}
       <td>${fmtPct(r[16])}</td>
       <td class="athc">${athCell(r)}</td>
-      <td class="mcapc">${mcapCell(r)}</td>
+      <td>${mcapCell(r)}</td>
       <td>${fmtPct(r[18])}</td>
       <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
       <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td><td class="fill"></td>
     </tr>`;
   }
-  const FV_HEAD = (extra, pxLabel)=>`<thead><tr><th style="text-align:left">名称</th><th>${pxLabel||"现价 / 52周区间"}</th>${extra||""}<th>当日</th><th>回撤 / ATH</th><th>市值</th><th>近1周</th><th>近1月</th><th>近3月</th><th>近半年</th><th>年初至今</th><th>近1年</th><th class="fill"></th></tr></thead>`;
+  const FV_HEAD = (extra, pxLabel)=>`<thead><tr><th style="text-align:left">名称</th><th>${pxLabel||"现价 / 近一年"}</th>${extra||""}<th>当日</th><th>回撤 / ATH</th><th>市值</th><th>近1周</th><th>近1月</th><th>近3月</th><th>近半年</th><th>年初至今</th><th>近1年</th><th class="fill"></th></tr></thead>`;
   window.buildFlat = function(){
     const v = window.CURVIEW;
     const el = document.getElementById("flatview");
@@ -1721,8 +1730,10 @@ let PROFILES = {};
     for(const s of DATA){ for(const x of s.rows){ if(x[1]===code){ r=x; break; } } if(r) break; }
     if(!r) return null;
     const usdLine = usdPriceLine(r);           /* 非美元个股才有内容，否则 "" */
+    const wk = (typeof r[15]==="string" && r[15])   /* 52周区间已从表格挪到这里 */
+      ? `<span style="display:block;font-size:12px;color:var(--text2)">52周 ${r[15]}</span>` : "";
     const b = (typeof BUY!=="undefined") && BUY[code];
-    if(!b) return usdLine || null;             /* 无买点：只显示美元换算；美股等则不弹 */
+    if(!b){ const body = wk + usdLine; return body || null; }   /* 无买点：52周区间 + 美元换算 */
     const px = parseFloat(String(r[5]).replace(/[^\d.]/g,""));
     const th = buyThreshold(b);   /* 与重点清单「距买点」同源，避免两处口径打架 */
     let line2 = "";
@@ -1735,7 +1746,7 @@ let PROFILES = {};
     /* 港股盘中现价来自腾讯免费源，延时15分钟——正好是「触达/未触达」可能翻转的量级，此处必须提醒 */
     if(String(r[2]).indexOf("港股")===0 && window.HK_OPEN)
       line2 += `<span style="display:block;margin-top:5px;font-size:11px;color:var(--text2);opacity:.85">⏳ 港股行情延时约15分钟，触达判断可能滞后</span>`;
-    return `<b>🎯 买点</b>　<span style="color:var(--gold);font-weight:700">${b}</span>${line2}${usdLine}`;
+    return `${wk}<b>🎯 买点</b>　<span style="color:var(--gold);font-weight:700">${b}</span>${line2}${usdLine}`;
   }
   function athTip(tr){   /* 历史高点悬停＝回撤台阶表（两列：跌幅+价格，现价插入档金色） */
     const code=tr.dataset.code; if(!code) return null;
