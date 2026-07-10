@@ -1270,6 +1270,73 @@ function renderNotes(cfg){
     });
     return got;
   }
+  /* ===== 加密资产实时层：CoinGecko =====
+     加密没有交易所授权那套规矩，行情本就免费实时。三家实测：币安不给市值（交易所只知成交价，
+     不知流通量）；CoinMarketCap 需 key 且不能跨域；CoinGecko 免 key、浏览器可直连、一次请求
+     返回现价+真实流通市值+历史高点+多周期涨跌。稳定币价格恒为1、市值只随发行量变，必须取真值。
+     缺「近3月/年初至今」，那两列仍由 Yahoo 流水线提供。取不到就静默降级，不覆盖任何东西。 */
+  const CG_IDS = {BTC:"bitcoin", ETH:"ethereum", BNB:"binancecoin", SOL:"solana",
+                  DOGE:"dogecoin", PEPE:"pepe", USDT:"tether", USDC:"usd-coin", HYPE:"hyperliquid"};
+  let cgCooldown = 0;   /* 被限流(429)后退避，别把免费额度打爆 */
+  function cgNum(v){
+    if(v>=10000) return v.toLocaleString("en-US",{maximumFractionDigits:0});
+    if(v>=100)   return v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+    if(v>=1)     return v.toFixed(2);
+    if(v>=0.01)  return v.toFixed(4);
+    return v.toPrecision(3);            /* PEPE 这类要保留有效数字，toFixed(3) 会变成 0.000 */
+  }
+  function cgMcap(mc){
+    const yi = mc/1e8;                  /* 美元 → 亿 */
+    return yi>=10000 ? `$${(yi/10000).toFixed(2)}万亿` : `$${yi.toFixed(1)}亿`;
+  }
+  async function applyCrypto(){
+    if(document.visibilityState!=="visible") return;
+    if(Date.now() < cgCooldown) return;
+    let arr;
+    try{
+      const ids = Object.values(CG_IDS).join(",");
+      const r = await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${ids}`
+                            + `&price_change_percentage=24h,7d,30d,1y`, {cache:"no-store"});
+      if(r.status===429){ cgCooldown = Date.now()+300000; return; }   /* 限流：静默退避5分钟 */
+      if(!r.ok) return;
+      arr = await r.json();
+    }catch(e){ return; }
+    if(!Array.isArray(arr) || !arr.length) return;
+    const bySym = {};
+    arr.forEach(c=>{ if(c && c.symbol) bySym[String(c.symbol).toUpperCase()] = c; });
+
+    let got = 0;
+    DATA.forEach(s=>s.rows.forEach(r=>{
+      if(String(r[2]).indexOf("加密资产")!==0) return;
+      const c = bySym[r[1]];
+      if(!c || !(c.current_price>0)) return;
+      const px = c.current_price;
+      r[5] = "$" + cgNum(px);
+      if(typeof c.price_change_percentage_24h_in_currency==="number") r[16]=Math.round(c.price_change_percentage_24h_in_currency*100)/100;
+      if(typeof c.price_change_percentage_7d_in_currency ==="number") r[18]=Math.round(c.price_change_percentage_7d_in_currency*10)/10;
+      if(typeof c.price_change_percentage_30d_in_currency==="number") r[7] =Math.round(c.price_change_percentage_30d_in_currency*10)/10;
+      if(typeof c.price_change_percentage_1y_in_currency ==="number") r[11]=Math.round(c.price_change_percentage_1y_in_currency*10)/10;
+      if(c.market_cap>0) r[3] = cgMcap(c.market_cap);
+      if(c.ath>0){
+        const ath = Math.max(c.ath, px);          /* 创新高时高点跟着抬 */
+        r[4] = "$" + cgNum(ath);
+        r[6] = Math.round((px/ath-1)*1000)/10;
+      }
+      got++;
+      document.querySelectorAll(`#sections tr[data-code="${r[1]}"]`).forEach(tr=>{
+        const t = tr.children;
+        if(t.length<11) return;
+        setHTML(t[1], priceCell(r));  setHTML(t[2], fmtPct(r[16]));
+        setHTML(t[3], athCell(r));    setHTML(t[4], mcapCell(r));
+        setHTML(t[5], fmtPct(r[18])); setHTML(t[6], fmtPct(r[7]));
+        setHTML(t[10],fmtPct(r[11]));
+      });
+    }));
+    if(!got) return;
+    window.buildOpps && window.buildOpps();
+    if(window.CURVIEW && window.CURVIEW!=="all" && window.buildFlat) window.buildFlat();
+  }
+
   let lastLiveAt=0;
   /* live.json（Nasdaq，分钟档）已覆盖的代码。applyExt 的 Yahoo 值是 6~15 分钟档，不能再去盖它——
      否则每轮"先写 Yahoo、再写 Nasdaq"，同一格被改两次，中间闪过一个旧价格。实测 92 行受此影响。 */
@@ -1399,8 +1466,9 @@ function renderNotes(cfg){
     setTimeout(()=>{ refetchStatic().finally(scheduleStatic); }, gap);
   }
   /* 首屏也要先快档后慢档：applyLive 在前，applyExt 只补它没覆盖的（指数/OTC），避免开屏闪一下旧价 */
-  window.addEventListener("load",()=>{ setTimeout(applyLive,800); setTimeout(applyExt,1200); setTimeout(refresh,1600); setInterval(refresh,30000); setInterval(applyLive,60000); scheduleStatic(); });
-  document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"){ refresh(); applyLive(); refetchStatic(); } });
+  window.addEventListener("load",()=>{ setTimeout(applyLive,800); setTimeout(applyExt,1200); setTimeout(applyCrypto,1400); setTimeout(refresh,1600);
+    setInterval(refresh,30000); setInterval(applyLive,60000); setInterval(applyCrypto,60000); scheduleStatic(); });
+  document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"){ refresh(); applyLive(); applyCrypto(); refetchStatic(); } });
 })();
 
 /* ===== 术语词典 ===== */
