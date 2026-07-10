@@ -6222,6 +6222,120 @@
      },
      "mcap_base_price": 100.77,
      "ath_floor": 543.0
+    },
+    {
+     "name": "以太坊",
+     "code": "ETH",
+     "market": "加密资产",
+     "yahoo": "ETH-USD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2170.3,
+      "approx": false
+     },
+     "mcap_base_price": 1798.7,
+     "ath_floor": 4946.05
+    },
+    {
+     "name": "币安币",
+     "code": "BNB",
+     "market": "加密资产",
+     "yahoo": "BNB-USD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 777.3,
+      "approx": false
+     },
+     "mcap_base_price": 576.72,
+     "ath_floor": 1369.99
+    },
+    {
+     "name": "索拉纳",
+     "code": "SOL",
+     "market": "加密资产",
+     "yahoo": "SOL-USD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 462.4,
+      "approx": false
+     },
+     "mcap_base_price": 79.48,
+     "ath_floor": 293.31
+    },
+    {
+     "name": "狗狗币",
+     "code": "DOGE",
+     "market": "加密资产",
+     "yahoo": "DOGE-USD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 115.5,
+      "approx": false
+     },
+     "mcap_base_price": 0.074515,
+     "ath_floor": 0.731578
+    },
+    {
+     "name": "Pepe",
+     "code": "PEPE",
+     "market": "加密资产",
+     "yahoo": "PEPE24478-USD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 11.4,
+      "approx": false
+     },
+     "mcap_base_price": 2.71e-06,
+     "ath_floor": 2.803e-05
+    },
+    {
+     "name": "泰达币 USDT",
+     "code": "USDT",
+     "market": "加密资产",
+     "yahoo": "USDT-USD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1841.7,
+      "approx": false
+     },
+     "mcap_base_price": 0.999229,
+     "ath_floor": 1.32,
+     "mcap_live": true
+    },
+    {
+     "name": "USD Coin",
+     "code": "USDC",
+     "market": "加密资产",
+     "yahoo": "USDC-USD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 732.3,
+      "approx": false
+     },
+     "mcap_base_price": 0.999793,
+     "ath_floor": 1.043,
+     "mcap_live": true
+    },
+    {
+     "name": "Robinhood",
+     "code": "HOOD",
+     "market": "美股",
+     "yahoo": "HOOD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1036.6,
+      "approx": false
+     },
+     "mcap_base_price": 115.11,
+     "ath_floor": 0
     }
    ]
   }

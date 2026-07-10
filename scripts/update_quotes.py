@@ -78,6 +78,7 @@ def fetch_pe_map(symbols):
     earn = {}   # sym -> (unix_ts, is_estimate)
     ext = {}    # sym -> {"px","pct","st"} 美股盘前/盘后价；新鲜度＝本流水线触发频率（美股时段由 ECS 定时器每6分钟触发）
     fpe = {}    # sym -> 远期PE（亏损公司估值补位）
+    mcap = {}   # sym -> 真实市值（美元）。稳定币价格恒为1，市值只随发行量变化，锚点推导会把它冻死，必须取真值
     import urllib.request as ur
     opener = ur.build_opener(ur.HTTPCookieProcessor())
     opener.addheaders = list(UA.items())
@@ -108,6 +109,9 @@ def fetch_pe_map(symbols):
                 fv = q.get("forwardPE")
                 if fv is not None and 0 < fv < 100000:
                     fpe[q["symbol"]] = round(fv, 1)
+                mc = q.get("marketCap")
+                if mc:
+                    mcap[q["symbol"]] = mc
                 st = q.get("marketState", "")
                 if st.startswith("PRE") and q.get("preMarketPrice"):
                     ext[q["symbol"]] = {"px": q["preMarketPrice"], "pct": q.get("preMarketChangePercent"), "st": "盘前"}
@@ -122,8 +126,8 @@ def fetch_pe_map(symbols):
         except Exception as e:
             print(f"  !! PE 批次 {i//40} 失败: {e}", file=sys.stderr)
         time.sleep(0.5)
-    print(f"PE 覆盖 {len(pe)}/{len(syms)} 个代码，财报日 {len(earn)} 个，盘前后价 {len(ext)} 个")
-    return pe, earn, ext, fpe
+    print(f"PE 覆盖 {len(pe)}/{len(syms)} 个代码，财报日 {len(earn)} 个，盘前后价 {len(ext)} 个，真实市值 {len(mcap)} 个")
+    return pe, earn, ext, fpe, mcap
 
 def _num(v):
     if v >= 10000:
@@ -141,12 +145,19 @@ def pos_52w(pairs, ts_1y, cur):
         return 50.0, rng
     return round((pairs[-1][1] - lo) / (hi - lo) * 100, 0), rng
 
-def fmt_mcap(item, price):
+def fmt_mcap(item, price, live_mcap=None):
     mb = item.get("mcap_base")
     if not mb:
         return "不适用"
-    scaled = mb["yi"] * price / item["mcap_base_price"]
     prefix = mb["prefix"]
+    # mcap_live：直接用交易所/行情源给的真实市值。稳定币价格恒为 1，市值只随发行量变，
+    # 锚点推导（市值 ∝ 现价）会把它永远冻在锚定当天的数字上，所以必须取真值。
+    if item.get("mcap_live") and live_mcap:
+        scaled = live_mcap / 1e8            # 美元 → 亿
+        if scaled >= 10000:
+            return f"{prefix}{scaled/10000:.2f}万亿"
+        return f"{prefix}{scaled:.1f}亿"
+    scaled = mb["yi"] * price / item["mcap_base_price"]
     if scaled >= 10000:
         return f"{prefix}{scaled/10000:.2f}万亿"
     return f"{prefix}{scaled:.1f}亿"
@@ -163,7 +174,7 @@ def main():
     ts_ytd = int(datetime.datetime(now.year, 1, 1, tzinfo=datetime.timezone.utc).timestamp())  # 基准=上年最后一个收盘
 
     all_syms = [it["yahoo"] for sec in watch["sections"] for it in sec["items"]]
-    pe_map, earn_map, ext_map, fpe_map = fetch_pe_map(all_syms)
+    pe_map, earn_map, ext_map, fpe_map, mcap_map = fetch_pe_map(all_syms)
 
     cache = {}
     sections_out = []
@@ -205,7 +216,7 @@ def main():
             y1 = window(ts_1y, "1y")
 
             rows.append([it["name"], it["code"], it["market"],
-                         fmt_mcap(it, price),
+                         fmt_mcap(it, price, mcap_map.get(sym)),
                          fmt_price(cur, ath), fmt_price(cur, price),
                          round(dd, 1), m1, m3, m6, ytd, y1, gmap.get(it["code"], ""),
                          pe_map.get(sym), *pos_52w(pairs, ts_1y, cur),
