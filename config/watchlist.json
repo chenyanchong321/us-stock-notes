@@ -5481,6 +5481,118 @@
      "ath_floor": 0
     },
     {
+     "name": "美团",
+     "code": "03690",
+     "market": "港股",
+     "yahoo": "3690.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 4859.5,
+      "approx": false
+     },
+     "mcap_base_price": 78.7,
+     "ath_floor": 80.9
+    },
+    {
+     "name": "京东集团",
+     "code": "09618",
+     "market": "港股",
+     "yahoo": "9618.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 3010.3,
+      "approx": false
+     },
+     "mcap_base_price": 110.2,
+     "ath_floor": 112.6
+    },
+    {
+     "name": "网易",
+     "code": "09999",
+     "market": "港股",
+     "yahoo": "9999.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 6598.2,
+      "approx": false
+     },
+     "mcap_base_price": 206.8,
+     "ath_floor": 213.8
+    },
+    {
+     "name": "快手",
+     "code": "01024",
+     "market": "港股",
+     "yahoo": "1024.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 1868.5,
+      "approx": false
+     },
+     "mcap_base_price": 43.04,
+     "ath_floor": 47.7
+    },
+    {
+     "name": "小米集团",
+     "code": "01810",
+     "market": "港股",
+     "yahoo": "1810.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 6662.9,
+      "approx": false
+     },
+     "mcap_base_price": 25.84,
+     "ath_floor": 26.3
+    },
+    {
+     "name": "百度集团",
+     "code": "09888",
+     "market": "港股",
+     "yahoo": "9888.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 3141.2,
+      "approx": false
+     },
+     "mcap_base_price": 115.4,
+     "ath_floor": 117.6
+    },
+    {
+     "name": "携程集团",
+     "code": "09961",
+     "market": "港股",
+     "yahoo": "9961.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 2074.2,
+      "approx": false
+     },
+     "mcap_base_price": 329.4,
+     "ath_floor": 377.4
+    },
+    {
+     "name": "哔哩哔哩",
+     "code": "09626",
+     "market": "港股",
+     "yahoo": "9626.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 582.6,
+      "approx": false
+     },
+     "mcap_base_price": 139.2,
+     "ath_floor": 143.9
+    },
+    {
      "name": "智谱",
      "code": "02513",
      "market": "港股",
@@ -5549,7 +5661,15 @@
      "codes": [
       "00700",
       "09988",
-      "PDD"
+      "PDD",
+      "03690",
+      "09618",
+      "09999",
+      "01024",
+      "01810",
+      "09888",
+      "09961",
+      "09626"
      ]
     },
     {
