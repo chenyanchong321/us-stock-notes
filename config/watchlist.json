@@ -2515,17 +2515,17 @@
     },
     {
      "name": "信越化学",
-     "code": "SHECF",
+     "code": "SHECY",
      "market": "美股 OTC",
-     "yahoo": "SHECF",
+     "yahoo": "SHECY",
      "currency": "$",
      "mcap_base": {
       "prefix": "$",
       "yi": 775.6,
       "approx": false
      },
-     "mcap_base_price": 41.71,
-     "ath_floor": 50.77
+     "mcap_base_price": 22.76,
+     "ath_floor": 24.74
     },
     {
      "name": "胜高（SUMCO）",
@@ -3778,17 +3778,17 @@
     },
     {
      "name": "信越化学",
-     "code": "SHECF",
+     "code": "SHECY",
      "market": "美股 OTC",
-     "yahoo": "SHECF",
+     "yahoo": "SHECY",
      "currency": "$",
      "mcap_base": {
       "prefix": "$",
       "yi": 775.6,
       "approx": false
      },
-     "mcap_base_price": 41.71,
-     "ath_floor": 50.77
+     "mcap_base_price": 22.76,
+     "ath_floor": 24.74
     }
    ],
    "groups": [
