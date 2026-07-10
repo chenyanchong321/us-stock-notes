@@ -327,7 +327,7 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="stat vc" data-view="hi"><div class="k">🚀 新高榜（&lt;10%）</div><div class="v" id="st-hi">–</div></div>
       <div class="stat vc" data-view="ladder"><div class="k">🪜 回撤阶梯</div><div class="v">全表</div></div>
       <div class="stat vc" data-view="heat"><div class="k">板块热力</div><div class="v">21</div></div>
-      <div class="refresh-note">盘中现价30秒刷新（港股源延时15分钟）· 美股盘前盘后约1分钟 · 其余指标数分钟刷新 · 市值为估算口径</div>
+      <div class="refresh-note" title="免费行情延时是交易所授权规则：A股 Level-1 免费即实时；港/美/日/韩/台的实时行情需向交易所付费，免费源一律延时">盘中现价30秒刷新（A股实时 · 港/美/日/韩/台为免费延时行情，约15分钟）· 美股盘前盘后约1分钟 · 其余指标数分钟刷新 · 市值为估算口径</div>
     </div>
     <div id="topbar">
       <select id="secjump" class="mobile-only"><option value="">📂 跳转板块…</option></select>
@@ -482,11 +482,8 @@ function priceCell(r, mode){
   const ses = window.US_SES;
   let badge = (String(r[2]).indexOf("美股")===0 && (ses==="盘前"||ses==="盘后") && r[17] && r[17].px)
     ? `<span class="sesbadge">${ses}</span>` : "";
-  /* 港股盘中延时15分钟。但「行行都有」的标记零信息量，只在会因它做错决定的地方显示：
-     ＝ 重点清单（mode==="buy"，那里要判断「距买点/已触达」，15分钟足以翻转结论）。
-     浏览类视图靠顶部说明即可，否则每行多占 57px，手机上会把「当日」列挤出屏幕。 */
-  if(!badge && mode==="buy" && String(r[2]).indexOf("港股")===0 && window.HK_OPEN)
-    badge = `<span class="sesbadge delay" title="腾讯免费港股行情延时约15分钟">延时15分</span>`;
+  /* 港股延时15分钟这件事，不在表格里逐行标：它行行都有、零信息量，却每行吃掉 57px。
+     顶部说明已写明；真要下单时会去券商 App 看实时价。提示只保留在现价悬停的买点浮窗里（posTip）。 */
   return `<span style="display:block;white-space:nowrap">${r[5]}${badge}</span>${sub}`;
 }
 function mcapCell(r){
