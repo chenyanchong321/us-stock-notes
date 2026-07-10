@@ -402,7 +402,7 @@ let DATA = [];
 
 /* 列序＝四个语义块：实时(现价·当日) → 位置(回撤) → 估值(市值·PE) → 历史(近1周~近1年)
    手机端只看得到前两格，所以把每30秒都在变的活数据放最前，静态的市值往后挪 */
-const COLS = ["名称","现价 / 近一年","当日","回撤 / ATH","市值","近1周","近1月","近3月","近半年","年初至今","近1年"];
+const COLS = ["名称","现价 / 1年","当日","回撤 / ATH","市值","1周","1月","3月","半年","年初至今","1年"];
 let BUY = {};
 
 function fmtPct(v){
@@ -778,7 +778,7 @@ function renderDash(quotes){
       <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td><td class="fill"></td>
     </tr>`;
   }
-  const FV_HEAD = (extra, pxLabel)=>`<thead><tr><th style="text-align:left">名称</th><th>${pxLabel||"现价 / 近一年"}</th>${extra||""}<th>当日</th><th>回撤 / ATH</th><th>市值</th><th>近1周</th><th>近1月</th><th>近3月</th><th>近半年</th><th>年初至今</th><th>近1年</th><th class="fill"></th></tr></thead>`;
+  const FV_HEAD = (extra, pxLabel)=>`<thead><tr><th style="text-align:left">名称</th><th>${pxLabel||"现价 / 1年"}</th>${extra||""}<th>当日</th><th>回撤 / ATH</th><th>市值</th><th>1周</th><th>1月</th><th>3月</th><th>半年</th><th>年初至今</th><th>1年</th><th class="fill"></th></tr></thead>`;
   window.buildFlat = function(){
     const v = window.CURVIEW;
     const el = document.getElementById("flatview");
