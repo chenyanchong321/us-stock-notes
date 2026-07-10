@@ -23,25 +23,72 @@ def fetch_series(sym, rng, itv, retries=3):
                 j = json.load(r)
             res = j["chart"]["result"][0]
             ts = res["timestamp"]
+            # 不能盲目优先 adjclose：指数没有复权概念，Yahoo 会返回一个几乎全是 null 的 adjclose 数组，
+            # 于是 pairs 只剩最后一个非空点 → 近1月/近1年全变「上市后 +0.0%」、52周区间塌成一个点。
+            # 正确做法：两个序列都取出来，谁的非空点多就用谁。
+            cands = []
             try:
-                closes = res["indicators"]["adjclose"][0]["adjclose"]
+                cands.append(res["indicators"]["adjclose"][0]["adjclose"])
             except (KeyError, IndexError):
-                closes = res["indicators"]["quote"][0]["close"]
-            pairs = [(t, c) for t, c in zip(ts, closes) if c is not None]
-            if not pairs:
+                pass
+            try:
+                cands.append(res["indicators"]["quote"][0]["close"])
+            except (KeyError, IndexError):
+                pass
+            best = []
+            for closes in cands:
+                if not closes:
+                    continue
+                p = [(t, c) for t, c in zip(ts, closes) if c is not None]
+                if len(p) > len(best):
+                    best = p
+            if not best:
                 raise ValueError("empty series")
-            return pairs
+            return best
         except Exception as e:
             if i == retries - 1:
                 print(f"  !! {sym} {rng}/{itv}: {e}", file=sys.stderr)
                 return None
             time.sleep(2 * (i + 1))
 
-def fetch_history(sym):
+TX_KLINE = ("https://web.ifzq.gtimg.cn/appstock/app/fqkline/get"
+            "?param={code},day,,,1800,qfq")
+
+def fetch_series_tencent(tx_code):
+    """腾讯日K兜底。Yahoo 对部分 A股/港股指数（科创50、创业板指、上证50、中证500、
+    中证1000、恒生科技指数）没有历史，甚至没有该代码；腾讯全都有。
+    只对 A股/港股 有效——实测腾讯的美股日K只返回2根，日/韩/台各只有1根。"""
+    try:
+        req = urllib.request.Request(TX_KLINE.format(code=tx_code), headers=UA)
+        with urllib.request.urlopen(req, timeout=20) as r:
+            j = json.load(r)
+        d = j["data"][tx_code]
+        arr = d.get("qfqday") or d.get("day") or []
+        pairs = []
+        for row in arr:
+            # row = [日期, 开, 收, 高, 低, 量]
+            t = int(datetime.datetime.strptime(row[0], "%Y-%m-%d")
+                    .replace(tzinfo=datetime.timezone.utc).timestamp())
+            c = float(row[2])
+            if c > 0:
+                pairs.append((t, c))
+        return pairs or None
+    except Exception as e:
+        print(f"  !! 腾讯K线 {tx_code}: {e}", file=sys.stderr)
+        return None
+
+def fetch_history(sym, tx_code=None):
     """近5年日线（算涨跌幅） + 全历史月线（算历史高点），规避 Yahoo 对老股票
-    range=max 时悄悄降级粒度/截断近期数据的问题。"""
+    range=max 时悄悄降级粒度/截断近期数据的问题。
+    Yahoo 拿不到或只拿到寥寥几根时，若配置了 tx（腾讯代码）则回退到腾讯日K。"""
     daily = fetch_series(sym, "5y", "1d")
     monthly = fetch_series(sym, "max", "1mo")
+    if (daily is None or len(daily) < 30) and tx_code:
+        tx = fetch_series_tencent(tx_code)
+        if tx and len(tx) > len(daily or []):
+            print(f"  ~~ {sym} 用腾讯日K兜底（Yahoo 仅 {len(daily or [])} 根 → 腾讯 {len(tx)} 根）")
+            daily = tx
+            monthly = None
     if daily is None:
         return None
     hist_max = max(c for _, c in daily)
@@ -200,7 +247,7 @@ def main():
         for it in sec["items"]:
             sym = it["yahoo"]
             if sym not in cache:
-                cache[sym] = fetch_history(sym)
+                cache[sym] = fetch_history(sym, it.get("tx"))   # tx＝腾讯代码，Yahoo 拿不到历史时兜底
                 time.sleep(0.4)  # 温和限速
             fetched = cache[sym]
             if fetched is None:
