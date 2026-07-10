@@ -436,8 +436,11 @@ function ladderOf(r){   /* 从历史高点往下 −30%~−80% 的价格台阶 *
   });
   return {ath:r[4], px:r[5], cur, steps, md};
 }
+/* 去掉数字前的货币符号（名称栏已标了市场，页面上不必再重复；浮窗里仍保留符号）。
+   只去最前面的前缀，区间串「HK$4.18–6.56」也只去开头。 */
+function stripCur(s){ return String(s).replace(/^(HK\$|NT\$|US\$|\$|¥|₩)/,""); }
 function athCell(r){
-  return `<span style="display:block;white-space:nowrap;font-weight:500">${ddCell(r[6])}</span><span style="display:block;font-size:11px;color:var(--text2)">${r[4]}</span>`;
+  return `<span style="display:block;white-space:nowrap;font-weight:500">${ddCell(r[6])}</span><span style="display:block;font-size:11px;color:var(--text2)">${stripCur(r[4])}</span>`;
 }
 function peCell(v){
   if(typeof v!=="number") return `<span class="flat">–</span>`;
@@ -490,22 +493,14 @@ function priceCell(r, mode){
     ? `<span class="sesbadge">${ses}</span>` : "";
   /* 港股延时15分钟这件事，不在表格里逐行标：它行行都有、零信息量，却每行吃掉 57px。
      顶部说明已写明；真要下单时会去券商 App 看实时价。提示只保留在现价悬停的买点浮窗里（posTip）。 */
-  return `<span style="display:block;white-space:nowrap">${r[5]}${badge}</span>${sub}`;
+  return `<span style="display:block;white-space:nowrap">${stripCur(r[5])}${badge}</span>${sub}`;
 }
 function mcapCell(r){
-  let pe="";
-  if(typeof r[13]==="number") pe=`PE ${r[13].toFixed(1)}`;
-  else if(typeof r[19]==="number") pe=`远期 ${r[19].toFixed(1)}`;   /* 亏损公司用下一年预期利润估值；「远期」＝远期PE，省字 */
-  /* 非美元个股：本币市值下面直接给美元市值（用户最关注，比 PE 有用），放在 PE 前、PE 缩暗让位 */
+  /* 两行：①本币市值（去符号）②美元换算（保留 $，标志"折算美元"）。PE 挪进悬停浮窗（mcapTip）。 */
   let usd="";
   if(needUSD(r)){ const yi=mcapVal(r); if(yi>0) usd = yi>=10000 ? `$${(yi/10000).toFixed(2)}万亿` : `$${yi.toFixed(1)}亿`; }
-  let sub="";
-  if(usd||pe){
-    const u = usd ? `<b style="color:var(--text);font-weight:600">${usd}</b>` : "";
-    const p = pe  ? `<span style="opacity:.65${usd?";margin-left:6px":""}">${pe}</span>` : "";
-    sub = `<span style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">${u}${p}</span>`;
-  }
-  return `${r[3]}${sub}`;
+  const sub = usd ? `<span style="display:block;font-size:11px;white-space:nowrap"><b style="color:var(--text);font-weight:600">${usd}</b></span>` : "";
+  return `${stripCur(r[3])}${sub}`;
 }
 /* 各币种对美元汇率（1本币=?美元，粗略即可，只影响排名不影响展示；口径约2026年中） */
 const FX2USD = {USD:1, HKD:1/7.8, CNY:1/7.2, JPY:1/158, KRW:1/1370, TWD:1/32};
@@ -550,13 +545,17 @@ function usdPriceLine(r){
     + `<span style="display:block;margin-top:2px;font-size:11px;color:var(--text2)">${FX_NOTE[cur]||""}</span>`;
 }
 /* 美元市值换算浮窗：两行——①美元市值（不重复本币原值）②灰色汇率。非目标行返回 null */
+/* 市值悬停浮窗：PE 从表格挪到这里（看得少的退到浮窗）；非美元个股再附一行换算汇率。 */
 function usdMcapTip(r){
-  if(!needUSD(r)) return null;
-  const yi=mcapVal(r); if(!(yi>0)) return null;   /* "不适用"等沉底为 -1 */
-  const cur=curOf(r[2]);
-  const usd = yi>=10000 ? `US$${(yi/10000).toFixed(2)}万亿` : `US$${yi.toFixed(1)}亿`;
-  return `<span style="display:block;font-size:14px;color:var(--text);font-weight:600">美元市值 ≈ ${usd}</span>`
-    + `<span style="display:block;margin-top:3px;font-size:11px;color:var(--text2)">${FX_NOTE[cur]||""}</span>`;
+  let pe="";
+  if(typeof r[13]==="number") pe=`市盈率 PE ${r[13].toFixed(1)}`;
+  else if(typeof r[19]==="number") pe=`远期市盈率 ${r[19].toFixed(1)}`;   /* 亏损公司用下一年预期利润 */
+  const rate = needUSD(r) ? (FX_NOTE[curOf(r[2])]||"") : "";
+  if(!pe && !rate) return null;
+  let h="";
+  if(pe)   h += `<span style="display:block;font-size:14px;color:var(--text);font-weight:600">${pe}</span>`;
+  if(rate) h += `<span style="display:block;margin-top:${pe?4:0}px;font-size:11px;color:var(--text2)">${rate}</span>`;
+  return h || null;
 }
 function rowHTML(r, grp){
   return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${grp||""}" data-code="${r[1]}" data-mkt="${r[2]||""}" data-key="${(r[0]+r[1]).toLowerCase()}">
@@ -564,7 +563,7 @@ function rowHTML(r, grp){
     <td class="pxc">${priceCell(r)}</td>
     <td>${fmtPct(r[16])}</td>
     <td class="athc">${athCell(r)}</td>
-    <td>${mcapCell(r)}</td>
+    <td class="mcapc">${mcapCell(r)}</td>
     <td>${fmtPct(r[18])}</td>
     <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
     <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td><td class="fill"></td>
@@ -772,7 +771,7 @@ function renderDash(quotes){
       <td class="pxc">${priceCell(r, mode)}</td>${extraTd||""}
       <td>${fmtPct(r[16])}</td>
       <td class="athc">${athCell(r)}</td>
-      <td>${mcapCell(r)}</td>
+      <td class="mcapc">${mcapCell(r)}</td>
       <td>${fmtPct(r[18])}</td>
       <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
       <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td><td class="fill"></td>
