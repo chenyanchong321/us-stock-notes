@@ -402,7 +402,7 @@ let DATA = [];
 
 /* 列序＝四个语义块：实时(现价·当日) → 位置(回撤) → 估值(市值·PE) → 历史(近1周~近1年)
    手机端只看得到前两格，所以把每30秒都在变的活数据放最前，静态的市值往后挪 */
-const COLS = ["名称","现价 / 1年","当日","回撤 / ATH","市值","1周","1月","3月","半年","年初至今","1年"];
+const COLS = ["名称","现价 / 1年","当日 / 1周","回撤 / ATH","市值","1周","1月","3月","半年","年初至今","1年"];
 let BUY = {};
 
 function fmtPct(v){
@@ -441,6 +441,10 @@ function ladderOf(r){   /* 从历史高点往下 −30%~−80% 的价格台阶 *
 function stripCur(s){ return String(s).replace(/^(HK\$|NT\$|US\$|\$|¥|₩)/,""); }
 function athCell(r){
   return `<span style="display:block;white-space:nowrap;font-weight:500">${ddCell(r[6])}</span><span style="display:block;font-size:11px;color:var(--text2)">${stripCur(r[4])}</span>`;
+}
+/* 当日/1周：当日在上、近1周在下（第二行小字），一眼对比今天和本周。最右侧独立「1周」列不变。 */
+function dayWeekCell(r){
+  return `<span style="display:block">${fmtPct(r[16])}</span><span style="display:block;font-size:12px">${fmtPct(r[18])}</span>`;
 }
 function peCell(v){
   if(typeof v!=="number") return `<span class="flat">–</span>`;
@@ -561,7 +565,7 @@ function rowHTML(r, grp){
   return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${grp||""}" data-code="${r[1]}" data-mkt="${r[2]||""}" data-key="${(r[0]+r[1]).toLowerCase()}">
     <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
     <td class="pxc">${priceCell(r)}</td>
-    <td>${fmtPct(r[16])}</td>
+    <td>${dayWeekCell(r)}</td>
     <td class="athc">${athCell(r)}</td>
     <td class="mcapc">${mcapCell(r)}</td>
     <td>${fmtPct(r[18])}</td>
@@ -769,7 +773,7 @@ function renderDash(quotes){
     return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${r[12]||""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
       <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
       <td class="pxc">${priceCell(r, mode)}</td>${extraTd||""}
-      <td>${fmtPct(r[16])}</td>
+      <td>${dayWeekCell(r)}</td>
       <td class="athc">${athCell(r)}</td>
       <td class="mcapc">${mcapCell(r)}</td>
       <td>${fmtPct(r[18])}</td>
@@ -777,7 +781,7 @@ function renderDash(quotes){
       <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td><td class="fill"></td>
     </tr>`;
   }
-  const FV_HEAD = (extra, pxLabel)=>`<thead><tr><th style="text-align:left">名称</th><th>${pxLabel||"现价 / 1年"}</th>${extra||""}<th>当日</th><th>回撤 / ATH</th><th>市值</th><th>1周</th><th>1月</th><th>3月</th><th>半年</th><th>年初至今</th><th>1年</th><th class="fill"></th></tr></thead>`;
+  const FV_HEAD = (extra, pxLabel)=>`<thead><tr><th style="text-align:left">名称</th><th>${pxLabel||"现价 / 1年"}</th>${extra||""}<th>当日 / 1周</th><th>回撤 / ATH</th><th>市值</th><th>1周</th><th>1月</th><th>3月</th><th>半年</th><th>年初至今</th><th>1年</th><th class="fill"></th></tr></thead>`;
   window.buildFlat = function(){
     const v = window.CURVIEW;
     const el = document.getElementById("flatview");
@@ -1271,7 +1275,7 @@ function renderNotes(cfg){
          用 setHTML 做差分：内容没变就不碰 DOM。实测每轮刷新 387 行里有 335 行内容完全相同，
          无差别重写会销毁重建约1550个单元格、产生6144次DOM变动，肉眼就看到"闪一下"。 */
       setHTML(tds[1], priceCell(r));
-      setHTML(tds[2], fmtPct(r[16]));
+      setHTML(tds[2], dayWeekCell(r));   /* 当日/1周两行，与 rowHTML 一致，否则实时刷新会抹掉第二行 */
       setHTML(tds[3], athCell(r));
       setHTML(tds[4], mcapCell(r));
     });
@@ -1381,7 +1385,7 @@ function renderNotes(cfg){
       document.querySelectorAll(`#sections tr[data-code="${r[1]}"]`).forEach(tr=>{
         const t = tr.children;
         if(t.length<11) return;
-        setHTML(t[1], priceCell(r));  setHTML(t[2], fmtPct(r[16]));
+        setHTML(t[1], priceCell(r));  setHTML(t[2], dayWeekCell(r));
         setHTML(t[3], athCell(r));    setHTML(t[4], mcapCell(r));
         setHTML(t[5], fmtPct(r[18])); setHTML(t[6], fmtPct(r[7]));
         setHTML(t[10],fmtPct(r[11]));
