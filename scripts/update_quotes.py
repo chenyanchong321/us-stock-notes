@@ -64,6 +64,11 @@ def price_at(pairs, target_ts):
             break
     return best
 
+def tiny(v):
+    """极小价格（PEPE ≈ 0.0000027）：{:.3f} 会抹成 0.000，{:.3g} 会变成科学计数 2.71e-06。
+    这里补足小数位再去掉尾零，得到 0.00000271。"""
+    return f"{v:.12f}".rstrip("0").rstrip(".") or "0"
+
 def fmt_price(cur, v):
     if v >= 10000:
         return f"{cur}{v:,.0f}"
@@ -73,8 +78,7 @@ def fmt_price(cur, v):
         return f"{cur}{v:.2f}"
     if v >= 0.01:
         return f"{cur}{v:.4f}"
-    # 迷因币这类极小价格（PEPE ≈ 0.0000027）：固定小数位会全抹成 0.000，改用有效数字
-    return f"{cur}{v:.3g}"
+    return f"{cur}{tiny(v)}"
 
 def fetch_pe_map(symbols):
     """批量获取 TTM 市盈率 + 下次财报日（同一响应顺带取出，零额外请求）。
@@ -143,7 +147,7 @@ def _num(v):
         return f"{v:.2f}"
     if v >= 0.01:
         return f"{v:.4f}"
-    return f"{v:.3g}"   # 同 fmt_price：极小价格保留有效数字，否则 52周区间会变成「$0.000–$0.000」
+    return tiny(v)   # 同 fmt_price：否则 52周区间会变成「$0.000–$0.000」
 
 def pos_52w(pairs, ts_1y, cur):
     """现价在近52周高低点区间的位置（0-100）＋区间字符串「低–高」"""

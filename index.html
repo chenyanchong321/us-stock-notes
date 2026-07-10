@@ -1283,7 +1283,9 @@ function renderNotes(cfg){
     if(v>=100)   return v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
     if(v>=1)     return v.toFixed(2);
     if(v>=0.01)  return v.toFixed(4);
-    return v.toPrecision(3);            /* PEPE 这类要保留有效数字，toFixed(3) 会变成 0.000 */
+    /* PEPE 这类：toFixed(3) 抹成 0.000；toPrecision 在 <1e-7 时又变科学计数 2.71e-8。
+       补足小数位再去尾零，得到 0.00000271。 */
+    return v.toFixed(12).replace(/0+$/,"").replace(/\.$/,"");
   }
   function cgMcap(mc){
     const yi = mc/1e8;                  /* 美元 → 亿 */
