@@ -1707,7 +1707,7 @@ let PROFILES = {};
     const nf = noteFor(code, tr.dataset.grp||"");
     return txt + alphaLine + (nf ? `<span style="display:block;margin-top:7px;font-size:12px;border-top:1px solid var(--border);padding-top:6px"><a href="articles/${nf[0]}.html" style="color:var(--accent);text-decoration:none">📖 相关笔记：${nf[1]} →</a></span>` : "");
   }
-  let pinned = false;
+  let pinned = false, pinnedEl = null;   /* pinnedEl＝当前钉住的触发格子，用于「再点一次关闭」 */
   function place(x, y){
     const w = tip.offsetWidth, h = tip.offsetHeight;
     let L = x + 14, T = y + 16;
@@ -1821,19 +1821,22 @@ let PROFILES = {};
     if(inZone(e.target) && !inZone(e.relatedTarget))
       tip.style.display = "none";
   });
-  document.addEventListener("click", e=>{      /* 点名称固定浮窗（可点相关笔记链接），点其他处收起 */
+  document.addEventListener("click", e=>{      /* 手机端：点触发格弹出，再点同一格收起（桌面端仍靠悬停，不受影响） */
     if(e.target.closest && e.target.closest("#stip")) return;   /* 点浮窗内链接不收起 */
     const td = e.target.closest("td.name");
     const tdp = e.target.closest("td.pxc");
     const tda = e.target.closest("td.athc");
     const tdm = e.target.closest("td.mcapc");
     const ipc = e.target.closest(".ipoflag");
+    const trig = td || tdp || tda || tdm || ipc;   /* 本次点中的触发格 */
+    /* 再点同一格＝关闭（开关式）。这样手机上不必再去点空白处收浮窗。 */
+    if(pinned && trig && trig===pinnedEl){ tip.style.display="none"; pinned=false; pinnedEl=null; return; }
     const h = td ? tipHTML(td) : (tdp ? posTip(tdp.parentElement) : (tda ? athTip(tda.parentElement) : (tdm ? usdMcapTip(rowOfTr(tdm.parentElement)) : (ipc ? ipc.dataset.tip : null))));
     if(h){
       tip.innerHTML = h; tip.style.display = "block"; tip.style.pointerEvents = "auto";
-      pinned = true;
+      pinned = true; pinnedEl = trig;
       place(e.clientX||20, e.clientY||100);
-    } else { tip.style.display = "none"; pinned = false; }
+    } else { tip.style.display = "none"; pinned = false; pinnedEl = null; }
   });
 })();
 
