@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-10 18:30 北京时间",
+ "updated": "2026-07-10 18:45 北京时间",
  "earnings": [
   {
    "d": "2026-07-15",
@@ -233,6 +233,12 @@
    "d": "2026-07-30",
    "code": "AEM",
    "name": "伊格尔矿业（Agnico Eagle）",
+   "est": false
+  },
+  {
+   "d": "2026-07-30",
+   "code": "HOOD",
+   "name": "Robinhood",
    "est": false
   },
   {
