@@ -152,7 +152,8 @@
      "currency": "",
      "mcap_base": null,
      "mcap_base_price": 1.0,
-     "ath_floor": 0
+     "ath_floor": 0,
+     "hist": "tx:sh000016"
     },
     {
      "name": "科创50",
@@ -162,7 +163,8 @@
      "currency": "",
      "mcap_base": null,
      "mcap_base_price": 1.0,
-     "ath_floor": 0
+     "ath_floor": 0,
+     "hist": "tx:sh000688"
     },
     {
      "name": "创业板指",
@@ -172,7 +174,8 @@
      "currency": "",
      "mcap_base": null,
      "mcap_base_price": 1.0,
-     "ath_floor": 0
+     "ath_floor": 0,
+     "hist": "tx:sz399006"
     },
     {
      "name": "中证500",
@@ -182,7 +185,8 @@
      "currency": "",
      "mcap_base": null,
      "mcap_base_price": 1.0,
-     "ath_floor": 0
+     "ath_floor": 0,
+     "hist": "tx:sh000905"
     },
     {
      "name": "中证1000",
@@ -192,7 +196,8 @@
      "currency": "",
      "mcap_base": null,
      "mcap_base_price": 1.0,
-     "ath_floor": 0
+     "ath_floor": 0,
+     "hist": "tx:sh000852"
     },
     {
      "name": "科创50ETF（华夏）",
