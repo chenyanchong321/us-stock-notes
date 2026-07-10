@@ -499,7 +499,7 @@ function mcapCell(r){
   /* 两行：①本币市值（去符号）②美元换算（保留 $，标志"折算美元"）。PE 挪进悬停浮窗（mcapTip）。 */
   let usd="";
   if(needUSD(r)){ const yi=mcapVal(r); if(yi>0) usd = yi>=10000 ? `$${(yi/10000).toFixed(2)}万亿` : `$${yi.toFixed(1)}亿`; }
-  const sub = usd ? `<span style="display:block;font-size:11px;white-space:nowrap"><b style="color:var(--text);font-weight:600">${usd}</b></span>` : "";
+  const sub = usd ? `<span style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">${usd}</span>` : "";
   return `${stripCur(r[3])}${sub}`;
 }
 /* 各币种对美元汇率（1本币=?美元，粗略即可，只影响排名不影响展示；口径约2026年中） */
