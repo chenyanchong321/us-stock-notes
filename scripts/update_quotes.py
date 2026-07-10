@@ -51,13 +51,50 @@ def fetch_series(sym, rng, itv, retries=3):
                 return None
             time.sleep(2 * (i + 1))
 
-def fetch_history(sym):
+TX_KLINE = "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param={code},day,,,1800,qfq"
+
+def fetch_series_tencent(tx_code):
+    """腾讯日K。返回 [(unix_ts, close)]，失败返回 None（不静默降级）。"""
+    req = urllib.request.Request(TX_KLINE.format(code=tx_code), headers=UA)
+    with urllib.request.urlopen(req, timeout=20) as r:
+        j = json.load(r)
+    d = j["data"][tx_code]
+    arr = d.get("qfqday") or d.get("day") or []
+    pairs = []
+    for row in arr:                       # row = [日期, 开, 收, 高, 低, 量]
+        t = int(datetime.datetime.strptime(row[0], "%Y-%m-%d")
+                .replace(tzinfo=datetime.timezone.utc).timestamp())
+        c = float(row[2])
+        if c > 0:
+            pairs.append((t, c))
+    return pairs or None
+
+def fetch_history(sym, hist=None):
     """近5年日线（算涨跌幅） + 全历史月线（算历史高点），规避 Yahoo 对老股票
     range=max 时悄悄降级粒度/截断近期数据的问题。
 
-    不设「换数据源兜底」：Yahoo 覆盖全部 6 个市场。历史上两次「Yahoo 拿不到」都是我们自己的错
-    ——一次是盲目优先 adjclose（指数的 adjclose 几乎全 null），一次是代码写错（^HSTECH 应为 HSTECH.HK）。
-    兜底只会把「我们写错了」伪装成「数据源不给力」，让真因永远查不出来。拿不到就报错，去查原因。"""
+    **没有「拿不到就偷偷换源」的兜底。** 历史上两次「Yahoo 拿不到」都是我们自己的错：
+    一次盲目优先 adjclose（指数的 adjclose 几乎全 null，只剩 1 个点），
+    一次代码写错（^HSTECH 其实是 HSTECH.HK）。静默兜底会把「我们写错了」伪装成
+    「数据源不给力」，让真因永远查不出来——科创50 差一点就这样被掩盖。
+
+    唯一的例外是 `hist` 字段：**显式声明**某只标的的历史来自别处，写在 watchlist 里一眼可见。
+    目前仅 HSTECH（恒生科技指数）——已穷举验证 Yahoo 对它的日/周/月线、max/显式起止、
+    query1/query2 全部只返回 1 个点，firstTradeDate 为 null，而 ^HSI / ^HSCE / 3033.HK 均正常。
+    声明源若失败则直接报错，绝不再往下退。"""
+    if hist and hist.startswith("tx:"):
+        tx_code = hist[3:]
+        try:
+            daily = fetch_series_tencent(tx_code)
+        except Exception as e:
+            print(f"  !! {sym} 声明的历史源 {hist} 失败: {e}", file=sys.stderr)
+            return None
+        if not daily:
+            print(f"  !! {sym} 声明的历史源 {hist} 返回空", file=sys.stderr)
+            return None
+        print(f"  ~~ {sym} 历史取自 {hist}（{len(daily)} 根日K）")
+        return daily, max(c for _, c in daily)
+
     daily = fetch_series(sym, "5y", "1d")
     monthly = fetch_series(sym, "max", "1mo")
     if daily is None:
@@ -220,7 +257,7 @@ def main():
         for it in sec["items"]:
             sym = it["yahoo"]
             if sym not in cache:
-                cache[sym] = fetch_history(sym)
+                cache[sym] = fetch_history(sym, it.get("hist"))   # hist＝显式声明的历史源，仅个别标的
                 time.sleep(0.4)  # 温和限速
             fetched = cache[sym]
             if fetched is None:

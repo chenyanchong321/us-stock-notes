@@ -232,7 +232,8 @@
      "currency": "",
      "mcap_base": null,
      "mcap_base_price": 1.0,
-     "ath_floor": 0
+     "ath_floor": 0,
+     "hist": "tx:hkHSTECH"
     },
     {
      "name": "恒生国企指数",
