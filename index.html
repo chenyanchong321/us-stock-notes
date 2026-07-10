@@ -1271,6 +1271,10 @@ function renderNotes(cfg){
     return got;
   }
   let lastLiveAt=0;
+  /* live.json（Nasdaq，分钟档）已覆盖的代码。applyExt 的 Yahoo 值是 6~15 分钟档，不能再去盖它——
+     否则每轮"先写 Yahoo、再写 Nasdaq"，同一格被改两次，中间闪过一个旧价格。实测 92 行受此影响。 */
+  const liveCodes = Object.create(null);
+  function liveFresh(code){ return liveCodes[code] && (Date.now()-liveCodes[code] < 180000); }
   function usNoteFor(ses){
     if((ses==="盘前"||ses==="盘后") && lastLiveAt && Date.now()-lastLiveAt<90000) return ` · 美股${ses}(分钟档)`;
     return ses==="盘前" ? " · 美股盘前(15分钟档)" : ses==="盘后" ? " · 美股盘后(15分钟档)" : ses===null ? " · 美股休市" : "";
@@ -1311,6 +1315,7 @@ function renderNotes(cfg){
     DATA.forEach(s=>s.rows.forEach(r=>{
       const e=r[17];
       if(!e || !e.px) return;
+      if(liveFresh(r[1])) return;   /* 已有分钟档，别用慢档盖回去（指数/OTC 不在 live.json 里，仍走这里） */
       const sym=txCode(r[2], r[1]);
       if(!sym || sym.slice(0,2)!=="us" || !rowsByCode[sym]) return;
       applyQuote(sym, e.px, (typeof e.pct==="number") ? Math.round(e.pct*100)/100 : null);
@@ -1356,6 +1361,7 @@ function renderNotes(cfg){
         if(c0 && isFinite(price) && Math.abs(price-c0) < Math.max(0.005, c0*1e-5)) return;
         if(isFinite(price)&&price>0){
           applyQuote(sym, price, isFinite(pct)?Math.round(pct*100)/100:null);
+          liveCodes[code] = Date.now();   /* 记下已被分钟档覆盖，applyExt 会跳过它 */
           got++;
         }
       });
@@ -1382,7 +1388,7 @@ function renderNotes(cfg){
       window.checkStale(q.updated);   /* 页面长开时也持续复查：流水线挂了会自动弹横幅，恢复了自动收起 */
       window.snapshotClose();   /* 此刻 r[5] 还是流水线的收盘价，先存基准再让实时层覆盖 */
       if(usSession()==="盘中") refresh();   /* 盘中：马上让实时层盖回最新价，避免短暂回跳 */
-      else { applyExt(); applyLive(); }
+      else { await applyLive(); applyExt(); }   /* 先快档(Nasdaq)后慢档(Yahoo补漏)，顺序反了会闪一下旧价 */
     }catch(e){}
   }
   /* 自适应轮询：盘前/盘后 60 秒（现价靠它），其余时段 10 分钟（只是慢变的统计指标）。
@@ -1392,7 +1398,8 @@ function renderNotes(cfg){
     const gap = (ses==="盘前"||ses==="盘后") ? 60000 : 600000;
     setTimeout(()=>{ refetchStatic().finally(scheduleStatic); }, gap);
   }
-  window.addEventListener("load",()=>{ setTimeout(applyExt,800); setTimeout(applyLive,1000); setTimeout(refresh,1500); setInterval(refresh,30000); setInterval(applyLive,60000); scheduleStatic(); });
+  /* 首屏也要先快档后慢档：applyLive 在前，applyExt 只补它没覆盖的（指数/OTC），避免开屏闪一下旧价 */
+  window.addEventListener("load",()=>{ setTimeout(applyLive,800); setTimeout(applyExt,1200); setTimeout(refresh,1600); setInterval(refresh,30000); setInterval(applyLive,60000); scheduleStatic(); });
   document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"){ refresh(); applyLive(); refetchStatic(); } });
 })();
 
