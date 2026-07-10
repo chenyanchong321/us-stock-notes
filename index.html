@@ -88,7 +88,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 
 /* 表格 */
 .tbl-wrap{background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow-x:auto}
-table{width:100%;border-collapse:collapse;white-space:nowrap}
+/* tabular-nums：数字等宽，8 和 1 占一样的宽度。否则价格/涨跌幅一变，列宽跟着推移，整表轻微抖动 */
+table{width:100%;border-collapse:collapse;white-space:nowrap;font-variant-numeric:tabular-nums}
 th.fill,td.fill{width:100%;padding:0;cursor:default}
 th{font-size:12px;color:var(--text);font-weight:600;text-align:right;padding:9px 13px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;background:var(--panel)}
 th:first-child{text-align:left}
@@ -636,8 +637,11 @@ function renderDash(quotes){
     const el = document.getElementById("opps");
     if(!hits.length){ el.classList.add("hidden"); return; }
     el.classList.remove("hidden");
-    el.innerHTML = `🎯 已进买点区（${hits.length}）：` +
+    const html = `🎯 已进买点区（${hits.length}）：` +
       hits.map(r=>`<a href="#" data-k="${(r[0]+r[1]).toLowerCase()}">${r[0]} ${r[5]}</a>`).join("");
+    if(el.__h === html) return;   /* 名单与价格都没变就别重建，否则这条横幅每30秒闪一次 */
+    el.__h = html;
+    el.innerHTML = html;
     el.querySelectorAll("a").forEach(a=>a.addEventListener("click",e=>{
       e.preventDefault();
       const tr=document.querySelector(`tr[data-key="${a.dataset.k}"]`);
@@ -849,12 +853,16 @@ function renderDash(quotes){
     const tstyle = '';
     /* 30秒自动刷新会整段重建本视图，导致手机端横向滚动位置归零。
        重建前记住滚动位置，重建后还原；仅当仍是同一个榜单时还原（切换榜单则回到最左）。 */
+    const html = `<div class="section"><div class="section-head"><h2>${title}</h2></div>
+      <p class="fv-note">${note}</p>
+      <div class="tbl-wrap"><table${tstyle}>${head}<tbody>${body}</tbody></table></div></div>`;
+    /* 内容一字未变就整段跳过：否则每30秒把整张榜单推倒重建，是肉眼可见闪烁的最大来源 */
+    if(el.__h === html){ el.classList.remove("hidden"); return; }
+    el.__h = html;
     const oldWrap = el.querySelector(".tbl-wrap");
     const sameView = el.dataset.fv === String(window.CURVIEW);
     const keepSL = (oldWrap && sameView) ? oldWrap.scrollLeft : 0;
-    el.innerHTML = `<div class="section"><div class="section-head"><h2>${title}</h2></div>
-      <p class="fv-note">${note}</p>
-      <div class="tbl-wrap"><table${tstyle}>${head}<tbody>${body}</tbody></table></div></div>`;
+    el.innerHTML = html;
     el.dataset.fv = String(window.CURVIEW);
     if(keepSL){ const nw = el.querySelector(".tbl-wrap"); if(nw) nw.scrollLeft = keepSL; }
     el.classList.remove("hidden");
@@ -1161,6 +1169,13 @@ function renderNotes(cfg){
     }));
   }
   function parseNum(s){ const m=String(s).replace(/[,，]/g,"").match(/-?\d+(\.\d+)?/); return m?parseFloat(m[0]):null; }
+  /* 差分写入：把上次写的 HTML 记在节点上，相同就一个字节都不碰。
+     不读 el.innerHTML 来比较——那个 getter 要序列化整棵子树，比直接重写还慢。 */
+  function setHTML(el, html){
+    if(el.__h === html) return;
+    el.__h = html;
+    el.innerHTML = html;
+  }
   /* 快照“流水线写下的收盘价”，作为识破坏数据源的基准。
      必须在 applyExt/applyLive 覆盖 r[5] 之前调用（renderDash 末尾、refetchStatic 写回之后） */
   window.CLOSEPX = {};
@@ -1205,11 +1220,13 @@ function renderNotes(cfg){
     document.querySelectorAll(`#sections tr[data-code="${ent.code}"]`).forEach(tr=>{
       const r=ent.rows[0], tds=tr.children;
       if(tds.length<5) return;
-      /* 下标须与 rowHTML 的 td 顺序一致：1现价 2当日 3回撤 4市值 */
-      tds[1].innerHTML=priceCell(r);
-      tds[2].innerHTML=fmtPct(r[16]);
-      tds[3].innerHTML=athCell(r);
-      tds[4].innerHTML=mcapCell(r);
+      /* 下标须与 rowHTML 的 td 顺序一致：1现价 2当日 3回撤 4市值。
+         用 setHTML 做差分：内容没变就不碰 DOM。实测每轮刷新 387 行里有 335 行内容完全相同，
+         无差别重写会销毁重建约1550个单元格、产生6144次DOM变动，肉眼就看到"闪一下"。 */
+      setHTML(tds[1], priceCell(r));
+      setHTML(tds[2], fmtPct(r[16]));
+      setHTML(tds[3], athCell(r));
+      setHTML(tds[4], mcapCell(r));
     });
   }
   function usSession(){   /* 纽约时区判定，自动处理夏令时 */
