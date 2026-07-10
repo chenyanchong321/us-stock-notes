@@ -495,13 +495,13 @@ function priceCell(r, mode){
 function mcapCell(r){
   let pe="";
   if(typeof r[13]==="number") pe=`PE ${r[13].toFixed(1)}`;
-  else if(typeof r[19]==="number") pe=`远期PE ${r[19].toFixed(1)}`;   /* 亏损公司用下一年预期利润估值 */
+  else if(typeof r[19]==="number") pe=`远期 ${r[19].toFixed(1)}`;   /* 亏损公司用下一年预期利润估值；「远期」＝远期PE，省字 */
   /* 非美元个股：本币市值下面直接给美元市值（用户最关注，比 PE 有用），放在 PE 前、PE 缩暗让位 */
   let usd="";
   if(needUSD(r)){ const yi=mcapVal(r); if(yi>0) usd = yi>=10000 ? `$${(yi/10000).toFixed(2)}万亿` : `$${yi.toFixed(1)}亿`; }
   let sub="";
   if(usd||pe){
-    const u = usd ? `<b style="color:var(--text2);font-weight:600">${usd}</b>` : "";
+    const u = usd ? `<b style="color:var(--text);font-weight:600">${usd}</b>` : "";
     const p = pe  ? `<span style="opacity:.65${usd?";margin-left:6px":""}">${pe}</span>` : "";
     sub = `<span style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">${u}${p}</span>`;
   }
