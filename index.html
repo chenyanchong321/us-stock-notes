@@ -442,10 +442,24 @@ function posCell(v, rng){
   const range = rng ? `<span style="color:var(--text2)">${rng}</span>` : "";
   return `<span style="white-space:nowrap">${range}<span style="color:${c};font-weight:600">（${Math.round(v)}%）</span></span>`;
 }
+/* 买点阈值 ＝ 第一档买点的「上沿」，也就是下跌途中开始建仓的那个价。
+   「30–35」        → 35   （跌到35就动手，不是等跌到30）
+   「330-350」      → 350
+   「385/330-350」  → 385  （第一档是单值）
+   「330-350/270-290」→ 350（第一档是区间，取上沿）
+   「73–76；二档65–68」→ 76
+   「4000以下梯次加：3800/3650/3400建满」→ 4000
+   注意：不能取串里的第一个数字——那是最后一档的下沿，会把「已该买入」误判成「还差很多」。
+   括号与圆点后面是注释（锚定日期、来源、市值口径），先剥掉再解析。 */
+function buyThreshold(b){
+  if(!b || String(b).includes("风险锚")) return null;
+  const head  = String(b).split("（")[0].split("·")[0];
+  const tier1 = head.split(/[\/;；、]/)[0];          /* 只看第一档 */
+  const nums  = (tier1.match(/[\d.]+/g)||[]).map(parseFloat).filter(n=>n>0);
+  return nums.length ? Math.max(...nums) : null;    /* 该档的上沿 */
+}
 function buyHit(r){
-  const b = BUY[r[1]];
-  if(!b || b.includes("风险锚")) return false;
-  const th = parseFloat((b.split("（")[0].split("·")[0].match(/[\d.]+/)||[])[0]);
+  const th = buyThreshold(BUY[r[1]]);
   const px = parseFloat(String(r[5]).replace(/[^\d.]/g,""));
   return !!(th && px && px <= th*1.02);
 }
@@ -629,12 +643,7 @@ function renderDash(quotes){
   try{ window.PERF_W = localStorage.getItem("perfW") || "m3"; window.PERF_DIR = localStorage.getItem("perfDir") || "gain"; window.HEAT_W = localStorage.getItem("heatW") || "d"; }catch(e){ window.PERF_W="m3"; window.PERF_DIR="gain"; window.HEAT_W="d"; }
   (function(){ const lab={w1:"近1周",m1:"近1月",m3:"近3月",m6:"近半年",ytd:"年初至今",y1:"近1年"}[window.PERF_W]||"近3月";
     const sp=document.getElementById("st-perf"); if(sp) sp.textContent=lab; })();
-  function buyTh(code){
-    const b = BUY[code];
-    if(!b || b.includes("风险锚")) return null;
-    const head=b.split("（")[0].split("·")[0];
-    return parseFloat((head.match(/[\d.]+/)||[])[0]) || null;
-  }
+  function buyTh(code){ return buyThreshold(BUY[code]); }   /* 统一走 buyThreshold，勿再各自解析 */
   function pxOf(r){ return parseFloat(String(r[5]).replace(/[^\d.]/g,"")); }
   function flatRows(){
     const seen = new Set(), out = [];
@@ -1542,7 +1551,7 @@ let PROFILES = {};
     for(const s of DATA){ for(const x of s.rows){ if(x[1]===code){ r=x; break; } } if(r) break; }
     if(!r) return null;
     const px = parseFloat(String(r[5]).replace(/[^\d.]/g,""));
-    const th = (b.includes("风险锚")||b.includes("市值")) ? null : (parseFloat((b.match(/[\d.]+/)||[])[0]) || null);
+    const th = buyThreshold(b);   /* 与重点清单「距买点」同源，避免两处口径打架 */
     let line2 = "";
     if(th && px){
       const dist = (1-th/px)*100;   // 从现价还需下跌到买点的幅度
