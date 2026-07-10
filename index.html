@@ -105,6 +105,8 @@ tr.grp td .glabel{position:sticky;left:14px;display:inline-block}
 /* 盘前/盘后角标：提示该价格不是收盘价 */
 .sesbadge{display:inline-block;margin-left:5px;padding:0 4px;border-radius:3px;font-size:10px;line-height:14px;vertical-align:1px;
   color:var(--gold);border:1px solid var(--gold);opacity:.8;font-weight:500;letter-spacing:.3px}
+/* 延时行情用灰色，与「盘前」的金色区分：金色＝真实时的盘前价，灰色＝慢了15分钟 */
+.sesbadge.delay{color:var(--text2);border-color:var(--border);opacity:.9}
 /* 有买点的重点标的：金色星标+左边条 */
 tr.buy td.name{box-shadow:inset 3px 0 0 var(--gold)}
 tr.buy td.name .cn::before{content:"★ ";color:var(--gold);font-size:11px}
@@ -325,7 +327,7 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="stat vc" data-view="hi"><div class="k">🚀 新高榜（&lt;10%）</div><div class="v" id="st-hi">–</div></div>
       <div class="stat vc" data-view="ladder"><div class="k">🪜 回撤阶梯</div><div class="v">全表</div></div>
       <div class="stat vc" data-view="heat"><div class="k">板块热力</div><div class="v">21</div></div>
-      <div class="refresh-note">盘中现价30秒实时 · 美股盘前盘后约1分钟 · 其余指标数分钟刷新 · 市值为估算口径</div>
+      <div class="refresh-note">盘中现价30秒刷新（港股源延时15分钟）· 美股盘前盘后约1分钟 · 其余指标数分钟刷新 · 市值为估算口径</div>
     </div>
     <div id="topbar">
       <select id="secjump" class="mobile-only"><option value="">📂 跳转板块…</option></select>
@@ -474,8 +476,11 @@ function priceCell(r, mode){
   /* 盘前/盘后时段，美股现价显示的是 Yahoo 的盘前(后)价而非收盘价 —— 标出来，避免误读为收盘价。
      盘中不标（此时价格来自腾讯实时）；仅标真正取到了盘前后报价的行 */
   const ses = window.US_SES;
-  const badge = (String(r[2]).indexOf("美股")===0 && (ses==="盘前"||ses==="盘后") && r[17] && r[17].px)
+  let badge = (String(r[2]).indexOf("美股")===0 && (ses==="盘前"||ses==="盘后") && r[17] && r[17].px)
     ? `<span class="sesbadge">${ses}</span>` : "";
+  /* 港股盘中：腾讯免费源延时15分钟，明确标出，别让延时价冒充实时价 */
+  if(!badge && String(r[2]).indexOf("港股")===0 && window.HK_OPEN)
+    badge = `<span class="sesbadge delay" title="腾讯免费港股行情延时约15分钟">延时15分</span>`;
   return `<span style="display:block;white-space:nowrap">${r[5]}${badge}</span>${sub}`;
 }
 function mcapCell(r){
@@ -1220,7 +1225,18 @@ function renderNotes(cfg){
     window.US_SES = r;   /* 暴露给 priceCell()：盘前/盘后时在现价旁标注，盘中不标 */
     return r;
   }
-  usSession();   /* 首屏渲染前先算一次，避免第一帧漏标 */
+  /* 港股是否处于交易时段（北京时间，工作日 9:30–16:10）。
+     2026-07-10 实测：腾讯免费港股行情延时15分钟（用腾讯自己的分时数据比对，13:56的价在14:11才返回）。
+     所以港股盘中必须标注「延时」，否则会把15分钟前的价当实时价用来判断买点。 */
+  function hkOpen(){
+    const bj = new Date(Date.now()+8*36e5);
+    const dow = bj.getUTCDay(); if(dow===0||dow===6) return false;
+    const m = bj.getUTCHours()*60 + bj.getUTCMinutes();
+    return m>=570 && m<=970;   /* 9:30 – 16:10 */
+  }
+  function tickSessions(){ usSession(); window.HK_OPEN = hkOpen(); }
+  tickSessions();   /* 首屏渲染前先算一次，避免第一帧漏标 */
+  setInterval(tickSessions, 60000);
   function parseBatch(syms){
     let got=0;
     const ses=usSession();
