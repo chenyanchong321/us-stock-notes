@@ -103,6 +103,10 @@ td.name{text-align:left;max-width:150px;white-space:normal;line-height:1.4}
 th:first-child,td.name{position:sticky;left:0;z-index:3;background:var(--panel)}
 tr:hover td.name{background:var(--panel2)}
 tr.grp td .glabel{position:sticky;left:14px;display:inline-block}
+/* 「数据更新…·实时…」这一行：预留高度，时段说明长短变化（美股盘中/盘前(分钟档)/休市）
+   不会改变行数把侧栏顶下去；时间数字用等宽字形，秒数跳动不会推着后面的字走 */
+#update-time{min-height:3.2em}
+#update-time .rt{font-variant-numeric:tabular-nums}
 /* 盘前/盘后角标：提示该价格不是收盘价 */
 .sesbadge{display:inline-block;margin-left:5px;padding:0 4px;border-radius:3px;font-size:10px;line-height:14px;vertical-align:1px;
   color:var(--gold);border:1px solid var(--gold);opacity:.8;font-weight:500;letter-spacing:.3px}
@@ -328,7 +332,7 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="stat vc" data-view="hi"><div class="k">🚀 新高榜（&lt;10%）</div><div class="v" id="st-hi">–</div></div>
       <div class="stat vc" data-view="ladder"><div class="k">🪜 回撤阶梯</div><div class="v">全表</div></div>
       <div class="stat vc" data-view="heat"><div class="k">板块热力</div><div class="v">21</div></div>
-      <div class="refresh-note" title="免费行情延时是交易所授权规则：A股 Level-1 免费即实时；港/美/日/韩/台的实时行情需向交易所付费，免费源一律延时">盘中现价30秒刷新（A股实时 · 港/美/日/韩/台为免费延时行情，约15分钟）· 美股盘前盘后约1分钟 · 其余指标数分钟刷新 · 市值为估算口径</div>
+      <div class="refresh-note" title="2026-07-10 实测：腾讯的 A股与美股盘中快照均为实时（用其分时数据反查验证）；港股实测延时15分钟（13:56的价14:11才返回）；日/韩/台未实测">盘中现价30秒刷新（A股·美股实时 · 港股延时15分钟）· 美股盘前盘后约1分钟 · 加密实时 · 其余指标数分钟刷新 · 市值为估算口径</div>
     </div>
     <div id="topbar">
       <select id="secjump" class="mobile-only"><option value="">📂 跳转板块…</option></select>
@@ -551,7 +555,9 @@ window.checkStale = function(updatedStr){
 
 function renderDash(quotes){
   DATA = quotes.sections;
-  document.getElementById("update-time").textContent = "数据更新：" + quotes.updated;
+  /* 首屏就画完整的一行（含「实时 --:--:--」占位），避免拿到行情后整行长出一截、把侧栏顶下去 */
+  if(window.setUpdBase) window.setUpdBase(quotes.updated);
+  else document.getElementById("update-time").textContent = "数据更新：" + quotes.updated;
   const secEl = document.getElementById("sections");
   const navEl = document.getElementById("nav-links");
   DATA.forEach((s,i)=>{
@@ -1254,7 +1260,13 @@ function renderNotes(cfg){
     const m = bj.getUTCHours()*60 + bj.getUTCMinutes();
     return m>=570 && m<=970;   /* 9:30 – 16:10 */
   }
-  function tickSessions(){ usSession(); window.HK_OPEN = hkOpen(); }
+  function tickSessions(){
+    const s = usSession();
+    window.HK_OPEN = hkOpen();
+    /* 首屏就把时段说明填上，别等第一笔行情才长出来。
+       本函数在脚本解析时会先跑一次，那时 lastLiveAt/updNote 尚未初始化（TDZ），故加保护。 */
+    try{ if(!updNote){ updNote = usNoteFor(s); paintUpd(); } }catch(e){}
+  }
   tickSessions();   /* 首屏渲染前先算一次，避免第一帧漏标 */
   setInterval(tickSessions, 60000);
   function parseBatch(syms){
@@ -1348,11 +1360,25 @@ function renderNotes(cfg){
     if((ses==="盘前"||ses==="盘后") && lastLiveAt && Date.now()-lastLiveAt<90000) return ` · 美股${ses}(分钟档)`;
     return ses==="盘前" ? " · 美股盘前(15分钟档)" : ses==="盘后" ? " · 美股盘后(15分钟档)" : ses===null ? " · 美股休市" : "";
   }
+  /* 「数据更新…·实时…·美股盘中」这一行原来是拼字符串重写整行：
+     首屏先只有前半截、拿到行情才长出后半截；而 refetchStatic 每次又把后半截抹掉、下轮再补回来。
+     于是这一行每分钟伸缩一次，把侧栏往下顶——用户看到的"跳一下"就是它。
+     改法：整行从第一帧起就是完整结构（时间先占位 --:--:--），之后只替换里面的时间文本。 */
+  let updBase = "", updRt = "--:--:--", updNote = "";
+  function paintUpd(){
+    const el = document.getElementById("update-time");
+    if(!el) return;
+    const html = `数据更新：${updBase} · 实时 <span class="rt">${updRt}</span>${updNote}`;
+    if(el.__h === html) return;   /* 内容没变就不碰 DOM */
+    el.__h = html;
+    el.innerHTML = html;
+  }
+  window.setUpdBase = function(s){ updBase = s; paintUpd(); };
   function markRealtime(note){
-    const t=new Date();
-    const el=document.getElementById("update-time");
-    el.textContent=el.textContent.replace(/ · 实时.*$/,"")+" · 实时 "+
-      `${String(t.getHours()).padStart(2,"0")}:${String(t.getMinutes()).padStart(2,"0")}:${String(t.getSeconds()).padStart(2,"0")}`+note;
+    const t = new Date(), p = n => String(n).padStart(2,"0");
+    updRt = `${p(t.getHours())}:${p(t.getMinutes())}:${p(t.getSeconds())}`;
+    updNote = note;
+    paintUpd();
   }
   function refresh(){
     if(document.visibilityState!=="visible") return;
@@ -1453,7 +1479,7 @@ function renderNotes(cfg){
         const nr=map[r[1]]; if(!nr) return;
         for(let i=0;i<nr.length;i++) r[i]=nr[i];   /* 原地更新，保持引用 */
       }));
-      document.getElementById("update-time").textContent="数据更新："+q.updated;
+      setUpdBase(q.updated);   /* 只换「数据更新」那一截，不再抹掉后面的「实时…」造成伸缩 */
       window.checkStale(q.updated);   /* 页面长开时也持续复查：流水线挂了会自动弹横幅，恢复了自动收起 */
       window.snapshotClose();   /* 此刻 r[5] 还是流水线的收盘价，先存基准再让实时层覆盖 */
       if(usSession()==="盘中") refresh();   /* 盘中：马上让实时层盖回最新价，避免短暂回跳 */
@@ -1468,7 +1494,7 @@ function renderNotes(cfg){
     setTimeout(()=>{ refetchStatic().finally(scheduleStatic); }, gap);
   }
   /* 首屏也要先快档后慢档：applyLive 在前，applyExt 只补它没覆盖的（指数/OTC），避免开屏闪一下旧价 */
-  window.addEventListener("load",()=>{ setTimeout(applyLive,800); setTimeout(applyExt,1200); setTimeout(applyCrypto,1400); setTimeout(refresh,1600);
+  window.addEventListener("load",()=>{ tickSessions(); setTimeout(applyLive,800); setTimeout(applyExt,1200); setTimeout(applyCrypto,1400); setTimeout(refresh,1600);
     setInterval(refresh,30000); setInterval(applyLive,60000); setInterval(applyCrypto,60000); scheduleStatic(); });
   document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"){ refresh(); applyLive(); applyCrypto(); refetchStatic(); } });
 })();
