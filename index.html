@@ -107,6 +107,8 @@ tr.grp td .glabel{position:sticky;left:14px;display:inline-block}
    不会改变行数把侧栏顶下去；时间数字用等宽字形，秒数跳动不会推着后面的字走 */
 #update-time{min-height:3.2em}
 #update-time .rt{font-variant-numeric:tabular-nums}
+/* 非美元个股的市值/现价可悬停看美元换算，给个手型提示 */
+td.mcapc, td.pxc{cursor:help}
 /* 盘前/盘后角标：提示该价格不是收盘价 */
 .sesbadge{display:inline-block;margin-left:5px;padding:0 4px;border-radius:3px;font-size:10px;line-height:14px;vertical-align:1px;
   color:var(--gold);border:1px solid var(--gold);opacity:.8;font-weight:500;letter-spacing:.3px}
@@ -516,13 +518,45 @@ function mcapVal(r){
   const local = parseFloat(m[0])*(s.includes("万亿")?10000:1);
   return local*(FX2USD[curOf(r[2])]||1);
 }
+/* ===== 悬停美元换算：只对「带真实价格的非美元个股」生效 =====
+   跳过：指数（恒生指数24175换美元是笑话）、美股/加密（本就是美元）、外汇/商品/宏观。 */
+const FX_NOTE = {HKD:"1美元≈7.8港元", CNY:"1美元≈7.2人民币", JPY:"1美元≈158日元", KRW:"1美元≈1370韩元", TWD:"1美元≈32台币"};
+function needUSD(r){
+  const m=String(r[2]||"");
+  if(m.indexOf("指数")>=0) return false;
+  if(m.indexOf("美股")===0||m.indexOf("加密")===0) return false;
+  if(m.indexOf("外汇")>=0||m.indexOf("商品")>=0||m.indexOf("宏观")>=0) return false;
+  return curOf(m)!=="USD";
+}
+function fmtUSD(n){
+  if(n>=1)    return "US$"+n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+  if(n>=0.01) return "US$"+n.toFixed(4);
+  return "US$"+n.toFixed(12).replace(/0+$/,"").replace(/\.$/,"");   /* 极小价保留有效数字 */
+}
+/* 美元价格换算行；非目标行返回 "" */
+function usdPriceLine(r){
+  if(!needUSD(r)) return "";
+  const m=String(r[5]).replace(/[,，]/g,"").match(/-?\d+(\.\d+)?/); if(!m) return "";
+  const cur=curOf(r[2]);
+  const v=parseFloat(m[0])*(FX2USD[cur]||1);
+  return `<span style="display:block;margin-top:5px;font-size:12px;color:var(--text2)">价格 ≈ <b style="color:var(--text)">${fmtUSD(v)}</b>　<span style="opacity:.7">${FX_NOTE[cur]||""}</span></span>`;
+}
+/* 美元市值换算浮窗（整块）；非目标行返回 null */
+function usdMcapTip(r){
+  if(!needUSD(r)) return null;
+  const yi=mcapVal(r); if(!(yi>0)) return null;   /* "不适用"等沉底为 -1 */
+  const cur=curOf(r[2]);
+  const usd = yi>=10000 ? `US$${(yi/10000).toFixed(2)}万亿` : `US$${yi.toFixed(1)}亿`;
+  return `<b>💵 美元市值</b><span style="display:block;margin-top:6px;font-size:14px;color:var(--text);font-weight:600">${r[3]} ≈ ${usd}</span>`
+    + `<span style="display:block;margin-top:4px;font-size:11px;color:var(--text2);opacity:.8">${FX_NOTE[cur]||""} · 估算口径</span>`;
+}
 function rowHTML(r, grp){
   return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${grp||""}" data-code="${r[1]}" data-mkt="${r[2]||""}" data-key="${(r[0]+r[1]).toLowerCase()}">
     <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
     <td class="pxc">${priceCell(r)}</td>
     <td>${fmtPct(r[16])}</td>
     <td class="athc">${athCell(r)}</td>
-    <td>${mcapCell(r)}</td>
+    <td class="mcapc">${mcapCell(r)}</td>
     <td>${fmtPct(r[18])}</td>
     <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
     <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td><td class="fill"></td>
@@ -730,7 +764,7 @@ function renderDash(quotes){
       <td class="pxc">${priceCell(r, mode)}</td>${extraTd||""}
       <td>${fmtPct(r[16])}</td>
       <td class="athc">${athCell(r)}</td>
-      <td>${mcapCell(r)}</td>
+      <td class="mcapc">${mcapCell(r)}</td>
       <td>${fmtPct(r[18])}</td>
       <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
       <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td><td class="fill"></td>
@@ -1682,13 +1716,14 @@ let PROFILES = {};
     if(T + h > innerHeight - 8) T = Math.max(8, y - h - 12);
     tip.style.left = L + "px"; tip.style.top = T + "px";
   }
-  function posTip(tr){   /* 现价悬停＝买点卡：有买点才弹（52周区间已在现价第二行，不再重复） */
+  function posTip(tr){   /* 现价悬停：非美元个股显示美元价格换算；有买点再叠加买点卡 */
     const code=tr.dataset.code; if(!code) return null;
-    const b = (typeof BUY!=="undefined") && BUY[code];
-    if(!b) return null;
     let r=null;
     for(const s of DATA){ for(const x of s.rows){ if(x[1]===code){ r=x; break; } } if(r) break; }
     if(!r) return null;
+    const usdLine = usdPriceLine(r);           /* 非美元个股才有内容，否则 "" */
+    const b = (typeof BUY!=="undefined") && BUY[code];
+    if(!b) return usdLine || null;             /* 无买点：只显示美元换算；美股等则不弹 */
     const px = parseFloat(String(r[5]).replace(/[^\d.]/g,""));
     const th = buyThreshold(b);   /* 与重点清单「距买点」同源，避免两处口径打架 */
     let line2 = "";
@@ -1701,7 +1736,7 @@ let PROFILES = {};
     /* 港股盘中现价来自腾讯免费源，延时15分钟——正好是「触达/未触达」可能翻转的量级，此处必须提醒 */
     if(String(r[2]).indexOf("港股")===0 && window.HK_OPEN)
       line2 += `<span style="display:block;margin-top:5px;font-size:11px;color:var(--text2);opacity:.85">⏳ 港股行情延时约15分钟，触达判断可能滞后</span>`;
-    return `<b>🎯 买点</b>　<span style="color:var(--gold);font-weight:700">${b}</span>${line2}`;
+    return `<b>🎯 买点</b>　<span style="color:var(--gold);font-weight:700">${b}</span>${line2}${usdLine}`;
   }
   function athTip(tr){   /* 历史高点悬停＝回撤台阶表（两列：跌幅+价格，现价插入档金色） */
     const code=tr.dataset.code; if(!code) return null;
@@ -1746,6 +1781,11 @@ let PROFILES = {};
       <table style="margin-top:6px;font-size:12.5px;border-collapse:collapse;min-width:190px">${rows}</table>
       <div style="margin-top:5px;font-size:11px;color:var(--text2)">金色＝现价 · 绿色🎯＝建议买点 · 灰色＝已跌破</div>`;
   }
+  function rowOfTr(tr){
+    const code=tr&&tr.dataset&&tr.dataset.code; if(!code) return null;
+    for(const s of DATA){ for(const x of s.rows){ if(x[1]===code) return x; } }
+    return null;
+  }
   document.addEventListener("mouseover", e=>{
     if(pinned) return;
     const ath = e.target.closest("td.athc");
@@ -1759,19 +1799,27 @@ let PROFILES = {};
       else tip.style.display="none";   /* 无买点的行：把上一行残留的浮窗收掉，防"粘卡" */
       return;
     }
+    const tdm = e.target.closest("td.mcapc");
+    if(tdm){
+      const hm = usdMcapTip(rowOfTr(tdm.parentElement));
+      if(hm){ tip.innerHTML=hm; tip.style.display="block"; tip.style.pointerEvents="none"; place(e.clientX, e.clientY); }
+      else tip.style.display="none";   /* 美股/指数等无换算的行：收掉残留 */
+      return;
+    }
     const td = e.target.closest("td.name"); if(!td) return;
     const h = tipHTML(td); if(!h) return;
     tip.innerHTML = h; tip.style.display = "block"; tip.style.pointerEvents = "none";
     place(e.clientX, e.clientY);
   });
+  const inZone = el => el && el.closest && (el.closest("td.name")||el.closest("td.pxc")||el.closest("td.athc")||el.closest("td.mcapc")||el.closest(".ipoflag"));
   document.addEventListener("mousemove", e=>{
     if(pinned || tip.style.display !== "block") return;
-    if(!e.target.closest || !(e.target.closest("td.name")||e.target.closest("td.pxc")||e.target.closest("td.athc")||e.target.closest(".ipoflag"))){ tip.style.display = "none"; return; }
+    if(!inZone(e.target)){ tip.style.display = "none"; return; }
     place(e.clientX, e.clientY);
   });
   document.addEventListener("mouseout", e=>{
     if(pinned) return;
-    if(e.target.closest && (e.target.closest("td.name")||e.target.closest("td.pxc")||e.target.closest("td.athc")||e.target.closest(".ipoflag")) && !(e.relatedTarget && e.relatedTarget.closest && (e.relatedTarget.closest("td.name")||e.relatedTarget.closest("td.pxc")||e.relatedTarget.closest("td.athc")||e.relatedTarget.closest(".ipoflag"))))
+    if(inZone(e.target) && !inZone(e.relatedTarget))
       tip.style.display = "none";
   });
   document.addEventListener("click", e=>{      /* 点名称固定浮窗（可点相关笔记链接），点其他处收起 */
@@ -1779,8 +1827,9 @@ let PROFILES = {};
     const td = e.target.closest("td.name");
     const tdp = e.target.closest("td.pxc");
     const tda = e.target.closest("td.athc");
+    const tdm = e.target.closest("td.mcapc");
     const ipc = e.target.closest(".ipoflag");
-    const h = td ? tipHTML(td) : (tdp ? posTip(tdp.parentElement) : (tda ? athTip(tda.parentElement) : (ipc ? ipc.dataset.tip : null)));
+    const h = td ? tipHTML(td) : (tdp ? posTip(tdp.parentElement) : (tda ? athTip(tda.parentElement) : (tdm ? usdMcapTip(rowOfTr(tdm.parentElement)) : (ipc ? ipc.dataset.tip : null))));
     if(h){
       tip.innerHTML = h; tip.style.display = "block"; tip.style.pointerEvents = "auto";
       pinned = true;
