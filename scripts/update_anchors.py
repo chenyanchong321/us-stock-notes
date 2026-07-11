@@ -158,20 +158,32 @@ def anchor_cn(diag):
     if not sse_yi:
         raise RuntimeError(f"上交所总市值字段解析失败: {row}")
 
-    # 深交所：市场总貌（找“股票”行的“总市值”列，亿元）。同样对海外IP间歇拒连 → 3次退避重试。
+    # 深交所：市场总貌（找“股票”行的“总市值”列，亿元）。
+    # 必须带 txtQueryDate=交易日，否则周末/盘前返回空表（recordcount=0）；逐日回退找最近交易日。
+    # 同样对海外IP间歇拒连 → 每个日期最多重试2次。
     j2 = None
-    for attempt in range(3):
-        try:
-            j2 = http_json("https://www.szse.cn/api/report/ShowReport/data"
-                           "?SHOWTYPE=JSON&CATALOGID=1803_sczm&TABKEY=tab1",
-                           headers={"Referer": "https://www.szse.cn/"}, timeout=20)
+    for back in range(0, 7):
+        qd = (datetime.date.today() - datetime.timedelta(days=back)).isoformat()
+        for attempt in range(2):
+            try:
+                cand = http_json("https://www.szse.cn/api/report/ShowReport/data"
+                                 f"?SHOWTYPE=JSON&CATALOGID=1803_sczm&TABKEY=tab1&txtQueryDate={qd}",
+                                 headers={"Referer": "https://www.szse.cn/"}, timeout=20)
+                if any((t.get("metadata") or {}).get("recordcount", 0) > 0
+                       for t in cand if isinstance(t, dict)):
+                    j2 = cand
+                    diag.append(f"深交所取到 {qd} 数据")
+                else:
+                    diag.append(f"深交所 {qd} 空表（非交易日），回退前一日")
+                break
+            except Exception as e:
+                last_err = e
+                diag.append(f"深交所 {qd} 第{attempt+1}次失败: {str(e)[:80]}")
+                import time as _t; _t.sleep(3)
+        if j2:
             break
-        except Exception as e:
-            last_err = e
-            diag.append(f"深交所第{attempt+1}次失败: {str(e)[:80]}")
-            import time as _t; _t.sleep(3 * (attempt + 1))
     if j2 is None:
-        raise RuntimeError(f"深交所三轮重试均失败（海外IP大概率被拒，考虑ECS路线）: {last_err}")
+        raise RuntimeError(f"深交所7天内无有效数据（海外IP被拒或接口变更）: {last_err}")
     # 结构无关的防御式解析：递归找到含「股票」的字典行，取行内量级合理的最大数
     # （总市值≥流通市值，深市总市值 20万亿~60万亿元 → 1.5e5~7e5 亿元；成交额/数量不在此量级）
     def _iter_dicts(o):
