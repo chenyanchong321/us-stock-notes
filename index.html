@@ -335,7 +335,7 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="stat vc" id="mktcard"><div class="k">市场 · 全景</div><div class="v" id="mkt-cur">全部</div>
         <div id="mktmenu" class="hidden"></div>
       </div>
-      <div class="stat vc" data-view="mcap"><div class="k">💰 市值排行榜</div><div class="v" id="st-mcap">Top30</div></div>
+      <div class="stat vc" data-view="mcap"><div class="k">💰 市值排行榜</div><div class="v">全表</div></div>
       <div class="stat vc" data-view="focus"><div class="k">⭐ 重点清单</div><div class="v" id="st-focus">–</div></div>
       <div class="stat vc" data-view="gain"><div class="k">今日涨幅榜</div><div class="v">Top30</div></div>
       <div class="stat vc" data-view="loss"><div class="k">今日跌幅榜</div><div class="v">Top30</div></div>
@@ -720,8 +720,7 @@ function renderDash(quotes){
   /* ===== 视图切换器：全景/重点清单/涨跌幅榜/回撤榜/板块热力 ===== */
   window.CURVIEW = "all";
   try{ window.PERF_W = localStorage.getItem("perfW") || "m3"; window.PERF_DIR = localStorage.getItem("perfDir") || "gain"; window.HEAT_W = localStorage.getItem("heatW") || "d"; }catch(e){ window.PERF_W="m3"; window.PERF_DIR="gain"; window.HEAT_W="d"; }
-  try{ const mn = localStorage.getItem("mcapN"); window.MCAP_N = mn===null ? 30 : +mn; }catch(e){ window.MCAP_N = 30; }
-  (function(){ const sm=document.getElementById("st-mcap"); if(sm) sm.textContent = window.MCAP_N ? `Top${window.MCAP_N}` : "全部"; })();
+  try{ const mn = localStorage.getItem("mcapN"); window.MCAP_N = mn===null ? 0 : +mn; }catch(e){ window.MCAP_N = 0; }   /* 默认全部（0=全表），卡片角标固定"全表"不随筛选变 */
   (function(){ const lab={w1:"近1周",m1:"近1月",m3:"近3月",m6:"近半年",ytd:"年初至今",y1:"近1年"}[window.PERF_W]||"近3月";
     const sp=document.getElementById("st-perf"); if(sp) sp.textContent=lab; })();
   function buyTh(code){ return buyThreshold(BUY[code]); }   /* 统一走 buyThreshold，勿再各自解析 */
@@ -971,7 +970,6 @@ function renderDash(quotes){
       if(b.dataset.dir){ window.PERF_DIR=b.dataset.dir; try{localStorage.setItem("perfDir",b.dataset.dir);}catch(e){} }
       if(b.dataset.mn!==undefined){
         window.MCAP_N=+b.dataset.mn; try{localStorage.setItem("mcapN",b.dataset.mn);}catch(e){}
-        const sm=document.getElementById("st-mcap"); if(sm) sm.textContent = window.MCAP_N?`Top${window.MCAP_N}`:"全部";
       }
       const lab={w1:"近1周",m1:"近1月",m3:"近3月",m6:"近半年",ytd:"年初至今",y1:"近1年"}[window.PERF_W||"m3"];
       const sp=document.getElementById("st-perf"); if(sp) sp.textContent=lab;
