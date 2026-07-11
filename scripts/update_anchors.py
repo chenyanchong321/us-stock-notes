@@ -158,10 +158,20 @@ def anchor_cn(diag):
     if not sse_yi:
         raise RuntimeError(f"上交所总市值字段解析失败: {row}")
 
-    # 深交所：市场总貌（找“股票”行的“总市值”列，亿元）
-    j2 = http_json("https://www.szse.cn/api/report/ShowReport/data"
-                   "?SHOWTYPE=JSON&CATALOGID=1803_sczm&TABKEY=tab1",
-                   headers={"Referer": "https://www.szse.cn/"})
+    # 深交所：市场总貌（找“股票”行的“总市值”列，亿元）。同样对海外IP间歇拒连 → 3次退避重试。
+    j2 = None
+    for attempt in range(3):
+        try:
+            j2 = http_json("https://www.szse.cn/api/report/ShowReport/data"
+                           "?SHOWTYPE=JSON&CATALOGID=1803_sczm&TABKEY=tab1",
+                           headers={"Referer": "https://www.szse.cn/"}, timeout=20)
+            break
+        except Exception as e:
+            last_err = e
+            diag.append(f"深交所第{attempt+1}次失败: {str(e)[:80]}")
+            import time as _t; _t.sleep(3 * (attempt + 1))
+    if j2 is None:
+        raise RuntimeError(f"深交所三轮重试均失败（海外IP大概率被拒，考虑ECS路线）: {last_err}")
     szse_yi = None
     for tab in (j2 if isinstance(j2, list) else [j2]):
         cols = {c.get("headtext", ""): c.get("name") for c in (tab.get("metadata") or {}).get("cols", [])} \
@@ -239,14 +249,15 @@ def anchor_jp(diag):
 
 def anchor_kr(diag):
     # KRX 数据门户全指数快照：코스피/코스닥 行含上市市值与收盘。逐日回退找最近交易日。
-    url = "http://data.krx.co.kr/comm/bldAttendant/getJsonData.cmd"
-    hdr = {"Referer": "http://data.krx.co.kr/contents/MDC/MDI/mdiLoader/index.cmd?menuId=MDC0201",
-           "Origin": "http://data.krx.co.kr",
+    # 配方来自 pykrx 源码（website/comm/webio.py + krxio.py）：
+    # https + Referer=outerLoader + X-Requested-With，参数只需 bld/trdDd/idxIndMidclssCd
+    url = "https://data.krx.co.kr/comm/bldAttendant/getJsonData.cmd"
+    hdr = {"Referer": "https://data.krx.co.kr/contents/MDC/MDI/outerLoader/index.cmd",
            "X-Requested-With": "XMLHttpRequest",
-           "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"}
-    # Cookie 预热：KRX 对无会话的裸 POST 返回 400
+           "Content-Type": "application/x-www-form-urlencoded"}
+    # Cookie 预热：拿会话
     try:
-        http_get("http://data.krx.co.kr/contents/MDC/MDI/mdiLoader/index.cmd?menuId=MDC0201", timeout=15)
+        http_get("https://data.krx.co.kr/contents/MDC/MDI/mdiLoader/index.cmd?menuId=MDC0201", timeout=15)
         diag.append("KRX 预热成功（已取会话Cookie）")
     except Exception as e:
         diag.append(f"KRX 预热失败: {str(e)[:80]}")
@@ -256,9 +267,7 @@ def anchor_kr(diag):
         got = {}
         for mid, label in (("02", "코스피"), ("03", "코스닥")):
             body = urllib.parse.urlencode({"bld": "dbms/MDC/STAT/standard/MDCSTAT00101",
-                                           "locale": "ko_KR", "idxIndMidclssCd": mid,
-                                           "trdDd": trd, "share": "2", "money": "3",
-                                           "csvxls_isNo": "false"})
+                                           "idxIndMidclssCd": mid, "trdDd": trd})
             j = http_json(url, headers=hdr, data=body)
             rows = j.get("output") or j.get("OutBlock_1") or []
             row = next((r for r in rows if str(r.get("IDX_NM", "")).strip() == label), None)
