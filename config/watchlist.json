@@ -1668,6 +1668,35 @@
      "mcap_base": null,
      "mcap_base_price": 20.84,
      "ath_floor": 0
+    },
+    {
+     "name": "立讯精密",
+     "code": "002475",
+     "market": "A股",
+     "yahoo": "002475.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 4800.5,
+      "approx": false
+     },
+     "mcap_base_price": 62.14,
+     "ath_floor": 80.15
+    },
+    {
+     "name": "立讯精密",
+     "code": "02475",
+     "market": "港股",
+     "yahoo": "2475.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 4866.9,
+      "approx": false
+     },
+     "mcap_base_price": 63.0,
+     "ath_floor": 68.0,
+     "hist": "tx:hk02475"
     }
    ],
    "groups": [
@@ -1743,6 +1772,13 @@
      "name": "杠杆 ETF",
      "codes": [
       "FOTO"
+     ]
+    },
+    {
+     "name": "连接器与 AI 互连组装",
+     "codes": [
+      "002475",
+      "02475"
      ]
     }
    ]
