@@ -172,23 +172,27 @@ def anchor_cn(diag):
             import time as _t; _t.sleep(3 * (attempt + 1))
     if j2 is None:
         raise RuntimeError(f"深交所三轮重试均失败（海外IP大概率被拒，考虑ECS路线）: {last_err}")
+    # 结构无关的防御式解析：递归找到含「股票」的字典行，取行内量级合理的最大数
+    # （总市值≥流通市值，深市总市值 20万亿~60万亿元 → 1.5e5~7e5 亿元；成交额/数量不在此量级）
+    def _iter_dicts(o):
+        if isinstance(o, dict):
+            yield o
+            for v in o.values():
+                yield from _iter_dicts(v)
+        elif isinstance(o, list):
+            for v in o:
+                yield from _iter_dicts(v)
     szse_yi = None
-    for tab in (j2 if isinstance(j2, list) else [j2]):
-        cols = {c.get("headtext", ""): c.get("name") for c in (tab.get("metadata") or {}).get("cols", [])} \
-               if isinstance(tab, dict) else {}
-        for r in (tab.get("data") or []) if isinstance(tab, dict) else []:
-            if "股票" in [str(v).strip() for v in r.values()]:
-                for head, name in cols.items():
-                    if "总市值" in head:
-                        szse_yi = _num(r.get(name))
-                if szse_yi is None:   # 没有列映射就取该行里量级合理的数（深市 20万亿~60万亿元）
-                    szse_yi = next((v for v in (_num(x) for x in r.values())
-                                    if v and 1.5e5 < v < 7e5), None)
+    for d0 in _iter_dicts(j2):
+        vals = list(d0.values())
+        if any(isinstance(v, str) and v.strip() == "股票" for v in vals):
+            diag.append(f"深交所股票行: {json.dumps(d0, ensure_ascii=False)[:220]}")
+            cand = [x for x in (_num(v) for v in vals) if x and 1.5e5 < x < 7e5]
+            if cand:
+                szse_yi = max(cand)
                 break
-        if szse_yi:
-            break
     if not szse_yi:
-        raise RuntimeError(f"深交所总市值解析失败: {str(j2)[:300]}")
+        raise RuntimeError(f"深交所总市值解析失败，返回结构: {str(j2)[:300]}")
 
     _, fx = yahoo_last("CNYUSD=X")
     cap_t = (sse_yi + szse_yi) * 1e8 * fx / 1e12
@@ -325,7 +329,9 @@ def main():
                   .astimezone(datetime.timezone(datetime.timedelta(hours=8)))
                   .strftime("%Y-%m-%d %H:%M 北京时间"), "markets": {}}
     changed = False
-    jobs = [("港股", anchor_hk), ("日本", anchor_jp), ("A股", anchor_cn), ("韩国", anchor_kr)]
+    # 韩国不在自动列表：KRX 数据门户 2025 改版后要求登录账号（见 pykrx auth.py），
+    # 免费无鉴权路线已断；韩国绝对锚由桌面端 AI 定时任务月检（KOSPI 指数浮动仍全自动）。
+    jobs = [("港股", anchor_hk), ("日本", anchor_jp), ("A股", anchor_cn)]
     for key, fn in jobs:
         diag, entry = [], {"ok": False}
         try:
@@ -346,6 +352,9 @@ def main():
             print(f"::warning::锚点校准失败 {key}: {e}", file=sys.stderr)
         entry["diag"] = diag
         log["markets"][key] = entry
+
+    log["markets"]["韩国"] = {"ok": None, "skipped": "KRX数据门户已需登录（2025改版），"
+                              "绝对锚由AI定时任务月检；KOSPI指数浮动不受影响"}
 
     # 美股：漂移指数升级探测
     diag, entry = [], {}
