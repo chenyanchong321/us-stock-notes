@@ -1,5 +1,5 @@
 {
- "run": "2026-07-12 02:11 北京时间",
+ "run": "2026-07-12 02:13 北京时间",
  "markets": {
   "港股": {
    "ok": true,
@@ -46,11 +46,12 @@
    ]
   },
   "标普月线": {
-   "ok": false,
-   "error": "仅499点(现存168)，疑似降级不覆盖",
+   "ok": true,
+   "n": 1195,
+   "range": "1927-01~2026-07",
    "diag": [
-    "stooq 3行 首行[<!DOCTYPE html><html><head><meta charset=\"utf-8\"><]",
-    "stooq 采纳 0 个月",
+    "datahub 1867行 首行[Date,SP500,Dividend,Earnings,Consumer Price Index,]",
+    "datahub 采纳 1194 个月（希勒月均价，1985年前专用；之后被Yahoo收盘覆盖）",
     "yahoo 分块覆盖 500 点"
    ]
   }
