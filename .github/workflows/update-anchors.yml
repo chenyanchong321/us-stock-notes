@@ -47,7 +47,7 @@ jobs:
           set -euo pipefail
           git config user.name "anchors-bot"
           git config user.email "actions@github.com"
-          git add config/marketscale.json data/anchors_log.json
+          git add config/marketscale.json data/anchors_log.json data/spx_history.json
           if git diff --cached --quiet; then
             echo "锚点无变化，跳过提交"
             exit 0

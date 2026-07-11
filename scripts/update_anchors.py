@@ -403,6 +403,23 @@ def main():
     entry["diag"] = diag
     log["markets"]["美股"] = entry
 
+    # 金融史页签的百年走势图数据：标普500全历史月线（Yahoo ^GSPC 从1927年起有数据）。
+    # 历史不变、仅月度追加，跟着本脚本周更即可。失败不影响锚点主流程。
+    try:
+        s = fetch_series("^GSPC", "max", "1mo")
+        if s:
+            bym = {}
+            for t, c in s:
+                ym = datetime.datetime.fromtimestamp(t, datetime.timezone.utc).strftime("%Y-%m")
+                bym[ym] = round(float(c), 2)   # 同月多点取最后
+            pts = sorted(bym.items())
+            (ROOT / "data/spx_history.json").write_text(json.dumps(
+                {"sym": "^GSPC", "updated": log["run"], "n": len(pts), "points": pts},
+                ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+            print(f"标普百年月线：{len(pts)} 个月（{pts[0][0]} ~ {pts[-1][0]}）")
+    except Exception as e:
+        print(f"::warning::标普百年月线生成失败: {e}", file=sys.stderr)
+
     if changed:
         dates = [s.get("anchor_date") for s in cfg["stocks"] if s.get("anchor_date")]
         cfg["anchor_date"] = max(dates) if dates else cfg.get("anchor_date", "")

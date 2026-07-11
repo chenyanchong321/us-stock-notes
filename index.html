@@ -233,6 +233,34 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 .gterm .gf{font-size:12px;color:var(--text2);margin:2px 0 6px}
 .gterm .gd{font-size:13.5px;color:var(--text);line-height:1.7;opacity:.92}
 @media(max-width:860px){.dict-main{padding:0 14px}}
+/* ===== 金融史（📜 编年档案 + 百年走势） ===== */
+.hist-main{max-width:940px;margin:calc(var(--header-h) + 24px) auto 80px;padding:0 20px}
+#hist-chart{border:1px solid var(--border);border-radius:10px;background:var(--panel);padding:14px 14px 8px;margin:16px 0 6px}
+#hist-chart svg{width:100%;height:auto;display:block}
+#hist-chart .hdot{cursor:pointer}
+.hist-chart-note{font-size:11.5px;color:var(--text2);margin:6px 2px 22px}
+.hist-tl{position:relative;padding-left:26px}
+.hist-tl::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--border)}
+.hcard{position:relative;border:1px solid var(--border);border-radius:10px;background:var(--panel);padding:14px 18px;margin-bottom:16px}
+.hcard::before{content:"";position:absolute;left:-25px;top:20px;width:12px;height:12px;border-radius:50%;background:var(--down);border:3px solid var(--bg)}
+.hcard.ms::before{background:var(--gold)}
+.hcard.hflash{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.hcard .hy{font-size:21px;font-weight:800;color:var(--text);letter-spacing:.5px}
+.hcard .ht{font-size:15.5px;font-weight:700;margin-left:8px}
+.hcard .htag{font-size:11px;color:var(--text2);border:1px solid var(--border);border-radius:4px;padding:1px 6px;margin-left:8px;vertical-align:2px;white-space:nowrap}
+.hcard .htag.cr{color:var(--down);border-color:rgba(240,74,74,.4)}
+.hcard .htag.mi{color:var(--gold);border-color:rgba(232,182,76,.4)}
+.hcard p{font-size:13.5px;line-height:1.75;color:var(--text);margin:8px 0 0}
+.hcard .hchain{font-size:12px;color:var(--text2);margin-top:8px;line-height:1.6}
+.hcard .hchain b{color:var(--text2)}
+.hstats{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.hstats span{font-size:12px;border:1px solid var(--border);border-radius:6px;padding:4px 10px;background:var(--panel2)}
+.hstats b{color:var(--text2);font-weight:400;margin-right:6px;font-size:11px}
+.hstats i{font-style:normal;color:var(--down);font-weight:700}
+.hcard .hpolicy{font-size:12px;color:var(--text2);margin-top:8px;line-height:1.6}
+.hcard .hlesson{margin-top:10px;padding:8px 12px;border-left:3px solid var(--gold);background:rgba(232,182,76,.06);border-radius:0 6px 6px 0;font-size:13px;line-height:1.7}
+.hcard .hlesson::before{content:"📌 一课　";color:var(--gold);font-size:12px}
+@media(max-width:860px){.hist-main{padding:0 14px}.hcard{padding:12px 14px}}
 
 /* ========== 学习笔记卡片 ========== */
 .notes-intro{background:linear-gradient(135deg,rgba(74,140,240,.12),rgba(232,182,76,.08));border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:26px}
@@ -309,6 +337,7 @@ body.resizing{user-select:none;cursor:col-resize}
     <div class="tab" data-view="events">📅 大事件</div>
     <div class="tab" data-view="notes">📚 学习笔记</div>
     <div class="tab" data-view="dict">📖 术语词典</div>
+    <div class="tab" data-view="history">📜 金融史</div>
   </div>
   <div id="searchwrap">
     <input id="search" type="search" enterkeyhint="search" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="🔍 搜索名称 / 代码，如 NVDA、紫金…">
@@ -402,6 +431,17 @@ body.resizing{user-select:none;cursor:col-resize}
     <div id="dict-cats"></div>
     <div id="dict-az"></div>
     <div id="dict-list"></div>
+  </div>
+</div>
+
+<div id="view-history" class="hidden">
+  <div class="hist-main">
+    <div class="dict-head">
+      <h2 style="font-size:18px">📜 金融史 · 危机编年 <span id="hist-n" style="font-size:12px;color:var(--text2);font-weight:400"></span></h2>
+      <p style="font-size:12.5px;color:var(--text2);margin-top:4px">从股票诞生到最近一次熊市 · 每次危机当时都像世界末日，拉长看全是长河里的坑 · 与「大事件」互为镜像：那边看未来，这边读过去</p>
+    </div>
+    <div id="hist-chart" class="hidden"></div>
+    <div id="hist-tl" class="hist-tl"></div>
   </div>
 </div>
 
@@ -1651,6 +1691,75 @@ function renderNotes(cfg){
 })();
 
 /* ===== 术语词典 ===== */
+/* ===== 金融史：编年档案卡 + 标普百年对数走势（config/history.json + data/spx_history.json） ===== */
+function renderHistory(hcfg, spx){
+  const evs = (hcfg && hcfg.events) || [];
+  if(!evs.length) return;
+  document.getElementById("hist-n").textContent = `共 ${evs.length} 篇档案`;
+  const tl = document.getElementById("hist-tl");
+  tl.innerHTML = evs.map((e,i)=>{
+    const tag = e.type==="crisis" ? `<span class="htag cr">危机</span>` : `<span class="htag mi">里程碑</span>`;
+    const chain = e.chain ? `<div class="hchain"><b>传导链：</b>${e.chain}</div>` : "";
+    const st = e.stats ? `<div class="hstats">${[["最大跌幅",e.stats.drop,1],["持续",e.stats.dur,0],["修复用时",e.stats.heal,0]]
+      .filter(x=>x[1]).map(x=>`<span><b>${x[0]}</b>${x[2]?`<i>${x[1]}</i>`:x[1]}</span>`).join("")}</div>` : "";
+    const pol = e.policy ? `<div class="hpolicy"><b>政策应对：</b>${e.policy}</div>` : "";
+    return `<div class="hcard${e.type==="milestone"?" ms":""}" id="hist-${i}">
+      <span class="hy">${e.y}</span><span class="ht">${e.title}</span>${tag}<span class="htag">${e.region}</span>
+      <p>${e.story}</p>${chain}${st}${pol}
+      <div class="hlesson">${e.lesson}</div>
+    </div>`;
+  }).join("");
+
+  /* 百年走势图（标普500，对数坐标，1927至今；数据来自周更流水线，缺失时只显示时间轴） */
+  if(!(spx && spx.points && spx.points.length > 100)) return;
+  const P = spx.points;
+  const W=1000, H=300, padL=44, padR=14, padT=30, padB=22;
+  const lg = v=>Math.log10(v);
+  let lmin=Infinity, lmax=-Infinity;
+  P.forEach(p=>{ const l=lg(p[1]); if(l<lmin)lmin=l; if(l>lmax)lmax=l; });
+  const X = i=> padL + i/(P.length-1)*(W-padL-padR);
+  const Y = v=> padT + (1-(lg(v)-lmin)/(lmax-lmin))*(H-padT-padB);
+  const line = P.map((p,i)=>`${i?"L":"M"}${X(i).toFixed(1)},${Y(p[1]).toFixed(1)}`).join("");
+  let ticks="";
+  P.forEach((p,i)=>{ const [y,m]=p[0].split("-"); if(m==="01" && +y%10===0)
+    ticks += `<line x1="${X(i).toFixed(1)}" y1="${padT}" x2="${X(i).toFixed(1)}" y2="${H-padB}" stroke="var(--border)" stroke-width="1" opacity=".5"/>
+              <text x="${X(i).toFixed(1)}" y="${H-6}" font-size="10" fill="var(--text2)" text-anchor="middle">${y}</text>`; });
+  let ylab="";
+  [10,100,1000,7000].forEach(v=>{ if(lg(v)>=lmin && lg(v)<=lmax)
+    ylab += `<line x1="${padL}" y1="${Y(v).toFixed(1)}" x2="${W-padR}" y2="${Y(v).toFixed(1)}" stroke="var(--border)" stroke-width="1" opacity=".35"/>
+             <text x="${padL-6}" y="${(Y(v)+3).toFixed(1)}" font-size="10" fill="var(--text2)" text-anchor="end">${v}</text>`; });
+  const ym2i = {}; P.forEach((p,i)=>ym2i[p[0]]=i);
+  let dots="", k=0;
+  evs.forEach((e,i)=>{
+    if(!e.mark) return;
+    let idx = ym2i[e.mark];
+    if(idx===undefined){ idx = P.findIndex(p=>p[0]>=e.mark); if(idx<0) return; }
+    const cx=X(idx), cy=Y(P[idx][1]);
+    const up = (k++ % 2 === 0);           /* 年份标签上下交错，右端密集区防重叠 */
+    const ly = up ? cy-13 : cy+22;
+    const col = e.type==="crisis" ? "var(--down)" : "var(--gold)";
+    dots += `<g class="hdot" data-hi="${i}">
+      <circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5" fill="${col}" stroke="var(--bg)" stroke-width="1.5"/>
+      <text x="${cx.toFixed(1)}" y="${ly.toFixed(1)}" font-size="10.5" fill="${col}" text-anchor="middle">${e.y}</text>
+      <title>${e.y} ${e.title}</title></g>`;
+  });
+  const box = document.getElementById("hist-chart");
+  box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+      ${ticks}${ylab}
+      <path d="${line}" fill="none" stroke="var(--accent)" stroke-width="1.6"/>
+      ${dots}
+      <text x="${padL}" y="16" font-size="11" fill="var(--text2)">标普500 · ${P[0][0]} ~ ${P[P.length-1][0]} · 对数坐标 · 🔴危机 🟡里程碑（点击圆点直达档案）</text>
+    </svg>
+    <div class="hist-chart-note">看点：1929年跌掉89%的大坑，放在百年对数图上不过一个豁口——每个红点在当时都像世界末日，拉长看全是长河里的坑。数据随流水线每周更新。</div>`;
+  box.classList.remove("hidden");
+  box.querySelectorAll(".hdot").forEach(g=>g.addEventListener("click",()=>{
+    const c=document.getElementById("hist-"+g.dataset.hi); if(!c) return;
+    c.scrollIntoView({block:"center"});
+    c.classList.remove("hflash"); void c.offsetWidth; c.classList.add("hflash");
+    setTimeout(()=>c.classList.remove("hflash"), 2200);
+  }));
+}
+
 function renderDict(g){
   const catsEl=document.getElementById("dict-cats"), azEl=document.getElementById("dict-az"),
         listEl=document.getElementById("dict-list"), inp=document.getElementById("dict-search");
@@ -1965,13 +2074,15 @@ let PROFILES = {};
 (async ()=>{
   try{
     const bust = "?t=" + Math.floor(Date.now()/60000);
-    const [quotes, notesCfg, buyCfg, glossary, evCfg, evAuto] = await Promise.all([
+    const [quotes, notesCfg, buyCfg, glossary, evCfg, evAuto, histCfg, spxHist] = await Promise.all([
       fetch("data/quotes.json"+bust).then(r=>r.json()),
       fetch("config/notes.json"+bust).then(r=>r.json()),
       fetch("config/buypoints.json"+bust).then(r=>r.ok?r.json():{}).catch(()=>({})),
       fetch("config/glossary.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null),
       fetch("config/events.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null),
-      fetch("data/events.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null)
+      fetch("data/events.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null),
+      fetch("config/history.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null),
+      fetch("data/spx_history.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null)
     ]);
     BUY = buyCfg || {};
     if(glossary) renderDict(glossary);
@@ -1979,6 +2090,7 @@ let PROFILES = {};
     renderDash(quotes);
     renderNotes(notesCfg);
     try{ renderEvents(evCfg, evAuto); }catch(e){ console.warn("events:", e); }
+    try{ renderHistory(histCfg, spxHist); }catch(e){ console.warn("history:", e); }
     window.checkStale(quotes.updated);
   }catch(e){
     document.getElementById("loading").textContent =
@@ -2066,6 +2178,7 @@ let PROFILES = {};
       document.getElementById("view-events").classList.toggle("hidden",v!=="events");
       document.getElementById("view-notes").classList.toggle("hidden",v!=="notes");
       document.getElementById("view-dict").classList.toggle("hidden",v!=="dict");
+      document.getElementById("view-history").classList.toggle("hidden",v!=="history");
       document.getElementById("searchwrap").style.display = v==="dash" ? "" : "none";
       try{ localStorage.setItem("lastView", v); }catch(e){}
       const u = new URL(location.href);
@@ -2107,7 +2220,7 @@ let PROFILES = {};
   /* 初始页签：URL 明确指定 > 上次停留 > 默认数据面板 */
   const wantView = new URLSearchParams(location.search).get("view")
                 || (function(){ try{ return localStorage.getItem("lastView"); }catch(e){ return null; } })();
-  if(wantView==="notes"||wantView==="dict"){
+  if(wantView==="notes"||wantView==="dict"||wantView==="history"){
     document.querySelector(`.tab[data-view="${wantView}"]`).click();
   }
 
