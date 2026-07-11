@@ -404,29 +404,44 @@ def main():
     log["markets"]["美股"] = entry
 
     # 金融史页签的百年走势图数据：标普500全历史月线（1927至今）。
-    # 坑（实测2026-07-12）：range=max&interval=1mo 会被 Yahoo 悄悄降级成 1984 年起的 168 个稀疏点
-    # （与手册记载的 range=max 日线降级同源）。解法：显式 period1/period2 按 20 年分块抓，合并去重。
-    # 防呆：新抓的点数不如现存文件就不覆盖（历史只会变多不会变少）。失败不影响锚点主流程。
+    # Yahoo 两个已实测的坑：range=max&interval=1mo 被悄悄降级成 1984 年起的季线（42年×4=168点）；
+    # 负 period1（1970年前）分块在 GH runner 上拿不到数据。
+    # 方案：Stooq 全历史月线 CSV 为主源（^spx 序列到 1789，免key），Yahoo 1970年起分块为辅源覆盖近期，
+    # 两源按月合并；防呆：合并点数 < max(现存, 500) 就不覆盖。诊断写 anchors_log.json（键「标普月线」）。
+    sdiag, sentry = [], {"ok": False}
     try:
         import time as _t
         bym = {}
-        t0, now_ts = -1362000000, int(_t.time())          # 1926-11 起
-        step = 20 * 365 * 86400
-        while t0 < now_ts:
-            t1 = min(t0 + step, now_ts)
-            url = (f"https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC"
-                   f"?period1={t0}&period2={t1}&interval=1mo")
-            try:
-                res = http_json(url)["chart"]["result"][0]
+        try:   # 源1：Stooq
+            raw = http_get("https://stooq.com/q/d/l/?s=%5Espx&i=m", timeout=40)
+            lines = raw.strip().splitlines()
+            sdiag.append(f"stooq {len(lines)}行 首行[{(lines[0] if lines else '')[:50]}]")
+            for ln in lines[1:]:
+                f = ln.split(",")
+                if len(f) >= 5 and f[0][:4].isdigit() and f[0][:7] >= "1927-01":
+                    c = _num(f[4])
+                    if c:
+                        bym[f[0][:7]] = round(c, 2)
+            sdiag.append(f"stooq 采纳 {len(bym)} 个月")
+        except Exception as e:
+            sdiag.append(f"stooq失败: {str(e)[:120]}")
+        try:   # 源2：Yahoo 1970起分块，覆盖/补齐近期
+            t0, now_ts = 0, int(_t.time())
+            yn = 0
+            while t0 < now_ts:
+                t1 = min(t0 + 20 * 365 * 86400, now_ts)
+                res = http_json(f"https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC"
+                                f"?period1={t0}&period2={t1}&interval=1mo")["chart"]["result"][0]
                 for t, c in zip(res.get("timestamp") or [],
                                 (res["indicators"]["quote"][0].get("close") or [])):
                     if c:
-                        ym = datetime.datetime.fromtimestamp(t, datetime.timezone.utc).strftime("%Y-%m")
-                        bym[ym] = round(float(c), 2)
-            except Exception as e:
-                print(f"  标普月线分块 {t0} 失败: {e}", file=sys.stderr)
-            t0 = t1 + 86400
-            _t.sleep(1)
+                        bym[datetime.datetime.fromtimestamp(t, datetime.timezone.utc).strftime("%Y-%m")] = round(float(c), 2)
+                        yn += 1
+                t0 = t1 + 86400
+                _t.sleep(1)
+            sdiag.append(f"yahoo 分块覆盖 {yn} 点")
+        except Exception as e:
+            sdiag.append(f"yahoo分块失败: {str(e)[:120]}")
         pts = sorted(bym.items())
         old_n = 0
         try:
@@ -435,13 +450,15 @@ def main():
             pass
         if len(pts) >= max(old_n, 500):
             (ROOT / "data/spx_history.json").write_text(json.dumps(
-                {"sym": "^GSPC", "updated": log["run"], "n": len(pts), "points": pts},
+                {"sym": "^GSPC(SPX)", "updated": log["run"], "n": len(pts), "points": pts},
                 ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
-            print(f"标普百年月线：{len(pts)} 个月（{pts[0][0]} ~ {pts[-1][0]}）")
+            sentry = {"ok": True, "n": len(pts), "range": f"{pts[0][0]}~{pts[-1][0]}"}
         else:
-            print(f"::warning::标普月线仅 {len(pts)} 点（现存 {old_n}），疑似降级，不覆盖")
+            sentry = {"ok": False, "error": f"仅{len(pts)}点(现存{old_n})，疑似降级不覆盖"}
     except Exception as e:
-        print(f"::warning::标普百年月线生成失败: {e}", file=sys.stderr)
+        sentry = {"ok": False, "error": str(e)[:200]}
+    sentry["diag"] = sdiag
+    log["markets"]["标普月线"] = sentry
 
     if changed:
         dates = [s.get("anchor_date") for s in cfg["stocks"] if s.get("anchor_date")]
