@@ -412,19 +412,19 @@ def main():
     try:
         import time as _t
         bym = {}
-        try:   # 源1：Stooq
-            raw = http_get("https://stooq.com/q/d/l/?s=%5Espx&i=m", timeout=40)
+        try:   # 源1：datahub 希勒月度序列（1871起，SP500列=月均价；实测GH可达。Stooq对服务器返回反爬页，已弃）
+            raw = http_get("https://datahub.io/core/s-and-p-500/r/data.csv", timeout=60)
             lines = raw.strip().splitlines()
-            sdiag.append(f"stooq {len(lines)}行 首行[{(lines[0] if lines else '')[:50]}]")
+            sdiag.append(f"datahub {len(lines)}行 首行[{(lines[0] if lines else '')[:50]}]")
             for ln in lines[1:]:
                 f = ln.split(",")
-                if len(f) >= 5 and f[0][:4].isdigit() and f[0][:7] >= "1927-01":
-                    c = _num(f[4])
+                if len(f) >= 2 and f[0][:4].isdigit() and f[0][:7] >= "1927-01":
+                    c = _num(f[1])
                     if c:
                         bym[f[0][:7]] = round(c, 2)
-            sdiag.append(f"stooq 采纳 {len(bym)} 个月")
+            sdiag.append(f"datahub 采纳 {len(bym)} 个月（希勒月均价，1985年前专用；之后被Yahoo收盘覆盖）")
         except Exception as e:
-            sdiag.append(f"stooq失败: {str(e)[:120]}")
+            sdiag.append(f"datahub失败: {str(e)[:120]}")
         try:   # 源2：Yahoo 1970起分块，覆盖/补齐近期
             t0, now_ts = 0, int(_t.time())
             yn = 0
