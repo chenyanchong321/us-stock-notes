@@ -39,10 +39,14 @@ LOG_PATH = ROOT / "data/anchors_log.json"
 SANITY = {"美股": (40, 150), "A股": (8, 30), "日本": (4, 15), "港股": (3, 12), "韩国": (1, 6)}
 
 
+import http.cookiejar
+_JAR = http.cookiejar.CookieJar()
+_OPENER = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(_JAR))
+
 def http_get(url, headers=None, data=None, timeout=30, binary=False):
     req = urllib.request.Request(url, headers={**UA, **(headers or {})},
                                  data=data.encode() if isinstance(data, str) else data)
-    with urllib.request.urlopen(req, timeout=timeout) as r:
+    with _OPENER.open(req, timeout=timeout) as r:
         raw = r.read()
     return raw if binary else raw.decode("utf-8", "replace")
 
@@ -122,11 +126,25 @@ def anchor_hk(diag):
 
 
 def anchor_cn(diag):
-    # 上交所：股票总貌（TOTAL_VALUE=总市值，亿元）
+    # 上交所：股票总貌（TOTAL_VALUE=总市值，亿元）。
+    # 中国官网对海外 IP 常见间歇性拒连（Connection reset）：https/http 双协议 × 3 次退避重试。
     q = urllib.parse.urlencode({"sqlId": "COMMON_SSE_SJ_GPSJ_GPSJZM_TJSJ_L",
                                 "PRODUCT_NAME": "股票,主板,科创板", "type": "inParams"})
-    j = http_json(f"http://query.sse.com.cn/commonQuery.do?{q}",
-                  headers={"Referer": "http://www.sse.com.cn/"})
+    j, last_err = None, None
+    for attempt in range(3):
+        for scheme in ("https", "http"):
+            try:
+                j = http_json(f"{scheme}://query.sse.com.cn/commonQuery.do?{q}",
+                              headers={"Referer": f"{scheme}://www.sse.com.cn/"}, timeout=20)
+                break
+            except Exception as e:
+                last_err = e
+                diag.append(f"上交所 {scheme} 第{attempt+1}次失败: {str(e)[:80]}")
+        if j:
+            break
+        import time as _t; _t.sleep(3 * (attempt + 1))
+    if not j:
+        raise RuntimeError(f"上交所三轮重试均失败（海外IP大概率被拒，考虑ECS路线）: {last_err}")
     rows = j.get("result") or []
     row = next((r for r in rows if str(r.get("PRODUCT_NAME")) == "股票"), None)
     if not row:
@@ -222,8 +240,16 @@ def anchor_jp(diag):
 def anchor_kr(diag):
     # KRX 数据门户全指数快照：코스피/코스닥 行含上市市值与收盘。逐日回退找最近交易日。
     url = "http://data.krx.co.kr/comm/bldAttendant/getJsonData.cmd"
-    hdr = {"Referer": "http://data.krx.co.kr/contents/MDC/MDI/mdiLoader/index.cmd",
-           "Content-Type": "application/x-www-form-urlencoded"}
+    hdr = {"Referer": "http://data.krx.co.kr/contents/MDC/MDI/mdiLoader/index.cmd?menuId=MDC0201",
+           "Origin": "http://data.krx.co.kr",
+           "X-Requested-With": "XMLHttpRequest",
+           "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"}
+    # Cookie 预热：KRX 对无会话的裸 POST 返回 400
+    try:
+        http_get("http://data.krx.co.kr/contents/MDC/MDI/mdiLoader/index.cmd?menuId=MDC0201", timeout=15)
+        diag.append("KRX 预热成功（已取会话Cookie）")
+    except Exception as e:
+        diag.append(f"KRX 预热失败: {str(e)[:80]}")
     today = datetime.date.today()
     for back in range(1, 8):
         trd = (today - datetime.timedelta(days=back)).strftime("%Y%m%d")
