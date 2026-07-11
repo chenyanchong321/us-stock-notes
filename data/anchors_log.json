@@ -1,5 +1,5 @@
 {
- "run": "2026-07-12 02:07 北京时间",
+ "run": "2026-07-12 02:11 北京时间",
  "markets": {
   "港股": {
    "ok": true,
@@ -43,6 +43,15 @@
    "changed": false,
    "diag": [
     "^W5000 健康（最后 2026-07-02），无需变更"
+   ]
+  },
+  "标普月线": {
+   "ok": false,
+   "error": "仅499点(现存168)，疑似降级不覆盖",
+   "diag": [
+    "stooq 3行 首行[<!DOCTYPE html><html><head><meta charset=\"utf-8\"><]",
+    "stooq 采纳 0 个月",
+    "yahoo 分块覆盖 500 点"
    ]
   }
  }
