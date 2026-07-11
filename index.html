@@ -134,12 +134,14 @@ tr.buy .buyline.hit{color:var(--up)!important;font-weight:600}
 #opps a{color:var(--up);text-decoration:none;margin-right:12px;white-space:nowrap}
 #opps a:hover{text-decoration:underline}
 /* 区间表现榜周期胶囊 */
-#perfbar,#mktbar{display:flex;gap:8px;align-items:center;margin:2px 0 12px;flex-wrap:wrap}
+#perfbar,.mktbar{display:flex;gap:8px;align-items:center;margin:2px 0 12px;flex-wrap:wrap}
+#mktbar-all{margin-top:10px}
+#mktbar-all .mktbar{margin-bottom:0}
 .perf-pill{background:var(--panel2);border:1px solid var(--border);color:var(--text2);border-radius:99px;padding:5px 14px;font-size:12.5px;cursor:pointer;white-space:nowrap}
 .perf-pill.on{color:var(--accent);border-color:var(--accent);background:rgba(74,140,240,.10)}
 .perf-pill.dirp.on{color:var(--gold);border-color:var(--gold);background:rgba(212,170,80,.10)}
 .perf-sep{width:1px;height:18px;background:var(--border);margin:0 2px}
-@media(max-width:860px){#perfbar,#mktbar{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:4px}}
+@media(max-width:860px){#perfbar,.mktbar{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:4px}}
 /* 大事件 */
 .ev-main{max-width:860px;margin:0 auto;padding:22px 18px 60px}
 .ev-week{background:rgba(74,140,240,.07);border:1px solid var(--accent);border-radius:12px;padding:14px 16px;margin:16px 0 22px}
@@ -379,6 +381,7 @@ body.resizing{user-select:none;cursor:col-resize}
       </div>
       <div class="refresh-note" title="2026-07-10 实测：腾讯的 A股与美股盘中快照均为实时（用其分时数据反查验证）；港股实测延时15分钟（13:56的价14:11才返回）；日/韩/台未实测">盘中现价30秒刷新（A股·美股实时 · 港股延时15分钟）· 美股盘前盘后约1分钟 · 加密实时 · 其余指标数分钟刷新 · 市值为估算口径</div>
     </div>
+    <div id="mktbar-all"></div>
     <div id="topbar">
       <select id="secjump" class="mobile-only"><option value="">📂 跳转板块…</option></select>
       <div id="opps" class="hidden"></div>
@@ -797,8 +800,16 @@ function renderDash(quotes){
       MK.forEach(m=>{ if(m && MKT_RULE[m] && MKT_RULE[m](mk)) cnt[m].add(r[1]); });
     }));
     const pill=m=>`<button class="perf-pill${(window.CURMKT||"")===m?" on":""}" data-mkt="${m}">${m||"全部"} ${cnt[m].size}</button>`;
-    return `</p><div id="mktbar">${MK.map(pill).join("")}</div><p class="fv-note" style="display:none">`;
+    return `</p><div class="mktbar">${MK.map(pill).join("")}</div><p class="fv-note" style="display:none">`;
   }
+  /* 全景主视图的市场横向切换条（主人指定：全景不能是唯一没有横向切换的视图）。
+     复用 mktBarHTML 的按钮段；仅在全景视图显示（setView 控制），切市场后刷新选中态。 */
+  window.refreshMktBarAll = function(){
+    const el = document.getElementById("mktbar-all");
+    if(!el) return;
+    const m = mktBarHTML().match(/<div class="mktbar">.*?<\/div>/s);
+    el.innerHTML = m ? m[0] : "";
+  };
   /* 各市场基准指数（超额收益锚，丹萍：锚必须匹配到位） */
   const BENCH_MAP={"A股":"000300","港股":"HSI","美股":"SPX","日":"N225","韩":"KOSPI","台股":"TWII"};
   const HK_TRAD = /能源|电力|资源|价值老登|贵金属|有色/;   /* 传统行业板块→恒指；其余港股→恒生科技 */
@@ -1057,6 +1068,7 @@ function renderDash(quotes){
     document.querySelectorAll(".stat.vc[data-view]").forEach(c=>c.classList.toggle("on", c.dataset.view===v));
     window.setMktCardOn && window.setMktCardOn(v==="all");
     document.getElementById("sections").classList.toggle("hidden", v!=="all");
+    document.getElementById("mktbar-all").classList.toggle("hidden", v!=="all");
     document.querySelector(".sidebar").style.opacity = v==="all" ? "" : ".45";
     if(v!=="all"){
       const inp=document.getElementById("search");
@@ -1102,6 +1114,7 @@ function renderDash(quotes){
       try{ localStorage.setItem("mkt", m); }catch(e){}
       applyFilter();
       window.updateBadges && window.updateBadges();   /* 数量类角标随市场联动 */
+      window.refreshMktBarAll && window.refreshMktBarAll();   /* 全景横向切换条选中态 */
       window.buildOpps && window.buildOpps();
       /* 市场=滤镜，视图=镜头：切市场保持当前视图，只刷新数据 */
       if(window.CURVIEW!=="all") window.buildFlat();
@@ -1156,6 +1169,11 @@ function renderDash(quotes){
     document.addEventListener("click",e=>{ if(!e.target.closest("#scalecard")) menu.classList.add("hidden"); });
   })();
   window.updateBadges();   /* 初始化全部数量类角标（含恢复的市场筛选） */
+  window.refreshMktBarAll();   /* 全景横向市场切换条：初始渲染 + 点击=全局切市场 */
+  document.getElementById("mktbar-all").addEventListener("click", e=>{
+    const b = e.target.closest("button");
+    if(b && b.dataset.mkt!==undefined && window.setMkt) window.setMkt(b.dataset.mkt);
+  });
   /* 搜索时自动回全景 */
   document.getElementById("search").addEventListener("input",()=>{
     if(window.CURVIEW!=="all" && document.getElementById("search").value) setView("all");
