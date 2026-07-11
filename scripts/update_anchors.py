@@ -126,6 +126,27 @@ def anchor_hk(diag):
 
 
 def anchor_cn(diag):
+    # 路线一（首选）：读 ECS 哨站写回的 data/cn_mcap.json。
+    # 深交所对海外IP软拒（连通但空表），GH Actions 直抓不可靠；杭州 ECS 抓沪深两所零障碍，
+    # 每周一/四 18:07 经 GitHub API 写回该文件（安装说明见 交接给ECS_A股市值哨站.md）。
+    try:
+        cn = json.loads((ROOT / "data/cn_mcap.json").read_text(encoding="utf-8"))
+        d0 = datetime.date.fromisoformat(cn["date"])
+        age = (datetime.date.today() - d0).days
+        if age <= 10 and cn.get("total_yi"):
+            _, fx = yahoo_last("CNYUSD=X")
+            cap_t = float(cn["total_yi"]) * 1e8 * fx / 1e12
+            dd, idx = yahoo_close_on("000300.SS", d0)
+            diag.append(f"ECS哨站 {cn['date']}: 沪+深 {cn['total_yi']:,.0f} 亿元 × {fx:.4f} = {cap_t:.2f}T；沪深300@{dd}={idx}")
+            return {"cap_usd_t": round(cap_t, 2), "index_anchor": idx, "anchor_date": str(dd),
+                    "anchor_source": "ECS哨站(沪深交易所官方)"}
+        diag.append(f"ECS哨站数据过期（{cn.get('date')}，{age}天前），转直抓")
+    except FileNotFoundError:
+        diag.append("ECS哨站文件不存在（尚未安装），转直抓")
+    except Exception as e:
+        diag.append(f"ECS哨站数据读取失败: {str(e)[:80]}，转直抓")
+
+    # 路线二（兜底）：GH Actions 直抓（深交所大概率空表，届时保留旧锚）
     # 上交所：股票总貌（TOTAL_VALUE=总市值，亿元）。
     # 中国官网对海外 IP 常见间歇性拒连（Connection reset）：https/http 双协议 × 3 次退避重试。
     q = urllib.parse.urlencode({"sqlId": "COMMON_SSE_SJ_GPSJ_GPSJZM_TJSJ_L",
