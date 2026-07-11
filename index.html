@@ -335,6 +335,7 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="stat vc" id="mktcard"><div class="k">市场 · 全景</div><div class="v" id="mkt-cur">全部</div>
         <div id="mktmenu" class="hidden"></div>
       </div>
+      <div class="stat vc" data-view="mcap"><div class="k">💰 市值排行榜</div><div class="v" id="st-mcap">Top30</div></div>
       <div class="stat vc" data-view="focus"><div class="k">⭐ 重点清单</div><div class="v" id="st-focus">–</div></div>
       <div class="stat vc" data-view="gain"><div class="k">今日涨幅榜</div><div class="v">Top30</div></div>
       <div class="stat vc" data-view="loss"><div class="k">今日跌幅榜</div><div class="v">Top30</div></div>
@@ -719,6 +720,8 @@ function renderDash(quotes){
   /* ===== 视图切换器：全景/重点清单/涨跌幅榜/回撤榜/板块热力 ===== */
   window.CURVIEW = "all";
   try{ window.PERF_W = localStorage.getItem("perfW") || "m3"; window.PERF_DIR = localStorage.getItem("perfDir") || "gain"; window.HEAT_W = localStorage.getItem("heatW") || "d"; }catch(e){ window.PERF_W="m3"; window.PERF_DIR="gain"; window.HEAT_W="d"; }
+  try{ const mn = localStorage.getItem("mcapN"); window.MCAP_N = mn===null ? 30 : +mn; }catch(e){ window.MCAP_N = 30; }
+  (function(){ const sm=document.getElementById("st-mcap"); if(sm) sm.textContent = window.MCAP_N ? `Top${window.MCAP_N}` : "全部"; })();
   (function(){ const lab={w1:"近1周",m1:"近1月",m3:"近3月",m6:"近半年",ytd:"年初至今",y1:"近1年"}[window.PERF_W]||"近3月";
     const sp=document.getElementById("st-perf"); if(sp) sp.textContent=lab; })();
   function buyTh(code){ return buyThreshold(BUY[code]); }   /* 统一走 buyThreshold，勿再各自解析 */
@@ -820,6 +823,36 @@ function renderDash(quotes){
           : x.hit ? `<span class="dist-hit">🎯已触达</span>`
           : `<span class="dist-far">还差 ${x.dist.toFixed(1)}%</span>`;
         return fvRow(x, `<td>${d}</td>`, "buy");
+      }).join("");
+    }else if(v==="mcap"){
+      /* 市值排行榜：不分板块、不分组，纯市值从高到低一列到底。
+         市场范围完全跟随「市场·全景」全局筛选（flatRows 内建 mktOk）；
+         跨币种用 mcapVal 统一折算成亿美元排序（汇率粗略口径，只影响排名，展示仍是本币+美元两行）。 */
+      const list = flatRows().filter(x=>mcapVal(x.r)>0 && !/ETF|指数|商品|外汇/.test(String(x.r[2])));
+      list.sort((a,b)=>mcapVal(b.r)-mcapVal(a.r));
+      const N = (typeof window.MCAP_N==="number" && window.MCAP_N>0) ? window.MCAP_N : 0;
+      const effAll = !N || N>=list.length;          /* 选了Top100但市场只有40只 → 等效全部 */
+      const top = effAll ? list : list.slice(0,N);
+      const mktLab = window.CURMKT || "全市场";
+      title=`💰 市值排行榜 · ${mktLab}${effAll?`（共${list.length}）`:` Top${N}`}`;
+      note=`按市值从高到低 · 跨币种按美元折算排序（汇率为粗略口径，只影响排名）· 市场范围跟随「市场·全景」筛选 · 指数/ETF/商品不参与 · A/H 两地上市在全市场视图下各按上市地市值分别出现`;
+      const npill=(n,lab)=>`<button class="perf-pill${(!effAll&&N===n)?" on":""}" data-mn="${n}">${lab}</button>`;
+      note += `</p><div id="perfbar">
+        ${[30,50,100].filter(n=>list.length>n).map(n=>npill(n,"Top"+n)).join("")}
+        <button class="perf-pill${effAll?" on":""}" data-mn="0">全部（${list.length}）</button>
+      </div><p class="fv-note" style="display:none">`;
+      head=`<thead><tr><th style="width:34px">#</th><th style="text-align:left">名称</th><th>市值</th><th>现价 / 1年</th><th>当日 / 1周</th><th>回撤 / ATH</th><th>年初至今</th><th>近1年</th><th class="fill"></th></tr></thead>`;
+      body=top.map((x,i)=>{
+        const r=x.r;
+        return `<tr class="${BUY[r[1]]?"buy":""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
+          <td style="color:var(--text2)">${i+1}</td>
+          <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
+          <td class="mcapc">${mcapCell(r)}</td>
+          <td class="pxc">${priceCell(r)}</td>
+          <td>${dayWeekCell(r)}</td>
+          <td class="athc">${athCell(r)}</td>
+          <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td><td class="fill"></td>
+        </tr>`;
       }).join("");
     }else if(v==="gain"||v==="loss"){
       const list = flatRows().filter(x=>typeof x.r[16]==="number");
@@ -936,6 +969,10 @@ function renderDash(quotes){
       if(b.dataset.hw){ window.HEAT_W=b.dataset.hw; try{localStorage.setItem("heatW",b.dataset.hw);}catch(e){} }
       if(b.dataset.w){ window.PERF_W=b.dataset.w; try{localStorage.setItem("perfW",b.dataset.w);}catch(e){} }
       if(b.dataset.dir){ window.PERF_DIR=b.dataset.dir; try{localStorage.setItem("perfDir",b.dataset.dir);}catch(e){} }
+      if(b.dataset.mn!==undefined){
+        window.MCAP_N=+b.dataset.mn; try{localStorage.setItem("mcapN",b.dataset.mn);}catch(e){}
+        const sm=document.getElementById("st-mcap"); if(sm) sm.textContent = window.MCAP_N?`Top${window.MCAP_N}`:"全部";
+      }
       const lab={w1:"近1周",m1:"近1月",m3:"近3月",m6:"近半年",ytd:"年初至今",y1:"近1年"}[window.PERF_W||"m3"];
       const sp=document.getElementById("st-perf"); if(sp) sp.textContent=lab;
       window.buildFlat();
