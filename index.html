@@ -134,12 +134,12 @@ tr.buy .buyline.hit{color:var(--up)!important;font-weight:600}
 #opps a{color:var(--up);text-decoration:none;margin-right:12px;white-space:nowrap}
 #opps a:hover{text-decoration:underline}
 /* 区间表现榜周期胶囊 */
-#perfbar{display:flex;gap:8px;align-items:center;margin:2px 0 12px;flex-wrap:wrap}
+#perfbar,#mktbar{display:flex;gap:8px;align-items:center;margin:2px 0 12px;flex-wrap:wrap}
 .perf-pill{background:var(--panel2);border:1px solid var(--border);color:var(--text2);border-radius:99px;padding:5px 14px;font-size:12.5px;cursor:pointer;white-space:nowrap}
 .perf-pill.on{color:var(--accent);border-color:var(--accent);background:rgba(74,140,240,.10)}
 .perf-pill.dirp.on{color:var(--gold);border-color:var(--gold);background:rgba(212,170,80,.10)}
 .perf-sep{width:1px;height:18px;background:var(--border);margin:0 2px}
-@media(max-width:860px){#perfbar{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:4px}}
+@media(max-width:860px){#perfbar,#mktbar{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:4px}}
 /* 大事件 */
 .ev-main{max-width:860px;margin:0 auto;padding:22px 18px 60px}
 .ev-week{background:rgba(74,140,240,.07);border:1px solid var(--accent);border-radius:12px;padding:14px 16px;margin:16px 0 22px}
@@ -335,7 +335,7 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="stat vc" id="mktcard"><div class="k">市场 · 全景</div><div class="v" id="mkt-cur">全部</div>
         <div id="mktmenu" class="hidden"></div>
       </div>
-      <div class="stat vc" data-view="mcap"><div class="k">💰 市值排行榜</div><div class="v">全表</div></div>
+      <div class="stat vc" data-view="mcap"><div class="k">💰 市值排行榜</div><div class="v" id="st-mcap">全表</div></div>
       <div class="stat vc" data-view="focus"><div class="k">⭐ 重点清单</div><div class="v" id="st-focus">–</div></div>
       <div class="stat vc" data-view="gain"><div class="k">今日涨幅榜</div><div class="v">Top30</div></div>
       <div class="stat vc" data-view="loss"><div class="k">今日跌幅榜</div><div class="v">Top30</div></div>
@@ -344,7 +344,7 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="stat vc" data-view="dd"><div class="k">回撤榜（&gt;30%）</div><div class="v" id="st-deep">–</div></div>
       <div class="stat vc" data-view="hi"><div class="k">🚀 新高榜（&lt;10%）</div><div class="v" id="st-hi">–</div></div>
       <div class="stat vc" data-view="ladder"><div class="k">🪜 回撤阶梯</div><div class="v">全表</div></div>
-      <div class="stat vc" data-view="heat"><div class="k">板块热力</div><div class="v">21</div></div>
+      <div class="stat vc" data-view="heat"><div class="k">板块热力</div><div class="v" id="st-heat">21</div></div>
       <div class="stat vc" id="scalecard"><div class="k">🌍 市场规模</div><div class="v">总市值</div>
         <div id="scalemenu" class="hidden"></div>
       </div>
@@ -733,6 +733,32 @@ function renderDash(quotes){
     }));
     return out;
   }
+  /* 数量类角标随市场联动（主人指定）：重点清单/回撤榜/新高榜/市值排行榜/板块热力。
+     规则类角标（Top30/近1年/全表）与市场无关，不动。 */
+  window.updateBadges = function(){
+    const rows = flatRows().map(x=>x.r);
+    const put=(id,v)=>{ const e=document.getElementById(id); if(e) e.textContent=v; };
+    put("st-focus", Object.keys(BUY).length ? String(new Set(rows.filter(r=>BUY[r[1]]).map(r=>r[1])).size) : "–");
+    put("st-deep", String(rows.filter(r=>typeof r[6]==="number"&&r[6]<=-30).length));
+    put("st-hi",   String(rows.filter(r=>typeof r[6]==="number"&&r[6]>=-10).length));
+    put("st-mcap", `${window.CURMKT||"全市场"} ${rows.filter(r=>mcapVal(r)>0 && !/ETF|指数|商品|外汇/.test(String(r[2]))).length}`);
+    put("st-heat", String(DATA.filter(s=>!s.sec.includes("指数与行业") &&
+      s.rows.some(r=>mktOk(r[2]) && !/ETF|指数|商品|外汇/.test(String(r[2])))).length));
+  };
+  /* 榜内市场快捷切换条：所有榜单视图共用（主人指定，2026-07-12），与「市场·全景」
+     同一全局开关（data-mkt → setMkt）。按钮数字 = 该市场标的数（与全景菜单同口径）。 */
+  function mktBarHTML(){
+    const MK=["","A股","港股","美股","日股","韩股","台股","加密"];
+    const cnt={}; MK.forEach(m=>cnt[m]=new Set());
+    DATA.forEach(s=>s.rows.forEach(r=>{
+      if(r[3]==="获取失败") return;
+      const mk=String(r[2]||"");
+      cnt[""].add(r[1]);
+      MK.forEach(m=>{ if(m && MKT_RULE[m] && MKT_RULE[m](mk)) cnt[m].add(r[1]); });
+    }));
+    const pill=m=>`<button class="perf-pill${(window.CURMKT||"")===m?" on":""}" data-mkt="${m}">${m||"全部"} ${cnt[m].size}</button>`;
+    return `</p><div id="mktbar">${MK.map(pill).join("")}</div><p class="fv-note" style="display:none">`;
+  }
   /* 各市场基准指数（超额收益锚，丹萍：锚必须匹配到位） */
   const BENCH_MAP={"A股":"000300","港股":"HSI","美股":"SPX","日":"N225","韩":"KOSPI","台股":"TWII"};
   const HK_TRAD = /能源|电力|资源|价值老登|贵金属|有色/;   /* 传统行业板块→恒指；其余港股→恒生科技 */
@@ -831,18 +857,6 @@ function renderDash(quotes){
       const mktLab = window.CURMKT || "全市场";
       title=`💰 市值排行榜 · ${mktLab}（共${top.length}）`;
       note=`按市值从高到低一列到底 · 跨币种按美元折算排序（汇率为粗略口径，只影响排名）· 指数/ETF/商品不参与 · A/H 两地上市在全市场视图下各按上市地市值分别出现`;
-      /* 榜内市场快捷切换：与「市场·全景」是同一个全局开关（走 setMkt），只是入口更近；
-         按钮上的数字 = 该市场参与排行的标的数（剔除指数/ETF后），与全景菜单的全量计数口径不同 */
-      const allElig=(()=>{ const seen=new Set(), out=[];
-        DATA.forEach(s=>s.rows.forEach(r=>{
-          if(seen.has(r[1])||r[3]==="获取失败") return; seen.add(r[1]);
-          if(mcapVal(r)>0 && !/ETF|指数|商品|外汇/.test(String(r[2]))) out.push(r);
-        })); return out; })();
-      const mpill=m=>{
-        const n = m ? allElig.filter(r=>MKT_RULE[m](String(r[2]||""))).length : allElig.length;
-        return `<button class="perf-pill${(window.CURMKT||"")===m?" on":""}" data-mkt="${m}">${m||"全部"} ${n}</button>`;
-      };
-      note += `</p><div id="perfbar">${["","A股","港股","美股","日股","韩股","台股","加密"].map(mpill).join("")}</div><p class="fv-note" style="display:none">`;
       head=`<thead><tr><th style="width:34px">#</th><th style="text-align:left">名称</th><th>市值</th><th>现价 / 1年</th><th>当日 / 1周</th><th>回撤 / ATH</th><th>年初至今</th><th>近1年</th><th class="fill"></th></tr></thead>`;
       body=top.map((x,i)=>{
         const r=x.r;
@@ -951,6 +965,8 @@ function renderDash(quotes){
         <td>${ddCell(Math.round(s.avgdd*10)/10)}</td><td class="fill"></td>
       </tr>`;}).join("");
     }
+    /* 榜内市场快捷切换（全站所有榜单统一，主人指定）：追加在说明文字之后 */
+    note += mktBarHTML();
     const tstyle = '';
     /* 30秒自动刷新会整段重建本视图，导致手机端横向滚动位置归零。
        重建前记住滚动位置，重建后还原；仅当仍是同一个榜单时还原（切换榜单则回到最左）。 */
@@ -1036,6 +1052,7 @@ function renderDash(quotes){
       menu.classList.add("hidden");
       try{ localStorage.setItem("mkt", m); }catch(e){}
       applyFilter();
+      window.updateBadges && window.updateBadges();   /* 数量类角标随市场联动 */
       window.buildOpps && window.buildOpps();
       /* 市场=滤镜，视图=镜头：切市场保持当前视图，只刷新数据 */
       if(window.CURVIEW!=="all") window.buildFlat();
@@ -1089,8 +1106,7 @@ function renderDash(quotes){
     card.addEventListener("click",e=>{ if(e.target.closest("#scalemenu")) return; menu.classList.toggle("hidden"); });
     document.addEventListener("click",e=>{ if(!e.target.closest("#scalecard")) menu.classList.add("hidden"); });
   })();
-  document.getElementById("st-focus").textContent = Object.keys(BUY).length ?
-    new Set(all.filter(r=>BUY[r[1]]).map(r=>r[1])).size : "–";
+  window.updateBadges();   /* 初始化全部数量类角标（含恢复的市场筛选） */
   /* 搜索时自动回全景 */
   document.getElementById("search").addEventListener("input",()=>{
     if(window.CURVIEW!=="all" && document.getElementById("search").value) setView("all");
