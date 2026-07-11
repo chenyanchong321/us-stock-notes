@@ -403,20 +403,43 @@ def main():
     entry["diag"] = diag
     log["markets"]["美股"] = entry
 
-    # 金融史页签的百年走势图数据：标普500全历史月线（Yahoo ^GSPC 从1927年起有数据）。
-    # 历史不变、仅月度追加，跟着本脚本周更即可。失败不影响锚点主流程。
+    # 金融史页签的百年走势图数据：标普500全历史月线（1927至今）。
+    # 坑（实测2026-07-12）：range=max&interval=1mo 会被 Yahoo 悄悄降级成 1984 年起的 168 个稀疏点
+    # （与手册记载的 range=max 日线降级同源）。解法：显式 period1/period2 按 20 年分块抓，合并去重。
+    # 防呆：新抓的点数不如现存文件就不覆盖（历史只会变多不会变少）。失败不影响锚点主流程。
     try:
-        s = fetch_series("^GSPC", "max", "1mo")
-        if s:
-            bym = {}
-            for t, c in s:
-                ym = datetime.datetime.fromtimestamp(t, datetime.timezone.utc).strftime("%Y-%m")
-                bym[ym] = round(float(c), 2)   # 同月多点取最后
-            pts = sorted(bym.items())
+        import time as _t
+        bym = {}
+        t0, now_ts = -1362000000, int(_t.time())          # 1926-11 起
+        step = 20 * 365 * 86400
+        while t0 < now_ts:
+            t1 = min(t0 + step, now_ts)
+            url = (f"https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC"
+                   f"?period1={t0}&period2={t1}&interval=1mo")
+            try:
+                res = http_json(url)["chart"]["result"][0]
+                for t, c in zip(res.get("timestamp") or [],
+                                (res["indicators"]["quote"][0].get("close") or [])):
+                    if c:
+                        ym = datetime.datetime.fromtimestamp(t, datetime.timezone.utc).strftime("%Y-%m")
+                        bym[ym] = round(float(c), 2)
+            except Exception as e:
+                print(f"  标普月线分块 {t0} 失败: {e}", file=sys.stderr)
+            t0 = t1 + 86400
+            _t.sleep(1)
+        pts = sorted(bym.items())
+        old_n = 0
+        try:
+            old_n = json.loads((ROOT / "data/spx_history.json").read_text(encoding="utf-8")).get("n", 0)
+        except Exception:
+            pass
+        if len(pts) >= max(old_n, 500):
             (ROOT / "data/spx_history.json").write_text(json.dumps(
                 {"sym": "^GSPC", "updated": log["run"], "n": len(pts), "points": pts},
                 ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
             print(f"标普百年月线：{len(pts)} 个月（{pts[0][0]} ~ {pts[-1][0]}）")
+        else:
+            print(f"::warning::标普月线仅 {len(pts)} 点（现存 {old_n}），疑似降级，不覆盖")
     except Exception as e:
         print(f"::warning::标普百年月线生成失败: {e}", file=sys.stderr)
 
