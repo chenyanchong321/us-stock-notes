@@ -78,6 +78,15 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 #mktmenu button:hover{background:var(--panel);color:var(--accent)}
 #mktmenu button.on{color:var(--accent);background:rgba(74,140,240,.10)}
 .refresh-note{font-size:12px;color:var(--text2);margin-left:auto}
+/* 市场规模弹层 */
+#scalecard{position:relative}
+#scalemenu{position:absolute;top:calc(100% + 6px);left:0;z-index:175;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;min-width:250px;max-width:calc(100vw - 32px);box-shadow:0 6px 18px rgba(0,0,0,.5)}
+#scalemenu.hidden{display:none}
+#scalemenu .sgrp{font-size:11px;color:var(--text2);letter-spacing:.3px;margin:0 0 6px}
+#scalemenu .srow{display:flex;justify-content:space-between;align-items:baseline;gap:24px;font-size:13px;padding:3px 0}
+#scalemenu .srow .sval{font-variant-numeric:tabular-nums;color:var(--text);font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;white-space:nowrap}
+#scalemenu .sdiv{height:1px;background:var(--border);margin:9px 0}
+#scalemenu .snote{font-size:11px;color:var(--text2);line-height:1.55;margin-top:10px}
 
 /* 板块 */
 .section{margin-bottom:34px;scroll-margin-top:var(--anchor-sec, calc(var(--header-h) + 76px))}
@@ -335,6 +344,9 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="stat vc" data-view="hi"><div class="k">🚀 新高榜（&lt;10%）</div><div class="v" id="st-hi">–</div></div>
       <div class="stat vc" data-view="ladder"><div class="k">🪜 回撤阶梯</div><div class="v">全表</div></div>
       <div class="stat vc" data-view="heat"><div class="k">板块热力</div><div class="v">21</div></div>
+      <div class="stat vc" id="scalecard"><div class="k">🌍 市场规模</div><div class="v">总市值</div>
+        <div id="scalemenu" class="hidden"></div>
+      </div>
       <div class="refresh-note" title="2026-07-10 实测：腾讯的 A股与美股盘中快照均为实时（用其分时数据反查验证）；港股实测延时15分钟（13:56的价14:11才返回）；日/韩/台未实测">盘中现价30秒刷新（A股·美股实时 · 港股延时15分钟）· 美股盘前盘后约1分钟 · 加密实时 · 其余指标数分钟刷新 · 市值为估算口径</div>
     </div>
     <div id="topbar">
@@ -1011,6 +1023,32 @@ function renderDash(quotes){
     menu.querySelectorAll("button").forEach(b=>b.classList.toggle("on", b.dataset.m===m0));
     if(m0){ applyFilter(); window.buildOpps && window.buildOpps(); }
     window.setMktCardOn(true);
+  })();
+  /* 市场规模弹层：全球主要股市 + 大类资产总市值（宏观参考·月度口径·美元计） */
+  (function(){
+    const card=document.getElementById("scalecard"), menu=document.getElementById("scalemenu");
+    if(!card||!menu) return;
+    const STOCKS=[
+      ["🇺🇸 美股","≈ $75 万亿"],
+      ["🇨🇳 A股","≈ $16.5 万亿"],
+      ["🇯🇵 日本","≈ $8.5 万亿"],
+      ["🇭🇰 港股","≈ $6.0 万亿"],
+      ["🇰🇷 韩国","≈ $5.0 万亿"],
+    ];
+    const ASSETS=[
+      ["🥇 黄金","≈ $30 万亿"],
+      ["🥈 白银","≈ $3.4 万亿"],
+      ["₿ 比特币","≈ $1.25 万亿"],
+    ];
+    const row=([n,v])=>`<div class="srow"><span>${n}</span><span class="sval">${v}</span></div>`;
+    menu.innerHTML =
+      `<div class="sgrp">股票市场 · 总市值（美元）</div>${STOCKS.map(row).join("")}`+
+      `<div class="sdiv"></div>`+
+      `<div class="sgrp">大类资产 · 总市值（美元）</div>${ASSETS.map(row).join("")}`+
+      `<div class="snote">七巨头 ≈ $24 万亿，约占美股三成（标普 500 约 1/3）</div>`+
+      `<div class="snote">口径：各交易所 / 资产 2026 年 7 月估算 · 美元计 · 仅供参考</div>`;
+    card.addEventListener("click",e=>{ if(e.target.closest("#scalemenu")) return; menu.classList.toggle("hidden"); });
+    document.addEventListener("click",e=>{ if(!e.target.closest("#scalecard")) menu.classList.add("hidden"); });
   })();
   document.getElementById("st-focus").textContent = Object.keys(BUY).length ?
     new Set(all.filter(r=>BUY[r[1]]).map(r=>r[1])).size : "–";
