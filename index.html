@@ -106,7 +106,10 @@ tr.grp td .glabel{position:sticky;left:14px;display:inline-block}
 /* 「数据更新…·实时…」这一行：预留高度，时段说明长短变化（美股盘中/盘前(分钟档)/休市）
    不会改变行数把侧栏顶下去；时间数字用等宽字形，秒数跳动不会推着后面的字走 */
 #update-time{min-height:3.2em}
-#update-time .rt{font-variant-numeric:tabular-nums}
+/* 实时时钟用真·等宽字体：当前中文字体不认 tabular-nums，秒数一跳数字宽度就变，
+   在窄侧栏(约200px)会把时间挤到下一行→整行行高从2行变3行→下面板块列表上下弹一下。
+   等宽字体让每个数字宽度恒定，秒数跳动不再改变换行，位移消失。 */
+#update-time .rt{font-variant-numeric:tabular-nums;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
 /* 盘前/盘后角标：提示该价格不是收盘价 */
 .sesbadge{display:inline-block;margin-left:5px;padding:0 4px;border-radius:3px;font-size:10px;line-height:14px;vertical-align:1px;
   color:var(--gold);border:1px solid var(--gold);opacity:.8;font-weight:500;letter-spacing:.3px}
