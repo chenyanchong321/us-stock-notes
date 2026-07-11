@@ -1,31 +1,36 @@
 {
- "updated": "2026-07-12 00:13 北京时间",
+ "updated": "2026-07-12 00:30 北京时间",
  "anchor_date": "2026-07-09",
  "stocks": [
   {
    "key": "美股",
    "flag": "🇺🇸",
-   "usd_t": 75.0
+   "usd_t": 75.0,
+   "src": "idx"
   },
   {
    "key": "A股",
    "flag": "🇨🇳",
-   "usd_t": 15.68
+   "usd_t": 15.68,
+   "src": "idx"
   },
   {
    "key": "日本",
    "flag": "🇯🇵",
-   "usd_t": 8.5
+   "usd_t": 8.5,
+   "src": "idx"
   },
   {
    "key": "港股",
    "flag": "🇭🇰",
-   "usd_t": 6.04
+   "usd_t": 6.04,
+   "src": "idx"
   },
   {
    "key": "韩国",
    "flag": "🇰🇷",
-   "usd_t": 5.0
+   "usd_t": 5.0,
+   "src": "idx"
   }
  ],
  "metals": [
