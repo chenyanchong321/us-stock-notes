@@ -1,0 +1,71 @@
+name: 每周自动校准市场规模锚点
+
+# 「市场规模」卡的绝对锚点自动校准（消灭人工季度重校）。
+# 双班冗余对抗 GitHub cron 跳班：周日深夜 + 周一凌晨各一班，脚本幂等（官方月报
+# 没出新数时 config 无变化 → 不产生提交），跑两次无副作用。
+# 注意：本工作流用默认 GITHUB_TOKEN 提交，不会连锁触发 update-data.yml 的 push 监听
+# （GitHub 防递归机制）。无妨——下一班行情流水线（工作日每15-30分钟）自然会用新锚点重算。
+on:
+  schedule:
+    - cron: "23 22 * * 0"   # 周日 22:23 UTC = 周一 6:23 北京
+    - cron: "23 4 * * 1"    # 周一 4:23 UTC 备班
+  workflow_dispatch: {}
+  # 改了校锚脚本/本工作流就立刻跑一轮，便于远程验证数据源可达性（看 data/anchors_log.json）
+  push:
+    branches: [main]
+    paths:
+      - "scripts/update_anchors.py"
+      - ".github/workflows/update-anchors.yml"
+
+concurrency:
+  group: update-anchors
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  anchors:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 安装依赖（仅 JPX Excel 解析需要）
+        run: pip install openpyxl
+
+      - name: 校准锚点
+        run: python scripts/update_anchors.py
+
+      - name: 提交更新
+        run: |
+          set -euo pipefail
+          git config user.name "anchors-bot"
+          git config user.email "actions@github.com"
+          git add config/marketscale.json data/anchors_log.json
+          if git diff --cached --quiet; then
+            echo "锚点无变化，跳过提交"
+            exit 0
+          fi
+          git commit -m "chore: 自动校准市场规模锚点 $(date -u +%F)"
+          for i in 1 2 3 4 5; do
+            if git push origin HEAD:main; then
+              echo "推送成功（第 $i 次尝试）"
+              exit 0
+            fi
+            echo "推送被拒（远端有新提交），rebase 后重试 $i/5"
+            git fetch origin main
+            if ! git rebase -X theirs origin/main; then
+              git rebase --abort || true
+              echo "rebase 失败，放弃本轮"
+              exit 1
+            fi
+            sleep $((i * 3))
+          done
+          echo "5 次推送均失败"
+          exit 1
