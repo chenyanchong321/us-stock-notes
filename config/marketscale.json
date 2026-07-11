@@ -1,19 +1,70 @@
 {
   "_说明": "市场规模卡片的锚点配置。流水线据此自动生成 data/marketscale.json。",
-  "_口径": "股市＝真实总市值锚点 × 各自大盘指数相对锚点日的涨跌，自动缩放（月度真实市值无免费实时接口，用指数跟踪日内浮动，季度重校一次绝对锚点）。金银＝现货价 × 地上存量（黄金216,265吨/World Gold Council，白银1,751,000吨/CPM Group，与 companiesmarketcap 同口径）。比特币＝CoinGecko 实时市值。",
-  "anchor_date": "2026-07-09",
+  "_口径": "股市＝官方总市值锚点 × 各自大盘指数相对锚点日的涨跌（锚点每周由 update_anchors.py 自动校准：港股HKMA/日本JPX/A股沪深交易所/韩国KRX 官方数据；美股绝对锚人工+AI月检）。金银＝现货价 × 地上存量（黄金216,265吨/WGC，白银1,751,000吨/CPM）。比特币＝CoinGecko 实时市值。",
+  "anchor_date": "2026-06-30",
   "stocks": [
-    { "key": "美股", "flag": "🇺🇸", "index": "^GSPC",     "cap_usd_t": 75.0, "index_anchor": 7575.39 },
-    { "key": "A股",  "flag": "🇨🇳", "index": "000300.SS", "cap_usd_t": 16.5, "index_anchor": 5031.00 },
-    { "key": "日本", "flag": "🇯🇵", "index": "^N225",     "cap_usd_t": 8.5,  "index_anchor": 68557.53 },
-    { "key": "港股", "flag": "🇭🇰", "index": "^HSI",      "cap_usd_t": 6.0,  "index_anchor": 24030.18 },
-    { "key": "韩国", "flag": "🇰🇷", "index": "^KS11",     "cap_usd_t": 5.0,  "index_anchor": 7475.94 }
+    {
+      "key": "美股",
+      "flag": "🇺🇸",
+      "index": "^W5000",
+      "cap_usd_t": 75.0,
+      "index_anchor": 75063.15625,
+      "anchor_source": "绝对锚沿用人工校准，漂移指数已升级为^W5000"
+    },
+    {
+      "key": "A股",
+      "flag": "🇨🇳",
+      "index": "000300.SS",
+      "cap_usd_t": 16.5,
+      "index_anchor": 5031.0
+    },
+    {
+      "key": "日本",
+      "flag": "🇯🇵",
+      "index": "^N225",
+      "cap_usd_t": 8.51,
+      "index_anchor": 70062.3203125,
+      "anchor_date": "2026-06-30",
+      "anchor_source": "JPX官方月末市值Excel"
+    },
+    {
+      "key": "港股",
+      "flag": "🇭🇰",
+      "index": "^HSI",
+      "cap_usd_t": 5.53,
+      "index_anchor": 22881.02,
+      "anchor_date": "2026-06-30",
+      "anchor_source": "HKMA月报(市值+恒指官方配对)"
+    },
+    {
+      "key": "韩国",
+      "flag": "🇰🇷",
+      "index": "^KS11",
+      "cap_usd_t": 5.0,
+      "index_anchor": 7475.94
+    }
   ],
   "metals": [
-    { "key": "黄金", "flag": "🥇", "yahoo": "GC=F", "oz": 6953081000 },
-    { "key": "白银", "flag": "🥈", "yahoo": "SI=F", "oz": 56296000000 }
+    {
+      "key": "黄金",
+      "flag": "🥇",
+      "yahoo": "GC=F",
+      "oz": 6953081000
+    },
+    {
+      "key": "白银",
+      "flag": "🥈",
+      "yahoo": "SI=F",
+      "oz": 56296000000
+    }
   ],
   "crypto": [
-    { "key": "比特币", "flag": "₿", "cg_id": "bitcoin", "yahoo_fallback": "BTC-USD", "supply_fallback": 19900000 }
+    {
+      "key": "比特币",
+      "flag": "₿",
+      "cg_id": "bitcoin",
+      "yahoo_fallback": "BTC-USD",
+      "supply_fallback": 19900000
+    }
   ]
 }

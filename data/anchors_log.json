@@ -1,0 +1,46 @@
+{
+ "run": "2026-07-12 01:01 北京时间",
+ "markets": {
+  "港股": {
+   "ok": true,
+   "cap_usd_t": 5.53,
+   "index_anchor": 22881.02,
+   "anchor_date": "2026-06-30",
+   "anchor_source": "HKMA月报(市值+恒指官方配对)",
+   "diag": [
+    "HKMA 2026-06: 43,324,537 百万港元 × 0.1276 = 5.53T"
+   ]
+  },
+  "日本": {
+   "ok": true,
+   "cap_usd_t": 8.51,
+   "index_anchor": 70062.3203125,
+   "anchor_date": "2026-06-30",
+   "anchor_source": "JPX官方月末市值Excel",
+   "diag": [
+    "JPX xlsx sheets: ['株式時価総額 Market Capitalization', '株式時価総額 Market Capitalizatio (旧)']",
+    "JPX 株式時価総額 Market Capitalization 最近行: 2026-06-30 原始值 1,384,750,323",
+    "按百万円解释 → 8.51万亿美元",
+    "✓ 单位=百万円"
+   ]
+  },
+  "A股": {
+   "ok": false,
+   "error": "<urlopen error [Errno 104] Connection reset by peer>",
+   "diag": []
+  },
+  "韩国": {
+   "ok": false,
+   "error": "HTTP Error 400: Bad Request",
+   "diag": []
+  },
+  "美股": {
+   "ok": true,
+   "changed": true,
+   "diag": [
+    "^FTW5000 探测失败: Yahoo ^FTW5000 无数据",
+    "迁移浮动指数 ^GSPC → ^W5000：锚点日 2026-07-02 指数 75063.15625（绝对锚 75.0T 不变）"
+   ]
+  }
+ }
+}
