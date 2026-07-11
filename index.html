@@ -72,11 +72,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 .dist-far{color:var(--text2)}
 /* 市场筛选下拉 */
 #mktcard{position:relative}
-#mktmenu{position:absolute;top:calc(100% + 6px);left:0;z-index:175;background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:6px;display:flex;flex-direction:column;gap:2px;min-width:96px;box-shadow:0 6px 18px rgba(0,0,0,.5)}
-#mktmenu.hidden{display:none}
-#mktmenu button{background:transparent;border:none;color:var(--text);font-size:13px;padding:7px 12px;border-radius:6px;cursor:pointer;text-align:left}
-#mktmenu button:hover{background:var(--panel);color:var(--accent)}
-#mktmenu button.on{color:var(--accent);background:rgba(74,140,240,.10)}
+/* mktmenu 下拉已删除（2026-07-12）：选市场走横向切换条，开盘状态长在胶囊上 */
 .refresh-note{font-size:12px;color:var(--text2);margin-left:auto}
 /* 市场规模弹层 */
 #scalecard{position:relative}
@@ -140,6 +136,9 @@ tr.buy .buyline.hit{color:var(--up)!important;font-weight:600}
 .perf-pill{background:var(--panel2);border:1px solid var(--border);color:var(--text2);border-radius:99px;padding:5px 14px;font-size:12.5px;cursor:pointer;white-space:nowrap}
 .perf-pill.on{color:var(--accent);border-color:var(--accent);background:rgba(74,140,240,.10)}
 .perf-pill.dirp.on{color:var(--gold);border-color:var(--gold);background:rgba(212,170,80,.10)}
+/* 双行市场胶囊：第一行 市场+数量+状态点，第二行 交易时段（盘中绿/休市灰） */
+.perf-pill.mk2{text-align:center;border-radius:12px;line-height:1.35;padding:5px 12px}
+.perf-pill .mksub{display:block;font-size:10.5px;color:var(--text2);margin-top:1px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .perf-sep{width:1px;height:18px;background:var(--border);margin:0 2px}
 @media(max-width:860px){#perfbar,.mktbar{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:4px}}
 /* 大事件 */
@@ -363,9 +362,7 @@ body.resizing{user-select:none;cursor:col-resize}
   </nav>
   <div class="main">
     <div id="viewbar">
-      <div class="stat vc" id="mktcard"><div class="k">市场 · 全景</div><div class="v" id="mkt-cur">全部</div>
-        <div id="mktmenu" class="hidden"></div>
-      </div>
+      <div class="stat vc" id="mktcard" title="回到全景 · 显示全部市场"><div class="k">市场 · 全景</div><div class="v" id="mkt-cur">全部</div></div>
       <div class="stat vc" data-view="mcap"><div class="k">💰 市值排行榜</div><div class="v" id="st-mcap">全表</div></div>
       <div class="stat vc" data-view="focus"><div class="k">⭐ 重点清单</div><div class="v" id="st-focus">–</div></div>
       <div class="stat vc" data-view="gain"><div class="k">今日涨幅榜</div><div class="v">Top30</div></div>
@@ -791,7 +788,8 @@ function renderDash(quotes){
   /* 榜内市场快捷切换条：所有榜单视图共用（主人指定，2026-07-12），与「市场·全景」
      同一全局开关（data-mkt → setMkt）。按钮数字 = 该市场标的数（与全景菜单同口径）。 */
   function mktBarHTML(){
-    const MK=["","A股","港股","美股","日股","韩股","台股","加密"];
+    /* 顺序=主人定的权重序（美股最前，手机端不用滑就能点到）；双行=名称·数量·状态点 / 交易时段 */
+    const MK=["","美股","A股","港股","日股","韩股","台股","加密"];
     const cnt={}; MK.forEach(m=>cnt[m]=new Set());
     DATA.forEach(s=>s.rows.forEach(r=>{
       if(r[3]==="获取失败") return;
@@ -799,7 +797,20 @@ function renderDash(quotes){
       cnt[""].add(r[1]);
       MK.forEach(m=>{ if(m && MKT_RULE[m] && MKT_RULE[m](mk)) cnt[m].add(r[1]); });
     }));
-    const pill=m=>`<button class="perf-pill${(window.CURMKT||"")===m?" on":""}" data-mkt="${m}">${m||"全部"} ${cnt[m].size}</button>`;
+    const pill=m=>{
+      let dot="", sub="";
+      if(m){
+        const st = window.mktStatus ? mktStatus(m) : null;
+        if(st){
+          dot = st.o ? ` <span style="color:var(--up)">●</span>` : ` <span style="color:var(--text2)">○</span>`;
+          sub = `<span class="mksub"${st.o?' style="color:var(--up)"':''}>${st.h}${st.o&&m!=="加密"?" · 盘中":""}</span>`;
+        }
+      }else{
+        const n = MK.filter(x=>x && x!=="加密" && mktStatus(x) && mktStatus(x).o).length;
+        sub = `<span class="mksub">${n ? n+" 市盘中" : "传统市场休市"}</span>`;
+      }
+      return `<button class="perf-pill mk2${(window.CURMKT||"")===m?" on":""}" data-mkt="${m}">${m||"全部"} ${cnt[m].size}${dot}${sub}</button>`;
+    };
     return `</p><div class="mktbar">${MK.map(pill).join("")}</div><p class="fv-note" style="display:none">`;
   }
   /* 全景主视图的市场横向切换条（主人指定：全景不能是唯一没有横向切换的视图）。
@@ -1085,7 +1096,7 @@ function renderDash(quotes){
   /* 市场筛选 + 全景入口二合一（全景+榜单+热力+机会条全局过滤） */
   window.setDashView = setView;
   (function(){
-    const card=document.getElementById("mktcard"), menu=document.getElementById("mktmenu"), cur=document.getElementById("mkt-cur");
+    const card=document.getElementById("mktcard"), cur=document.getElementById("mkt-cur");
     const MKTS=["全部","A股","港股","美股","日股","韩股","台股","加密"];
     function countOf(m){
       const seen=new Set();
@@ -1096,21 +1107,11 @@ function renderDash(quotes){
       return seen.size;
     }
     const CNT={}; MKTS.forEach(m=>CNT[m]=countOf(m==="全部"?"":m));
-    function renderMenu(){
-      menu.innerHTML = MKTS.map(m=>{
-        const st = window.mktStatus ? mktStatus(m) : null;
-        const dot = st ? (st.o?`<span style="color:var(--up)">●盘中</span>`:`<span style="color:var(--text2)">○休市</span>`) : "";
-        const hrs = st ? `<span style="display:block;font-size:10.5px;color:var(--text2)">${st.h}</span>` : "";
-        return `<button data-m="${m==="全部"?"":m}" style="min-width:190px"><span style="display:flex;justify-content:space-between;gap:10px"><span>${m}（${CNT[m]}）</span>${dot}</span>${hrs}</button>`;
-      }).join("");
-      menu.querySelectorAll("button").forEach(b=>b.classList.toggle("on", b.dataset.m===window.CURMKT));
-    }
-    renderMenu();
+    /* 下拉菜单已删（2026-07-12 主人定）：选市场走横向切换条（一步直达），
+       开盘状态/交易时段直接长在切换条胶囊上，全景卡退化为纯视图开关。 */
     function setMkt(m){
       window.CURMKT = m;
       cur.textContent = `${m||"全部"} ${CNT[m||"全部"]}`;
-      menu.querySelectorAll("button").forEach(b=>b.classList.toggle("on", b.dataset.m===m));
-      menu.classList.add("hidden");
       try{ localStorage.setItem("mkt", m); }catch(e){}
       applyFilter();
       window.updateBadges && window.updateBadges();   /* 数量类角标随市场联动 */
@@ -1122,23 +1123,24 @@ function renderDash(quotes){
     }
     window.setMktCardOn = on=>card.classList.toggle("on", on);
     window.setMkt = setMkt;
-    menu.addEventListener("click",e=>{
-      const b=e.target.closest("button"); if(!b) return;
-      e.stopPropagation(); setMkt(b.dataset.m);
+    /* 全景卡=纯开关：点击直接回全景并重置为全部（与其他视图卡"一点即达"一致）。
+       想保留市场筛选回全景：再点一次当前榜单卡（既有开关逻辑）。 */
+    card.addEventListener("click",()=>{
+      setMkt("");
+      if(window.CURVIEW!=="all") setView("all");
+      else window.scrollTo(0,0);
     });
-    card.addEventListener("click",e=>{
-      if(e.target.closest("#mktmenu")) return;
-      if(menu.classList.contains("hidden")) renderMenu();   /* 打开时刷新开盘状态 */
-      menu.classList.toggle("hidden");
-    });
-    document.addEventListener("click",e=>{ if(!e.target.closest("#mktcard")) menu.classList.add("hidden"); });
     let m0=""; try{ m0=localStorage.getItem("mkt")||""; }catch(e){}
     window.CURMKT=m0;
     cur.textContent = `${m0||"全部"} ${CNT[m0||"全部"]}`;
-    menu.querySelectorAll("button").forEach(b=>b.classList.toggle("on", b.dataset.m===m0));
     if(m0){ applyFilter(); window.buildOpps && window.buildOpps(); }
     window.setMktCardOn(true);
   })();
+  /* 开盘状态是活信息：每分钟刷新一次切换条（全景条+当前榜单条），状态点/时段颜色自动翻转 */
+  setInterval(()=>{
+    window.refreshMktBarAll && window.refreshMktBarAll();
+    if(window.CURVIEW && window.CURVIEW!=="all" && window.buildFlat) window.buildFlat();
+  }, 60000);
   /* 市场规模弹层：全球主要股市 + 金银 + 比特币总市值（美元）。
      数据来自流水线 data/marketscale.json，随大盘/金价/BTC 每轮自动刷新；
      拉取失败时退回内置静态值（会在角标注明「离线」）。 */
