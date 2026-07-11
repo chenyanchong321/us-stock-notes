@@ -3,7 +3,7 @@
   "_口径": "股市＝真实总市值锚点 × 各自大盘指数相对锚点日的涨跌，自动缩放（月度真实市值无免费实时接口，用指数跟踪日内浮动，季度重校一次绝对锚点）。金银＝现货价 × 地上存量（黄金216,265吨/World Gold Council，白银1,751,000吨/CPM Group，与 companiesmarketcap 同口径）。比特币＝CoinGecko 实时市值。",
   "anchor_date": "2026-07-09",
   "stocks": [
-    { "key": "美股", "flag": "🇺🇸", "index": "^GSPC",     "cap_usd_t": 75.0, "index_anchor": 7575.39, "cmc_country": "United States" },
+    { "key": "美股", "flag": "🇺🇸", "index": "^GSPC",     "cap_usd_t": 75.0, "index_anchor": 7575.39 },
     { "key": "A股",  "flag": "🇨🇳", "index": "000300.SS", "cap_usd_t": 16.5, "index_anchor": 5031.00 },
     { "key": "日本", "flag": "🇯🇵", "index": "^N225",     "cap_usd_t": 8.5,  "index_anchor": 68557.53 },
     { "key": "港股", "flag": "🇭🇰", "index": "^HSI",      "cap_usd_t": 6.0,  "index_anchor": 24030.18 },

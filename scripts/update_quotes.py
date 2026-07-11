@@ -261,29 +261,6 @@ def fetch_btc_mcap(cg_id, yahoo_fallback, supply_fallback):
     px = _last_price(yahoo_fallback)
     return px * supply_fallback if px else None
 
-def fetch_cmc_country_caps():
-    """从 companiesmarketcap 各国总市值表抓取总市值（返回 {国家名: 万亿美元}）。
-    注意：该源按公司国籍归类且只收录各国大盘股，仅「美股/United States」口径与真实值吻合；
-    A股/港股/日/韩会被严重低估（港股仅约$1.3T vs 真实$6T），故只用于美股。
-    抓不到就返回空并日志报警，绝不静默造数。"""
-    import re
-    url = "https://companiesmarketcap.com/all-countries/"
-    try:
-        req = urllib.request.Request(url, headers=UA)
-        with urllib.request.urlopen(req, timeout=25) as r:
-            html = r.read().decode("utf-8", "ignore")
-    except Exception as e:
-        print(f"::warning::companiesmarketcap 国家总市值表抓取失败，美股改用指数跟踪：{e}")
-        return {}
-    caps = {}
-    for name in ["United States"]:
-        m = re.search(re.escape(name) + r"[^$]*?\$([\d.]+)\s*(T|B)", html, re.S)
-        if m:
-            caps[name] = float(m.group(1)) * (1.0 if m.group(2) == "T" else 0.001)
-        else:
-            print(f"::warning::companiesmarketcap 表中未解析到 {name}")
-    return caps
-
 def build_market_scale():
     """生成 data/marketscale.json：全球主要股市 + 金银 + 比特币的总市值（美元）。
     - 股市：真实市值锚点 × 大盘指数/锚点指数（跟随大盘自动浮动）
@@ -298,22 +275,15 @@ def build_market_scale():
     now = datetime.datetime.now(datetime.timezone.utc)
     stamp = now.astimezone(datetime.timezone(datetime.timedelta(hours=8))).strftime("%Y-%m-%d %H:%M") + " 北京时间"
 
-    cmc = fetch_cmc_country_caps()   # 仅美股口径可用
     stocks = []
     for s in cfg.get("stocks", []):
-        cc = s.get("cmc_country")
-        if cc and cc in cmc:
-            t = cmc[cc]                                        # 美股：直接取全国实时口径
-            src = "cmc"
+        lvl = _last_price(s["index"])
+        if lvl is None:
+            print(f"  !! 市场规模 {s['key']} 指数 {s['index']} 拉取失败", file=sys.stderr)
+            t = None
         else:
-            lvl = _last_price(s["index"])
-            if lvl is None:
-                print(f"  !! 市场规模 {s['key']} 指数 {s['index']} 拉取失败", file=sys.stderr)
-                t = None
-            else:
-                t = s["cap_usd_t"] * (lvl / s["index_anchor"])  # 锚点市值×指数涨跌
-            src = "idx"
-        stocks.append({"key": s["key"], "flag": s["flag"], "usd_t": (round(t, 2) if t else None), "src": src})
+            t = s["cap_usd_t"] * (lvl / s["index_anchor"])   # 锚点市值×指数涨跌
+        stocks.append({"key": s["key"], "flag": s["flag"], "usd_t": (round(t, 2) if t else None)})
 
     metals = []
     for m in cfg.get("metals", []):
