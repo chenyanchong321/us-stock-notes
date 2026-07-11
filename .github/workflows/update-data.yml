@@ -18,6 +18,7 @@ on:
     paths:
       - "config/watchlist.json"
       - "config/buypoints.json"
+      - "config/marketscale.json"
       - "scripts/update_quotes.py"
 
 concurrency:

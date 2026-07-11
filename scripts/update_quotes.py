@@ -241,6 +241,69 @@ def fmt_mcap(item, price, live_mcap=None):
         return f"{prefix}{scaled/10000:.2f}万亿"
     return f"{prefix}{scaled:.1f}亿"
 
+def _last_price(sym):
+    """取最近一个收盘价（5日日K的最后一根）。失败返回 None，不静默造数。"""
+    s = fetch_series(sym, "5d", "1d")
+    return s[-1][1] if s else None
+
+def fetch_btc_mcap(cg_id, yahoo_fallback, supply_fallback):
+    """比特币总市值：优先 CoinGecko 实时市值；429/失败则退回 雅虎BTC价×流通量估算。"""
+    url = f"https://api.coingecko.com/api/v3/simple/price?ids={cg_id}&vs_currencies=usd&include_market_cap=true"
+    try:
+        req = urllib.request.Request(url, headers=UA)
+        with urllib.request.urlopen(req, timeout=20) as r:
+            j = json.load(r)
+        mc = j[cg_id]["usd_market_cap"]
+        if mc and mc > 0:
+            return mc
+    except Exception as e:
+        print(f"  !! BTC CoinGecko 失败，改用雅虎估算：{e}", file=sys.stderr)
+    px = _last_price(yahoo_fallback)
+    return px * supply_fallback if px else None
+
+def build_market_scale():
+    """生成 data/marketscale.json：全球主要股市 + 金银 + 比特币的总市值（美元）。
+    - 股市：真实市值锚点 × 大盘指数/锚点指数（跟随大盘自动浮动）
+    - 金银：现货价 × 地上存量
+    - 比特币：CoinGecko 实时市值
+    每轮流水线自动刷新，无需人工。"""
+    try:
+        cfg = json.loads((ROOT / "config/marketscale.json").read_text(encoding="utf-8"))
+    except Exception as e:
+        print(f"::warning::marketscale 配置读取失败，跳过：{e}")
+        return
+    now = datetime.datetime.now(datetime.timezone.utc)
+    stamp = now.astimezone(datetime.timezone(datetime.timedelta(hours=8))).strftime("%Y-%m-%d %H:%M") + " 北京时间"
+
+    stocks = []
+    for s in cfg.get("stocks", []):
+        lvl = _last_price(s["index"])
+        if lvl is None:
+            print(f"  !! 市场规模 {s['key']} 指数 {s['index']} 拉取失败", file=sys.stderr)
+            t = None
+        else:
+            t = s["cap_usd_t"] * (lvl / s["index_anchor"])   # 锚点市值×指数涨跌
+        stocks.append({"key": s["key"], "flag": s["flag"], "usd_t": (round(t, 2) if t else None)})
+
+    metals = []
+    for m in cfg.get("metals", []):
+        px = _last_price(m["yahoo"])
+        t = (px * m["oz"] / 1e12) if px else None
+        metals.append({"key": m["key"], "flag": m["flag"], "usd_t": (round(t, 2) if t else None)})
+
+    crypto = []
+    for c in cfg.get("crypto", []):
+        mc = fetch_btc_mcap(c["cg_id"], c.get("yahoo_fallback"), c.get("supply_fallback", 0))
+        t = (mc / 1e12) if mc else None
+        crypto.append({"key": c["key"], "flag": c["flag"], "usd_t": (round(t, 2) if t else None)})
+
+    out = {"updated": stamp, "anchor_date": cfg.get("anchor_date", ""),
+           "stocks": stocks, "metals": metals, "crypto": crypto}
+    (ROOT / "data/marketscale.json").write_text(
+        json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
+    line = " | ".join(f"{x['key']}{x['usd_t']}" for x in stocks + metals + crypto)
+    print(f"市场规模：{line}（万亿美元）")
+
 def main():
     watch = json.loads((ROOT / "config/watchlist.json").read_text(encoding="utf-8"))
     now = datetime.datetime.now(datetime.timezone.utc)
@@ -326,6 +389,8 @@ def main():
     (ROOT / "data/events.json").write_text(
         json.dumps({"updated": out["updated"], "earnings": ev_rows}, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"财报日历：未来120天 {len(ev_rows)} 场")
+    # ==== 市场规模（全球主要股市 + 金银 + 比特币总市值）====
+    build_market_scale()
     rows_all = [r for s in sections_out for r in s["rows"]]
     fails = sum(1 for r in rows_all if r[3] == "获取失败")
     flat_1m = sum(1 for r in rows_all if r[7] == 0.0)

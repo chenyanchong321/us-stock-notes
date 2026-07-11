@@ -1024,29 +1024,32 @@ function renderDash(quotes){
     if(m0){ applyFilter(); window.buildOpps && window.buildOpps(); }
     window.setMktCardOn(true);
   })();
-  /* 市场规模弹层：全球主要股市 + 大类资产总市值（宏观参考·月度口径·美元计） */
+  /* 市场规模弹层：全球主要股市 + 金银 + 比特币总市值（美元）。
+     数据来自流水线 data/marketscale.json，随大盘/金价/BTC 每轮自动刷新；
+     拉取失败时退回内置静态值（会在角标注明「离线」）。 */
   (function(){
     const card=document.getElementById("scalecard"), menu=document.getElementById("scalemenu");
     if(!card||!menu) return;
-    const STOCKS=[
-      ["🇺🇸 美股","≈ $75 万亿"],
-      ["🇨🇳 A股","≈ $16.5 万亿"],
-      ["🇯🇵 日本","≈ $8.5 万亿"],
-      ["🇭🇰 港股","≈ $6.0 万亿"],
-      ["🇰🇷 韩国","≈ $5.0 万亿"],
-    ];
-    const ASSETS=[
-      ["🥇 黄金","≈ $30 万亿"],
-      ["🥈 白银","≈ $3.4 万亿"],
-      ["₿ 比特币","≈ $1.25 万亿"],
-    ];
-    const row=([n,v])=>`<div class="srow"><span>${n}</span><span class="sval">${v}</span></div>`;
-    menu.innerHTML =
-      `<div class="sgrp">股票市场 · 总市值（美元）</div>${STOCKS.map(row).join("")}`+
-      `<div class="sdiv"></div>`+
-      `<div class="sgrp">大类资产 · 总市值（美元）</div>${ASSETS.map(row).join("")}`+
-      `<div class="snote">七巨头 ≈ $24 万亿，约占美股三成（标普 500 约 1/3）</div>`+
-      `<div class="snote">口径：各交易所 / 资产 2026 年 7 月估算 · 美元计 · 仅供参考</div>`;
+    /* 兜底静态值（2026-07 口径），仅在 marketscale.json 拉取失败时使用 */
+    const FB={updated:"2026-07 内置值",stocks:[
+        {key:"美股",flag:"🇺🇸",usd_t:75.0},{key:"A股",flag:"🇨🇳",usd_t:16.5},
+        {key:"日本",flag:"🇯🇵",usd_t:8.5},{key:"港股",flag:"🇭🇰",usd_t:6.0},
+        {key:"韩国",flag:"🇰🇷",usd_t:5.0}],
+      metals:[{key:"黄金",flag:"🥇",usd_t:28.7},{key:"白银",flag:"🥈",usd_t:3.3}],
+      crypto:[{key:"比特币",flag:"₿",usd_t:1.29}]};
+    const fmtT=t=>t==null?"—":"≈ $"+(t>=1?t.toFixed(1):t.toFixed(2))+" 万亿";
+    const row=x=>`<div class="srow"><span>${x.flag} ${x.key}</span><span class="sval">${fmtT(x.usd_t)}</span></div>`;
+    function render(d, offline){
+      const assets=[...(d.metals||[]),...(d.crypto||[])];
+      menu.innerHTML =
+        `<div class="sgrp">股票市场 · 总市值（美元）</div>${(d.stocks||[]).map(row).join("")}`+
+        `<div class="sdiv"></div>`+
+        `<div class="sgrp">大类资产 · 总市值（美元）</div>${assets.map(row).join("")}`+
+        `<div class="snote">股市＝真实市值锚点随大盘指数浮动 · 金银＝现货价×地上存量 · BTC＝实时市值</div>`+
+        `<div class="snote">更新：${d.updated||"—"}${offline?" · ⚠️离线兜底":""}</div>`;
+    }
+    render(FB, true);   /* 先渲染兜底，避免空白 */
+    fetch("data/marketscale.json?v="+Date.now()).then(r=>r.ok?r.json():Promise.reject()).then(d=>render(d,false)).catch(()=>{});
     card.addEventListener("click",e=>{ if(e.target.closest("#scalemenu")) return; menu.classList.toggle("hidden"); });
     document.addEventListener("click",e=>{ if(!e.target.closest("#scalecard")) menu.classList.add("hidden"); });
   })();
