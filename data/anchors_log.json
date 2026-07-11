@@ -1,5 +1,5 @@
 {
- "run": "2026-07-12 01:09 北京时间",
+ "run": "2026-07-12 01:11 北京时间",
  "markets": {
   "港股": {
    "ok": true,
@@ -26,9 +26,16 @@
   },
   "A股": {
    "ok": false,
-   "error": "深交所总市值解析失败，返回结构: [{'metadata': {'catalogid': '1803_sczm', 'name': '证券类别统计', 'excel': 'xlsx', 'pagetype': 'tabs', 'subname': '', 'tabkey': 'tab1', 'pagesize': -1, 'pageno': 0, 'pagecount': 0, 'recordcount': 0, 'showrecordcount': False, 'header': '', 'footer': '', 'reporttype': None, 'tabcss': None, 'conditions': [{'l",
+   "error": "深交所7天内无有效数据（海外IP被拒或接口变更）: <urlopen error [Errno 104] Connection reset by peer>",
    "diag": [
-    "深交所第1次失败: <urlopen error [Errno 104] Connection reset by peer>"
+    "深交所 2026-07-11 第1次失败: <urlopen error [Errno 104] Connection reset by peer>",
+    "深交所 2026-07-11 空表（非交易日），回退前一日",
+    "深交所 2026-07-10 空表（非交易日），回退前一日",
+    "深交所 2026-07-09 空表（非交易日），回退前一日",
+    "深交所 2026-07-08 空表（非交易日），回退前一日",
+    "深交所 2026-07-07 空表（非交易日），回退前一日",
+    "深交所 2026-07-06 空表（非交易日），回退前一日",
+    "深交所 2026-07-05 空表（非交易日），回退前一日"
    ]
   },
   "韩国": {
