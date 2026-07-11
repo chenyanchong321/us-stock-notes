@@ -1,5 +1,5 @@
 {
- "run": "2026-07-12 01:07 北京时间",
+ "run": "2026-07-12 01:09 北京时间",
  "markets": {
   "港股": {
    "ok": true,
@@ -26,17 +26,14 @@
   },
   "A股": {
    "ok": false,
-   "error": "'str' object has no attribute 'get'",
+   "error": "深交所总市值解析失败，返回结构: [{'metadata': {'catalogid': '1803_sczm', 'name': '证券类别统计', 'excel': 'xlsx', 'pagetype': 'tabs', 'subname': '', 'tabkey': 'tab1', 'pagesize': -1, 'pageno': 0, 'pagecount': 0, 'recordcount': 0, 'showrecordcount': False, 'header': '', 'footer': '', 'reporttype': None, 'tabcss': None, 'conditions': [{'l",
    "diag": [
     "深交所第1次失败: <urlopen error [Errno 104] Connection reset by peer>"
    ]
   },
   "韩国": {
-   "ok": false,
-   "error": "HTTP Error 400: Bad Request",
-   "diag": [
-    "KRX 预热成功（已取会话Cookie）"
-   ]
+   "ok": null,
+   "skipped": "KRX数据门户已需登录（2025改版），绝对锚由AI定时任务月检；KOSPI指数浮动不受影响"
   },
   "美股": {
    "ok": true,
