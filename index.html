@@ -810,20 +810,27 @@ function renderDash(quotes){
     const cls=v>0?"pos":v<0?"neg":"flat";
     return `<span class="${cls}">${v>0?"+":""}${v.toFixed(0)}pp</span>`;
   }
-  function fvRow(x, extraTd, mode){
+  /* athFirst=true：把「回撤/ATH」列提到名称之后（回撤榜/新高榜专用——主人原则：
+     用户点进哪个榜，排序依据就该紧跟名称，与市值排行榜把市值放第二列同理） */
+  function fvRow(x, extraTd, mode, athFirst){
     const r = x.r;
+    const ath = `<td class="athc">${athCell(r)}</td>`;
     return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${r[12]||""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
       <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
+      ${athFirst ? ath : ""}
       <td class="pxc">${priceCell(r, mode)}</td>${extraTd||""}
       <td>${dayWeekCell(r)}</td>
-      <td class="athc">${athCell(r)}</td>
+      ${athFirst ? "" : ath}
       <td class="mcapc">${mcapCell(r)}</td>
       <td>${fmtPct(r[18])}</td>
       <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
       <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td><td class="fill"></td>
     </tr>`;
   }
-  const FV_HEAD = (extra, pxLabel)=>`<thead><tr><th style="text-align:left">名称</th><th>${pxLabel||"现价 / 1年"}</th>${extra||""}<th>当日 / 1周</th><th>回撤 / ATH</th><th>市值</th><th>1周</th><th>1月</th><th>3月</th><th>半年</th><th>年初至今</th><th>1年</th><th class="fill"></th></tr></thead>`;
+  const FV_HEAD = (extra, pxLabel, athFirst)=>{
+    const ath = `<th>回撤 / ATH</th>`;
+    return `<thead><tr><th style="text-align:left">名称</th>${athFirst?ath:""}<th>${pxLabel||"现价 / 1年"}</th>${extra||""}<th>当日 / 1周</th>${athFirst?"":ath}<th>市值</th><th>1周</th><th>1月</th><th>3月</th><th>半年</th><th>年初至今</th><th>1年</th><th class="fill"></th></tr></thead>`;
+  };
   window.buildFlat = function(){
     const v = window.CURVIEW;
     const el = document.getElementById("flatview");
@@ -911,12 +918,14 @@ function renderDash(quotes){
       const list = flatRows().filter(x=>typeof x.r[6]==="number" && x.r[6]>=-10);
       list.sort((a,b)=>b.r[6]-a.r[6]);
       title=`🚀 新高榜（距历史高点不足10%，共${list.length}）`; note="离历史新高一步之遥 · 强者恒强，但追高前先看简介、估值和买点";
-      body=list.map(x=>fvRow(x)).join("");
+      head=FV_HEAD(null, null, true);   /* 回撤列前置：看回撤判断是否创新高 */
+      body=list.map(x=>fvRow(x, null, null, true)).join("");
     }else if(v==="dd"){
       const list = flatRows().filter(x=>typeof x.r[6]==="number" && x.r[6]<=-30);
       list.sort((a,b)=>a.r[6]-b.r[6]);
       title=`🕳 回撤榜（>30%，共${list.length}）`; note="距历史高点回撤最深的在最上面 · 捡深跌前先看简介和买点";
-      body=list.map(x=>fvRow(x)).join("");
+      head=FV_HEAD(null, null, true);   /* 回撤列前置：本榜排序依据 */
+      body=list.map(x=>fvRow(x, null, null, true)).join("");
     }else if(v==="ladder"){
       const asc = window.LADDER_ASC===true;   // false=回撤深在上(默认)，true=回撤浅在上
       const list=flatRows().map(x=>({x, L:ladderOf(x.r)})).filter(o=>o.L && !/指数/.test(String(o.x.r[2])));
