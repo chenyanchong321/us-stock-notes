@@ -830,7 +830,19 @@ function renderDash(quotes){
       top.sort((a,b)=>mcapVal(b.r)-mcapVal(a.r));
       const mktLab = window.CURMKT || "全市场";
       title=`💰 市值排行榜 · ${mktLab}（共${top.length}）`;
-      note=`按市值从高到低一列到底 · 跨币种按美元折算排序（汇率为粗略口径，只影响排名）· 市场范围跟随「市场·全景」筛选 · 指数/ETF/商品不参与 · A/H 两地上市在全市场视图下各按上市地市值分别出现`;
+      note=`按市值从高到低一列到底 · 跨币种按美元折算排序（汇率为粗略口径，只影响排名）· 指数/ETF/商品不参与 · A/H 两地上市在全市场视图下各按上市地市值分别出现`;
+      /* 榜内市场快捷切换：与「市场·全景」是同一个全局开关（走 setMkt），只是入口更近；
+         按钮上的数字 = 该市场参与排行的标的数（剔除指数/ETF后），与全景菜单的全量计数口径不同 */
+      const allElig=(()=>{ const seen=new Set(), out=[];
+        DATA.forEach(s=>s.rows.forEach(r=>{
+          if(seen.has(r[1])||r[3]==="获取失败") return; seen.add(r[1]);
+          if(mcapVal(r)>0 && !/ETF|指数|商品|外汇/.test(String(r[2]))) out.push(r);
+        })); return out; })();
+      const mpill=m=>{
+        const n = m ? allElig.filter(r=>MKT_RULE[m](String(r[2]||""))).length : allElig.length;
+        return `<button class="perf-pill${(window.CURMKT||"")===m?" on":""}" data-mkt="${m}">${m||"全部"} ${n}</button>`;
+      };
+      note += `</p><div id="perfbar">${["","A股","港股","美股","日股","韩股","台股","加密"].map(mpill).join("")}</div><p class="fv-note" style="display:none">`;
       head=`<thead><tr><th style="width:34px">#</th><th style="text-align:left">名称</th><th>市值</th><th>现价 / 1年</th><th>当日 / 1周</th><th>回撤 / ATH</th><th>年初至今</th><th>近1年</th><th class="fill"></th></tr></thead>`;
       body=top.map((x,i)=>{
         const r=x.r;
@@ -956,6 +968,7 @@ function renderDash(quotes){
     if(keepSL){ const nw = el.querySelector(".tbl-wrap"); if(nw) nw.scrollLeft = keepSL; }
     el.classList.remove("hidden");
     el.querySelectorAll(".perf-pill").forEach(b=>b.addEventListener("click",()=>{
+      if(b.dataset.mkt!==undefined){ window.setMkt && window.setMkt(b.dataset.mkt); return; }   /* 榜内切市场=全局切市场 */
       if(b.dataset.hw){ window.HEAT_W=b.dataset.hw; try{localStorage.setItem("heatW",b.dataset.hw);}catch(e){} }
       if(b.dataset.w){ window.PERF_W=b.dataset.w; try{localStorage.setItem("perfW",b.dataset.w);}catch(e){} }
       if(b.dataset.dir){ window.PERF_DIR=b.dataset.dir; try{localStorage.setItem("perfDir",b.dataset.dir);}catch(e){} }
