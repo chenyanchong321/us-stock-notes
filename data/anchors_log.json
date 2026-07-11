@@ -1,5 +1,5 @@
 {
- "run": "2026-07-12 01:04 北京时间",
+ "run": "2026-07-12 01:07 北京时间",
  "markets": {
   "港股": {
    "ok": true,
@@ -26,8 +26,10 @@
   },
   "A股": {
    "ok": false,
-   "error": "<urlopen error [Errno 104] Connection reset by peer>",
-   "diag": []
+   "error": "'str' object has no attribute 'get'",
+   "diag": [
+    "深交所第1次失败: <urlopen error [Errno 104] Connection reset by peer>"
+   ]
   },
   "韩国": {
    "ok": false,
