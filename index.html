@@ -541,7 +541,7 @@ function priceCell(r, mode){
   let sub = "";
   if(mode==="buy"){
     const b = BUY[r[1]], hit = buyHit(r);
-    sub = b ? `<span class="buyline${hit?" hit":""}" style="display:block;font-size:11px;color:var(--text2);white-space:normal;max-width:170px;margin-left:auto;line-height:1.45">${hit?"🎯":""}买点 ${buyLabel(b)}</span>` : "";
+    sub = b ? `<span class="buyline${hit?" hit":""}" style="display:block;font-size:11px;color:var(--text2);white-space:normal;max-width:170px;margin-left:auto;line-height:1.45">${hit?"🎯":""}观察位 ${buyLabel(b)}</span>` : "";
   }else{
     /* 现价第二行改放「近1年涨跌」（用户最关注），带涨跌色；52周区间挪进悬停浮窗 */
     sub = `<span style="display:block;font-size:12px;white-space:nowrap">${fmtPct(r[11])}</span>`;
@@ -744,7 +744,7 @@ function renderDash(quotes){
     const el = document.getElementById("opps");
     if(!hits.length){ el.classList.add("hidden"); return; }
     el.classList.remove("hidden");
-    const html = `🎯 已进买点区（${hits.length}）：` +
+    const html = `🎯 已进观察区（${hits.length}）：` +
       hits.map(r=>`<a href="#" data-k="${(r[0]+r[1]).toLowerCase()}">${r[0]} ${r[5]}</a>`).join("");
     if(el.__h === html) return;   /* 名单与价格都没变就别重建，否则这条横幅每30秒闪一次 */
     el.__h = html;
@@ -909,8 +909,8 @@ function renderDash(quotes){
         if(a.hit!==b.hit) return a.hit?-1:1;
         return (a.dist??9e9)-(b.dist??9e9);
       });
-      title=`⭐ 重点清单（${list.length}）`; note="标注了买点的标的 · 按距买点由近到远排序，🎯已进买点区置顶";
-      head=FV_HEAD(`<th>距买点</th>`, "现价 / 买点");
+      title=`⭐ 重点清单（${list.length}）`; note="标注了观察位的标的 · 按距观察位由近到远排序，🎯已进观察区置顶 · 观察位为个人学习记录，不构成投资建议";
+      head=FV_HEAD(`<th>距观察位</th>`, "现价 / 观察位");
       body=list.map(x=>{
         const d = x.dist===null ? `<span class="flat">–</span>`
           : x.hit ? `<span class="dist-hit">🎯已触达</span>`
@@ -979,13 +979,13 @@ function renderDash(quotes){
     }else if(v==="hi"){
       const list = flatRows().filter(x=>typeof x.r[6]==="number" && x.r[6]>=-10);
       list.sort((a,b)=>b.r[6]-a.r[6]);
-      title=`🚀 新高榜（距历史高点不足10%，共${list.length}）`; note="离历史新高一步之遥 · 强者恒强，但追高前先看简介、估值和买点";
+      title=`🚀 新高榜（距历史高点不足10%，共${list.length}）`; note="离历史新高一步之遥 · 强者恒强，但追高前先看简介、估值和观察位";
       head=FV_HEAD(null, null, true);   /* 回撤列前置：看回撤判断是否创新高 */
       body=list.map(x=>fvRow(x, null, null, true)).join("");
     }else if(v==="dd"){
       const list = flatRows().filter(x=>typeof x.r[6]==="number" && x.r[6]<=-30);
       list.sort((a,b)=>a.r[6]-b.r[6]);
-      title=`🕳 回撤榜（>30%，共${list.length}）`; note="距历史高点回撤最深的在最上面 · 捡深跌前先看简介和买点";
+      title=`🕳 回撤榜（>30%，共${list.length}）`; note="距历史高点回撤最深的在最上面 · 捡深跌前先看简介和观察位";
       head=FV_HEAD(null, null, true);   /* 回撤列前置：本榜排序依据 */
       body=list.map(x=>fvRow(x, null, null, true)).join("");
     }else if(v==="ladder"){
@@ -1979,13 +1979,13 @@ let PROFILES = {};
     if(th && px){
       const dist = (1-th/px)*100;   // 从现价还需下跌到买点的幅度
       line2 = dist<=2
-        ? `<span style="display:block;margin-top:6px;color:var(--up);font-weight:600">🎯 已进买点区（现价 ${r[5]}）</span>`
-        : `<span style="display:block;margin-top:6px;font-size:12px;color:var(--text2)">现价 ${r[5]} · 距买点还差 <b style="color:var(--gold)">${dist.toFixed(1)}%</b></span>`;
+        ? `<span style="display:block;margin-top:6px;color:var(--up);font-weight:600">🎯 已进观察区（现价 ${r[5]}）</span>`
+        : `<span style="display:block;margin-top:6px;font-size:12px;color:var(--text2)">现价 ${r[5]} · 距观察位还差 <b style="color:var(--gold)">${dist.toFixed(1)}%</b></span>`;
     }
     /* 港股盘中现价来自腾讯免费源，延时15分钟——正好是「触达/未触达」可能翻转的量级，此处必须提醒 */
     if(String(r[2]).indexOf("港股")===0 && window.HK_OPEN)
       line2 += `<span style="display:block;margin-top:5px;font-size:11px;color:var(--text2);opacity:.85">⏳ 港股行情延时约15分钟，触达判断可能滞后</span>`;
-    return `${wk}<b>🎯 买点</b>　<span style="color:var(--gold);font-weight:700">${b}</span>${line2}${usdLine}`;
+    return `${wk}<b>🎯 观察位</b>　<span style="color:var(--gold);font-weight:700">${b}</span>${line2}${usdLine}`;
   }
   function athTip(tr){   /* 历史高点悬停＝回撤台阶表（两列：跌幅+价格，现价插入档金色） */
     const code=tr.dataset.code; if(!code) return null;
@@ -2006,7 +2006,7 @@ let PROFILES = {};
       const uniq=[...new Set(nums)].sort((a,b)=>b-a);   // 价格从高到低：先跌到的高价=买点①
       uniq.forEach((bp,i)=>{
         const retr=(1-bp/ath)*100;
-        const lab=uniq.length>1?`买点${["①","②","③","④"][i]||(i+1)}`:"买点";
+        const lab=uniq.length>1?`观察位${["①","②","③","④"][i]||(i+1)}`:"观察位";
         items.push({retr, price:cur+fmt(bp), kind:"buy", lab});
       });
     }
@@ -2028,7 +2028,7 @@ let PROFILES = {};
     }).join("");
     return `<b>🪜 回撤台阶</b>　<span style="color:var(--text2);font-size:12px">ATH ${L.ath}</span>
       <table style="margin-top:6px;font-size:12.5px;border-collapse:collapse;min-width:190px">${rows}</table>
-      <div style="margin-top:5px;font-size:11px;color:var(--text2)">金色＝现价 · 绿色🎯＝建议买点 · 灰色＝已跌破</div>`;
+      <div style="margin-top:5px;font-size:11px;color:var(--text2)">金色＝现价 · 绿色🎯＝观察位 · 灰色＝已跌破</div>`;
   }
   function rowOfTr(tr){
     const code=tr&&tr.dataset&&tr.dataset.code; if(!code) return null;
