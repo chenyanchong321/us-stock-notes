@@ -140,7 +140,8 @@ tr.buy .buyline.hit{color:var(--up)!important;font-weight:600}
 .perf-pill.mk2{text-align:center;border-radius:12px;line-height:1.35;padding:5px 12px}
 .perf-pill .mksub{display:block;font-size:10.5px;color:var(--text2);margin-top:1px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .perf-sep{width:1px;height:18px;background:var(--border);margin:0 2px}
-@media(max-width:860px){#perfbar,.mktbar{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:4px}}
+/* 手机端不再横滑（2026-07-12 主人定）：胶囊自动换行，所有市场/周期一屏可点，无需滑动 */
+@media(max-width:860px){#perfbar,.mktbar{gap:6px}.perf-pill.mk2{padding:4px 9px}}
 /* 大事件 */
 .ev-main{max-width:860px;margin:0 auto;padding:22px 18px 60px}
 .ev-week{background:rgba(74,140,240,.07);border:1px solid var(--accent);border-radius:12px;padding:14px 16px;margin:16px 0 22px}
