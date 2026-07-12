@@ -364,9 +364,8 @@ body.resizing{user-select:none;cursor:col-resize}
     <div id="viewbar">
       <div class="stat vc" id="mktcard" title="回到全景 · 显示全部市场"><div class="k">市场 · 全景</div><div class="v" id="mkt-cur">全部</div></div>
       <div class="stat vc" data-view="focus"><div class="k">⭐ 重点清单</div><div class="v" id="st-focus">–</div></div>
-      <div class="stat vc" data-view="gain"><div class="k">今日涨幅榜</div><div class="v">Top30</div></div>
-      <div class="stat vc" data-view="loss"><div class="k">今日跌幅榜</div><div class="v">Top30</div></div>
-      <div class="stat vc" data-view="perf"><div class="k">区间表现榜</div><div class="v" id="st-perf">近3月</div></div>
+      <div class="stat vc" data-view="gain"><div class="k">📈 涨幅榜 Top30</div><div class="v" id="st-gain">今日</div></div>
+      <div class="stat vc" data-view="loss"><div class="k">📉 跌幅榜 Top30</div><div class="v" id="st-loss">今日</div></div>
       <div class="stat vc" data-view="alpha"><div class="k">超额榜</div><div class="v">Top30</div></div>
       <div class="stat vc" data-view="dd"><div class="k">回撤榜（&gt;30%）</div><div class="v" id="st-deep">–</div></div>
       <div class="stat vc" data-view="hi"><div class="k">🚀 新高榜（&lt;10%）</div><div class="v" id="st-hi">–</div></div>
@@ -759,9 +758,8 @@ function renderDash(quotes){
 
   /* ===== 视图切换器：全景/重点清单/涨跌幅榜/回撤榜/板块热力 ===== */
   window.CURVIEW = "all";
-  try{ window.PERF_W = localStorage.getItem("perfW") || "m3"; window.PERF_DIR = localStorage.getItem("perfDir") || "gain"; window.HEAT_W = localStorage.getItem("heatW") || "d"; }catch(e){ window.PERF_W="m3"; window.PERF_DIR="gain"; window.HEAT_W="d"; }
-  (function(){ const lab={w1:"近1周",m1:"近1月",m3:"近3月",m6:"近半年",ytd:"年初至今",y1:"近1年"}[window.PERF_W]||"近3月";
-    const sp=document.getElementById("st-perf"); if(sp) sp.textContent=lab; })();
+  try{ window.HEAT_W = localStorage.getItem("heatW") || "d"; }catch(e){ window.HEAT_W="d"; }
+  window.PERF_W = "d";   /* 涨跌幅榜周期：每次进榜重置为「今日」（主人定，不做记忆） */
   function buyTh(code){ return buyThreshold(BUY[code]); }   /* 统一走 buyThreshold，勿再各自解析 */
   function pxOf(r){ return parseFloat(String(r[5]).replace(/[^\d.]/g,"")); }
   function flatRows(){
@@ -874,9 +872,11 @@ function renderDash(quotes){
   }
   /* athFirst=true：把「回撤/ATH」列提到名称之后（回撤榜/新高榜专用——主人原则：
      用户点进哪个榜，排序依据就该紧跟名称，与市值排行榜把市值放第二列同理） */
-  function fvRow(x, extraTd, mode, athFirst){
+  /* skipRi：市值后的周期列里跳过某个字段号（该周期已被前置到第三列，避免重复展示） */
+  function fvRow(x, extraTd, mode, athFirst, skipRi){
     const r = x.r;
     const ath = `<td class="athc">${athCell(r)}</td>`;
+    const pers = [18,7,8,9,10,11].filter(i=>i!==skipRi).map(i=>`<td>${fmtPct(r[i])}</td>`).join("");
     return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${r[12]||""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
       <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
       ${athFirst ? ath : ""}
@@ -884,14 +884,14 @@ function renderDash(quotes){
       <td>${dayWeekCell(r)}</td>
       ${athFirst ? "" : ath}
       <td class="mcapc">${mcapCell(r)}</td>
-      <td>${fmtPct(r[18])}</td>
-      <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
-      <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td><td class="fill"></td>
+      ${pers}<td class="fill"></td>
     </tr>`;
   }
-  const FV_HEAD = (extra, pxLabel, athFirst)=>{
+  const FV_HEAD = (extra, pxLabel, athFirst, skipRi)=>{
     const ath = `<th>回撤 / ATH</th>`;
-    return `<thead><tr><th style="text-align:left">名称</th>${athFirst?ath:""}<th>${pxLabel||"现价 / 1年"}</th>${extra||""}<th>当日 / 1周</th>${athFirst?"":ath}<th>市值</th><th>1周</th><th>1月</th><th>3月</th><th>半年</th><th>年初至今</th><th>1年</th><th class="fill"></th></tr></thead>`;
+    const PLBL = {18:"1周",7:"1月",8:"3月",9:"半年",10:"年初至今",11:"1年"};
+    const pers = [18,7,8,9,10,11].filter(i=>i!==skipRi).map(i=>`<th>${PLBL[i]}</th>`).join("");
+    return `<thead><tr><th style="text-align:left">名称</th>${athFirst?ath:""}<th>${pxLabel||"现价 / 1年"}</th>${extra||""}<th>当日 / 1周</th>${athFirst?"":ath}<th>市值</th>${pers}<th class="fill"></th></tr></thead>`;
   };
   window.buildFlat = function(){
     const v = window.CURVIEW;
@@ -940,30 +940,27 @@ function renderDash(quotes){
         </tr>`;
       }).join("");
     }else if(v==="gain"||v==="loss"){
-      const list = flatRows().filter(x=>typeof x.r[16]==="number");
-      list.sort((a,b)=> v==="gain" ? b.r[16]-a.r[16] : a.r[16]-b.r[16]);
-      const top = list.slice(0,30);
-      title = v==="gain" ? "📈 今日涨幅榜 Top30" : "📉 今日跌幅榜 Top30";
-      note = "跨板块去重 · 随实时行情自动刷新";
-      body = top.map(x=>fvRow(x)).join("");
-    }else if(v==="perf"){
-      const W={w1:[18,"近1周"],m1:[7,"近1月"],m3:[8,"近3月"],m6:[9,"近半年"],ytd:[10,"年初至今"],y1:[11,"近1年"]};
-      const wk = W[window.PERF_W] ? window.PERF_W : "m3";
-      const dir = window.PERF_DIR==="loss" ? "loss" : "gain";
+      /* 涨幅榜/跌幅榜（2026-07-12 三合二定稿）：方向由卡片决定（想换方向点另一张卡），
+         榜内只切周期+市场。列序原则：名称/现价锚定前两列，选中周期列第三；
+         「今日」= 默认布局（当日/1周本就在第三列），其他周期前置到第三列并在市值后跳过重复。 */
+      const W={d:[16,"今日"],w1:[18,"近1周"],m1:[7,"近1月"],m3:[8,"近3月"],m6:[9,"近半年"],ytd:[10,"年初至今"],y1:[11,"近1年"]};
+      const wk = W[window.PERF_W] ? window.PERF_W : "d";
       const [ri,wl] = W[wk];
       const list = flatRows().filter(x=>typeof x.r[ri]==="number");
-      list.sort((a,b)=> dir==="gain" ? b.r[ri]-a.r[ri] : a.r[ri]-b.r[ri]);
+      list.sort((a,b)=> v==="gain" ? b.r[ri]-a.r[ri] : a.r[ri]-b.r[ri]);
       const top=list.slice(0,30);
-      title=`${dir==="gain"?"🏅":"🥶"} ${wl}${dir==="gain"?"涨幅":"跌幅"}榜 Top30`;
-      note=`按${wl}区间涨跌排序 · 跨板块去重 · 上市不满该窗口的标的不参与`;
+      title = `${v==="gain"?"📈":"📉"} ${wl}${v==="gain"?"涨幅":"跌幅"}榜 Top30`;
+      note = wk==="d" ? "跨板块去重 · 随实时行情自动刷新"
+                      : `按${wl}区间涨跌排序 · 跨板块去重 · 上市不满该窗口的标的不参与`;
       const pill=(k,lab)=>`<button class="perf-pill${k===wk?" on":""}" data-w="${k}">${lab}</button>`;
-      note += `</p><div id="perfbar">
-        ${pill("w1","近1周")}${pill("m1","近1月")}${pill("m3","近3月")}${pill("m6","近半年")}${pill("ytd","年初至今")}${pill("y1","近1年")}
-        <span class="perf-sep"></span>
-        <button class="perf-pill dirp${dir==="gain"?" on":""}" data-dir="gain">▲ 涨幅</button>
-        <button class="perf-pill dirp${dir==="loss"?" on":""}" data-dir="loss">▼ 跌幅</button>
-      </div><p class="fv-note" style="display:none">`;
-      body=top.map(x=>fvRow(x)).join("");
+      note += `</p><div id="perfbar">${Object.keys(W).map(k=>pill(k,W[k][1])).join("")}</div><p class="fv-note" style="display:none">`;
+      if(wk==="d"){
+        head=FV_HEAD();
+        body=top.map(x=>fvRow(x)).join("");
+      }else{
+        head=FV_HEAD(`<th>${wl}</th>`, null, false, ri);
+        body=top.map(x=>fvRow(x, `<td>${fmtPct(x.r[ri])}</td>`, null, false, ri)).join("");
+      }
     }else if(v==="alpha"){
       const list = flatRows().map(x=>({...x, a:alphaOf(x.r, x.sec)}))
         .filter(x=>x.a && typeof x.a.aytd==="number" && !/ETF|指数|商品|外汇/.test(String(x.r[2])));
@@ -1057,10 +1054,11 @@ function renderDash(quotes){
     el.querySelectorAll(".perf-pill").forEach(b=>b.addEventListener("click",()=>{
       if(b.dataset.mkt!==undefined){ window.setMkt && window.setMkt(b.dataset.mkt); return; }   /* 榜内切市场=全局切市场 */
       if(b.dataset.hw){ window.HEAT_W=b.dataset.hw; try{localStorage.setItem("heatW",b.dataset.hw);}catch(e){} }
-      if(b.dataset.w){ window.PERF_W=b.dataset.w; try{localStorage.setItem("perfW",b.dataset.w);}catch(e){} }
-      if(b.dataset.dir){ window.PERF_DIR=b.dataset.dir; try{localStorage.setItem("perfDir",b.dataset.dir);}catch(e){} }
-      const lab={w1:"近1周",m1:"近1月",m3:"近3月",m6:"近半年",ytd:"年初至今",y1:"近1年"}[window.PERF_W||"m3"];
-      const sp=document.getElementById("st-perf"); if(sp) sp.textContent=lab;
+      if(b.dataset.w){
+        window.PERF_W=b.dataset.w;
+        const lab={d:"今日",w1:"近1周",m1:"近1月",m3:"近3月",m6:"近半年",ytd:"年初至今",y1:"近1年"}[window.PERF_W]||"今日";
+        ["st-gain","st-loss"].forEach(id=>{ const e=document.getElementById(id); if(e) e.textContent=lab; });
+      }
       window.buildFlat();
     }));
     const ls=document.getElementById("ladder-sort");
@@ -1076,6 +1074,10 @@ function renderDash(quotes){
   };
   function setView(v){
     window.CURVIEW = v;
+    if(v==="gain"||v==="loss"){   /* 每次点进涨/跌幅榜都重置为「今日」（主人定：最高频用法是看今天） */
+      window.PERF_W="d";
+      ["st-gain","st-loss"].forEach(id=>{ const e=document.getElementById(id); if(e) e.textContent="今日"; });
+    }
     document.querySelectorAll(".stat.vc[data-view]").forEach(c=>c.classList.toggle("on", c.dataset.view===v));
     window.setMktCardOn && window.setMktCardOn(v==="all");
     document.getElementById("sections").classList.toggle("hidden", v!=="all");
