@@ -88,7 +88,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
    手机=居中悬浮抽屉（无富余空间不做挤压）。词典页管"逛"，侧栏管"随手查+随手翻"。 */
 :root{--rdict:26px}
 #dictbar{position:fixed;top:var(--header-h);right:0;bottom:0;z-index:230;background:var(--panel);border-left:1px solid var(--border);width:26px;display:flex;flex-direction:column;transition:width .15s ease}
-#db-strip{flex:1;writing-mode:vertical-rl;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);font-size:12px;letter-spacing:3px;user-select:none;padding:10px 0}
+#db-strip{flex:1;writing-mode:vertical-rl;text-orientation:upright;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);font-size:12px;letter-spacing:3px;user-select:none;padding:10px 0}
 #db-strip:hover{color:var(--accent)}
 #db-body{display:none;flex-direction:column;height:100%;min-width:238px}
 #dictbar.open #db-body{display:flex}
@@ -118,6 +118,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
   #toTop{right:14px !important}
   #dictbar{top:50%;bottom:auto;transform:translateY(-50%);height:auto;max-height:74vh;border:1px solid var(--border);border-right:none;border-radius:10px 0 0 10px;box-shadow:0 8px 24px rgba(0,0,0,.45)}
   #dictbar.open{width:min(320px,84vw) !important;height:74vh}
+  /* 手机端把手：固定高度保证竖排单列（高度不足会拆成多列且列序从右到左→"典词语术"，2026-07-13 主人实测修复） */
+  #db-strip{flex:0 0 auto;height:148px;width:26px;box-sizing:border-box}
 }
 /* 手机端市场规模弹层：改固定定位居中面板，杜绝溢出屏幕（2026-07-13 主人反馈修复） */
 @media(max-width:860px){#scalemenu{position:fixed;left:12px;right:12px;top:calc(var(--header-h) + 56px);max-height:65vh;overflow:auto}}
