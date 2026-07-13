@@ -120,6 +120,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
   #dictbar.open{width:min(320px,84vw) !important;height:74vh}
   /* 手机端把手：固定高度保证竖排单列（高度不足会拆成多列且列序从右到左→"典词语术"，2026-07-13 主人实测修复） */
   #db-strip{flex:0 0 auto;height:148px;width:26px;box-sizing:border-box}
+  /* iOS铁律：输入框字号<16px 聚焦会触发页面自动放大且不回弹（2026-07-13 主人实测二次复发）。
+     全站任何输入框手机端字号一律≥16px（顺手排查修复了词典页15px的搜索框） */
+  #db-head input,#dict-search{font-size:16px}
 }
 /* 手机端市场规模弹层：改固定定位居中面板，杜绝溢出屏幕（2026-07-13 主人反馈修复） */
 @media(max-width:860px){#scalemenu{position:fixed;left:12px;right:12px;top:calc(var(--header-h) + 56px);max-height:65vh;overflow:auto}}
