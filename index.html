@@ -98,7 +98,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 #db-head input:focus{border-color:var(--accent)}
 #db-head button{background:var(--panel2);border:1px solid var(--border);border-radius:8px;color:var(--text2);font-size:13px;cursor:pointer;padding:6px 8px;flex:0 0 auto}
 #db-head button:hover{color:var(--accent);border-color:var(--accent)}
-#db-head button.on{color:var(--gold);border-color:var(--gold)}
+#db-head button.on{color:#0e1117;background:var(--gold);border-color:var(--gold);font-weight:700}
 #db-cats,#db-az{display:flex;gap:5px;flex-wrap:wrap;padding:2px 10px 6px;flex:0 0 auto}
 #db-cats button,#db-az button{background:transparent;border:1px solid var(--border);border-radius:99px;color:var(--text2);font-size:11px;padding:2px 9px;cursor:pointer}
 #db-cats button.on,#db-az button.on{color:var(--accent);border-color:var(--accent)}
@@ -1994,7 +1994,7 @@ function mktStatus(m){
   let W = Math.min(440, Math.max(240, +(localStorage.getItem("rdictW")||300)));
   let pinned = localStorage.getItem("rdictPin")==="1";
   let open = pinned && !mob();
-  let cat = "全部", az = "", hoverT=null, rendered=false;
+  let cat = "全部", az = "", rendered=false;
 
   function apply(){
     bar.classList.toggle("open", open);
@@ -2008,16 +2008,23 @@ function mktStatus(m){
     }
     if(open && !rendered) render();
   }
-  const doOpen = ()=>{ open=true; apply(); };
-  const doClose = ()=>{ if(pinned && !mob()) return; if(document.activeElement===q) return; open=false; apply(); };
-
-  strip.addEventListener("click", doOpen);
-  strip.addEventListener("mouseenter", ()=>{ if(!mob()) doOpen(); });
-  bar.addEventListener("mouseenter", ()=>clearTimeout(hoverT));
-  bar.addEventListener("mouseleave", ()=>{ clearTimeout(hoverT); hoverT=setTimeout(doClose, 350); });
-  closeBtn.addEventListener("click", ()=>{ pinned=false; localStorage.setItem("rdictPin","0"); open=false; apply(); });
-  pinBtn.addEventListener("click", ()=>{ pinned=!pinned; try{localStorage.setItem("rdictPin", pinned?"1":"0");}catch(e){} apply(); });
-  document.addEventListener("click", e=>{ if(mob() && !e.target.closest("#dictbar")){ open=false; apply(); } });
+  /* 交互模型（2026-07-13 主人定稿）：点击展开（悬停只高亮不弹出，右缘不做"雷区"）；
+     »收起永远有效（同时解除钉住）；未钉住时点面板外也可关，钉住时只认»。 */
+  strip.addEventListener("click", ()=>{ open=true; apply(); });
+  closeBtn.addEventListener("click", ()=>{
+    open=false; pinned=false;
+    try{ localStorage.setItem("rdictPin","0"); }catch(e){}
+    apply();
+  });
+  pinBtn.addEventListener("click", ()=>{
+    pinned=!pinned;
+    try{ localStorage.setItem("rdictPin", pinned?"1":"0"); }catch(e){}
+    pinBtn.title = pinned ? "已钉住常开 · 点击取消" : "钉住常开";
+    apply();
+  });
+  document.addEventListener("click", e=>{
+    if(open && !pinned && !e.target.closest("#dictbar")){ open=false; apply(); }
+  });
   q.addEventListener("input", render);
 
   /* 拖拽调宽（与左侧栏对等） */
