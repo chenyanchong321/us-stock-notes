@@ -376,7 +376,7 @@ body.resizing{user-select:none;cursor:col-resize}
         <div id="scalemenu" class="hidden"></div>
       </div>
       <div class="stat vc" data-view="mcap"><div class="k">💰 市值排行榜</div><div class="v" id="st-mcap">全表</div></div>
-      <div class="refresh-note" title="2026-07-10 实测：腾讯的 A股与美股盘中快照均为实时（用其分时数据反查验证）；港股实测延时15分钟（13:56的价14:11才返回）。2026-07-13 盘中实测：日股延时约15-20分钟、韩股约20-25分钟，且为约5分钟一档的快照跳动（时间戳每5分钟跳一格）；台股未实测（实时层不覆盖台股）">盘中现价30秒刷新（A股·美股实时 · 港股延时15分钟 · 日股约15-20分钟 · 韩股约20-25分钟）· 美股盘前盘后约1分钟 · 加密实时 · 其余指标数分钟刷新 · 市值为估算口径</div>
+      <div class="refresh-note" title="2026-07-10 实测：腾讯的 A股与美股盘中快照均为实时（用其分时数据反查验证）；港股实测延时15分钟（13:56的价14:11才返回）。2026-07-13 盘中实测：日股延时约15-20分钟、韩股约20-25分钟（时间戳法+Yahoo分钟线反查双法吻合）；A股复盘后实测秒级实时（快照=分时最新一分钟）；腾讯无台股行情（tw代码返回none_match），台股行仅每日流水线数据">盘中现价30秒刷新（A股·美股实时 · 港股延时15分钟 · 日股约15-20分钟 · 韩股约20-25分钟 · 台股仅每日数据）· 美股盘前盘后约1分钟 · 加密实时 · 其余指标数分钟刷新 · 市值为估算口径</div>
     </div>
     <div id="topbar">
       <select id="secjump" class="mobile-only"><option value="">📂 跳转板块…</option></select>
@@ -458,7 +458,7 @@ let DATA = [];
 
 /* 列序＝四个语义块：实时(现价·当日) → 位置(回撤) → 估值(市值·PE) → 历史(近1周~近1年)
    手机端只看得到前两格，所以把每30秒都在变的活数据放最前，静态的市值往后挪 */
-const COLS = ["名称","现价 / 1年","当日 / 1周","回撤 / ATH","市值","1周","1月","3月","半年","年初至今","1年"];
+const COLS = ["名称","现价 / 1年","当日","回撤 / ATH","市值","1周","1月","3月","半年","年初至今","1年"];
 let BUY = {};
 
 function fmtPct(v){
@@ -500,7 +500,8 @@ function athCell(r){
 }
 /* 当日/1周：当日在上、近1周在下（第二行小字），一眼对比今天和本周。最右侧独立「1周」列不变。 */
 function dayWeekCell(r){
-  return `<span style="display:block">${fmtPct(r[16])}</span><span style="display:block;font-size:12px">${fmtPct(r[18])}</span>`;
+  /* 2026-07-13 主人定：只显示当日，去掉第二行1周（1周有独立列，双行干扰阅读） */
+  return `<span style="display:block">${fmtPct(r[16])}</span>`;
 }
 function peCell(v){
   if(typeof v!=="number") return `<span class="flat">–</span>`;
@@ -894,7 +895,7 @@ function renderDash(quotes){
     const ath = `<th>回撤 / ATH</th>`;
     const PLBL = {18:"1周",7:"1月",8:"3月",9:"半年",10:"年初至今",11:"1年"};
     const pers = [18,7,8,9,10,11].filter(i=>i!==skipRi).map(i=>`<th>${PLBL[i]}</th>`).join("");
-    return `<thead><tr><th style="text-align:left">名称</th>${athFirst?ath:""}<th>${pxLabel||"现价 / 1年"}</th>${extra||""}<th>当日 / 1周</th>${athFirst?"":ath}<th>市值</th>${pers}<th class="fill"></th></tr></thead>`;
+    return `<thead><tr><th style="text-align:left">名称</th>${athFirst?ath:""}<th>${pxLabel||"现价 / 1年"}</th>${extra||""}<th>当日</th>${athFirst?"":ath}<th>市值</th>${pers}<th class="fill"></th></tr></thead>`;
   };
   window.buildFlat = function(){
     const v = window.CURVIEW;
@@ -929,7 +930,7 @@ function renderDash(quotes){
       const mktLab = window.CURMKT || "全市场";
       title=`💰 市值排行榜 · ${mktLab}（共${top.length}）`;
       note=`按市值从高到低一列到底 · 跨币种按美元折算排序（汇率为粗略口径，只影响排名）· 指数/ETF/商品不参与 · A/H 两地上市在全市场视图下各按上市地市值分别出现`;
-      head=`<thead><tr><th style="width:34px">#</th><th style="text-align:left">名称</th><th>市值</th><th>现价 / 1年</th><th>当日 / 1周</th><th>回撤 / ATH</th><th>年初至今</th><th>近1年</th><th class="fill"></th></tr></thead>`;
+      head=`<thead><tr><th style="width:34px">#</th><th style="text-align:left">名称</th><th>市值</th><th>现价 / 1年</th><th>当日</th><th>回撤 / ATH</th><th>年初至今</th><th>近1年</th><th class="fill"></th></tr></thead>`;
       body=top.map((x,i)=>{
         const r=x.r;
         return `<tr class="${BUY[r[1]]?"buy":""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
@@ -1358,7 +1359,7 @@ function renderNotes(cfg){
 })();
 
 /* ===== 实时行情：前端直连腾讯行情接口（30秒刷新现价/当日） =====
-   覆盖 A股/港股/美股/主要指数；台日韩股、商品、加密等腾讯不覆盖的保持每日数据。 */
+   覆盖 A股/港股/美股/日股/韩股/主要指数（A股·美股实时，港15min·日≈15-20min·韩≈20-25min延时）；台股、商品等腾讯不覆盖的保持每日数据。 */
 (function(){
   /* 指数必须显式映射：000688/000016 等以 0 开头但在沪不在深，走通用规则会错配成 sz */
   const IDX={SHCOMP:"sh000001","000300":"sh000300","000016":"sh000016","000688":"sh000688",
@@ -1446,7 +1447,7 @@ function renderNotes(cfg){
          用 setHTML 做差分：内容没变就不碰 DOM。实测每轮刷新 387 行里有 335 行内容完全相同，
          无差别重写会销毁重建约1550个单元格、产生6144次DOM变动，肉眼就看到"闪一下"。 */
       setHTML(tds[1], priceCell(r));
-      setHTML(tds[2], dayWeekCell(r));   /* 当日/1周两行，与 rowHTML 一致，否则实时刷新会抹掉第二行 */
+      setHTML(tds[2], dayWeekCell(r));   /* 与 rowHTML 同一渲染函数，实时刷新不会错位 */
       setHTML(tds[3], athCell(r));
       setHTML(tds[4], mcapCell(r));
     });
