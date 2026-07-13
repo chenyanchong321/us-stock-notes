@@ -2206,23 +2206,36 @@ let PROFILES = {};
     const fmt = v => v>=10000 ? v.toLocaleString("en-US",{maximumFractionDigits:0})
                : v>=1 ? v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})
                : v.toFixed(6).replace(/0+$/,"").replace(/\.$/,"");
-    const rows=[], holding=[], broken=[];
+    /* 台阶式排版（2026-07-13 主人定，与回撤台阶同一视觉语言）：均线按价格从高到低排，
+       现价金色插入实际位置——现价上方=已跌破(灰)，下方=未破支撑(正常)，数据不足沉底。 */
+    const holding=[], broken=[], have=[], miss=[];
     DEF.forEach((d,i)=>{
       const v = mas[i];
-      if(!(v>0)){
-        rows.push(`<tr><td style="padding:1px 0"><b>${d[0]}</b> <span class="mtag">${d[1]}</span></td><td style="text-align:right">—</td><td style="text-align:right;color:var(--text2)">数据不足</td></tr>`);
-        return;
-      }
-      const diff=(px/v-1)*100, up=diff>=0;
-      (up?holding:broken).push(d[0]);
-      rows.push(`<tr><td style="padding:1px 0"><b>${d[0]}</b> <span class="mtag">${d[1]}</span></td><td style="text-align:right;padding:0 8px">${fmt(v)}</td><td style="text-align:right;color:${up?"var(--up)":"var(--down)"};white-space:nowrap">${up?"在上方 +":"已跌破 −"}${Math.abs(diff).toFixed(1)}%</td></tr>`);
+      if(v>0){ have.push({n:d[0], t:d[1], v}); (px>=v?holding:broken).push(d[0]); }
+      else miss.push(d);
     });
+    have.sort((a,b)=>b.v-a.v);
+    const rows=[];
+    let inserted=false, nearest=null;
+    have.forEach(m=>{
+      if(px>=m.v && !nearest) nearest=m.n;   /* 价格降序中第一条未破线＝现价下方最近支撑 */
+      if(!inserted && px>=m.v){
+        rows.push(`<tr><td style="padding:1px 0;color:var(--gold);font-weight:700">▶ 现价</td><td style="text-align:right;padding:0 8px;color:var(--gold);font-weight:700">${fmt(px)}</td><td></td></tr>`);
+        inserted=true;
+      }
+      const brokenLine = px < m.v;   /* 均线在现价上方＝已跌破 */
+      const diff = Math.abs(px/m.v-1)*100;
+      const st = brokenLine ? "color:var(--text2);opacity:.6" : "";
+      rows.push(`<tr style="${st}"><td style="padding:1px 0"><b style="${brokenLine?"color:var(--text2)":""}">${m.n}</b> <span class="mtag">${m.t}</span></td><td style="text-align:right;padding:0 8px">${fmt(m.v)}</td><td style="text-align:right;white-space:nowrap;font-size:11px;${brokenLine?"":"color:var(--up)"}">${brokenLine?"已跌破":"距现价 −"+diff.toFixed(1)+"%"}</td></tr>`);
+    });
+    if(!inserted) rows.push(`<tr><td style="padding:1px 0;color:var(--gold);font-weight:700">▶ 现价</td><td style="text-align:right;padding:0 8px;color:var(--gold);font-weight:700">${fmt(px)}</td><td></td></tr>`);
+    miss.forEach(d=>rows.push(`<tr style="color:var(--text2);opacity:.5"><td style="padding:1px 0"><b style="color:var(--text2)">${d[0]}</b> <span class="mtag">${d[1]}</span></td><td style="text-align:right;padding:0 8px">—</td><td style="text-align:right;font-size:11px">数据不足</td></tr>`));
     let sum="";
     if(holding.length && !broken.length) sum=`<span style="color:var(--up)">✓ 均线全部站稳 · 多头形态</span>`;
     else if(broken.length && !holding.length) sum=`<span style="color:var(--down)">✗ 均线全部跌破 · 空头形态</span>`;
-    else if(broken.length) sum=`<span style="color:var(--down)">✗ 已破 ${broken.join("/")}</span><span style="color:var(--text2)"> · ${holding[holding.length-1]} 是下方支撑</span>`;
+    else if(broken.length) sum=`<span style="color:var(--down)">✗ 已破 ${broken.join("/")}</span><span style="color:var(--text2)"> · ${nearest||holding[0]} 是下方支撑</span>`;
     return `<div style="border-top:1px solid var(--border);margin-top:8px;padding-top:6px">
-      <span style="display:block;font-size:11px;color:var(--text2);margin-bottom:2px">📐 均线位置（现价 ${r[5]}）</span>
+      <span style="display:block;font-size:11px;color:var(--text2);margin-bottom:2px">📐 均线台阶</span>
       <table style="width:100%;font-size:12px;border-collapse:collapse">${rows.join("")}</table>
       <span style="display:block;font-size:11px;margin-top:4px">${sum}</span></div>`;
   }
