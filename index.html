@@ -2220,17 +2220,17 @@ let PROFILES = {};
     have.forEach(m=>{
       if(px>=m.v && !nearest) nearest=m.n;   /* 价格降序中第一条未破线＝现价下方最近支撑 */
       if(!inserted && px>=m.v){
-        rows.push(`<tr><td style="padding:1px 0;color:var(--gold);font-weight:700">▶ 现价</td><td style="text-align:right;padding:0 8px;color:var(--gold);font-weight:700">${fmt(px)}</td><td></td></tr>`);
+        rows.push(`<tr><td style="padding:1px 0;color:var(--gold);font-weight:700;text-align:left;white-space:nowrap">▶ 现价</td><td style="text-align:right;padding:0 8px;color:var(--gold);font-weight:700">${fmt(px)}</td><td></td></tr>`);
         inserted=true;
       }
       /* 行样式（2026-07-13 主人定稿）：台阶排位管"现价在哪"，行内红绿幅度管"距离与性质"——
          已跌破=红色+负幅度，在上方=绿色+正幅度，所有均线行保持明亮，灰色只留给数据不足 */
       const brokenLine = px < m.v;   /* 均线在现价上方＝已跌破 */
       const diff = Math.abs(px/m.v-1)*100;
-      rows.push(`<tr><td style="padding:1px 0"><b>${m.n}</b> <span class="mtag">${m.t}</span></td><td style="text-align:right;padding:0 8px">${fmt(m.v)}</td><td style="text-align:right;white-space:nowrap;color:${brokenLine?"var(--down)":"var(--up)"}">${brokenLine?"已跌破 −":"在上方 +"}${diff.toFixed(1)}%</td></tr>`);
+      rows.push(`<tr><td style="padding:1px 0;text-align:left;white-space:nowrap"><b>${m.n}</b> <span class="mtag">${m.t}</span></td><td style="text-align:right;padding:0 8px">${fmt(m.v)}</td><td style="text-align:right;white-space:nowrap;color:${brokenLine?"var(--down)":"var(--up)"}">${brokenLine?"已跌破 −":"在上方 +"}${diff.toFixed(1)}%</td></tr>`);
     });
-    if(!inserted) rows.push(`<tr><td style="padding:1px 0;color:var(--gold);font-weight:700">▶ 现价</td><td style="text-align:right;padding:0 8px;color:var(--gold);font-weight:700">${fmt(px)}</td><td></td></tr>`);
-    miss.forEach(d=>rows.push(`<tr style="color:var(--text2);opacity:.5"><td style="padding:1px 0"><b style="color:var(--text2)">${d[0]}</b> <span class="mtag">${d[1]}</span></td><td style="text-align:right;padding:0 8px">—</td><td style="text-align:right;font-size:11px">数据不足</td></tr>`));
+    if(!inserted) rows.push(`<tr><td style="padding:1px 0;color:var(--gold);font-weight:700;text-align:left;white-space:nowrap">▶ 现价</td><td style="text-align:right;padding:0 8px;color:var(--gold);font-weight:700">${fmt(px)}</td><td></td></tr>`);
+    miss.forEach(d=>rows.push(`<tr style="color:var(--text2);opacity:.5"><td style="padding:1px 0;text-align:left;white-space:nowrap"><b style="color:var(--text2)">${d[0]}</b> <span class="mtag">${d[1]}</span></td><td style="text-align:right;padding:0 8px">—</td><td style="text-align:right;font-size:11px">数据不足</td></tr>`));
     let sum="";
     if(holding.length && !broken.length) sum=`<span style="color:var(--up)">✓ 均线全部站稳 · 多头形态</span>`;
     else if(broken.length && !holding.length) sum=`<span style="color:var(--down)">✗ 均线全部跌破 · 空头形态</span>`;
