@@ -369,7 +369,7 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="stat vc" data-view="loss"><div class="k">📉 跌幅榜 Top30</div><div class="v" id="st-loss">今日</div></div>
       <div class="stat vc" data-view="alpha"><div class="k">超额榜</div><div class="v">Top30</div></div>
       <div class="stat vc" data-view="dd"><div class="k">回撤榜（&gt;30%）</div><div class="v" id="st-deep">–</div></div>
-      <div class="stat vc" data-view="hi"><div class="k">🚀 新高榜（&lt;10%）</div><div class="v" id="st-hi">–</div></div>
+      <div class="stat vc" data-view="hi"><div class="k">🚀 回撤榜（&lt;30%）</div><div class="v" id="st-hi">–</div></div>
       <div class="stat vc" data-view="ladder"><div class="k">🪜 回撤阶梯</div><div class="v">全表</div></div>
       <div class="stat vc" data-view="heat"><div class="k">板块热力</div><div class="v" id="st-heat">21</div></div>
       <div class="stat vc" id="scalecard"><div class="k">🌍 市场规模</div><div class="v">总市值</div>
@@ -702,7 +702,7 @@ function renderDash(quotes){
 
   const all = DATA.flatMap(s=>s.rows);
   document.getElementById("st-deep").textContent = all.filter(r=>typeof r[6]==="number"&&r[6]<=-30).length;
-  document.getElementById("st-hi").textContent = all.filter(r=>typeof r[6]==="number"&&r[6]>=-10).length;
+  document.getElementById("st-hi").textContent = all.filter(r=>typeof r[6]==="number"&&r[6]>-30).length;
   window.snapshotClose && window.snapshotClose();   /* 首屏：趁 r[5] 还是收盘价，存下防呆基准 */
 
   /* 排序 */
@@ -783,7 +783,7 @@ function renderDash(quotes){
     const put=(id,v)=>{ const e=document.getElementById(id); if(e) e.textContent=v; };
     put("st-focus", Object.keys(BUY).length ? String(new Set(rows.filter(r=>BUY[r[1]]).map(r=>r[1])).size) : "–");
     put("st-deep", String(rows.filter(r=>typeof r[6]==="number"&&r[6]<=-30).length));
-    put("st-hi",   String(rows.filter(r=>typeof r[6]==="number"&&r[6]>=-10).length));
+    put("st-hi",   String(rows.filter(r=>typeof r[6]==="number"&&r[6]>-30).length));
     put("st-mcap", `${window.CURMKT||"全市场"} ${rows.filter(r=>mcapVal(r)>0 && !/ETF|指数|商品|外汇/.test(String(r[2]))).length}`);
     put("st-heat", String(DATA.filter(s=>!s.sec.includes("指数与行业") &&
       s.rows.some(r=>mktOk(r[2]) && !/ETF|指数|商品|外汇/.test(String(r[2])))).length));
@@ -979,9 +979,11 @@ function renderDash(quotes){
         return fvRow(x, `<td style="white-space:nowrap">${sCell}</td><td>${ppCell(x.a.aytd)}</td>`);
       }).join("");
     }else if(v==="hi"){
-      const list = flatRows().filter(x=>typeof x.r[6]==="number" && x.r[6]>=-10);
+      /* 2026-07-13 主人定：新高榜(<10%)扩展为回撤榜(<30%)，与深回撤榜成对（同涨/跌两卡逻辑）。
+         排序=离新高最近的在上（继承新高榜精神：头部即原新高榜内容，往下一路排到-30%边缘） */
+      const list = flatRows().filter(x=>typeof x.r[6]==="number" && x.r[6]>-30);
       list.sort((a,b)=>b.r[6]-a.r[6]);
-      title=`🚀 新高榜（距历史高点不足10%，共${list.length}）`; note="离历史新高一步之遥 · 强者恒强，但追高前先看简介、估值和观察位";
+      title=`🚀 回撤榜（<30%，共${list.length}）`; note="回撤不足30%的全部标的 · 离新高最近的在最上面（头部即新高区）· 强者恒强，但追高前先看简介、估值和观察位";
       head=FV_HEAD(null, null, true);   /* 回撤列前置：看回撤判断是否创新高 */
       body=list.map(x=>fvRow(x, null, null, true)).join("");
     }else if(v==="dd"){
