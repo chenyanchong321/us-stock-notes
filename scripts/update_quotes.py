@@ -334,13 +334,26 @@ def main():
             fetched = cache[sym]
             if fetched is None:
                 rows.append([it["name"], it["code"], it["market"], "获取失败",
-                             "-", "-", 0.0, "-", "-", "-", "-", "-", gmap.get(it["code"], ""), None, None, None, None, None, None, None])
+                             "-", "-", 0.0, "-", "-", "-", "-", "-", gmap.get(it["code"], ""), None, None, None, None, None, None, None, None])
                 continue
             pairs, hist_max = fetched
             price = pairs[-1][1]
             cur = it["currency"]
             ath = max(hist_max, it.get("ath_floor") or 0)  # 兜底：配置的历史高点下限
             dd = pct(price, ath)
+
+            def ma_list():
+                """五条关键均线 [MA20,MA50,MA60,MA120,MA200]，数据不足的档位为 None。
+                复用已抓的5年复权日线，零额外请求（2026-07-13 主人需求：现价浮窗均线支撑）。"""
+                closes = [c for _, c in pairs]
+                out = []
+                for n in (20, 50, 60, 120, 200):
+                    if len(closes) >= n:
+                        v = sum(closes[-n:]) / n
+                        out.append(round(v, 2) if v >= 1 else round(v, 6))
+                    else:
+                        out.append(None)
+                return out
 
             def window(ts_base, label_ipo):
                 base = price_at(pairs, ts_base)
@@ -364,7 +377,7 @@ def main():
                          pe_map.get(sym), *pos_52w(pairs, ts_1y, cur),
                          round(pct(pairs[-1][1], pairs[-2][1]), 2) if len(pairs) >= 2 else None,
                          ext_map.get(sym) if it["market"].startswith("美股") else None,
-                         w1, fpe_map.get(sym)])
+                         w1, fpe_map.get(sym), ma_list()])
             print(f"  {it['code']:>10} {it['name'][:12]:<14} 现价 {price:,.2f}  回撤 {dd:.1f}%")
         sections_out.append({"sec": sec["name"], "rows": rows})
 

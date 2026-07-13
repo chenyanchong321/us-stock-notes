@@ -2116,7 +2116,7 @@ let PROFILES = {};
   tip.style.cssText = "position:fixed;display:none;z-index:300;max-width:330px;background:var(--panel2);border-left:3px solid var(--accent);border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);border-radius:0 10px 10px 0;padding:11px 13px;font-size:13px;line-height:1.65;color:var(--text2);box-shadow:0 8px 28px rgba(0,0,0,.5);pointer-events:none";
   document.body.appendChild(tip);
   const st = document.createElement("style");
-  st.textContent = "#stip b{color:var(--text);font-weight:600}";
+  st.textContent = "#stip b{color:var(--text);font-weight:600} #stip .mtag{color:var(--text2);font-size:10.5px}";
   document.head.appendChild(st);
   function codeOf(td){
     const s = td.querySelector(".sub");
@@ -2195,6 +2195,37 @@ let PROFILES = {};
     if(T + h > innerHeight - 8) T = Math.max(8, y - h - 12);
     tip.style.left = L + "px"; tip.style.top = T + "px";
   }
+  /* 均线支撑区块（2026-07-13 主人需求）：五条关键均线（数据r[20]，流水线日更），
+     每条带白话身份说明；现价用实时价比较，绿=站稳/红=跌破/灰=数据不足，底部自动形态总结。 */
+  function maBlock(r){
+    const mas = r[20];
+    if(!Array.isArray(mas)) return "";
+    const px = parseFloat(String(r[5]).replace(/[^\d.]/g,""));
+    if(!px) return "";
+    const DEF = [["MA20","月线·短期趋势"],["MA50","50日·美股中期生命线"],["MA60","季线·A股港股中期"],["MA120","半年线·中长期分水岭"],["MA200","年线·牛熊分界"]];
+    const fmt = v => v>=10000 ? v.toLocaleString("en-US",{maximumFractionDigits:0})
+               : v>=1 ? v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})
+               : v.toFixed(6).replace(/0+$/,"").replace(/\.$/,"");
+    const rows=[], holding=[], broken=[];
+    DEF.forEach((d,i)=>{
+      const v = mas[i];
+      if(!(v>0)){
+        rows.push(`<tr><td style="padding:1px 0"><b>${d[0]}</b> <span class="mtag">${d[1]}</span></td><td style="text-align:right">—</td><td style="text-align:right;color:var(--text2)">数据不足</td></tr>`);
+        return;
+      }
+      const diff=(px/v-1)*100, up=diff>=0;
+      (up?holding:broken).push(d[0]);
+      rows.push(`<tr><td style="padding:1px 0"><b>${d[0]}</b> <span class="mtag">${d[1]}</span></td><td style="text-align:right;padding:0 8px">${fmt(v)}</td><td style="text-align:right;color:${up?"var(--up)":"var(--down)"};white-space:nowrap">${up?"在上方 +":"已跌破 −"}${Math.abs(diff).toFixed(1)}%</td></tr>`);
+    });
+    let sum="";
+    if(holding.length && !broken.length) sum=`<span style="color:var(--up)">✓ 均线全部站稳 · 多头形态</span>`;
+    else if(broken.length && !holding.length) sum=`<span style="color:var(--down)">✗ 均线全部跌破 · 空头形态</span>`;
+    else if(broken.length) sum=`<span style="color:var(--down)">✗ 已破 ${broken.join("/")}</span><span style="color:var(--text2)"> · ${holding[holding.length-1]} 是下方支撑</span>`;
+    return `<div style="border-top:1px solid var(--border);margin-top:8px;padding-top:6px">
+      <span style="display:block;font-size:11px;color:var(--text2);margin-bottom:2px">📐 均线位置（现价 ${r[5]}）</span>
+      <table style="width:100%;font-size:12px;border-collapse:collapse">${rows.join("")}</table>
+      <span style="display:block;font-size:11px;margin-top:4px">${sum}</span></div>`;
+  }
   function posTip(tr){   /* 现价悬停：非美元个股显示美元价格换算；有买点再叠加买点卡 */
     const code=tr.dataset.code; if(!code) return null;
     let r=null;
@@ -2204,7 +2235,7 @@ let PROFILES = {};
     const wk = (typeof r[15]==="string" && r[15])   /* 52周区间已从表格挪到这里 */
       ? `<span style="display:block;font-size:12px;color:var(--text2)">52周 ${r[15]}</span>` : "";
     const b = (typeof BUY!=="undefined") && BUY[code];
-    if(!b){ const body = wk + usdLine; return body || null; }   /* 无买点：52周区间 + 美元换算 */
+    if(!b){ const body = wk + usdLine + maBlock(r); return body || null; }   /* 无观察位：52周区间 + 美元换算 + 均线 */
     const px = parseFloat(String(r[5]).replace(/[^\d.]/g,""));
     const th = buyThreshold(b);   /* 与重点清单「距买点」同源，避免两处口径打架 */
     let line2 = "";
@@ -2217,7 +2248,7 @@ let PROFILES = {};
     /* 港股盘中现价来自腾讯免费源，延时15分钟——正好是「触达/未触达」可能翻转的量级，此处必须提醒 */
     if(String(r[2]).indexOf("港股")===0 && window.HK_OPEN)
       line2 += `<span style="display:block;margin-top:5px;font-size:11px;color:var(--text2);opacity:.85">⏳ 港股行情延时约15分钟，触达判断可能滞后</span>`;
-    return `${wk}<b>🎯 观察位</b>　<span style="color:var(--gold);font-weight:700">${b}</span>${line2}${usdLine}`;
+    return `${wk}<b>🎯 观察位</b>　<span style="color:var(--gold);font-weight:700">${b}</span>${line2}${usdLine}${maBlock(r)}`;
   }
   function athTip(tr){   /* 历史高点悬停＝回撤台阶表（两列：跌幅+价格，现价插入档金色） */
     const code=tr.dataset.code; if(!code) return null;
