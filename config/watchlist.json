@@ -3427,20 +3427,6 @@
      "ath_floor": 75.0
     },
     {
-     "name": "纳微半导体",
-     "code": "NVTS",
-     "market": "美股",
-     "yahoo": "NVTS",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 35.2,
-      "approx": false
-     },
-     "mcap_base_price": 14.46,
-     "ath_floor": 34.17
-    },
-    {
      "name": "英诺赛科",
      "code": "02577",
      "market": "港股",
@@ -3589,7 +3575,6 @@
     {
      "name": "GaN 阵营",
      "codes": [
-      "NVTS",
       "02577",
       "600703"
      ]
@@ -4488,20 +4473,6 @@
     },
     {
      "name": "大唐发电",
-     "code": "601991",
-     "market": "A股",
-     "yahoo": "601991.SS",
-     "currency": "¥",
-     "mcap_base": {
-      "prefix": "¥",
-      "yi": 1419,
-      "approx": true
-     },
-     "mcap_base_price": 7.67,
-     "ath_floor": 0
-    },
-    {
-     "name": "大唐发电",
      "code": "00991",
      "market": "港股",
      "yahoo": "0991.HK",
@@ -4515,17 +4486,17 @@
      "ath_floor": 0
     },
     {
-     "name": "华电能源",
-     "code": "600726",
+     "name": "华电国际",
+     "code": "600027",
      "market": "A股",
-     "yahoo": "600726.SS",
+     "yahoo": "600027.SS",
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 1260,
+      "yi": 613,
       "approx": true
      },
-     "mcap_base_price": 6.43,
+     "mcap_base_price": 6.0,
      "ath_floor": 0
     },
     {
@@ -4731,9 +4702,8 @@
      "codes": [
       "600011",
       "00902",
-      "601991",
       "00991",
-      "600726",
+      "600027",
       "00836",
       "00883",
       "03668",
@@ -5837,20 +5807,6 @@
     },
     {
      "name": "大唐发电",
-     "code": "601991",
-     "market": "A股",
-     "yahoo": "601991.SS",
-     "currency": "¥",
-     "mcap_base": {
-      "prefix": "¥",
-      "yi": 1419,
-      "approx": true
-     },
-     "mcap_base_price": 7.67,
-     "ath_floor": 0
-    },
-    {
-     "name": "大唐发电",
      "code": "00991",
      "market": "港股",
      "yahoo": "0991.HK",
@@ -6078,7 +6034,6 @@
     {
      "name": "电力（煤电剪刀差）",
      "codes": [
-      "601991",
       "00991",
       "00902",
       "600900"
