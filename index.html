@@ -79,6 +79,10 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 #moremenu.hidden{display:none}
 #moremenu button{background:transparent;border:none;color:var(--text);font-size:13px;padding:8px 12px;border-radius:6px;cursor:pointer;text-align:left;white-space:nowrap}
 #moremenu button:hover{background:var(--panel);color:var(--accent)}
+/* 手机端：.tabs 是横滑容器会裁剪下拉（2026-07-13 主人实测"点更多没反应"的根因）→ 改固定定位脱离裁剪 */
+@media(max-width:860px){#moremenu{position:fixed;left:auto;right:12px;top:calc(var(--header-h) + 4px)}}
+/* 侧边栏板块当日中位涨跌（2026-07-13 主人定：目录=固定座次的热力条） */
+#nav-links .navheat{font-size:10.5px;margin-left:6px;font-variant-numeric:tabular-nums}
 /* 手机端市场规模弹层：改固定定位居中面板，杜绝溢出屏幕（2026-07-13 主人反馈修复） */
 @media(max-width:860px){#scalemenu{position:fixed;left:12px;right:12px;top:calc(var(--header-h) + 56px);max-height:65vh;overflow:auto}}
 .refresh-note{font-size:12px;color:var(--text2);margin-left:auto}
@@ -709,7 +713,7 @@ function renderDash(quotes){
       body+=rowHTML(r, lastG);
     });
     navEl.insertAdjacentHTML("beforeend",
-      `<a href="#${id}" data-sec="${id}">${s.sec}<span class="cnt">${s.rows.length}</span></a>`+subnav);
+      `<a href="#${id}" data-sec="${id}">${s.sec}<span class="navheat"></span><span class="cnt">${s.rows.length}</span></a>`+subnav);
     secEl.insertAdjacentHTML("beforeend",`
       <div class="section" id="${id}" data-idx="${i}">
         <div class="section-head"><h2>${s.sec}</h2><span class="n">${s.rows.length} 个标的</span><span class="avg">板块平均回撤 ${avgDD}%</span></div>
@@ -829,6 +833,23 @@ function renderDash(quotes){
     put("st-mcap", `${window.CURMKT||"全市场"} ${rows.filter(r=>mcapVal(r)>0 && !/ETF|指数|商品|外汇/.test(String(r[2]))).length}`);
     put("st-heat", String(DATA.filter(s=>!s.sec.includes("指数与行业") &&
       s.rows.some(r=>mktOk(r[2]) && !/ETF|指数|商品|外汇/.test(String(r[2])))).length));
+    window.updateNavHeat && window.updateNavHeat();
+  };
+  /* 侧边栏板块热力（2026-07-13 主人定）：目录每个板块名后标当日中位涨跌（口径=板块热力图：
+     只算个股、剔除ETF/指数/商品/外汇、随市场筛选联动），固定板块座次扫一眼即全景。 */
+  window.updateNavHeat = function(){
+    DATA.forEach((s,i)=>{
+      const el = document.querySelector(`#nav-links a[data-sec="sec${i}"] .navheat`);
+      if(!el) return;
+      if(s.sec.includes("指数与行业")){ el.textContent=""; return; }
+      const vals = s.rows.filter(r=>typeof r[16]==="number" && !/ETF|指数|商品|外汇/.test(String(r[2])) && mktOk(r[2]))
+                         .map(r=>r[16]).sort((a,b)=>a-b);
+      if(!vals.length){ el.textContent=""; return; }
+      const med = vals.length%2 ? vals[(vals.length-1)/2] : (vals[vals.length/2-1]+vals[vals.length/2])/2;
+      const m = Math.round(med*10)/10;
+      el.textContent = (m>0?"+":"")+m.toFixed(1)+"%";
+      el.style.color = m>0 ? "var(--up)" : m<0 ? "var(--down)" : "var(--text2)";
+    });
   };
   /* 榜内市场快捷切换条：所有榜单视图共用（主人指定，2026-07-12），与「市场·全景」
      同一全局开关（data-mkt → setMkt）。按钮数字 = 该市场标的数（与全景菜单同口径）。 */
@@ -1205,9 +1226,10 @@ function renderDash(quotes){
     mc.addEventListener("click", ()=>setX(!window.XOPEN));
     setX(false);
   })();
-  /* 开盘状态是活信息：每分钟刷新一次切换条（全景条+当前榜单条），状态点/时段颜色自动翻转 */
+  /* 开盘状态是活信息：每分钟刷新一次切换条（全景条+当前榜单条）与侧边栏板块中位涨跌 */
   setInterval(()=>{
     window.refreshMktBarAll && window.refreshMktBarAll();
+    window.updateNavHeat && window.updateNavHeat();
     if(window.CURVIEW && window.CURVIEW!=="all" && window.buildFlat) window.buildFlat();
   }, 60000);
   /* 市场规模弹层：全球主要股市 + 金银 + 比特币总市值（美元）。
