@@ -73,6 +73,14 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 /* 市场筛选下拉 */
 #mktcard{position:relative}
 /* mktmenu 下拉已删除（2026-07-12）：选市场走横向切换条，开盘状态长在胶囊上 */
+/* 「更多」页签下拉（2026-07-13 主人定：桌面手机统一，为未来加栏目留门） */
+#tab-more{position:relative}
+#moremenu{position:absolute;top:calc(100% + 2px);left:0;z-index:220;background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:6px;display:flex;flex-direction:column;gap:2px;min-width:132px;box-shadow:0 6px 18px rgba(0,0,0,.5)}
+#moremenu.hidden{display:none}
+#moremenu button{background:transparent;border:none;color:var(--text);font-size:13px;padding:8px 12px;border-radius:6px;cursor:pointer;text-align:left;white-space:nowrap}
+#moremenu button:hover{background:var(--panel);color:var(--accent)}
+/* 手机端市场规模弹层：改固定定位居中面板，杜绝溢出屏幕（2026-07-13 主人反馈修复） */
+@media(max-width:860px){#scalemenu{position:fixed;left:12px;right:12px;top:calc(var(--header-h) + 56px);max-height:65vh;overflow:auto}}
 .refresh-note{font-size:12px;color:var(--text2);margin-left:auto}
 /* 市场规模弹层 */
 #scalecard{position:relative}
@@ -343,10 +351,14 @@ body.resizing{user-select:none;cursor:col-resize}
   <div class="logo">📓 烟囱<span>的美股学习笔记</span></div>
   <div class="tabs">
     <div class="tab active" data-view="dash">📊 数据面板</div>
-    <div class="tab" data-view="events">📅 大事件</div>
     <div class="tab" data-view="notes">📚 学习笔记</div>
-    <div class="tab" data-view="dict">📖 术语词典</div>
-    <div class="tab" data-view="history">📜 金融史</div>
+    <div class="tab" id="tab-more">☰ 更多
+      <div id="moremenu" class="hidden">
+        <button data-view="events">📅 大事件</button>
+        <button data-view="dict">📖 术语词典</button>
+        <button data-view="history">📜 金融史</button>
+      </div>
+    </div>
   </div>
   <div id="searchwrap">
     <input id="search" type="search" enterkeyhint="search" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="🔍 搜索名称 / 代码，如 NVDA、紫金…">
@@ -376,13 +388,14 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="stat vc" data-view="loss"><div class="k">📉 跌幅榜 Top30</div><div class="v" id="st-loss">今日</div></div>
       <div class="stat vc" data-view="dd"><div class="k">回撤榜（&gt;30%）</div><div class="v" id="st-deep">–</div></div>
       <div class="stat vc" data-view="hi"><div class="k">🚀 回撤榜（&lt;30%）</div><div class="v" id="st-hi">–</div></div>
-      <div class="stat vc" data-view="alpha"><div class="k">超额榜</div><div class="v">Top30</div></div>
-      <div class="stat vc" data-view="ladder"><div class="k">🪜 回撤阶梯</div><div class="v">全表</div></div>
-      <div class="stat vc" data-view="heat"><div class="k">板块热力</div><div class="v" id="st-heat">21</div></div>
-      <div class="stat vc" id="scalecard"><div class="k">🌍 市场规模</div><div class="v">总市值</div>
+      <div class="stat vc" data-view="mcap"><div class="k">💰 市值排行榜</div><div class="v" id="st-mcap">全表</div></div>
+      <div class="stat vc" id="morecard"><div class="k">📦 其他</div><div class="v" id="st-more">▾ 4 个</div></div>
+      <div class="stat vc xtra hidden" data-view="alpha"><div class="k">超额榜</div><div class="v">Top30</div></div>
+      <div class="stat vc xtra hidden" data-view="ladder"><div class="k">🪜 回撤阶梯</div><div class="v">全表</div></div>
+      <div class="stat vc xtra hidden" data-view="heat"><div class="k">板块热力</div><div class="v" id="st-heat">21</div></div>
+      <div class="stat vc xtra hidden" id="scalecard"><div class="k">🌍 市场规模</div><div class="v">总市值</div>
         <div id="scalemenu" class="hidden"></div>
       </div>
-      <div class="stat vc" data-view="mcap"><div class="k">💰 市值排行榜</div><div class="v" id="st-mcap">全表</div></div>
       <div class="refresh-note" title="2026-07-10 实测：腾讯的 A股与美股盘中快照均为实时（用其分时数据反查验证）；港股实测延时15分钟（13:56的价14:11才返回）。2026-07-13 盘中实测：日股延时约15-20分钟、韩股约20-25分钟（时间戳法+Yahoo分钟线反查双法吻合）；A股复盘后实测秒级实时（快照=分时最新一分钟）；腾讯无台股行情（tw代码返回none_match），台股行仅每日流水线数据">盘中现价30秒刷新（A股·美股实时 · 港股延时15分钟 · 日股约15-20分钟 · 韩股约20-25分钟 · 台股仅每日数据）· 美股盘前盘后约1分钟 · 加密实时 · 其余指标数分钟刷新 · 市值为估算口径</div>
     </div>
     <div id="topbar">
@@ -1114,6 +1127,10 @@ function renderDash(quotes){
       window.PERF_W="d";
       ["st-gain","st-loss"].forEach(id=>{ const e=document.getElementById(id); if(e) e.textContent="今日"; });
     }
+    const inXtra = ["alpha","ladder","heat"].includes(v);
+    if(inXtra && window.ensureXtra) window.ensureXtra();
+    const mc0 = document.getElementById("morecard");
+    if(mc0) mc0.classList.toggle("on", inXtra);
     document.querySelectorAll(".stat.vc[data-view]").forEach(c=>c.classList.toggle("on", c.dataset.view===v));
     window.setMktCardOn && window.setMktCardOn(v==="all");
     document.getElementById("sections").classList.toggle("hidden", v!=="all");
@@ -1173,6 +1190,20 @@ function renderDash(quotes){
     cur.textContent = `${m0||"全部"} ${CNT[m0||"全部"]}`;
     if(m0){ applyFilter(); window.buildOpps && window.buildOpps(); }
     window.setMktCardOn(true);
+  })();
+  /* 「其他」抽屉（2026-07-13 主人定）：高频视图置顶，低频四卡（超额/阶梯/热力/规模）收纳。
+     点击展开/收起；进入抽屉内视图时自动展开并高亮入口卡，避免"人在榜里入口藏着"。 */
+  (function(){
+    const mc=document.getElementById("morecard"), sv=document.getElementById("st-more");
+    if(!mc) return;
+    function setX(open){
+      window.XOPEN = open;
+      document.querySelectorAll(".stat.xtra").forEach(c=>c.classList.toggle("hidden", !open));
+      sv.textContent = open ? "▴ 收起" : "▾ 4 个";
+    }
+    window.ensureXtra = ()=>{ if(!window.XOPEN) setX(true); };
+    mc.addEventListener("click", ()=>setX(!window.XOPEN));
+    setX(false);
   })();
   /* 开盘状态是活信息：每分钟刷新一次切换条（全景条+当前榜单条），状态点/时段颜色自动翻转 */
   setInterval(()=>{
@@ -2213,11 +2244,11 @@ let PROFILES = {};
     if(ew && week.length){
       ew.textContent = `📅 本周大事 ${week.length} 件：` + week.slice(0,3).map(e=>e.t).join(" · ") + (week.length>3?" …":"") + " →";
       ew.classList.remove("hidden");
-      ew.addEventListener("click",()=>document.querySelector('.tab[data-view="events"]').click());
+      ew.addEventListener("click",()=>window.switchTab("events"));
     }
   }
   function jumpToCode(code){
-    document.querySelector('.tab[data-view="dash"]').click();
+    window.switchTab("dash");
     if(window.CURVIEW!=="all" && window.setDashView) window.setDashView("all");
     setTimeout(()=>{
       const tr = document.querySelector(`#sections tr[data-code="${code}"]`);
@@ -2227,32 +2258,44 @@ let PROFILES = {};
     }, 60);
   }
 
-  /* 视图切换（记住上次页签，并同步 URL 防止刷新跳走） */
-  document.querySelectorAll(".tab").forEach(tab=>{
-    tab.addEventListener("click",()=>{
-      const v = tab.dataset.view;
-      document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===tab));
-      document.getElementById("view-dash").classList.toggle("hidden",v!=="dash");
-      document.getElementById("view-events").classList.toggle("hidden",v!=="events");
-      document.getElementById("view-notes").classList.toggle("hidden",v!=="notes");
-      document.getElementById("view-dict").classList.toggle("hidden",v!=="dict");
-      document.getElementById("view-history").classList.toggle("hidden",v!=="history");
-      document.getElementById("searchwrap").style.display = v==="dash" ? "" : "none";
-      try{ localStorage.setItem("lastView", v); }catch(e){}
-      const u = new URL(location.href);
-      if(v!=="dash") u.searchParams.set("view",v);
-      else u.searchParams.delete("view");
-      u.hash="";
-      history.replaceState(null,"",u);
-      window.scrollTo(0,0);
+  /* 视图切换（记住上次页签，并同步 URL 防止刷新跳走）。
+     2026-07-13 改版：顶部只留 数据面板/学习笔记/更多（大事件·词典·金融史收进「更多」下拉，
+     桌面手机统一，为未来加栏目留门）。所有切页签一律走 switchTab()。 */
+  const MORE_VIEWS = ["events","dict","history"];
+  window.switchTab = function(v){
+    document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active", t.dataset.view===v));
+    const tm = document.getElementById("tab-more");
+    if(tm) tm.classList.toggle("active", MORE_VIEWS.includes(v));
+    ["dash","events","notes","dict","history"].forEach(x=>{
+      const el = document.getElementById("view-"+x);
+      if(el) el.classList.toggle("hidden", v!==x);
     });
-  });
+    document.getElementById("searchwrap").style.display = v==="dash" ? "" : "none";
+    try{ localStorage.setItem("lastView", v); }catch(e){}
+    const u = new URL(location.href);
+    if(v!=="dash") u.searchParams.set("view",v);
+    else u.searchParams.delete("view");
+    u.hash="";
+    history.replaceState(null,"",u);
+    window.scrollTo(0,0);
+  };
+  document.querySelectorAll(".tab[data-view]").forEach(tab=>
+    tab.addEventListener("click",()=>switchTab(tab.dataset.view)));
+  (function(){
+    const t=document.getElementById("tab-more"), m=document.getElementById("moremenu");
+    if(!t||!m) return;
+    t.addEventListener("click",e=>{ e.stopPropagation(); m.classList.toggle("hidden"); });
+    m.querySelectorAll("button").forEach(b=>b.addEventListener("click",e=>{
+      e.stopPropagation(); m.classList.add("hidden"); switchTab(b.dataset.view);
+    }));
+    document.addEventListener("click",()=>m.classList.add("hidden"));
+  })();
 
   /* Logo 点击回主页：数据面板 + 市场全景（重置市场筛选）+ 清空搜索 */
   document.querySelector("#header .logo").addEventListener("click", ()=>{
     const inp = document.getElementById("search");
     if(inp.value){ inp.value=""; inp.dispatchEvent(new Event("input")); document.getElementById("search-clear").style.display="none"; }
-    document.querySelector('.tab[data-view="dash"]').click();
+    window.switchTab("dash");
     if(window.CURMKT && window.setMkt) window.setMkt("");
     else if(window.setDashView) window.setDashView("all");
   });
@@ -2278,8 +2321,8 @@ let PROFILES = {};
   /* 初始页签：URL 明确指定 > 上次停留 > 默认数据面板 */
   const wantView = new URLSearchParams(location.search).get("view")
                 || (function(){ try{ return localStorage.getItem("lastView"); }catch(e){ return null; } })();
-  if(wantView==="notes"||wantView==="dict"||wantView==="history"){
-    document.querySelector(`.tab[data-view="${wantView}"]`).click();
+  if(["notes","dict","history","events"].includes(wantView)){
+    window.switchTab(wantView);
   }
 
   /* 滚动高亮导航 */
