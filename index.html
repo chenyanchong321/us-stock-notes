@@ -83,21 +83,41 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 @media(max-width:860px){#moremenu{position:fixed;left:auto;right:12px;top:calc(var(--header-h) + 4px)}}
 /* 侧边栏板块当日中位涨跌（2026-07-13 主人定：目录=固定座次的热力条） */
 #nav-links .navheat{font-size:10.5px;margin-left:6px;font-variant-numeric:tabular-nums}
-/* 术语速查抽屉（2026-07-13 主人定）：右缘常驻把手，悬停/点击展开，查词不离开当前页。
-   词典页管"逛"，抽屉管"查"（point of need 原则，与标的简介浮窗同一设计哲学） */
-#dictdrawer{position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:260;display:flex;align-items:center}
-#dd-handle{writing-mode:vertical-rl;background:var(--panel2);border:1px solid var(--border);border-right:none;border-radius:8px 0 0 8px;padding:12px 5px;font-size:12px;color:var(--text2);cursor:pointer;user-select:none;letter-spacing:2px}
-#dictdrawer.open #dd-handle{color:var(--accent);border-color:var(--accent)}
-#dd-panel{width:0;overflow:hidden;transition:width .18s ease;background:var(--panel);border:1px solid var(--border);border-radius:10px 0 0 10px;max-height:72vh;display:flex;flex-direction:column;box-shadow:0 8px 24px rgba(0,0,0,.45)}
-#dictdrawer.open #dd-panel{width:320px}
-#dd-panel input{margin:10px 10px 6px;padding:8px 10px;background:var(--panel2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none;flex:0 0 auto}
-#dd-panel input:focus{border-color:var(--accent)}
-#dd-list{overflow-y:auto;padding:4px 10px 10px;min-width:298px}
+/* 术语词典右侧栏（2026-07-13 主人定，参照 Askwise 三栏布局）：
+   桌面=可收起、可钉住、可拖宽的完整侧栏（展开时主内容让位，与左侧栏对称）；
+   手机=居中悬浮抽屉（无富余空间不做挤压）。词典页管"逛"，侧栏管"随手查+随手翻"。 */
+:root{--rdict:26px}
+#dictbar{position:fixed;top:var(--header-h);right:0;bottom:0;z-index:230;background:var(--panel);border-left:1px solid var(--border);width:26px;display:flex;flex-direction:column;transition:width .15s ease}
+#db-strip{flex:1;writing-mode:vertical-rl;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);font-size:12px;letter-spacing:3px;user-select:none;padding:10px 0}
+#db-strip:hover{color:var(--accent)}
+#db-body{display:none;flex-direction:column;height:100%;min-width:238px}
+#dictbar.open #db-body{display:flex}
+#dictbar.open #db-strip{display:none}
+#db-head{display:flex;gap:6px;align-items:center;padding:10px 10px 6px;flex:0 0 auto}
+#db-head input{flex:1;min-width:0;padding:7px 10px;background:var(--panel2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none}
+#db-head input:focus{border-color:var(--accent)}
+#db-head button{background:var(--panel2);border:1px solid var(--border);border-radius:8px;color:var(--text2);font-size:13px;cursor:pointer;padding:6px 8px;flex:0 0 auto}
+#db-head button:hover{color:var(--accent);border-color:var(--accent)}
+#db-head button.on{color:var(--gold);border-color:var(--gold)}
+#db-cats{display:flex;gap:5px;flex-wrap:wrap;padding:2px 10px 8px;flex:0 0 auto}
+#db-cats button{background:transparent;border:1px solid var(--border);border-radius:99px;color:var(--text2);font-size:11px;padding:2px 9px;cursor:pointer}
+#db-cats button.on{color:var(--accent);border-color:var(--accent)}
+#db-list{flex:1;overflow-y:auto;padding:2px 10px 12px}
 .dd-item{border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-bottom:8px;background:var(--panel2)}
 .dd-item b{font-size:13px}
 .dd-item .f{font-size:11px;color:var(--text2);display:block;margin-top:1px}
 .dd-item p{font-size:12px;color:var(--text);margin:5px 0 0;line-height:1.65}
-@media(max-width:860px){#dictdrawer.open #dd-panel{width:min(320px,84vw)}}
+#db-drag{position:absolute;left:-3px;top:0;bottom:0;width:7px;cursor:ew-resize;display:none}
+#dictbar.open #db-drag{display:block}
+/* 展开时主内容让位（与左侧栏 margin-left 对称）；#toTop 跟着避让 */
+#view-dash,#view-events,#view-notes,#view-dict,#view-history,#footer{padding-right:var(--rdict);box-sizing:border-box;transition:padding-right .15s ease}
+#toTop{right:calc(var(--rdict) + 12px) !important}
+@media(max-width:860px){
+  #view-dash,#view-events,#view-notes,#view-dict,#view-history,#footer{padding-right:0}
+  #toTop{right:14px !important}
+  #dictbar{top:50%;bottom:auto;transform:translateY(-50%);height:auto;max-height:74vh;border:1px solid var(--border);border-right:none;border-radius:10px 0 0 10px;box-shadow:0 8px 24px rgba(0,0,0,.45)}
+  #dictbar.open{width:min(320px,84vw) !important;height:74vh}
+}
 /* 手机端市场规模弹层：改固定定位居中面板，杜绝溢出屏幕（2026-07-13 主人反馈修复） */
 @media(max-width:860px){#scalemenu{position:fixed;left:12px;right:12px;top:calc(var(--header-h) + 56px);max-height:65vh;overflow:auto}}
 .refresh-note{font-size:12px;color:var(--text2);margin-left:auto}
@@ -484,12 +504,18 @@ body.resizing{user-select:none;cursor:col-resize}
   </div>
 </div>
 
-<div id="dictdrawer">
-  <div id="dd-handle">📖 术语</div>
-  <div id="dd-panel">
-    <input id="dd-q" type="search" placeholder="🔍 查术语，如 HBM、收敛比、赔率…">
-    <div id="dd-list"></div>
+<div id="dictbar">
+  <div id="db-strip">📖 术语词典</div>
+  <div id="db-body">
+    <div id="db-head">
+      <input id="db-q" type="search" placeholder="🔍 查术语，如 HBM、赔率…">
+      <button id="db-pin" title="钉住常开">📌</button>
+      <button id="db-close" title="收起">»</button>
+    </div>
+    <div id="db-cats"></div>
+    <div id="db-list"></div>
   </div>
+  <div id="db-drag" title="拖拽调宽"></div>
 </div>
 
 <div id="footer">本站内容为个人学习笔记与数据整理，仅作知识分享，不构成任何投资建议。行情数据来自公开渠道，可能存在延迟或误差。</div>
@@ -1955,32 +1981,74 @@ function mktStatus(m){
   return null;
 }
 
-/* ===== 术语速查抽屉：右缘把手，桌面悬停展开/移开收起（输入中不收起），手机点击开合 ===== */
+/* ===== 术语词典右侧栏：桌面=可收起/钉住/拖宽的侧栏（内容让位），手机=悬浮抽屉 ===== */
 (function(){
-  const dw=document.getElementById("dictdrawer"), h=document.getElementById("dd-handle"),
-        q=document.getElementById("dd-q"), list=document.getElementById("dd-list");
-  if(!dw) return;
-  let hoverT=null;
-  const HINT='<div style="font-size:12px;color:var(--text2);padding:2px 4px;line-height:1.7">输入关键词即查（如 HBM、收敛比、赔率）。<br>想系统浏览全部词条：「☰ 更多 → 📖 术语词典」。</div>';
-  list.innerHTML=HINT;
-  const open=()=>{ dw.classList.add("open"); render(); };
-  const close=()=>{ if(document.activeElement===q) return; dw.classList.remove("open"); };
-  h.addEventListener("mouseenter",open);
-  dw.addEventListener("mouseenter",()=>clearTimeout(hoverT));
-  dw.addEventListener("mouseleave",()=>{ clearTimeout(hoverT); hoverT=setTimeout(close,300); });
-  h.addEventListener("click",()=>{ dw.classList.contains("open") ? dw.classList.remove("open") : (open(), q.focus()); });
-  document.addEventListener("click",e=>{ if(!e.target.closest("#dictdrawer")) dw.classList.remove("open"); });
-  q.addEventListener("input",render);
-  q.addEventListener("blur",()=>{ clearTimeout(hoverT); hoverT=setTimeout(close,400); });
-  function render(){
-    const g=window.GLOSSARY, kw=q.value.trim().toLowerCase();
-    if(!g||!g.terms){ list.innerHTML='<div style="font-size:12px;color:var(--text2);padding:4px">词典数据加载中…</div>'; return; }
-    if(!kw){ list.innerHTML=HINT; return; }
-    const hits=g.terms.filter(t=>[t.t,t.f,t.d].some(x=>String(x||"").toLowerCase().includes(kw))).slice(0,15);
-    list.innerHTML = hits.length
-      ? hits.map(t=>`<div class="dd-item"><b>${t.t}</b><span class="f">${t.f||""}</span><p>${t.d}</p></div>`).join("")
-      : '<div style="font-size:12px;color:var(--text2);padding:4px">没查到该词——可能还没收录，去词典页翻翻，或提醒烟囱补一条。</div>';
+  const bar=document.getElementById("dictbar"), strip=document.getElementById("db-strip"),
+        q=document.getElementById("db-q"), catsEl=document.getElementById("db-cats"),
+        list=document.getElementById("db-list"), pinBtn=document.getElementById("db-pin"),
+        closeBtn=document.getElementById("db-close"), drag=document.getElementById("db-drag");
+  if(!bar) return;
+  const mob = ()=>window.matchMedia("(max-width:860px)").matches;
+  let W = Math.min(440, Math.max(240, +(localStorage.getItem("rdictW")||300)));
+  let pinned = localStorage.getItem("rdictPin")==="1";
+  let open = pinned && !mob();
+  let cat = "全部", hoverT=null, rendered=false;
+
+  function apply(){
+    bar.classList.toggle("open", open);
+    pinBtn.classList.toggle("on", pinned);
+    if(mob()){
+      document.documentElement.style.setProperty("--rdict","0px");
+      bar.style.width = open ? "" : "26px";     /* 展开宽度交给媒体查询 */
+    }else{
+      bar.style.width = open ? W+"px" : "26px";
+      document.documentElement.style.setProperty("--rdict", open ? W+"px" : "26px");
+    }
+    if(open && !rendered) render();
   }
+  const doOpen = ()=>{ open=true; apply(); };
+  const doClose = ()=>{ if(pinned && !mob()) return; if(document.activeElement===q) return; open=false; apply(); };
+
+  strip.addEventListener("click", doOpen);
+  strip.addEventListener("mouseenter", ()=>{ if(!mob()) doOpen(); });
+  bar.addEventListener("mouseenter", ()=>clearTimeout(hoverT));
+  bar.addEventListener("mouseleave", ()=>{ clearTimeout(hoverT); hoverT=setTimeout(doClose, 350); });
+  closeBtn.addEventListener("click", ()=>{ pinned=false; localStorage.setItem("rdictPin","0"); open=false; apply(); });
+  pinBtn.addEventListener("click", ()=>{ pinned=!pinned; try{localStorage.setItem("rdictPin", pinned?"1":"0");}catch(e){} apply(); });
+  document.addEventListener("click", e=>{ if(mob() && !e.target.closest("#dictbar")){ open=false; apply(); } });
+  q.addEventListener("input", render);
+
+  /* 拖拽调宽（与左侧栏对等） */
+  drag.addEventListener("mousedown", e=>{
+    e.preventDefault();
+    bar.style.transition="none";
+    const move = ev=>{ W=Math.min(440, Math.max(240, window.innerWidth-ev.clientX)); apply(); };
+    const up = ()=>{ bar.style.transition=""; try{localStorage.setItem("rdictW", String(Math.round(W)));}catch(e){}
+      document.removeEventListener("mousemove",move); document.removeEventListener("mouseup",up); };
+    document.addEventListener("mousemove",move); document.addEventListener("mouseup",up);
+  });
+
+  function render(){
+    rendered=true;
+    const g=window.GLOSSARY;
+    if(!g||!g.terms){ list.innerHTML='<div style="font-size:12px;color:var(--text2);padding:4px">词典数据加载中…</div>'; setTimeout(render,800); return; }
+    if(!catsEl.childElementCount){
+      const cats=["全部",...(g.cats||[])];
+      catsEl.innerHTML = cats.map(c=>`<button data-c="${c}"${c===cat?' class="on"':''}>${c}</button>`).join("");
+      catsEl.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+        cat=b.dataset.c;
+        catsEl.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));
+        render();
+      }));
+    }
+    const kw=q.value.trim().toLowerCase();
+    let terms=g.terms.filter(t=>cat==="全部"||t.c===cat);
+    if(kw) terms=terms.filter(t=>[t.t,t.f,t.d].some(x=>String(x||"").toLowerCase().includes(kw)));
+    list.innerHTML = terms.length
+      ? terms.map(t=>`<div class="dd-item"><b>${t.t}</b><span class="f">${t.f||""}</span><p>${t.d}</p></div>`).join("")
+      : '<div style="font-size:12px;color:var(--text2);padding:4px">没查到该词——可能还没收录，提醒烟囱补一条。</div>';
+  }
+  apply();
 })();
 
 /* ===== 一键回到顶部 ===== */
