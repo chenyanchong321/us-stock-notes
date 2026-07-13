@@ -129,6 +129,13 @@ tr.buy .buyline.hit{color:var(--up)!important;font-weight:600}
 #opps{width:100%;background:rgba(47,191,113,.08);border:1px solid rgba(47,191,113,.35);border-radius:8px;padding:8px 14px;font-size:13px;color:var(--text);line-height:1.9}
 #opps a{color:var(--up);text-decoration:none;margin-right:12px;white-space:nowrap}
 #opps a:hover{text-decoration:underline}
+/* 观察区按市场分组（2026-07-13 主人定）：每市场一行，行首市场徽章可点=全局切市场 */
+#opps .opps-head{font-weight:600}
+#opps .opps-row{display:flex;gap:10px;align-items:baseline}
+#opps a.opps-mkt{flex:0 0 auto;color:var(--text2);font-size:11.5px;border:1px solid var(--border);border-radius:4px;padding:0 7px;margin-right:0;line-height:1.7}
+#opps a.opps-mkt:hover{color:var(--accent);border-color:var(--accent);text-decoration:none}
+#opps span.opps-mkt{flex:0 0 auto;color:var(--text2);font-size:11.5px;border:1px solid var(--border);border-radius:4px;padding:0 7px;line-height:1.7}
+#opps .opps-items{flex:1;min-width:0}
 /* 区间表现榜周期胶囊 */
 #perfbar,.mktbar{display:flex;gap:8px;align-items:center;margin:2px 0 12px;flex-wrap:wrap}
 #mktbar-all{margin:14px 0 2px}   /* 位置：本周大事之后、第一个板块之前（主人指定，贴内容区） */
@@ -748,15 +755,37 @@ function renderDash(quotes){
     const el = document.getElementById("opps");
     if(!hits.length){ el.classList.add("hidden"); return; }
     el.classList.remove("hidden");
-    const html = `🎯 已进观察区（${hits.length}）：` +
-      hits.map(r=>`<a href="#" data-k="${(r[0]+r[1]).toLowerCase()}">${r[0]} ${r[5]}</a>`).join("");
+    /* 按市场分组（2026-07-13 主人定）：每市场一行，权重序排列；行内去掉币种前缀（行首已标市场，
+       币符是冗余；商品/其他类保留原价含$）。行首徽章可点=全局切市场（第三个切市场入口） */
+    const CATS=["美股","A股","港股","日股","韩股","台股","加密"];
+    const catOf=m=>{ m=String(m||""); for(const k of CATS) if(MKT_RULE[k]&&MKT_RULE[k](m)) return k;
+                     return (m.indexOf("商品")>=0||m.indexOf("外汇")>=0||m.indexOf("宏观")>=0) ? "商品" : "其他"; };
+    const grp={};
+    hits.forEach(r=>{ (grp[catOf(r[2])] = grp[catOf(r[2])]||[]).push(r); });
+    const rowOf=(cat,list)=>{
+      const filterable = CATS.indexOf(cat)>=0;
+      const badge = filterable
+        ? `<a href="#" class="opps-mkt" data-m="${cat}" title="切换到${cat}">${cat} ${list.length}</a>`
+        : `<span class="opps-mkt">${cat} ${list.length}</span>`;
+      const items = list.map(r=>{
+        const px = filterable ? stripCur(r[5]) : r[5];
+        return `<a href="#" data-k="${(r[0]+r[1]).toLowerCase()}">${r[0]} ${px}</a>`;
+      }).join("");
+      return `<div class="opps-row">${badge}<span class="opps-items">${items}</span></div>`;
+    };
+    const html = `<div class="opps-head">🎯 已进观察区（${hits.length}）</div>` +
+      [...CATS,"商品","其他"].filter(c=>grp[c]).map(c=>rowOf(c,grp[c])).join("");
     if(el.__h === html) return;   /* 名单与价格都没变就别重建，否则这条横幅每30秒闪一次 */
     el.__h = html;
     el.innerHTML = html;
-    el.querySelectorAll("a").forEach(a=>a.addEventListener("click",e=>{
+    el.querySelectorAll("a[data-k]").forEach(a=>a.addEventListener("click",e=>{
       e.preventDefault();
       const tr=document.querySelector(`tr[data-key="${a.dataset.k}"]`);
       if(tr){ tr.scrollIntoView({block:"center"}); tr.style.outline="1px solid var(--up)"; setTimeout(()=>tr.style.outline="",2000); }
+    }));
+    el.querySelectorAll("a.opps-mkt").forEach(a=>a.addEventListener("click",e=>{
+      e.preventDefault();
+      window.setMkt && window.setMkt(a.dataset.m);
     }));
   };
   window.buildOpps();
