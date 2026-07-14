@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-15 06:00 北京时间",
+ "updated": "2026-07-15 06:07 北京时间",
  "earnings": [
   {
    "d": "2026-07-15",
@@ -153,6 +153,12 @@
   },
   {
    "d": "2026-07-29",
+   "code": "STX",
+   "name": "希捷科技",
+   "est": false
+  },
+  {
+   "d": "2026-07-29",
    "code": "APH",
    "name": "安费诺",
    "est": false
@@ -197,6 +203,12 @@
    "d": "2026-07-30",
    "code": "MSFT",
    "name": "微软",
+   "est": false
+  },
+  {
+   "d": "2026-07-30",
+   "code": "META",
+   "name": "Meta Platforms",
    "est": false
   },
   {
@@ -303,6 +315,12 @@
   },
   {
    "d": "2026-07-31",
+   "code": "MPWR",
+   "name": "Monolithic Power",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
    "code": "ETN",
    "name": "伊顿",
    "est": false
@@ -353,6 +371,12 @@
    "d": "2026-08-04",
    "code": "7011",
    "name": "三菱重工",
+   "est": false
+  },
+  {
+   "d": "2026-08-04",
+   "code": "WMB",
+   "name": "Williams Companies",
    "est": false
   },
   {
