@@ -80,7 +80,18 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 #mktfloat.show{transform:translate(-50%,0);opacity:1;pointer-events:auto}
 #mktfloat button{background:transparent;border:1px solid var(--border);border-radius:99px;color:var(--text2);font-size:12px;padding:3px 10px;cursor:pointer;white-space:nowrap}
 #mktfloat button.on{color:var(--accent);border-color:var(--accent)}
-@media(max-width:860px){#mktfloat{bottom:10px;padding:6px 8px;gap:5px}}
+@media(max-width:860px){#mktfloat{display:none !important}}   /* 手机端由底部三按钮接管，dock退役 */
+/* 手机端半屏选单（市场/视图共用）：两列大按钮，48px+触控目标 */
+#mbottom{display:none}
+#msheet{position:fixed;inset:0;z-index:320;display:none}
+#msheet.show{display:block}
+#msheet .msk{position:absolute;inset:0;background:rgba(0,0,0,.55)}
+#msheet .pan{position:absolute;left:0;right:0;bottom:0;background:var(--panel2);border-top:1px solid var(--border);border-radius:16px 16px 0 0;padding:16px 14px calc(16px + env(safe-area-inset-bottom));max-height:72vh;overflow-y:auto}
+#msheet h3{font-size:14px;color:var(--text2);margin:0 0 12px;font-weight:600}
+#msheet .grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+#msheet .grid button{min-height:50px;background:var(--panel);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;padding:6px;cursor:pointer}
+#msheet .grid button.on{color:var(--accent);border-color:var(--accent);background:rgba(74,140,240,.10)}
+#msheet .grid button .s{display:block;font-size:11px;color:var(--text2);margin-top:3px}
 /* 「更多」页签下拉（2026-07-13 主人定：桌面手机统一，为未来加栏目留门） */
 #tab-more{position:relative}
 #moremenu{position:absolute;top:calc(100% + 2px);left:0;z-index:220;background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:6px;display:flex;flex-direction:column;gap:2px;min-width:132px;box-shadow:0 6px 18px rgba(0,0,0,.5)}
@@ -253,11 +264,15 @@ tr.ev-flash td{animation:evflash 2.4s ease-out}
   #search{font-size:16px;padding:8px 30px 8px 12px}
   #search::placeholder{font-size:12px}
   /* 跳转板块：底部居中悬浮胶囊，随时可连续跳转 */
-  #secjump{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:180;
-    width:min(88%,320px);background:rgba(22,27,36,.94);color:var(--text);
-    border:1px solid var(--border);border-radius:99px;padding:10px 18px;font-size:14px;
+  /* 手机端底部三按钮（2026-07-14 主人定稿方案A）：板块跳转 + 市场选单 + 视图选单，
+     常驻入口替代上滑dock（小胶囊触控目标太小易误触），44px+触控标准 */
+  #mbottom{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;z-index:180;
+    display:flex;gap:8px;width:min(94%,430px)}
+  #mbottom>select,#mbottom>button{flex:1;min-width:0;background:rgba(22,27,36,.94);color:var(--text);
+    border:1px solid var(--border);border-radius:99px;padding:11px 8px;font-size:13px;
     box-shadow:0 6px 20px rgba(0,0,0,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-    appearance:none;-webkit-appearance:none;text-align:center;text-align-last:center}
+    appearance:none;-webkit-appearance:none;text-align:center;text-align-last:center;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
   #footer{padding-bottom:76px}
 }
 td.name .cn{font-weight:500;display:block}
@@ -452,7 +467,12 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="refresh-note" title="2026-07-10 实测：腾讯的 A股与美股盘中快照均为实时（用其分时数据反查验证）；港股实测延时15分钟（13:56的价14:11才返回）。2026-07-13 盘中实测：日股延时约15-20分钟、韩股约20-25分钟（时间戳法+Yahoo分钟线反查双法吻合）；A股复盘后实测秒级实时（快照=分时最新一分钟）；腾讯无台股行情（tw代码返回none_match），台股行仅每日流水线数据">盘中现价30秒刷新（A股·美股实时 · 港股延时15分钟 · 日股约15-20分钟 · 韩股约20-25分钟 · 台股仅每日数据）· 美股盘前盘后约1分钟 · 加密实时 · 其余指标数分钟刷新 · 市值为估算口径</div>
     </div>
     <div id="topbar">
-      <select id="secjump" class="mobile-only"><option value="">📂 跳转板块…</option></select>
+      <div id="mbottom" class="mobile-only">
+        <select id="secjump"><option value="">📂 板块…</option></select>
+        <button id="mb-mkt">🌐 市场</button>
+        <button id="mb-view">📊 视图</button>
+      </div>
+      <div id="msheet"><div class="msk"></div><div class="pan"><h3 id="ms-title"></h3><div class="grid" id="ms-grid"></div></div></div>
       <div id="opps" class="hidden"></div>
       <div id="evweek" class="hidden"></div>
     </div>
@@ -1212,6 +1232,7 @@ function renderDash(quotes){
       window.PERF_W="d";
       ["st-gain","st-loss"].forEach(id=>{ const e=document.getElementById(id); if(e) e.textContent="今日"; });
     }
+    window.updateMbottom && window.updateMbottom();
     const inXtra = ["alpha","ladder","heat"].includes(v);
     if(inXtra && window.ensureXtra) window.ensureXtra();
     const mc0 = document.getElementById("morecard");
@@ -1257,6 +1278,7 @@ function renderDash(quotes){
       window.updateBadges && window.updateBadges();   /* 数量类角标随市场联动 */
       window.refreshMktBarAll && window.refreshMktBarAll();   /* 全景横向切换条选中态 */
       window.refreshMktFloat && window.refreshMktFloat();     /* 悬浮dock选中态 */
+      window.updateMbottom && window.updateMbottom();          /* 手机底部按钮文字 */
       window.buildOpps && window.buildOpps();
       /* 市场=滤镜，视图=镜头：切市场保持当前视图，只刷新数据 */
       if(window.CURVIEW!=="all") window.buildFlat();
@@ -1331,7 +1353,7 @@ function renderDash(quotes){
       let show=false;
       if(ref){
         const out = ref.getBoundingClientRect().bottom < 100;   /* 顶部切换条已滚出吸顶区 */
-        show = mob() ? (out && upIntent) : out;
+        show = mob() ? false : out;   /* 手机端由底部三按钮接管（2026-07-14），dock仅桌面 */
       }
       if(show && !dock.classList.contains("show")){ window.refreshMktFloat(); dock.classList.add("show"); }
       if(!show) dock.classList.remove("show");
@@ -1341,6 +1363,55 @@ function renderDash(quotes){
       requestAnimationFrame(()=>{ update(); tick=false; });
     },{passive:true});
     update();
+  })();
+  /* ===== 手机端底部三按钮 + 半屏选单（2026-07-14 主人定稿方案A）===== */
+  (function(){
+    const mbMkt=document.getElementById("mb-mkt"), mbView=document.getElementById("mb-view"),
+          sheet=document.getElementById("msheet"), title=document.getElementById("ms-title"),
+          grid=document.getElementById("ms-grid");
+    if(!mbMkt) return;
+    const VIEWS=[["all","市场全景"],["focus","⭐ 重点清单"],["gain","📈 涨幅榜"],["loss","📉 跌幅榜"],
+                 ["dd","回撤榜 >30%"],["hi","🚀 回撤榜 <30%"],["mcap","💰 市值排行榜"],
+                 ["alpha","超额榜"],["ladder","🪜 回撤阶梯"],["heat","板块热力"]];
+    const VSHORT={all:"全景",focus:"重点清单",gain:"涨幅榜",loss:"跌幅榜",dd:"回撤>30%",hi:"回撤<30%",
+                  mcap:"市值榜",alpha:"超额榜",ladder:"回撤阶梯",heat:"板块热力"};
+    window.updateMbottom=function(){
+      mbMkt.textContent = `🌐 ${window.CURMKT||"全部"}`;
+      mbView.textContent = `📊 ${VSHORT[window.CURVIEW||"all"]||"全景"}`;
+    };
+    const close=()=>sheet.classList.remove("show");
+    sheet.querySelector(".msk").addEventListener("click",close);
+    mbMkt.addEventListener("click",()=>{
+      const MK=["","美股","A股","港股","日股","韩股","台股","加密"];
+      const c={}; MK.forEach(m=>c[m]=new Set());
+      DATA.forEach(s=>s.rows.forEach(r=>{
+        if(r[3]==="获取失败") return;
+        const mk=String(r[2]||"");
+        c[""].add(r[1]);
+        MK.forEach(m=>{ if(m&&MKT_RULE[m]&&MKT_RULE[m](mk)) c[m].add(r[1]); });
+      }));
+      title.textContent="🌐 切换市场";
+      grid.innerHTML=MK.map(m=>{
+        const st=m?(window.mktStatus?mktStatus(m):null):null;
+        const dot=st?(st.o?' <span style="color:var(--up)">●</span>':' <span style="opacity:.55">○</span>'):"";
+        return `<button data-mkt="${m}" class="${(window.CURMKT||"")===m?"on":""}">${m||"全部"} ${c[m].size}${dot}${st?`<span class="s">${st.h}</span>`:'<span class="s">所有市场</span>'}</button>`;
+      }).join("");
+      grid.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+        window.setMkt && setMkt(b.dataset.mkt); close();
+      }));
+      sheet.classList.add("show");
+    });
+    mbView.addEventListener("click",()=>{
+      title.textContent="📊 切换视图";
+      grid.innerHTML=VIEWS.map(([v,lab])=>
+        `<button data-v="${v}" class="${(window.CURVIEW||"all")===v?"on":""}">${lab}</button>`).join("");
+      grid.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+        window.setDashView && setDashView(b.dataset.v); close();
+        window.scrollTo(0,0);
+      }));
+      sheet.classList.add("show");
+    });
+    window.updateMbottom();
   })();
   /* 开盘状态是活信息：每分钟刷新一次切换条（全景条+当前榜单条）与侧边栏板块中位涨跌 */
   setInterval(()=>{
@@ -2542,6 +2613,8 @@ let PROFILES = {};
       if(el) el.classList.toggle("hidden", v!==x);
     });
     document.getElementById("searchwrap").style.display = v==="dash" ? "" : "none";
+    const mb=document.getElementById("mbottom");
+    if(mb) mb.style.display = v==="dash" ? "" : "none";
     try{ localStorage.setItem("lastView", v); }catch(e){}
     const u = new URL(location.href);
     if(v!=="dash") u.searchParams.set("view",v);
