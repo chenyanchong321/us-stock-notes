@@ -959,6 +959,20 @@
      "ath_floor": 2987000.0
     },
     {
+     "name": "SK海力士(美股ADR)",
+     "code": "SKHY",
+     "market": "美股",
+     "yahoo": "SKHY",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 13250,
+      "approx": true
+     },
+     "mcap_base_price": 186.66,
+     "ath_floor": 0
+    },
+    {
      "name": "美光科技",
      "code": "MU",
      "market": "美股",
@@ -1156,6 +1170,7 @@
      "name": "HBM/DRAM 三巨头",
      "codes": [
       "000660.KS",
+      "SKHY",
       "MU",
       "005930",
       "07709",
@@ -4823,6 +4838,20 @@
      "ath_floor": 0
     },
     {
+     "name": "IBM",
+     "code": "IBM",
+     "market": "美股",
+     "yahoo": "IBM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2060,
+      "approx": false
+     },
+     "mcap_base_price": 219.16,
+     "ath_floor": 0
+    },
+    {
      "name": "Adobe",
      "code": "ADBE",
      "market": "美股",
@@ -5235,6 +5264,7 @@
      "codes": [
       "MSFT",
       "ORCL",
+      "IBM",
       "ADBE",
       "CRM",
       "DELL"
