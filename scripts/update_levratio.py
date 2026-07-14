@@ -108,12 +108,16 @@ def main():
             tgt = lev_long if leg["x"] > 0 else lev_short
             for d, v in ser.items():
                 tgt[d] = tgt.get(d, 0) + v
-        days = sorted(und)[-60:]
+        # 日期轴锚定第一上市地（und[0]）：其余腿缺该日数据就不计入当日，
+        # 避免"只剩GDR有数据、分母塌了"的口径畸变（2026-07-15实跑发现）
+        primary = dollars(n["und"][0]) or {}
+        days = sorted(primary)[-60:]
         hist = []
         for d in days:
+            if not und.get(d):
+                continue
             lv = lev_long.get(d, 0) + lev_short.get(d, 0)
-            if und.get(d):
-                hist.append([d, round(lv / und[d], 4)])
+            hist.append([d, round(lv / und[d], 4)])
         last = hist[-1] if hist else None
         names_out.append({
             "key": n["key"], "label": n["label"],
