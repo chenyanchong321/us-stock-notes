@@ -5,7 +5,7 @@
 
 - 数据源：Yahoo chart API 日线（close×volume=当日成交额近似；KRW/JPY 经每日汇率折美元）。
 - 产品清单 config/levratio.json 人工维护；抓不到的代码记进 missing，页面上透明展示。
-- 输出 data/levratio.json：每标的最近60个交易日 ratio 序列 + 最新多空拆分。
+- 输出 data/levratio.json：每标的最近60个交易日 ratio 序列 + 最新多空拆分。（2026-07-15 手动触发重跑一次）
 """
 import json, time, urllib.request, datetime
 
