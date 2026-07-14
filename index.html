@@ -268,14 +268,17 @@ tr.ev-flash td{animation:evflash 2.4s ease-out}
   /* 跳转板块：底部居中悬浮胶囊，随时可连续跳转 */
   /* 手机端底部三按钮（2026-07-14 主人定稿方案A）：板块跳转 + 市场选单 + 视图选单，
      常驻入口替代上滑dock（小胶囊触控目标太小易误触），44px+触控标准 */
-  #mbottom{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom));z-index:180;
-    display:flex;gap:12px;width:min(94%,430px)}
-  #mbottom>button{flex:1;min-width:0;background:rgba(22,27,36,.94);color:var(--text);
+  /* 通栏底座（HIG 标签栏范式，2026-07-14 主人指出悬浮胶囊下方透出内容）：
+     bar 自带磨砂背景铺到屏幕物理底边（含安全区），内容在后面滚动但永不透出 */
+  #mbottom{position:fixed;left:0;right:0;bottom:0;z-index:180;
+    display:flex;gap:12px;padding:10px 3% calc(10px + env(safe-area-inset-bottom));
+    background:rgba(15,19,26,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border-top:1px solid var(--border)}
+  #mbottom>button{flex:1;min-width:0;background:var(--panel);color:var(--text);
     border:1px solid var(--border);border-radius:99px;padding:13px 8px;font-size:13px;
-    box-shadow:0 6px 20px rgba(0,0,0,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
     appearance:none;-webkit-appearance:none;text-align:center;text-align-last:center;
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
-  #footer{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+  #footer{padding-bottom:calc(88px + env(safe-area-inset-bottom))}
 }
 td.name .cn{font-weight:500;display:block}
 td.name .sub{font-size:11px;color:var(--text2);white-space:nowrap}
