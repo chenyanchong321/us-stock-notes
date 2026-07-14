@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>烟囱的美股学习笔记 · 数据与知识</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -85,8 +85,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 #mbottom{display:none}
 #msheet{position:fixed;inset:0;z-index:320;display:none}
 #msheet.show{display:block}
-#msheet .msk{position:absolute;inset:0;background:rgba(0,0,0,.55)}
-#msheet .pan{position:absolute;left:0;right:0;bottom:0;background:var(--panel2);border-top:1px solid var(--border);border-radius:16px 16px 0 0;padding:16px 14px calc(16px + env(safe-area-inset-bottom));max-height:72vh;overflow-y:auto}
+#msheet .msk{position:absolute;inset:0;background:rgba(0,0,0,.55);touch-action:none}
+#msheet .pan{position:absolute;left:0;right:0;bottom:0;background:var(--panel2);border-top:1px solid var(--border);border-radius:16px 16px 0 0;padding:16px 14px calc(16px + env(safe-area-inset-bottom));max-height:72vh;overflow-y:auto;overscroll-behavior:contain}
 #msheet h3{font-size:14px;color:var(--text2);margin:0 0 12px;font-weight:600}
 #msheet .grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 #msheet .grid button{min-height:50px;background:var(--panel);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;padding:6px;cursor:pointer}
@@ -268,14 +268,14 @@ tr.ev-flash td{animation:evflash 2.4s ease-out}
   /* 跳转板块：底部居中悬浮胶囊，随时可连续跳转 */
   /* 手机端底部三按钮（2026-07-14 主人定稿方案A）：板块跳转 + 市场选单 + 视图选单，
      常驻入口替代上滑dock（小胶囊触控目标太小易误触），44px+触控标准 */
-  #mbottom{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;z-index:180;
-    display:flex;gap:8px;width:min(94%,430px)}
+  #mbottom{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom));z-index:180;
+    display:flex;gap:12px;width:min(94%,430px)}
   #mbottom>button{flex:1;min-width:0;background:rgba(22,27,36,.94);color:var(--text);
-    border:1px solid var(--border);border-radius:99px;padding:11px 8px;font-size:13px;
+    border:1px solid var(--border);border-radius:99px;padding:13px 8px;font-size:13px;
     box-shadow:0 6px 20px rgba(0,0,0,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
     appearance:none;-webkit-appearance:none;text-align:center;text-align-last:center;
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
-  #footer{padding-bottom:76px}
+  #footer{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 }
 td.name .cn{font-weight:500;display:block}
 td.name .sub{font-size:11px;color:var(--text2);white-space:nowrap}
@@ -1381,7 +1381,22 @@ function renderDash(quotes){
       mbMkt.textContent = `🌐 ${window.CURMKT||"全部"}`;
       mbView.textContent = `📊 ${VSHORT[window.CURVIEW||"all"]||"全景"}`;
     };
-    const close=()=>sheet.classList.remove("show");
+    /* iOS 滚动穿透锁：开选单时把 body 固定（记住位置），关时恢复；配合 .pan 的
+       overscroll-behavior:contain 与 .msk 的 touch-action:none 三道锁（2026-07-14 主人实测穿透后加） */
+    let lockY=0;
+    const open=()=>{
+      lockY=window.scrollY;
+      document.body.style.position="fixed";
+      document.body.style.top=(-lockY)+"px";
+      document.body.style.left="0"; document.body.style.right="0"; document.body.style.width="100%";
+      sheet.classList.add("show");
+    };
+    const close=()=>{
+      sheet.classList.remove("show");
+      document.body.style.position=""; document.body.style.top="";
+      document.body.style.left=""; document.body.style.right=""; document.body.style.width="";
+      window.scrollTo(0,lockY);
+    };
     sheet.querySelector(".msk").addEventListener("click",close);
     mbMkt.addEventListener("click",()=>{
       const MK=["","美股","A股","港股","日股","韩股","台股","加密"];
@@ -1402,7 +1417,7 @@ function renderDash(quotes){
       grid.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
         window.setMkt && setMkt(b.dataset.mkt); close();
       }));
-      sheet.classList.add("show");
+      open();
     });
     const mbSec=document.getElementById("mb-sec");
     mbSec.addEventListener("click",()=>{
@@ -1426,7 +1441,7 @@ function renderDash(quotes){
         const t=document.getElementById(b.dataset.sec);
         if(t) t.scrollIntoView();
       }));
-      sheet.classList.add("show");
+      open();
     });
     mbView.addEventListener("click",()=>{
       title.textContent="📊 切换视图";
@@ -1437,7 +1452,7 @@ function renderDash(quotes){
         window.setDashView && setDashView(b.dataset.v); close();
         window.scrollTo(0,0);
       }));
-      sheet.classList.add("show");
+      open();
     });
     window.updateMbottom();
   })();
