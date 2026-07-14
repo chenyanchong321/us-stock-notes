@@ -92,6 +92,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 #msheet .grid button{min-height:50px;background:var(--panel);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;padding:6px;cursor:pointer}
 #msheet .grid button.on{color:var(--accent);border-color:var(--accent);background:rgba(74,140,240,.10)}
 #msheet .grid button .s{display:block;font-size:11px;color:var(--text2);margin-top:3px}
+#msheet .grid.one{grid-template-columns:1fr}
+#msheet .grid.one button{display:flex;justify-content:space-between;align-items:center;padding:6px 14px;text-align:left;min-height:44px}
 /* 「更多」页签下拉（2026-07-13 主人定：桌面手机统一，为未来加栏目留门） */
 #tab-more{position:relative}
 #moremenu{position:absolute;top:calc(100% + 2px);left:0;z-index:220;background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:6px;display:flex;flex-direction:column;gap:2px;min-width:132px;box-shadow:0 6px 18px rgba(0,0,0,.5)}
@@ -268,7 +270,7 @@ tr.ev-flash td{animation:evflash 2.4s ease-out}
      常驻入口替代上滑dock（小胶囊触控目标太小易误触），44px+触控标准 */
   #mbottom{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;z-index:180;
     display:flex;gap:8px;width:min(94%,430px)}
-  #mbottom>select,#mbottom>button{flex:1;min-width:0;background:rgba(22,27,36,.94);color:var(--text);
+  #mbottom>button{flex:1;min-width:0;background:rgba(22,27,36,.94);color:var(--text);
     border:1px solid var(--border);border-radius:99px;padding:11px 8px;font-size:13px;
     box-shadow:0 6px 20px rgba(0,0,0,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
     appearance:none;-webkit-appearance:none;text-align:center;text-align-last:center;
@@ -468,7 +470,7 @@ body.resizing{user-select:none;cursor:col-resize}
     </div>
     <div id="topbar">
       <div id="mbottom" class="mobile-only">
-        <select id="secjump"><option value="">📂 板块…</option></select>
+        <button id="mb-sec">📂 板块</button>
         <button id="mb-mkt">🌐 市场</button>
         <button id="mb-view">📊 视图</button>
       </div>
@@ -1391,6 +1393,7 @@ function renderDash(quotes){
         MK.forEach(m=>{ if(m&&MKT_RULE[m]&&MKT_RULE[m](mk)) c[m].add(r[1]); });
       }));
       title.textContent="🌐 切换市场";
+      grid.classList.remove("one");
       grid.innerHTML=MK.map(m=>{
         const st=m?(window.mktStatus?mktStatus(m):null):null;
         const dot=st?(st.o?' <span style="color:var(--up)">●</span>':' <span style="opacity:.55">○</span>'):"";
@@ -1401,8 +1404,33 @@ function renderDash(quotes){
       }));
       sheet.classList.add("show");
     });
+    const mbSec=document.getElementById("mb-sec");
+    mbSec.addEventListener("click",()=>{
+      title.textContent="📂 跳转板块";
+      grid.classList.add("one");
+      grid.innerHTML=DATA.map((s,i)=>{
+        /* 副信息=当日中位涨跌，与侧边栏热力同口径（个股、剔除ETF/指数/商品/外汇、随市场筛选） */
+        let sub="";
+        if(!s.sec.includes("指数与行业")){
+          const vals=s.rows.filter(r=>typeof r[16]==="number" && !/ETF|指数|商品|外汇/.test(String(r[2])) && mktOk(r[2])).map(r=>r[16]).sort((a,b)=>a-b);
+          if(vals.length){
+            const med=vals.length%2?vals[(vals.length-1)/2]:(vals[vals.length/2-1]+vals[vals.length/2])/2;
+            const m=Math.round(med*10)/10;
+            sub=`<span style="color:${m>0?"var(--up)":m<0?"var(--down)":"var(--text2)"};font-size:12px">${(m>0?"+":"")+m.toFixed(1)}%</span>`;
+          }
+        }
+        return `<button data-sec="sec${i}"><span>${s.sec}</span>${sub}</button>`;
+      }).join("");
+      grid.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+        close();
+        const t=document.getElementById(b.dataset.sec);
+        if(t) t.scrollIntoView();
+      }));
+      sheet.classList.add("show");
+    });
     mbView.addEventListener("click",()=>{
       title.textContent="📊 切换视图";
+      grid.classList.remove("one");
       grid.innerHTML=VIEWS.map(([v,lab])=>
         `<button data-v="${v}" class="${(window.CURVIEW||"all")===v?"on":""}">${lab}</button>`).join("");
       grid.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
@@ -1474,14 +1502,6 @@ function renderDash(quotes){
     setMode(nm);
   })();
 
-  /* 手机端板块跳转 */
-  const sj = document.getElementById("secjump");
-  DATA.forEach((s,i)=>sj.insertAdjacentHTML("beforeend",`<option value="sec${i}">${s.sec}</option>`));
-  sj.addEventListener("change",()=>{
-    const t=document.getElementById(sj.value);
-    if(t) t.scrollIntoView();
-    sj.value="";
-  });
 }
 
 window.CURMKT = "";
