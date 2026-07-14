@@ -17,7 +17,6 @@ on:
     branches: [main]
     paths:
       - "config/watchlist.json"
-      - "config/buypoints.json"
       - "config/marketscale.json"
       - "scripts/update_quotes.py"
 
