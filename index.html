@@ -35,6 +35,31 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 .tab:hover{color:var(--text)}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 #header .slogan{margin-left:auto;font-size:12px;color:var(--text2)}
+#authbtn{background:var(--panel);border:1px solid var(--border);color:var(--text);border-radius:99px;
+  padding:6px 14px;font-size:13px;cursor:pointer;white-space:nowrap;flex:0 0 auto}
+#authbtn.member{color:var(--gold);border-color:var(--gold)}
+#authbtn:hover{border-color:var(--accent)}
+.bpmask{display:inline-block;vertical-align:-1px;width:52px;height:10px;border-radius:4px;margin:0 2px;
+  background:linear-gradient(90deg,#3a4356,#2c3444);filter:blur(.5px)}
+.lockg{color:var(--gold)}
+#authmodal{position:fixed;inset:0;z-index:400;display:none;align-items:center;justify-content:center}
+#authmodal.show{display:flex}
+#authmodal .amsk{position:absolute;inset:0;background:rgba(0,0,0,.6);touch-action:none}
+#authmodal .abox{position:relative;background:var(--panel2);border:1px solid var(--border);border-radius:14px;
+  padding:18px 16px;width:min(92vw,340px);box-shadow:0 16px 48px rgba(0,0,0,.6)}
+#authmodal .atabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:14px}
+#authmodal .atab{flex:1;text-align:center;padding:9px 0;font-size:14px;color:var(--text2);cursor:pointer;
+  border-bottom:2px solid transparent;margin-bottom:-1px}
+#authmodal .atab.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+#authmodal input{width:100%;margin:5px 0;padding:11px 12px;border-radius:8px;border:1px solid var(--border);
+  background:var(--bg);color:var(--text);font-size:16px;box-sizing:border-box;outline:none}
+#authmodal input:focus{border-color:var(--accent)}
+#authmodal .abtn{width:100%;margin-top:10px;padding:12px;border-radius:8px;border:none;background:var(--accent);
+  color:#fff;font-size:15px;font-weight:600;cursor:pointer}
+#authmodal .abtn:disabled{opacity:.55}
+#authmodal .aerr{font-size:12px;color:var(--down);min-height:16px;margin-top:8px}
+#authmodal .ad{font-size:12px;color:var(--text2);margin-bottom:10px}
+#authmodal .aclose{position:absolute;top:10px;right:14px;color:var(--text2);cursor:pointer;font-size:16px}
 
 /* ========== 左侧导航 ========== */
 .sidebar{position:fixed;left:0;top:var(--header-h);bottom:0;width:var(--sidebar-w);background:var(--panel);border-right:1px solid var(--border);overflow-y:auto;padding:14px 0;z-index:100}
@@ -438,7 +463,30 @@ body.resizing{user-select:none;cursor:col-resize}
     <span id="search-clear" title="清空">✕</span>
   </div>
   <div class="slogan">看得懂的数据 · 讲得清的知识</div>
+  <button id="authbtn">登录</button>
 </header>
+
+<div id="authmodal">
+  <div class="amsk"></div>
+  <div class="abox">
+    <span class="aclose">✕</span>
+    <div class="atabs"><div class="atab on" data-t="login">登 录</div><div class="atab" data-t="reg">注 册</div></div>
+    <div id="apane-login">
+      <div class="ad">会员登录后可查看观察位与卖点。</div>
+      <input id="al-user" placeholder="用户名" autocomplete="username">
+      <input id="al-pw" type="password" placeholder="密码" autocomplete="current-password">
+      <button class="abtn" id="al-go">登 录</button>
+    </div>
+    <div id="apane-reg" style="display:none">
+      <div class="ad">注册需要邀请码（定向发放，一码一号）。注册成功即为会员并自动登录。</div>
+      <input id="ar-inv" placeholder="邀请码（如 YC-8F3K-Q2C1）" autocomplete="off">
+      <input id="ar-user" placeholder="设置用户名（2-20位）" autocomplete="off">
+      <input id="ar-pw" type="password" placeholder="设置密码（至少6位）" autocomplete="new-password">
+      <button class="abtn" id="ar-go">注 册</button>
+    </div>
+    <div class="aerr" id="aerr"></div>
+  </div>
+</div>
 
 <div id="loading">数据加载中…</div>
 <div id="resizer" title="拖拽调整目录宽度"></div>
@@ -572,7 +620,11 @@ let DATA = [];
 /* 列序＝四个语义块：实时(现价·当日) → 位置(回撤) → 估值(市值·PE) → 历史(近1周~近1年)
    手机端只看得到前两格，所以把每30秒都在变的活数据放最前，静态的市值往后挪 */
 const COLS = ["名称","现价 / 1年","当日","回撤","市值","1周","1月","3月","半年","年初至今","1年"];
-let BUY = {};
+let BUY = {};          /* 会员登录后=真实观察位；游客=空对象（数字不出服务器） */
+let SELL = {};         /* 卖点（会员可见），与 BUY 同源同规则 */
+let BUYCODES = new Set();  /* 设了点位的代码清单（公开）：画★、清单票名、锁 */
+window.MEMBER = false; window.AUSER = "";
+const AUTH_API = location.host==="stock.ziyuanai.top" ? "/api" : "https://stock.ziyuanai.top/api";
 
 function fmtPct(v){
   if(v==null) return `<span class="flat">–</span>`;
@@ -656,7 +708,12 @@ function priceCell(r, mode){
   let sub = "";
   if(mode==="buy"){
     const b = BUY[r[1]], hit = buyHit(r);
-    sub = b ? `<span class="buyline${hit?" hit":""}" style="display:block;font-size:11px;color:var(--text2);white-space:normal;max-width:170px;margin-left:auto;line-height:1.45">${hit?"🎯":""}观察位 ${buyLabel(b)}</span>` : "";
+    if(!window.MEMBER && BUYCODES.has(r[1])){
+      /* 游客：知道有观察位，数字是服务器都没发来的磨砂块（脱敏在服务端，前端只画占位） */
+      sub = `<span class="buyline" style="display:block;font-size:11px;color:var(--text2);white-space:nowrap;margin-left:auto">观察位 <span class="lockg" data-auth>🔒</span><span class="bpmask"></span></span>`;
+    }else{
+      sub = b ? `<span class="buyline${hit?" hit":""}" style="display:block;font-size:11px;color:var(--text2);white-space:normal;max-width:170px;margin-left:auto;line-height:1.45">${hit?"🎯":""}观察位 ${buyLabel(b)}</span>` : "";
+    }
   }else{
     /* 现价第二行改放「近1年涨跌」（用户最关注），带涨跌色；52周区间挪进悬停浮窗 */
     sub = `<span style="display:block;font-size:12px;white-space:nowrap">${fmtPct(r[11])}</span>`;
@@ -733,7 +790,7 @@ function usdMcapTip(r){
   return h || null;
 }
 function rowHTML(r, grp){
-  return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${grp||""}" data-code="${r[1]}" data-mkt="${r[2]||""}" data-key="${(r[0]+r[1]).toLowerCase()}">
+  return `<tr class="${BUYCODES.has(r[1])?"buy":""}" data-grp="${grp||""}" data-code="${r[1]}" data-mkt="${r[2]||""}" data-key="${(r[0]+r[1]).toLowerCase()}">
     <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
     <td class="pxc">${priceCell(r)}</td>
     <td>${dayWeekCell(r)}</td>
@@ -859,6 +916,13 @@ function renderDash(quotes){
     const seen = new Set();
     const hits = rowsAll.filter(r=>{ if(seen.has(r[1])||!mktOk(r[2])) return false; seen.add(r[1]); return buyHit(r); });
     const el = document.getElementById("opps");
+    if(!window.MEMBER){
+      if(!BUYCODES.size){ el.classList.add("hidden"); return; }
+      el.classList.remove("hidden");
+      const gh = `<div class="opps-head">🎯 已进观察区 · <span class="lockg" data-auth style="cursor:pointer;font-weight:400">🔒 会员用户专属（触达名单与价格登录后显示）</span></div>`;
+      if(el.__h!==gh){ el.__h=gh; el.innerHTML=gh; }
+      return;
+    }
     if(!hits.length){ el.classList.add("hidden"); return; }
     el.classList.remove("hidden");
     /* 按市场分组（2026-07-13 主人定）：每市场一行，权重序排列；行内去掉币种前缀（行首已标市场，
@@ -916,7 +980,7 @@ function renderDash(quotes){
   window.updateBadges = function(){
     const rows = flatRows().map(x=>x.r);
     const put=(id,v)=>{ const e=document.getElementById(id); if(e) e.textContent=v; };
-    put("st-focus", Object.keys(BUY).length ? String(new Set(rows.filter(r=>BUY[r[1]]).map(r=>r[1])).size) : "–");
+    put("st-focus", BUYCODES.size ? String(new Set(rows.filter(r=>BUYCODES.has(r[1])).map(r=>r[1])).size) : "–");
     put("st-deep", String(rows.filter(r=>typeof r[6]==="number"&&r[6]<=-30).length));
     put("st-hi",   String(rows.filter(r=>typeof r[6]==="number"&&r[6]>-30).length));
     put("st-mcap", `${window.CURMKT||"全市场"} ${rows.filter(r=>mcapVal(r)>0 && !/ETF|指数|商品|外汇/.test(String(r[2]))).length}`);
@@ -1034,7 +1098,7 @@ function renderDash(quotes){
     const r = x.r;
     const ath = `<td class="athc">${athCell(r)}</td>`;
     const pers = [18,7,8,9,10,11].filter(i=>i!==skipRi).map(i=>`<td>${fmtPct(r[i])}</td>`).join("");
-    return `<tr class="${BUY[r[1]]?"buy":""}" data-grp="${r[12]||""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
+    return `<tr class="${BUYCODES.has(r[1])?"buy":""}" data-grp="${r[12]||""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
       <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
       ${athFirst ? ath : ""}
       <td class="pxc">${priceCell(r, mode)}</td>${extraTd||""}
@@ -1056,7 +1120,7 @@ function renderDash(quotes){
     if(v==="all"){ el.classList.add("hidden"); return; }
     let title="", note="", head=FV_HEAD(), body="";
     if(v==="focus"){
-      const list = flatRows().filter(x=>BUY[x.r[1]]);
+      const list = flatRows().filter(x=>BUYCODES.has(x.r[1]));
       list.forEach(x=>{
         const th=buyTh(x.r[1]), px=pxOf(x.r);
         x.dist = (th&&px) ? (1-th/px)*100 : null;   // 从现价还需下跌到买点的幅度
@@ -1068,8 +1132,11 @@ function renderDash(quotes){
       });
       title=`⭐ 重点清单（${list.length}）`; note="标注了观察位的标的 · 按距观察位由近到远排序，🎯已进观察区置顶 · 观察位为个人学习记录，不构成投资建议";
       head=FV_HEAD(`<th>距观察位</th>`, "现价 / 观察位");
-      body=list.map(x=>{
-        const d = x.dist===null ? `<span class="flat">–</span>`
+      const guestBanner = window.MEMBER ? "" :
+        `<tr><td colspan="99" style="text-align:left;padding:8px 10px"><span style="display:inline-block;font-size:12px;color:var(--gold);border:1px dashed var(--gold);border-radius:8px;padding:5px 10px;cursor:pointer" data-auth>🔒 观察位为会员用户专属内容 · 会员请登录</span></td></tr>`;
+      body=guestBanner + list.map(x=>{
+        const d = !window.MEMBER ? `<span class="lockg" data-auth style="cursor:pointer">🔒</span>`
+          : x.dist===null ? `<span class="flat">–</span>`
           : x.hit ? `<span class="dist-hit">🎯已触达</span>`
           : `<span class="dist-far">还差 ${x.dist.toFixed(1)}%</span>`;
         return fvRow(x, `<td>${d}</td>`, "buy");
@@ -1086,7 +1153,7 @@ function renderDash(quotes){
       head=`<thead><tr><th style="width:34px">#</th><th style="text-align:left">名称</th><th>市值</th><th>现价 / 1年</th><th>当日</th><th>回撤</th><th>年初至今</th><th>近1年</th><th class="fill"></th></tr></thead>`;
       body=top.map((x,i)=>{
         const r=x.r;
-        return `<tr class="${BUY[r[1]]?"buy":""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
+        return `<tr class="${BUYCODES.has(r[1])?"buy":""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
           <td style="color:var(--text2)">${i+1}</td>
           <td class="name"><span class="cn">${r[0]}</span><span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
           <td class="mcapc">${mcapCell(r)}</td>
@@ -2420,8 +2487,15 @@ let PROFILES = {};
     const usdLine = usdPriceLine(r);           /* 非美元个股才有内容，否则 "" */
     const wk = (typeof r[15]==="string" && r[15])   /* 52周区间已从表格挪到这里 */
       ? `<span style="display:block;font-size:12px;color:var(--text2)">52周 ${r[15]}</span>` : "";
+    if(!window.MEMBER && BUYCODES.has(code)){
+      /* 游客：观察位行保留存在感，数字为磨砂占位（真数字未下发） */
+      const gline = `<b>🎯 观察位</b>　<span class="lockg">🔒</span><span class="bpmask"></span> <span style="font-size:11px;color:var(--text2)">会员专属</span>`;
+      return `${wk}${gline}${usdLine}${maBlock(r)}`;
+    }
     const b = (typeof BUY!=="undefined") && BUY[code];
-    if(!b){ const body = wk + usdLine + maBlock(r); return body || null; }   /* 无观察位：52周区间 + 美元换算 + 均线 */
+    const sline = (window.MEMBER && typeof SELL!=="undefined" && SELL[code])
+      ? `<span style="display:block;margin-top:5px"><b>💰 卖点</b>　<span style="color:var(--down);font-weight:600">${SELL[code]}</span></span>` : "";
+    if(!b){ const body = wk + sline + usdLine + maBlock(r); return body || null; }   /* 无观察位：52周区间 + 美元换算 + 均线 */
     const px = parseFloat(String(r[5]).replace(/[^\d.]/g,""));
     const th = buyThreshold(b);   /* 与重点清单「距买点」同源，避免两处口径打架 */
     let line2 = "";
@@ -2434,7 +2508,7 @@ let PROFILES = {};
     /* 港股盘中现价来自腾讯免费源，延时15分钟——正好是「触达/未触达」可能翻转的量级，此处必须提醒 */
     if(String(r[2]).indexOf("港股")===0 && window.HK_OPEN)
       line2 += `<span style="display:block;margin-top:5px;font-size:11px;color:var(--text2);opacity:.85">⏳ 港股行情延时约15分钟，触达判断可能滞后</span>`;
-    return `${wk}<b>🎯 观察位</b>　<span style="color:var(--gold);font-weight:700">${b}</span>${line2}${usdLine}${maBlock(r)}`;
+    return `${wk}<b>🎯 观察位</b>　<span style="color:var(--gold);font-weight:700">${b}</span>${sline}${line2}${usdLine}${maBlock(r)}`;
   }
   function athTip(tr){   /* 历史高点悬停＝回撤台阶表（两列：跌幅+价格，现价插入档金色） */
     const code=tr.dataset.code; if(!code) return null;
@@ -2539,21 +2613,99 @@ let PROFILES = {};
   });
 })();
 
+/* ===== 会员登录/注册（2026-07-15）：token 存 localStorage("atk")，成功后整页刷新用会员数据重渲染 ===== */
+(function(){
+  const m = document.getElementById("authmodal"), btn = document.getElementById("authbtn"),
+        err = document.getElementById("aerr");
+  if(!m || !btn) return;
+  const open = t=>{ m.classList.add("show"); err.textContent=""; setTab(t||"login"); };
+  const close = ()=>m.classList.remove("show");
+  function setTab(t){
+    m.querySelectorAll(".atab").forEach(x=>x.classList.toggle("on", x.dataset.t===t));
+    document.getElementById("apane-login").style.display = t==="login" ? "" : "none";
+    document.getElementById("apane-reg").style.display = t==="reg" ? "" : "none";
+    err.textContent="";
+  }
+  m.querySelectorAll(".atab").forEach(x=>x.addEventListener("click",()=>setTab(x.dataset.t)));
+  m.querySelector(".amsk").addEventListener("click",close);
+  m.querySelector(".aclose").addEventListener("click",close);
+  window.openAuth = open;
+  /* 所有带 data-auth 的锁/横幅点击都弹窗（事件委托：榜单会反复重建） */
+  document.addEventListener("click",e=>{
+    const t = e.target.closest("[data-auth]");
+    if(t && !window.MEMBER){ e.preventDefault(); open("login"); }
+  });
+  window.updateAuthBtn = function(){
+    if(window.MEMBER){ btn.textContent = "👤 " + (window.AUSER||"会员"); btn.classList.add("member"); }
+    else{ btn.textContent = "登录"; btn.classList.remove("member"); }
+  };
+  btn.addEventListener("click",()=>{
+    if(!window.MEMBER) return open("login");
+    if(confirm("退出登录？（下次看点位需重新登录）")){
+      localStorage.removeItem("atk"); localStorage.removeItem("auser"); location.reload();
+    }
+  });
+  async function call(path, body, goBtn){
+    goBtn.disabled = true; err.textContent = "";
+    try{
+      const r = await fetch(AUTH_API+path,{method:"POST",body:JSON.stringify(body)});
+      const d = await r.json();
+      if(d.ok && d.token){
+        localStorage.setItem("atk", d.token); localStorage.setItem("auser", d.user||"");
+        err.style.color="var(--up)"; err.textContent="✓ 成功，正在加载点位…";
+        setTimeout(()=>location.reload(), 400);
+      }else{
+        err.style.color="var(--down)"; err.textContent = d.err || "失败，请重试";
+      }
+    }catch(e){ err.style.color="var(--down)"; err.textContent = "网络异常，请稍后再试"; }
+    goBtn.disabled = false;
+  }
+  document.getElementById("al-go").addEventListener("click",function(){
+    call("/login",{username:document.getElementById("al-user").value, password:document.getElementById("al-pw").value}, this);
+  });
+  document.getElementById("ar-go").addEventListener("click",function(){
+    call("/register",{invite:document.getElementById("ar-inv").value,
+      username:document.getElementById("ar-user").value, password:document.getElementById("ar-pw").value}, this);
+  });
+  document.getElementById("al-pw").addEventListener("keydown",e=>{ if(e.key==="Enter") document.getElementById("al-go").click(); });
+  document.getElementById("ar-pw").addEventListener("keydown",e=>{ if(e.key==="Enter") document.getElementById("ar-go").click(); });
+})();
+
 /* ===== 启动 ===== */
 (async ()=>{
   try{
     const bust = "?t=" + Math.floor(Date.now()/60000);
-    const [quotes, notesCfg, buyCfg, glossary, evCfg, evAuto, histCfg, spxHist] = await Promise.all([
+    /* 点位改走 ECS 会员服务（2026-07-15）：有token先试完整版，401/失败降级游客版（只有代码清单）。
+       任何一步失败都不会影响网站其余部分 —— 最差情况=看不到★和锁，等同无点位站点。 */
+    const authLoad = (async ()=>{
+      const tk = localStorage.getItem("atk");
+      if(tk){
+        try{
+          const r = await fetch(AUTH_API+"/points",{headers:{Authorization:"Bearer "+tk}});
+          if(r.ok){ const d = await r.json();
+            return {member:true, user:d.user, buy:d.buy||{}, sell:d.sell||{},
+                    codes:[...new Set([...Object.keys(d.buy||{}),...Object.keys(d.sell||{})])]}; }
+          if(r.status===401||r.status===403){ localStorage.removeItem("atk"); localStorage.removeItem("auser"); }
+        }catch(e){}
+      }
+      try{
+        const p = await fetch(AUTH_API+"/public").then(r=>r.json());
+        return {member:false, codes:p.codes||[]};
+      }catch(e){ return {member:false, codes:[]}; }
+    })();
+    const [quotes, notesCfg, auth, glossary, evCfg, evAuto, histCfg, spxHist] = await Promise.all([
       fetch("data/quotes.json"+bust).then(r=>r.json()),
       fetch("config/notes.json"+bust).then(r=>r.json()),
-      fetch("config/buypoints.json"+bust).then(r=>r.ok?r.json():{}).catch(()=>({})),
+      authLoad,
       fetch("config/glossary.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null),
       fetch("config/events.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null),
       fetch("data/events.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null),
       fetch("config/history.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null),
       fetch("data/spx_history.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null)
     ]);
-    BUY = buyCfg || {};
+    window.MEMBER = auth.member; window.AUSER = auth.user||"";
+    BUY = auth.buy || {}; SELL = auth.sell || {}; BUYCODES = new Set(auth.codes||[]);
+    window.updateAuthBtn && window.updateAuthBtn();
     if(glossary){ window.GLOSSARY = glossary; renderDict(glossary); }
     fetch("config/profiles.json"+bust).then(r=>r.ok?r.json():{}).then(p=>{ PROFILES = p || {}; }).catch(()=>{});
     renderDash(quotes);
