@@ -2135,7 +2135,8 @@ function renderLev(D){
   };
   const read = n=>{
     /* 自动判读：当前值在近60日序列中的分位 + 单日方向 */
-    if(n.ratio===null) return n.nlev ? "暂无数据" : "尚无挂钩的杠杆产品，此行仅作占位对照。";
+    if(!n.nlev) return "尚无挂钩的杠杆产品（0 只收录），此卡仅作基准对照——它的涨跌基本不受杠杆盘机械调仓影响。";
+    if(n.ratio===null) return "暂无数据";
     const vs=n.hist.map(x=>x[1]).sort((a,b)=>a-b);
     const pct=Math.round(vs.filter(v=>v<=n.ratio).length/vs.length*100);
     let s = pct>=80 ? `处于近60日 <b style="color:var(--down)">${pct}%</b> 分位——杠杆盘很拥挤，涨跌都会被机械调仓放大，回调容易踩踏，接刀需格外小心。`
@@ -2149,6 +2150,7 @@ function renderLev(D){
       <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
         <b style="font-size:14.5px;flex:0 0 auto">${n.label}</b>
         <span style="font-size:20px;font-weight:700;color:var(--gold)">${n.ratio===null?"–":n.ratio.toFixed(3)}</span>
+        <span style="font-size:12px;color:var(--text2)">${n.ratio&&n.nlev?`= 杠杆盘成交约为正股的 ${(n.ratio*100).toFixed(0)}%`:""}</span>
         <span style="font-size:12px;color:${n.d1>0?"var(--down)":"var(--up)"}">${n.d1===null?"":(n.d1>0?"↑":"↓")+" Δ1d "+(n.d1>0?"+":"")+n.d1.toFixed(3)}</span>
         <span style="flex:1"></span>
         ${spark(n.hist)}
