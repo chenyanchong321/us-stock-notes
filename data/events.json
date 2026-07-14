@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-14 08:05 北京时间",
+ "updated": "2026-07-14 08:15 北京时间",
  "earnings": [
   {
    "d": "2026-07-15",
@@ -53,6 +53,12 @@
    "d": "2026-07-23",
    "code": "TXN",
    "name": "德州仪器",
+   "est": false
+  },
+  {
+   "d": "2026-07-23",
+   "code": "NOK",
+   "name": "诺基亚",
    "est": false
   },
   {
@@ -135,6 +141,12 @@
   },
   {
    "d": "2026-07-29",
+   "code": "APH",
+   "name": "安费诺",
+   "est": false
+  },
+  {
+   "d": "2026-07-29",
    "code": "KLAC",
    "name": "科磊",
    "est": false
@@ -186,6 +198,12 @@
    "code": "QCOM",
    "name": "高通",
    "est": false
+  },
+  {
+   "d": "2026-07-30",
+   "code": "APLD",
+   "name": "Applied Digital",
+   "est": true
   },
   {
    "d": "2026-07-30",
@@ -333,6 +351,18 @@
   },
   {
    "d": "2026-08-05",
+   "code": "ANET",
+   "name": "Arista Networks",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
+   "code": "ALAB",
+   "name": "Astera Labs",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
    "code": "3110",
    "name": "日东纺织",
    "est": false
@@ -377,6 +407,12 @@
    "d": "2026-08-06",
    "code": "5801",
    "name": "古河电工",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
+   "code": "HIMX",
+   "name": "奇景光电",
    "est": false
   },
   {
@@ -447,6 +483,12 @@
   },
   {
    "d": "2026-08-12",
+   "code": "POET",
+   "name": "POET Technologies",
+   "est": true
+  },
+  {
+   "d": "2026-08-12",
    "code": "00700",
    "name": "腾讯控股",
    "est": false
@@ -461,6 +503,12 @@
    "d": "2026-08-27",
    "code": "NVDA",
    "name": "英伟达",
+   "est": false
+  },
+  {
+   "d": "2026-09-04",
+   "code": "DELL",
+   "name": "戴尔科技",
    "est": false
   },
   {
