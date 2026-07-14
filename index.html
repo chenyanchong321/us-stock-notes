@@ -455,6 +455,7 @@ body.resizing{user-select:none;cursor:col-resize}
         <button data-view="events">📅 大事件</button>
         <button data-view="dict">📖 术语词典</button>
         <button data-view="history">📜 金融史</button>
+        <button data-view="lev">⚖️ 存储杠杆率</button>
       </div>
     </div>
   </div>
@@ -578,6 +579,29 @@ body.resizing{user-select:none;cursor:col-resize}
     <div id="dict-az"></div>
     <div id="dict-list"></div>
   </div>
+</div>
+
+<div id="view-lev" class="hidden" style="max-width:860px;margin:0 auto;padding:18px 14px 60px">
+  <h2 style="font-size:18px;margin:6px 0 2px">⚖️ 存储杠杆率</h2>
+  <div style="font-size:12px;color:var(--text2)" id="lev-upd">数据加载中…</div>
+
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin:14px 0;font-size:13.5px;line-height:1.9">
+    <b style="color:var(--accent)">这是什么？</b>
+    一句话：<b>这只票身上挂了多少「自动放大器」</b>。指标 = 挂钩它的杠杆 ETF/ETN 当日成交额 ÷ 正股（含 ADR/GDR）当日成交额。
+    <br><br>
+    <b style="color:var(--accent)">为什么杠杆 ETF 会放大涨跌？</b>
+    2倍杠杆 ETF 承诺「标的涨跌多少我翻倍」，为此它<b>每天收盘前必须机械调仓</b>：标的涨了要追买、跌了要砍仓——追涨杀跌写在产品说明书里，与基本面无关。挂的杠杆盘越多（比值越高），这种机械买卖对正股的推力越大，涨跌都被放大。
+    <br><br>
+    <b style="color:var(--accent)">为什么现在盯它？</b>
+    韩国 2026 年 5 月 27 日首次放开三星/海力士<b>单股</b>杠杆 ETF，一天上市 18 只。韩股单日涨跌停限制是 ±30%，2倍杠杆 ETF 理论单日波动就是 ±60%（涨跌停幅度×杠杆倍数——理论上限，不是天天发生）。韩国散户的杠杆狂潮正是这轮存储暴涨暴跌的放大器：本轮回撤 海力士 −37% ＞ 三星 −30% ＞ SanDisk −24% ＞ 美光 −22%，恰与各家杠杆率排序一致。
+    <br><br>
+    <b style="color:var(--accent)">怎么用？</b>
+    把它当<b>拥挤度温度计</b>，不是买卖信号：比值处于高位 → 下跌容易被杠杆盘踩踏放大，接刀要格外小心；比值明显回落 → 杠杆出清较充分，跌势更接近尾声。判断「这次下跌是杠杆出清还是逻辑坏了」时先看它。
+    <br><br>
+    <span style="color:var(--text2);font-size:12px">口径与局限：思路源自 Leto Bao（@leto_bao），数值为本站自建口径（成交额=收盘价×成交量，韩元/日元按当日汇率折美元），与其发布值不完全一致，看趋势不看绝对值；产品清单人工维护（韩国 14 只正杠杆已收录，2 只反向 ETF 与 2 只 ETN 待补，铠侠暂无杠杆产品）；相关不等于因果，样本仅一轮周期。</span>
+  </div>
+
+  <div id="lev-cards"></div>
 </div>
 
 <div id="view-history" class="hidden">
@@ -2095,6 +2119,46 @@ function renderNotes(cfg){
 
 /* ===== 术语词典 ===== */
 /* ===== 金融史：编年档案卡 + 标普百年对数走势（config/history.json + data/spx_history.json） ===== */
+function renderLev(D){
+  const box = document.getElementById("lev-cards"), upd = document.getElementById("lev-upd");
+  if(!box) return;
+  if(!D || !D.names || !D.names.length){
+    upd.textContent = "数据尚未生成（流水线每个交易日美股收盘后自动计算，首次上线请稍候）"; return;
+  }
+  upd.textContent = `数据更新：${D.updated} · 每个交易日美股收盘后自动重算` +
+    (D.missing && D.missing.length ? ` · 未抓到：${D.missing.join(", ")}（清单待修）` : "");
+  const spark = h=>{
+    if(!h || h.length<2) return "";
+    const vs=h.map(x=>x[1]), mn=Math.min(...vs), mx=Math.max(...vs), rg=(mx-mn)||1;
+    const pts=vs.map((v,i)=>`${(i/(vs.length-1)*160).toFixed(1)},${(30-(v-mn)/rg*26).toFixed(1)}`).join(" ");
+    return `<svg width="160" height="34" style="flex:0 0 auto"><polyline points="${pts}" fill="none" stroke="var(--accent)" stroke-width="1.5"/></svg>`;
+  };
+  const read = n=>{
+    /* 自动判读：当前值在近60日序列中的分位 + 单日方向 */
+    if(n.ratio===null) return n.nlev ? "暂无数据" : "尚无挂钩的杠杆产品，此行仅作占位对照。";
+    const vs=n.hist.map(x=>x[1]).sort((a,b)=>a-b);
+    const pct=Math.round(vs.filter(v=>v<=n.ratio).length/vs.length*100);
+    let s = pct>=80 ? `处于近60日 <b style="color:var(--down)">${pct}%</b> 分位——杠杆盘很拥挤，涨跌都会被机械调仓放大，回调容易踩踏，接刀需格外小心。`
+      : pct>=40 ? `处于近60日 ${pct}% 分位——杠杆拥挤度中等，放大效应存在但不极端。`
+      : `处于近60日 <b style="color:var(--up)">${pct}%</b> 分位——杠杆盘较薄，走势更多反映基本面而非杠杆资金进出。`;
+    if(n.d1!==null && Math.abs(n.d1)>=0.02) s += n.d1>0 ? " 较上日明显抬升。" : " 较上日明显回落（杠杆在退潮）。";
+    return s;
+  };
+  box.innerHTML = D.names.map(n=>`
+    <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin:10px 0">
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+        <b style="font-size:14.5px;flex:0 0 auto">${n.label}</b>
+        <span style="font-size:20px;font-weight:700;color:var(--gold)">${n.ratio===null?"–":n.ratio.toFixed(3)}</span>
+        <span style="font-size:12px;color:${n.d1>0?"var(--down)":"var(--up)"}">${n.d1===null?"":(n.d1>0?"↑":"↓")+" Δ1d "+(n.d1>0?"+":"")+n.d1.toFixed(3)}</span>
+        <span style="flex:1"></span>
+        ${spark(n.hist)}
+      </div>
+      <div style="font-size:12px;color:var(--text2);margin-top:4px">
+        杠杆做多 $${n.longM}M · 做空 $${n.shortM}M · 正股成交 $${n.undB}B · 收录${n.nlev}只杠杆产品</div>
+      <div style="font-size:12.5px;margin-top:6px;line-height:1.7">${read(n)}</div>
+    </div>`).join("");
+}
+
 function renderHistory(hcfg, spx){
   const evs = (hcfg && hcfg.events) || [];
   if(!evs.length) return;
@@ -2693,7 +2757,7 @@ let PROFILES = {};
         return {member:false, codes:p.codes||[]};
       }catch(e){ return {member:false, codes:[]}; }
     })();
-    const [quotes, notesCfg, auth, glossary, evCfg, evAuto, histCfg, spxHist] = await Promise.all([
+    const [quotes, notesCfg, auth, glossary, evCfg, evAuto, histCfg, spxHist, levData] = await Promise.all([
       fetch("data/quotes.json"+bust).then(r=>r.json()),
       fetch("config/notes.json"+bust).then(r=>r.json()),
       authLoad,
@@ -2701,7 +2765,8 @@ let PROFILES = {};
       fetch("config/events.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null),
       fetch("data/events.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null),
       fetch("config/history.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null),
-      fetch("data/spx_history.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null)
+      fetch("data/spx_history.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null),
+      fetch("data/levratio.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null)
     ]);
     window.MEMBER = auth.member; window.AUSER = auth.user||"";
     BUY = auth.buy || {}; SELL = auth.sell || {}; BUYCODES = new Set(auth.codes||[]);
@@ -2712,6 +2777,7 @@ let PROFILES = {};
     renderNotes(notesCfg);
     try{ renderEvents(evCfg, evAuto); }catch(e){ console.warn("events:", e); }
     try{ renderHistory(histCfg, spxHist); }catch(e){ console.warn("history:", e); }
+    try{ renderLev(levData); }catch(e){ console.warn("lev:", e); }
     window.checkStale(quotes.updated);
   }catch(e){
     document.getElementById("loading").textContent =
@@ -2793,12 +2859,12 @@ let PROFILES = {};
   /* 视图切换（记住上次页签，并同步 URL 防止刷新跳走）。
      2026-07-13 改版：顶部只留 数据面板/学习笔记/更多（大事件·词典·金融史收进「更多」下拉，
      桌面手机统一，为未来加栏目留门）。所有切页签一律走 switchTab()。 */
-  const MORE_VIEWS = ["events","dict","history"];
+  const MORE_VIEWS = ["events","dict","history","lev"];
   window.switchTab = function(v){
     document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active", t.dataset.view===v));
     const tm = document.getElementById("tab-more");
     if(tm) tm.classList.toggle("active", MORE_VIEWS.includes(v));
-    ["dash","events","notes","dict","history"].forEach(x=>{
+    ["dash","events","notes","dict","history","lev"].forEach(x=>{
       const el = document.getElementById("view-"+x);
       if(el) el.classList.toggle("hidden", v!==x);
     });

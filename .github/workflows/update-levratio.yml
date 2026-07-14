@@ -1,0 +1,36 @@
+name: 每日更新存储杠杆率
+
+on:
+  schedule:
+    - cron: "18 21 * * 1-5"   # UTC 21:18 = 美股收盘后（北京 5:18），韩日早已收盘
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/update_levratio.py"
+      - "config/levratio.json"
+      - ".github/workflows/update-levratio.yml"
+
+concurrency:
+  group: data-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 计算杠杆率
+        run: python scripts/update_levratio.py
+      - name: 提交
+        run: |
+          git config user.name "levratio-bot"
+          git config user.email "actions@github.com"
+          git pull --rebase || true
+          git add data/levratio.json
+          git diff --cached --quiet || git commit -m "chore: 更新存储杠杆率 $(date -u +%F)"
+          git push
