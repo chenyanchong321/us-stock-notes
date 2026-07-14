@@ -73,6 +73,14 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 /* 市场筛选下拉 */
 #mktcard{position:relative}
 /* mktmenu 下拉已删除（2026-07-12）：选市场走横向切换条，开盘状态长在胶囊上 */
+/* 悬浮市场快捷dock（2026-07-14 主人需求：长列表滚动后切市场不用回顶部）。
+   底部居中：避开顶部三层吸顶（导航/卡片/表头），且手机端底部是拇指热区。
+   桌面=切换条滚出视野即常驻浮现；手机=上滑浮现/下滑隐藏（阅读零占用）。 */
+#mktfloat{position:fixed;left:50%;transform:translate(-50%,130%);bottom:14px;z-index:240;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:min(94vw,880px);background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:7px 10px;box-shadow:0 8px 24px rgba(0,0,0,.5);opacity:0;transition:transform .2s ease,opacity .2s ease;pointer-events:none}
+#mktfloat.show{transform:translate(-50%,0);opacity:1;pointer-events:auto}
+#mktfloat button{background:transparent;border:1px solid var(--border);border-radius:99px;color:var(--text2);font-size:12px;padding:3px 10px;cursor:pointer;white-space:nowrap}
+#mktfloat button.on{color:var(--accent);border-color:var(--accent)}
+@media(max-width:860px){#mktfloat{bottom:10px;padding:6px 8px;gap:5px}}
 /* 「更多」页签下拉（2026-07-13 主人定：桌面手机统一，为未来加栏目留门） */
 #tab-more{position:relative}
 #moremenu{position:absolute;top:calc(100% + 2px);left:0;z-index:220;background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:6px;display:flex;flex-direction:column;gap:2px;min-width:132px;box-shadow:0 6px 18px rgba(0,0,0,.5)}
@@ -1248,6 +1256,7 @@ function renderDash(quotes){
       applyFilter();
       window.updateBadges && window.updateBadges();   /* 数量类角标随市场联动 */
       window.refreshMktBarAll && window.refreshMktBarAll();   /* 全景横向切换条选中态 */
+      window.refreshMktFloat && window.refreshMktFloat();     /* 悬浮dock选中态 */
       window.buildOpps && window.buildOpps();
       /* 市场=滤镜，视图=镜头：切市场保持当前视图，只刷新数据 */
       if(window.CURVIEW!=="all") window.buildFlat();
@@ -1281,6 +1290,57 @@ function renderDash(quotes){
     window.ensureXtra = ()=>{ if(!window.XOPEN) setX(true); };
     mc.addEventListener("click", ()=>setX(!window.XOPEN));
     setX(false);
+  })();
+  /* ===== 悬浮市场快捷dock：桌面滚出即现，手机上滑浮现（2026-07-14 主人定，高频切换场景） ===== */
+  (function(){
+    const dock=document.createElement("div");
+    dock.id="mktfloat";
+    document.body.appendChild(dock);
+    const MK=["","美股","A股","港股","日股","韩股","台股","加密"];
+    window.refreshMktFloat=function(){
+      const c={}; MK.forEach(m=>c[m]=new Set());
+      DATA.forEach(s=>s.rows.forEach(r=>{
+        if(r[3]==="获取失败") return;
+        const mk=String(r[2]||"");
+        c[""].add(r[1]);
+        MK.forEach(m=>{ if(m&&MKT_RULE[m]&&MKT_RULE[m](mk)) c[m].add(r[1]); });
+      }));
+      dock.innerHTML=MK.map(m=>{
+        const st=m?(window.mktStatus?mktStatus(m):null):null;
+        const dot=st?(st.o?' <span style="color:var(--up)">●</span>':' <span style="opacity:.55">○</span>'):"";
+        return `<button data-mkt="${m}" class="${(window.CURMKT||"")===m?"on":""}">${m||"全部"} ${c[m].size}${dot}</button>`;
+      }).join("");
+    };
+    dock.addEventListener("click",e=>{
+      const b=e.target.closest("button");
+      if(b&&window.setMkt) setMkt(b.dataset.mkt);
+    });
+    const mob=()=>window.matchMedia("(max-width:860px)").matches;
+    let lastY=window.scrollY, upIntent=false, tick=false;
+    function refBar(){
+      const vd=document.getElementById("view-dash");
+      if(!vd||vd.classList.contains("hidden")) return null;
+      return (window.CURVIEW && window.CURVIEW!=="all")
+        ? document.querySelector("#flatview .mktbar")
+        : document.querySelector("#mktbar-all .mktbar");
+    }
+    function update(){
+      const y=window.scrollY, dy=y-lastY; lastY=y;
+      if(Math.abs(dy)>6) upIntent = dy<0;
+      const ref=refBar();
+      let show=false;
+      if(ref){
+        const out = ref.getBoundingClientRect().bottom < 100;   /* 顶部切换条已滚出吸顶区 */
+        show = mob() ? (out && upIntent) : out;
+      }
+      if(show && !dock.classList.contains("show")){ window.refreshMktFloat(); dock.classList.add("show"); }
+      if(!show) dock.classList.remove("show");
+    }
+    window.addEventListener("scroll",()=>{
+      if(tick) return; tick=true;
+      requestAnimationFrame(()=>{ update(); tick=false; });
+    },{passive:true});
+    update();
   })();
   /* 开盘状态是活信息：每分钟刷新一次切换条（全景条+当前榜单条）与侧边栏板块中位涨跌 */
   setInterval(()=>{
