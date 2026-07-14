@@ -596,7 +596,7 @@ body.resizing{user-select:none;cursor:col-resize}
     韩国 2026 年 5 月 27 日首次放开三星/海力士<b>单股</b>杠杆 ETF，一天上市 18 只。韩股单日涨跌停限制是 ±30%，2倍杠杆 ETF 理论单日波动就是 ±60%（涨跌停幅度×杠杆倍数——理论上限，不是天天发生）。韩国散户的杠杆狂潮正是这轮存储暴涨暴跌的放大器：本轮回撤 海力士 −37% ＞ 三星 −30% ＞ SanDisk −24% ＞ 美光 −22%，恰与各家杠杆率排序一致。
     <br><br>
     <b style="color:var(--accent)">怎么用？</b>
-    把它当<b>拥挤度温度计</b>，不是买卖信号：比值处于高位 → 下跌容易被杠杆盘踩踏放大，接刀要格外小心；比值明显回落 → 杠杆出清较充分，跌势更接近尾声。判断「这次下跌是杠杆出清还是逻辑坏了」时先看它。
+    把它当<b>拥挤度温度计</b>，不是买卖信号。经验档位：&lt;0.10 低（美光长期在此）、0.10–0.25 中等、0.25–0.50 偏高、&gt;0.50 很高（Leto 提示海力士(仅韩国) 0.8 时为危险区）。另外：比值处于高位 → 下跌容易被杠杆盘踩踏放大，接刀要格外小心；比值明显回落 → 杠杆出清较充分，跌势更接近尾声。判断「这次下跌是杠杆出清还是逻辑坏了」时先看它。
     <br><br>
     <span style="color:var(--text2);font-size:12px">口径与局限：思路源自 Leto Bao（@leto_bao），数值为本站自建口径（成交额=收盘价×成交量，韩元/日元按当日汇率折美元），与其发布值不完全一致，看趋势不看绝对值；产品清单人工维护（韩国 14 只正杠杆已收录，2 只反向 ETF 与 2 只 ETN 待补，铠侠暂无杠杆产品）；相关不等于因果，样本仅一轮周期。</span>
   </div>
@@ -2134,15 +2134,21 @@ function renderLev(D){
     return `<svg width="160" height="34" style="flex:0 0 auto"><polyline points="${pts}" fill="none" stroke="var(--accent)" stroke-width="1.5"/></svg>`;
   };
   const read = n=>{
-    /* 自动判读：当前值在近60日序列中的分位 + 单日方向 */
+    /* 自动判读两句话（2026-07-15 主人纠偏：先绝对档位再自身趋势，两维度分开说，
+       不许再出现"0.1很拥挤、0.6反而中等"的荒谬）：
+       ①绝对档位：横向可比，谁被杠杆绑得深一目了然；②自身分位：只说升温/退潮 */
     if(!n.nlev) return "尚无挂钩的杠杆产品（0 只收录），此卡仅作基准对照——它的涨跌基本不受杠杆盘机械调仓影响。";
     if(n.ratio===null) return "暂无数据";
+    const r=n.ratio;
+    let s = r>=0.5 ? `<b style="color:var(--down)">杠杆很高</b>：杠杆盘成交已达正股的一半以上，涨跌被机械调仓强烈放大，踩踏与逼空风险都最大，接刀需格外小心。`
+      : r>=0.25 ? `<b style="color:var(--gold)">杠杆偏高</b>：杠杆盘对走势有明显放大作用，波动会比基本面该有的更凶。`
+      : r>=0.10 ? `杠杆中等：放大效应存在但不主导。`
+      : `<b style="color:var(--up)">杠杆较低</b>：杠杆盘影响小，走势主要由基本面和普通资金决定。`;
     const vs=n.hist.map(x=>x[1]).sort((a,b)=>a-b);
     const pct=Math.round(vs.filter(v=>v<=n.ratio).length/vs.length*100);
-    let s = pct>=80 ? `处于近60日 <b style="color:var(--down)">${pct}%</b> 分位——杠杆盘很拥挤，涨跌都会被机械调仓放大，回调容易踩踏，接刀需格外小心。`
-      : pct>=40 ? `处于近60日 ${pct}% 分位——杠杆拥挤度中等，放大效应存在但不极端。`
-      : `处于近60日 <b style="color:var(--up)">${pct}%</b> 分位——杠杆盘较薄，走势更多反映基本面而非杠杆资金进出。`;
-    if(n.d1!==null && Math.abs(n.d1)>=0.02) s += n.d1>0 ? " 较上日明显抬升。" : " 较上日明显回落（杠杆在退潮）。";
+    s += pct>=80 ? ` 且处于自身近60日 ${pct}% 分位，杠杆还在升温。`
+      : pct<=25 ? ` 已回落至自身近60日 ${pct}% 分位，杠杆在退潮。`
+      : ` 目前在自身近60日 ${pct}% 分位附近波动。`;
     return s;
   };
   box.innerHTML = D.names.map(n=>`
@@ -2156,7 +2162,8 @@ function renderLev(D){
         ${spark(n.hist)}
       </div>
       <div style="font-size:12px;color:var(--text2);margin-top:4px">
-        杠杆做多 $${n.longM}M · 做空 $${n.shortM}M · 正股成交 $${n.undB}B · 收录${n.nlev}只杠杆产品</div>
+        杠杆做多 $${n.longM}M · 做空 $${n.shortM}M · 正股成交 $${n.undB}B · 收录${n.nlev}只杠杆产品
+        ${n.nlev?`<span style="opacity:.75">｜黄色数字 = (做多+做空)÷正股成交 = (${n.longM}+${n.shortM})M ÷ ${n.undB}B</span>`:""}</div>
       <div style="font-size:12.5px;margin-top:6px;line-height:1.7">${read(n)}</div>
     </div>`).join("");
 }
