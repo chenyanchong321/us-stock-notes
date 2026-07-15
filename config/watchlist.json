@@ -5410,20 +5410,6 @@
      "ath_floor": 0
     },
     {
-     "name": "兆威机电",
-     "code": "02692",
-     "market": "港股",
-     "yahoo": "2692.HK",
-     "currency": "HK$",
-     "mcap_base": {
-      "prefix": "HK$",
-      "yi": 2.4,
-      "approx": true
-     },
-     "mcap_base_price": 1.0,
-     "ath_floor": 0
-    },
-    {
      "name": "蓝思科技",
      "code": "300433",
      "market": "A股",
@@ -5648,6 +5634,20 @@
      "ath_floor": 0
     },
     {
+     "name": "兆威机电",
+     "code": "02692",
+     "market": "港股",
+     "yahoo": "2692.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 2.4,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "柯力传感",
      "code": "603662",
      "market": "A股",
@@ -5738,7 +5738,6 @@
      "codes": [
       "09880",
       "09868",
-      "02692",
       "300433"
      ]
     },
@@ -5779,7 +5778,8 @@
     {
      "name": "灵巧手与微传动",
      "codes": [
-      "003021"
+      "003021",
+      "02692"
      ]
     },
     {
