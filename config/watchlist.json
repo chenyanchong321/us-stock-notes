@@ -5379,7 +5379,7 @@
    ]
   },
   {
-   "name": "17 机器人、汽车零部件与无人系统",
+   "name": "17 机器人与 Physical AI",
    "items": [
     {
      "name": "优必选",
@@ -5390,6 +5390,34 @@
      "mcap_base": {
       "prefix": "HK$",
       "yi": 4.5,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "小鹏汽车",
+     "code": "09868",
+     "market": "港股",
+     "yahoo": "9868.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 19.1,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "兆威机电",
+     "code": "02692",
+     "market": "港股",
+     "yahoo": "2692.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 2.4,
       "approx": true
      },
      "mcap_base_price": 1.0,
@@ -5422,6 +5450,20 @@
      },
      "mcap_base_price": 8840.0,
      "ath_floor": 9510.0
+    },
+    {
+     "name": "纳博特斯克",
+     "code": "6268",
+     "market": "日本",
+     "yahoo": "6268.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1.24,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
     },
     {
      "name": "绿的谐波",
@@ -5494,6 +5536,48 @@
      "ath_floor": 137.66
     },
     {
+     "name": "THK",
+     "code": "6481",
+     "market": "日本",
+     "yahoo": "6481.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1.27,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "华辰装备",
+     "code": "300809",
+     "market": "A股",
+     "yahoo": "300809.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2.2,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "秦川机床",
+     "code": "000837",
+     "market": "A股",
+     "yahoo": "000837.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 10.9,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "鸣志电器",
      "code": "603728",
      "market": "A股",
@@ -5506,6 +5590,48 @@
      },
      "mcap_base_price": 68.02,
      "ath_floor": 92.5
+    },
+    {
+     "name": "金力永磁",
+     "code": "300748",
+     "market": "A股",
+     "yahoo": "300748.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 13.4,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "金力永磁",
+     "code": "06680",
+     "market": "港股",
+     "yahoo": "6680.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 13.4,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "正海磁材",
+     "code": "300224",
+     "market": "A股",
+     "yahoo": "300224.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 8.2,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
     },
     {
      "name": "兆威机电",
@@ -5522,14 +5648,70 @@
      "ath_floor": 0
     },
     {
-     "name": "兆威机电",
-     "code": "02692",
+     "name": "柯力传感",
+     "code": "603662",
+     "market": "A股",
+     "yahoo": "603662.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2.8,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "速腾聚创",
+     "code": "02498",
      "market": "港股",
-     "yahoo": "2692.HK",
+     "yahoo": "2498.HK",
      "currency": "HK$",
      "mcap_base": {
       "prefix": "HK$",
-      "yi": 2.4,
+      "yi": 4.5,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "Novanta",
+     "code": "NOVT",
+     "market": "美股",
+     "yahoo": "NOVT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 0.36,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "直觉外科",
+     "code": "ISRG",
+     "market": "美股",
+     "yahoo": "ISRG",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3.58,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "Symbotic",
+     "code": "SYM",
+     "market": "美股",
+     "yahoo": "SYM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 5.8,
       "approx": true
      },
      "mcap_base_price": 1.0,
@@ -5555,31 +5737,64 @@
      "name": "整机与代工",
      "codes": [
       "09880",
+      "09868",
+      "02692",
       "300433"
      ]
     },
     {
-     "name": "谐波减速器",
+     "name": "谐波与RV减速器",
      "codes": [
       "6324",
+      "6268",
       "688017"
      ]
     },
     {
-     "name": "执行器·丝杠·热管理",
+     "name": "执行器与Tier1",
      "codes": [
       "002050",
       "02050",
-      "601689",
-      "601100"
+      "601689"
+     ]
+    },
+    {
+     "name": "丝杠·导轨·设备",
+     "codes": [
+      "601100",
+      "6481",
+      "300809",
+      "000837"
+     ]
+    },
+    {
+     "name": "电机与磁材",
+     "codes": [
+      "603728",
+      "300748",
+      "06680",
+      "300224"
      ]
     },
     {
      "name": "灵巧手与微传动",
      "codes": [
-      "603728",
-      "003021",
-      "02692"
+      "003021"
+     ]
+    },
+    {
+     "name": "传感器与感知",
+     "codes": [
+      "603662",
+      "02498",
+      "NOVT"
+     ]
+    },
+    {
+     "name": "应用场景整机",
+     "codes": [
+      "ISRG",
+      "SYM"
      ]
     },
     {
