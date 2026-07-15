@@ -725,27 +725,35 @@ function buyThreshold(b){
   const nums  = (tier1.match(/[\d.]+/g)||[]).map(parseFloat).filter(n=>n>0);
   return nums.length ? Math.max(...nums) : null;    /* 该档的上沿 */
 }
-function tgtNum(code){
-  /* 目标价文案里第一个数字=目标价（如 "45（07/15锚·…）"→45、"50港元（…）"→50） */
+function tgtRange(code){
+  /* 目标价文案头部的数字（支持区间）："45（…）"→[45]、"80–100（…）"→[80,100]、"180000–200000"→[lo,hi] */
   const t = (typeof TGT!=="undefined") && TGT[code];
   if(!t) return null;
-  const m = String(t).split(/[（(]/)[0].match(/[\d.]+/);
-  return m ? parseFloat(m[0]) : null;
+  const nums = (String(t).split(/[（(]/)[0].match(/[\d.]+/g)||[]).map(parseFloat).filter(x=>x>0);
+  if(!nums.length) return null;
+  return nums.length>1 ? [Math.min(...nums), Math.max(...nums)] : [nums[0]];
 }
 function tgtCell(r){
-  /* 重点清单「目标价」列：双行=目标价 + 距目标涨幅（随实时现价刷新）。
-     游客=🔒磨砂（数字未下发）；无目标价="–"。现价已超目标→金色提示（天然的减仓信号）。 */
+  /* 重点清单「目标价」列：双行=目标价 + 距目标涨幅（随实时现价刷新，支持区间目标）。
+     游客=🔒磨砂；无目标价="–"。现价进入/超过目标区→金色提示（天然的减仓信号）。 */
   if(!window.MEMBER) return `<span class="lockg" data-auth style="cursor:pointer">🔒</span><span class="bpmask"></span>`;
-  const th = tgtNum(r[1]);
-  if(!th) return `<span class="flat">–</span>`;
+  const rg = tgtRange(r[1]);
+  if(!rg) return `<span class="flat">–</span>`;
   const px = parseFloat(String(r[5]).replace(/[^\d.]/g,""));
   const lab = String(TGT[r[1]]).split(/[（(]/)[0].trim();
   let sub = "";
   if(px>0){
-    const up = (th/px-1)*100;
-    sub = up>=0
-      ? `<span style="display:block;font-size:11px;color:var(--up)">还有 +${up.toFixed(1)}% 空间</span>`
-      : `<span style="display:block;font-size:11px;color:var(--gold);font-weight:600">已达目标 +${(-up).toFixed(1)}%</span>`;
+    const pc = v=>((v/px-1)*100);
+    if(rg.length===1){
+      const up = pc(rg[0]);
+      sub = up>=0 ? `<span style="display:block;font-size:11px;color:var(--up)">还有 +${up.toFixed(1)}% 空间</span>`
+                  : `<span style="display:block;font-size:11px;color:var(--gold);font-weight:600">已达目标 +${(-up).toFixed(1)}%</span>`;
+    }else{
+      const lo=pc(rg[0]), hi=pc(rg[1]);
+      if(lo>0)      sub = `<span style="display:block;font-size:11px;color:var(--up)">还有 +${lo.toFixed(0)}%~+${hi.toFixed(0)}% 空间</span>`;
+      else if(hi>0) sub = `<span style="display:block;font-size:11px;color:var(--gold);font-weight:600">已进目标区 · 距上沿 +${hi.toFixed(1)}%</span>`;
+      else          sub = `<span style="display:block;font-size:11px;color:var(--gold);font-weight:600">已越目标区上沿 +${(-hi).toFixed(1)}%</span>`;
+    }
   }
   return `<span style="display:block;white-space:nowrap">${lab}</span>${sub}`;
 }
