@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-15 21:00 北京时间",
+ "updated": "2026-07-15 21:15 北京时间",
  "earnings": [
   {
    "d": "2026-07-15",
@@ -203,6 +203,12 @@
    "d": "2026-07-29",
    "code": "BE",
    "name": "Bloom Energy",
+   "est": false
+  },
+  {
+   "d": "2026-07-29",
+   "code": "GNRC",
+   "name": "Generac",
    "est": false
   },
   {
@@ -503,6 +509,12 @@
    "d": "2026-08-06",
    "code": "CEG",
    "name": "Constellation Energy",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
+   "code": "TLN",
+   "name": "Talen Energy",
    "est": false
   },
   {
