@@ -746,11 +746,11 @@ function tgtCell(r){
     const pc = v=>((v/px-1)*100);
     if(rg.length===1){
       const up = pc(rg[0]);
-      sub = up>=0 ? `<span style="display:block;font-size:11px;color:var(--up)">还有 +${up.toFixed(1)}% 空间</span>`
+      sub = up>=0 ? `<span style="display:block;font-size:11px;color:var(--up)">+${up.toFixed(1)}% 空间</span>`
                   : `<span style="display:block;font-size:11px;color:var(--gold);font-weight:600">已达目标 +${(-up).toFixed(1)}%</span>`;
     }else{
       const lo=pc(rg[0]), hi=pc(rg[1]);
-      if(lo>0)      sub = `<span style="display:block;font-size:11px;color:var(--up)">还有 +${lo.toFixed(0)}%~+${hi.toFixed(0)}% 空间</span>`;
+      if(lo>0)      sub = `<span style="display:block;font-size:11px;color:var(--up)">+${lo.toFixed(0)}%~+${hi.toFixed(0)}% 空间</span>`;
       else if(hi>0) sub = `<span style="display:block;font-size:11px;color:var(--gold);font-weight:600">已进目标区 · 距上沿 +${hi.toFixed(1)}%</span>`;
       else          sub = `<span style="display:block;font-size:11px;color:var(--gold);font-weight:600">已越目标区上沿 +${(-hi).toFixed(1)}%</span>`;
     }
