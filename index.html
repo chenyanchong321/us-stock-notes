@@ -803,6 +803,8 @@ function volCell(r){
     /* 加密：CoinGecko 24小时滚动成交额 + volume/mcap（圈内标准"换手"），与市值同源真值 */
     const lv=window.VLIVE[r[1]];
     if(!(lv&&lv.amt>0)) return `<span class="flat">–</span>`;
+    window.LBOF = window.LBOF || {};
+    window.LBOF[r[1]] = {lb:null, to:(typeof lv.to==="number"?lv.to:null), amt:lv.amt, isLive:true, mkt:"加密"};
     const sub = (typeof lv.to==="number"&&lv.to>0)
       ? `<span style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">换手(24h) ${lv.to>=10?lv.to.toFixed(1):lv.to.toFixed(2)}%</span>` : "";
     return `<span style="display:block;white-space:nowrap">${fmtAmt("美股",lv.amt)}</span>${sub}`;
@@ -826,14 +828,47 @@ function volCell(r){
     const frac = isLive ? sessFrac(mkt) : 1;
     if(frac>=0.05) lb = amt/(d[0]*frac);
   }
-  const lbTxt = lb===null ? "" :
-    lb>=2   ? `<span style="color:var(--down)">量比 ${lb.toFixed(1)} 放量</span>` :
-    lb<=0.5 ? `<span style="opacity:.55">量比 ${lb.toFixed(1)} 缩量</span>` :
-              `量比 ${lb.toFixed(1)}`;
-  const toTxt = to===null ? "" : `换手 ${to>=10?to.toFixed(1):to.toFixed(2)}%`;
-  const sub = (toTxt||lbTxt) ? `<span style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">${toTxt}${toTxt&&lbTxt?" · ":""}${lbTxt}</span>` : "";
-  const stale = (!isLive && liveMkt) || !liveMkt ? "" : "";
+  /* 格内瘦身（2026-07-15 主人定稿）：只留 成交额+换手，量比收进悬停浮窗；
+     但放量/缩量的一眼信号保留为小圆点（●红=量比≥2放量，●灰=≤0.5缩量） */
+  window.LBOF = window.LBOF || {};
+  window.LBOF[r[1]] = {lb, to, amt, isLive, mkt, avg20: d&&d[0]||null};
+  const dot = lb===null ? "" :
+    lb>=2   ? `<span style="color:var(--down)">●</span> ` :
+    lb<=0.5 ? `<span style="opacity:.4">●</span> ` : "";
+  const toTxt = to===null ? "" : `${dot}换手 ${to>=10?to.toFixed(1):to.toFixed(2)}%`;
+  const sub = toTxt ? `<span style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">${toTxt}</span>` : (dot?`<span style="display:block;font-size:11px">${dot}</span>`:"");
   return `<span style="display:block;white-space:nowrap">${fmtAmt(mkt,amt)}</span>${sub}`;
+}
+function volTip(tr){
+  /* 成交格悬停浮窗：动态判读（这只票的量比/换手处于什么水平）+ 固定说明（定义与档位表） */
+  const code=tr && tr.dataset ? tr.dataset.code : null; if(!code) return null;
+  const i = window.LBOF && window.LBOF[code]; if(!i) return null;
+  const lines=[];
+  lines.push(`<b>📊 量能读数</b>`);
+  if(i.lb!==null){
+    const lb=i.lb;
+    const tag = lb>=5?["极端放量","var(--down)"]:lb>=2.5?["明显放量","var(--down)"]:lb>=1.5?["温和放量","var(--gold)"]
+             :lb>0.5?["正常水平","var(--text2)"]:["明显缩量","var(--text2)"];
+    const expl = lb>=2.5?"平时"+lb.toFixed(1)+"倍的资金涌入，一定有事发生（新闻/财报/资金异动），今天的涨跌'动真格'"
+             :lb>=1.5?"资金参与度高于平时，关注度在升温"
+             :lb>0.5?"和这只票平时的成交节奏差不多"
+             :"连平时一半的人都没来，此时的价格波动参考意义有限";
+    lines.push(`<span style="display:block;margin-top:5px">量比 <b style="color:${tag[1]}">${lb.toFixed(2)}</b>　<span style="color:${tag[1]}">${tag[0]}</span></span>`);
+    lines.push(`<span style="display:block;font-size:12px;color:var(--text2)">${expl}</span>`);
+    lines.push(`<span style="display:block;font-size:11px;color:var(--text2);opacity:.8;margin-top:2px">样本=它自己近20个交易日的日均成交${i.isLive?"，盘中已按开盘时长折算（开盘1小时只跟往常前1小时比）":""}</span>`);
+  }else{
+    lines.push(`<span style="display:block;margin-top:4px;font-size:12px;color:var(--text2)">量比暂无（20日均量基准生成中，或该市场不适用）</span>`);
+  }
+  if(typeof i.to==="number" && i.to>0){
+    const t=i.to;
+    const ttag = t>=20?"极度亢奋（常见于情绪顶点附近）":t>=7?"偏高，交投火热":t>=3?"活跃":t>=1?"正常":"偏低，筹码安静";
+    lines.push(`<span style="display:block;margin-top:7px">换手率 <b>${t>=10?t.toFixed(1):t.toFixed(2)}%</b>　<span style="color:var(--text2)">${ttag}</span></span>`);
+  }
+  lines.push(`<span style="display:block;margin-top:8px;border-top:1px solid var(--border);padding-top:6px;font-size:11.5px;color:var(--text2);line-height:1.75">`+
+    `<b>量比</b>=今日成交÷自己近20日均值：&lt;0.5缩量 · 0.5–1.5正常 · 1.5–2.5温和放量 · &gt;2.5明显放量 · &gt;5极端异动<br>`+
+    `<b>换手率</b>=今日换了主人的筹码比例：&lt;1%安静 · 1–3%正常 · 3–7%活跃 · 7–20%火热 · &gt;20%极度亢奋<br>`+
+    `<span style="opacity:.8">口径：A股美股=流通股本(平台直给)、港股=成交额÷流通市值、日韩台=总股本(昨日值)、加密=volume/mcap(24h)</span></span>`);
+  return lines.join("");
 }
 /* 各币种对美元汇率（1本币=?美元，粗略即可，只影响排名不影响展示；口径约2026年中） */
 const FX2USD = {USD:1, HKD:1/7.8, CNY:1/7.2, JPY:1/158, KRW:1/1370, TWD:1/32};
@@ -2747,12 +2782,19 @@ let PROFILES = {};
       else tip.style.display="none";   /* 美股/指数等无换算的行：收掉残留 */
       return;
     }
+    const tdv = e.target.closest("td.volc");
+    if(tdv){
+      const hv = volTip(tdv.parentElement);
+      if(hv){ tip.innerHTML=hv; tip.style.display="block"; tip.style.pointerEvents="none"; place(e.clientX, e.clientY); }
+      else tip.style.display="none";
+      return;
+    }
     const td = e.target.closest("td.name"); if(!td) return;
     const h = tipHTML(td); if(!h) return;
     tip.innerHTML = h; tip.style.display = "block"; tip.style.pointerEvents = "none";
     place(e.clientX, e.clientY);
   });
-  const inZone = el => el && el.closest && (el.closest("td.name")||el.closest("td.pxc")||el.closest("td.athc")||el.closest("td.mcapc")||el.closest(".ipoflag"));
+  const inZone = el => el && el.closest && (el.closest("td.name")||el.closest("td.pxc")||el.closest("td.athc")||el.closest("td.mcapc")||el.closest("td.volc")||el.closest(".ipoflag"));
   document.addEventListener("mousemove", e=>{
     if(pinned || tip.style.display !== "block") return;
     if(!inZone(e.target)){ tip.style.display = "none"; return; }
@@ -2769,11 +2811,12 @@ let PROFILES = {};
     const tdp = e.target.closest("td.pxc");
     const tda = e.target.closest("td.athc");
     const tdm = e.target.closest("td.mcapc");
+    const tdv = e.target.closest("td.volc");
     const ipc = e.target.closest(".ipoflag");
-    const trig = td || tdp || tda || tdm || ipc;   /* 本次点中的触发格 */
+    const trig = td || tdp || tda || tdm || tdv || ipc;   /* 本次点中的触发格 */
     /* 再点同一格＝关闭（开关式）。这样手机上不必再去点空白处收浮窗。 */
     if(pinned && trig && trig===pinnedEl){ tip.style.display="none"; pinned=false; pinnedEl=null; return; }
-    const h = td ? tipHTML(td) : (tdp ? posTip(tdp.parentElement) : (tda ? athTip(tda.parentElement) : (tdm ? usdMcapTip(rowOfTr(tdm.parentElement)) : (ipc ? ipc.dataset.tip : null))));
+    const h = td ? tipHTML(td) : (tdp ? posTip(tdp.parentElement) : (tda ? athTip(tda.parentElement) : (tdm ? usdMcapTip(rowOfTr(tdm.parentElement)) : (tdv ? volTip(tdv.parentElement) : (ipc ? ipc.dataset.tip : null)))));
     if(h){
       tip.innerHTML = h; tip.style.display = "block"; tip.style.pointerEvents = "auto";
       pinned = true; pinnedEl = trig;
