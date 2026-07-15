@@ -1,16 +1,10 @@
 {
- "updated": "2026-07-16 04:45 北京时间",
+ "updated": "2026-07-16 05:00 北京时间",
  "earnings": [
   {
    "d": "2026-07-15",
    "code": "ASML",
    "name": "阿斯麦",
-   "est": false
-  },
-  {
-   "d": "2026-07-16",
-   "code": "TSM",
-   "name": "台积电",
    "est": false
   },
   {
@@ -51,12 +45,6 @@
   },
   {
    "d": "2026-07-23",
-   "code": "TXN",
-   "name": "德州仪器",
-   "est": false
-  },
-  {
-   "d": "2026-07-23",
    "code": "NOK",
    "name": "诺基亚",
    "est": false
@@ -77,12 +65,6 @@
    "d": "2026-07-23",
    "code": "NOW",
    "name": "ServiceNow",
-   "est": false
-  },
-  {
-   "d": "2026-07-24",
-   "code": "INTC",
-   "name": "英特尔",
    "est": false
   },
   {
@@ -111,12 +93,6 @@
   },
   {
    "d": "2026-07-28",
-   "code": "GLW",
-   "name": "康宁",
-   "est": false
-  },
-  {
-   "d": "2026-07-28",
    "code": "AMKR",
    "name": "艾马克技术（Amkor）",
    "est": false
@@ -137,24 +113,6 @@
    "d": "2026-07-28",
    "code": "ECL",
    "name": "艺康集团（Ecolab）",
-   "est": false
-  },
-  {
-   "d": "2026-07-29",
-   "code": "NXPI",
-   "name": "恩智浦",
-   "est": false
-  },
-  {
-   "d": "2026-07-29",
-   "code": "005930",
-   "name": "三星电子",
-   "est": false
-  },
-  {
-   "d": "2026-07-29",
-   "code": "STX",
-   "name": "希捷科技",
    "est": false
   },
   {
@@ -231,24 +189,6 @@
   },
   {
    "d": "2026-07-30",
-   "code": "ARM",
-   "name": "Arm Holdings",
-   "est": false
-  },
-  {
-   "d": "2026-07-30",
-   "code": "QCOM",
-   "name": "高通",
-   "est": false
-  },
-  {
-   "d": "2026-07-30",
-   "code": "SKHY",
-   "name": "SK海力士(美股ADR)",
-   "est": true
-  },
-  {
-   "d": "2026-07-30",
    "code": "APLD",
    "name": "Applied Digital",
    "est": true
@@ -299,24 +239,6 @@
    "d": "2026-07-31",
    "code": "AAPL",
    "name": "苹果",
-   "est": false
-  },
-  {
-   "d": "2026-07-31",
-   "code": "285A",
-   "name": "铠侠",
-   "est": false
-  },
-  {
-   "d": "2026-07-31",
-   "code": "AXTI",
-   "name": "AXT Inc",
-   "est": false
-  },
-  {
-   "d": "2026-07-31",
-   "code": "5802",
-   "name": "住友电气",
    "est": false
   },
   {
@@ -417,12 +339,6 @@
   },
   {
    "d": "2026-08-05",
-   "code": "AMD",
-   "name": "AMD",
-   "est": false
-  },
-  {
-   "d": "2026-08-05",
    "code": "ANET",
    "name": "Arista Networks",
    "est": false
@@ -473,24 +389,6 @@
    "d": "2026-08-05",
    "code": "NOVT",
    "name": "Novanta",
-   "est": false
-  },
-  {
-   "d": "2026-08-06",
-   "code": "SNDK",
-   "name": "闪迪",
-   "est": false
-  },
-  {
-   "d": "2026-08-06",
-   "code": "WDC",
-   "name": "西部数据",
-   "est": false
-  },
-  {
-   "d": "2026-08-06",
-   "code": "5801",
-   "name": "古河电工",
    "est": false
   },
   {
@@ -575,12 +473,6 @@
    "d": "2026-08-07",
    "code": "6324",
    "name": "哈默纳科机电",
-   "est": false
-  },
-  {
-   "d": "2026-08-12",
-   "code": "LITE",
-   "name": "Lumentum",
    "est": false
   },
   {
