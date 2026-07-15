@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-16 06:00 北京时间",
+ "updated": "2026-07-16 06:10 北京时间",
  "earnings": [
   {
    "d": "2026-07-15",
@@ -113,6 +113,12 @@
    "d": "2026-07-28",
    "code": "GLW",
    "name": "康宁",
+   "est": false
+  },
+  {
+   "d": "2026-07-28",
+   "code": "APLD",
+   "name": "Applied Digital",
    "est": false
   },
   {
@@ -245,12 +251,6 @@
    "d": "2026-07-30",
    "code": "SKHY",
    "name": "SK海力士(美股ADR)",
-   "est": true
-  },
-  {
-   "d": "2026-07-30",
-   "code": "APLD",
-   "name": "Applied Digital",
    "est": true
   },
   {
@@ -548,6 +548,24 @@
    "est": false
   },
   {
+   "d": "2026-08-06",
+   "code": "KVYO",
+   "name": "Klaviyo",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
+   "code": "SYM",
+   "name": "Symbotic",
+   "est": false
+  },
+  {
+   "d": "2026-08-07",
+   "code": "ACMR",
+   "name": "ACM Research",
+   "est": false
+  },
+  {
    "d": "2026-08-07",
    "code": "5803",
    "name": "藤仓（Fujikura）",
@@ -569,6 +587,12 @@
    "d": "2026-08-07",
    "code": "TEAM",
    "name": "Atlassian",
+   "est": false
+  },
+  {
+   "d": "2026-08-07",
+   "code": "FROG",
+   "name": "JFrog",
    "est": false
   },
   {
