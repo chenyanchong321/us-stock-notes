@@ -5459,7 +5459,7 @@
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 1.24,
+      "yi": 1.17,
       "approx": true
      },
      "mcap_base_price": 1.0,
@@ -5543,7 +5543,7 @@
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 1.27,
+      "yi": 1.12,
       "approx": true
      },
      "mcap_base_price": 1.0,
@@ -5557,7 +5557,7 @@
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 2.2,
+      "yi": 2.54,
       "approx": true
      },
      "mcap_base_price": 1.0,
@@ -5571,7 +5571,7 @@
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 10.9,
+      "yi": 10.2,
       "approx": true
      },
      "mcap_base_price": 1.0,
@@ -5599,7 +5599,7 @@
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 13.4,
+      "yi": 13.75,
       "approx": true
      },
      "mcap_base_price": 1.0,
@@ -5613,7 +5613,7 @@
      "currency": "HK$",
      "mcap_base": {
       "prefix": "HK$",
-      "yi": 13.4,
+      "yi": 13.75,
       "approx": true
      },
      "mcap_base_price": 1.0,
@@ -5627,7 +5627,7 @@
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 8.2,
+      "yi": 9.3,
       "approx": true
      },
      "mcap_base_price": 1.0,
@@ -5655,7 +5655,7 @@
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 2.8,
+      "yi": 2.81,
       "approx": true
      },
      "mcap_base_price": 1.0,
@@ -5669,7 +5669,7 @@
      "currency": "HK$",
      "mcap_base": {
       "prefix": "HK$",
-      "yi": 4.5,
+      "yi": 4.62,
       "approx": true
      },
      "mcap_base_price": 1.0,
@@ -5683,7 +5683,7 @@
      "currency": "$",
      "mcap_base": {
       "prefix": "$",
-      "yi": 0.36,
+      "yi": 0.356,
       "approx": true
      },
      "mcap_base_price": 1.0,
@@ -5697,7 +5697,7 @@
      "currency": "$",
      "mcap_base": {
       "prefix": "$",
-      "yi": 3.58,
+      "yi": 3.54,
       "approx": true
      },
      "mcap_base_price": 1.0,
