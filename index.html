@@ -518,7 +518,7 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="stat vc xtra hidden" id="scalecard"><div class="k">🌍 市场规模</div><div class="v">总市值</div>
         <div id="scalemenu" class="hidden"></div>
       </div>
-      <div class="refresh-note" title="2026-07-10 实测：腾讯的 A股与美股盘中快照均为实时（用其分时数据反查验证）；港股实测延时15分钟（13:56的价14:11才返回）。2026-07-13 盘中实测：日股延时约15-20分钟、韩股约20-25分钟（时间戳法+Yahoo分钟线反查双法吻合）；A股复盘后实测秒级实时（快照=分时最新一分钟）；腾讯无台股行情（tw代码返回none_match），台股行仅每日流水线数据">盘中现价30秒刷新（A股·美股实时 · 港股延时15分钟 · 日股约15-20分钟 · 韩股约20-25分钟 · 台股仅每日数据）· 美股盘前盘后约1分钟 · 加密实时 · 其余指标数分钟刷新 · 市值为估算口径 · 成交列：A股/美股/港股盘中实时，日韩台为上一交易日；换手率口径 A股美股=流通股本(平台直给) 港股=成交额÷流通市值 日韩台=总股本；量比=今日成交÷近20日均值(盘中按已开盘时间折算)</div>
+      <div class="refresh-note" title="2026-07-10 实测：腾讯的 A股与美股盘中快照均为实时（用其分时数据反查验证）；港股实测延时15分钟（13:56的价14:11才返回）。2026-07-13 盘中实测：日股延时约15-20分钟、韩股约20-25分钟（时间戳法+Yahoo分钟线反查双法吻合）；A股复盘后实测秒级实时（快照=分时最新一分钟）；腾讯无台股行情（tw代码返回none_match），台股行仅每日流水线数据">盘中现价30秒刷新（A股·美股实时 · 港股延时15分钟 · 日股约15-20分钟 · 韩股约20-25分钟 · 台股仅每日数据）· 美股盘前盘后约1分钟 · 加密实时 · 其余指标数分钟刷新 · 市值为估算口径 · 成交列：A股/美股/港股盘中实时，日韩台为上一交易日；换手率口径 A股美股=流通股本(平台直给) 港股=成交额÷流通市值 日韩台=总股本；量比=今日成交÷近20日均值(盘中按已开盘时间折算)；加密=CoinGecko 24小时滚动成交额，换手=volume/mcap</div>
     </div>
     <div id="topbar">
       <div id="mbottom" class="mobile-only">
@@ -799,7 +799,15 @@ function fmtAmt(mkt, v){
 }
 function volCell(r){
   const mkt=String(r[2]||"");
-  if(/指数|商品|外汇|宏观|加密/.test(mkt)) return `<span class="flat">–</span>`;
+  if(/加密/.test(mkt)){
+    /* 加密：CoinGecko 24小时滚动成交额 + volume/mcap（圈内标准"换手"），与市值同源真值 */
+    const lv=window.VLIVE[r[1]];
+    if(!(lv&&lv.amt>0)) return `<span class="flat">–</span>`;
+    const sub = (typeof lv.to==="number"&&lv.to>0)
+      ? `<span style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">换手(24h) ${lv.to>=10?lv.to.toFixed(1):lv.to.toFixed(2)}%</span>` : "";
+    return `<span style="display:block;white-space:nowrap">${fmtAmt("美股",lv.amt)}</span>${sub}`;
+  }
+  if(/指数|商品|外汇|宏观/.test(mkt)) return `<span class="flat">–</span>`;
   const d = Array.isArray(r[21]) ? r[21] : null;   /* [avg20额,昨额,昨量,总股本] */
   const lv = window.VLIVE[r[1]];
   const liveMkt = /^(A股|美股|港股)/.test(mkt);
@@ -2034,6 +2042,8 @@ function renderNotes(cfg){
       if(typeof c.price_change_percentage_30d_in_currency==="number") r[7] =Math.round(c.price_change_percentage_30d_in_currency*10)/10;
       if(typeof c.price_change_percentage_1y_in_currency ==="number") r[11]=Math.round(c.price_change_percentage_1y_in_currency*10)/10;
       if(c.market_cap>0) r[3] = cgMcap(c.market_cap);
+      if(c.total_volume>0) window.VLIVE[r[1]] = {amt: c.total_volume,
+        to: c.market_cap>0 ? c.total_volume/c.market_cap*100 : null, ts: Date.now()};
       if(c.ath>0){
         const ath = Math.max(c.ath, px);          /* 创新高时高点跟着抬 */
         r[4] = "$" + cgNum(ath);
@@ -2045,6 +2055,7 @@ function renderNotes(cfg){
         if(t.length<12) return;
         setHTML(t[1], priceCell(r));  setHTML(t[2], dayWeekCell(r));
         setHTML(t[3], athCell(r));    setHTML(t[4], mcapCell(r));
+        setHTML(t[5], volCell(r));
         setHTML(t[6], fmtPct(r[18])); setHTML(t[7], fmtPct(r[7]));
         setHTML(t[11],fmtPct(r[11]));
       });
