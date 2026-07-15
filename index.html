@@ -659,6 +659,7 @@ function fmtPct(v){
     if(m) return `<span class="flat ipoflag" data-tip="上市时间不满该窗口 · 上市至今 <b>${m[1]}</b>">／</span>`;
     return `<span class="flat">${v}</span>`;
   }
+  if(typeof v!=="number" || !isFinite(v)) return `<span class="flat">–</span>`;   /* 防呆：脏数据（数组/对象/NaN）显示–，绝不放倒整页（2026-07-16 IAU坏行事故） */
   const cls = v>0 ? "pos" : v<0 ? "neg" : "flat";
   const sign = v>0 ? "+" : "";
   return `<span class="${cls}">${sign}${v.toFixed(1)}%</span>`;

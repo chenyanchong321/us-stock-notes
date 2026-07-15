@@ -408,6 +408,12 @@ def main():
             print(f"  {it['code']:>10} {it['name'][:12]:<14} 现价 {price:,.2f}  回撤 {dd:.1f}%")
         sections_out.append({"sec": sec["name"], "rows": rows})
 
+    # 完整性校验（2026-07-16 IAU 19字段坏行事故后加）：任何行长度不等于22一律拒绝发布，
+    # 让 workflow 失败、线上保留旧数据——坏数据比旧数据危害大得多。
+    for _s in sections_out:
+        for _r in _s["rows"]:
+            if len(_r) != 22:
+                raise SystemExit(f"::error::行完整性校验失败 {_r[1] if len(_r)>1 else _r} 长度{len(_r)}≠22，拒绝发布")
     out = {"updated": now.astimezone(datetime.timezone(datetime.timedelta(hours=8))).strftime("%Y-%m-%d %H:%M") + " 北京时间",
            "sections": sections_out}
     (ROOT / "data/quotes.json").write_text(
