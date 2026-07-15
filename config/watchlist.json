@@ -3953,6 +3953,48 @@
      "ath_floor": 0
     },
     {
+     "name": "生益电子",
+     "code": "688183",
+     "market": "A股",
+     "yahoo": "688183.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1079.4,
+      "approx": false
+     },
+     "mcap_base_price": 128.87,
+     "ath_floor": 0
+    },
+    {
+     "name": "广合科技",
+     "code": "001389",
+     "market": "A股",
+     "yahoo": "001389.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 928.87,
+      "approx": false
+     },
+     "mcap_base_price": 196.5,
+     "ath_floor": 0
+    },
+    {
+     "name": "方正科技",
+     "code": "600601",
+     "market": "A股",
+     "yahoo": "600601.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 500.46,
+      "approx": false
+     },
+     "mcap_base_price": 11.71,
+     "ath_floor": 0
+    },
+    {
      "name": "金像电",
      "code": "2368",
      "market": "台股",
@@ -4006,6 +4048,20 @@
       "approx": true
      },
      "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "南亚新材",
+     "code": "688519",
+     "market": "A股",
+     "yahoo": "688519.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 830.19,
+      "approx": false
+     },
+     "mcap_base_price": 353.0,
      "ath_floor": 0
     },
     {
@@ -4074,6 +4130,9 @@
       "002463",
       "002384",
       "002916",
+      "688183",
+      "001389",
+      "600601",
       "2368",
       "TTMI"
      ]
@@ -4083,6 +4142,7 @@
      "codes": [
       "2383",
       "600183",
+      "688519",
       "01888"
      ]
     },
