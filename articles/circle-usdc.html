@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Circle 与 USDC：稳定币的收费站生意 · 烟囱的美股学习笔记</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<style>
+:root{--bg:#ffffff;--panel:#f6f8fa;--panel2:#eef1f4;--border:#e2e5e9;--text:#1f2328;--text2:#6b7280;--accent:#2563eb;--gold:#b8860b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:16px;line-height:1.85}
+#bar{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);z-index:10}
+#bar .in{max-width:760px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px}
+#bar a{color:var(--text2);text-decoration:none;font-size:14px}
+#bar a:hover{color:var(--accent)}
+#bar .site{margin-left:auto;font-size:13px;color:var(--text2)}
+#bar .site b{color:var(--accent);font-weight:600}
+main{max-width:760px;margin:0 auto;padding:28px 20px 90px}
+.head h1{font-size:26px;line-height:1.4;margin-bottom:12px}
+.meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.meta .date{font-size:13px;color:var(--text2)}
+.meta .tag{font-size:12px;color:var(--accent);background:rgba(74,140,240,.12);border-radius:4px;padding:2px 8px}
+.meta .pdf{font-size:13px;color:var(--text2);text-decoration:none;border:1px solid var(--border);border-radius:6px;padding:3px 10px}
+.meta .pdf:hover{color:var(--text);border-color:var(--text2)}
+.head{border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:26px}
+article h1{font-size:22px;margin:38px 0 14px;line-height:1.4}
+article h2{font-size:20px;margin:34px 0 12px;padding-left:10px;border-left:3px solid var(--accent);line-height:1.4}
+article h3{font-size:17px;margin:26px 0 10px}
+article p{margin:0 0 16px}
+article ul,article ol{margin:0 0 16px 1.4em}
+article li{margin-bottom:6px}
+article img,article svg{max-width:100%;height:auto;border-radius:10px;display:block;margin:18px auto;background:#fff;border:1px solid var(--border)}
+article blockquote{border-left:3px solid var(--gold);background:var(--panel);border-radius:0 8px 8px 0;padding:12px 16px;margin:0 0 16px;color:var(--text2)}
+article table{border-collapse:collapse;width:100%;margin:0 0 18px;font-size:14px;word-break:break-word}
+article th,article td{border:1px solid var(--border);padding:8px 12px;text-align:left}
+article th{background:var(--panel);color:var(--text2)}
+article tr:nth-child(even) td{background:rgba(246,248,250,.7)}
+article code{background:var(--panel2);border-radius:4px;padding:1px 6px;font-size:14px}
+article pre{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:14px;overflow-x:auto;margin:0 0 16px}
+article pre code{background:none;padding:0}
+article a{color:var(--accent)}
+article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+.disclaim{margin-top:50px;padding:14px 18px;background:var(--panel);border:1px solid var(--border);border-radius:10px;font-size:13px;color:var(--text2)}
+</style>
+</head>
+<body>
+<div id="bar"><div class="in">
+  <a href="../index.html?view=notes">← 返回笔记库</a>
+  <span class="site">📓 <b>烟囱</b>的美股学习笔记</span>
+</div></div>
+<main>
+  <div class="head">
+    <h1>Circle 与 USDC：一场朋友聚会引出的稳定币投研</h1>
+    <div class="meta"><span class="date">2026-07-15</span><span class="tag">稳定币</span><span class="tag">USDC</span><span class="tag">CRCL</span><span class="tag">加密</span><a class="pdf" href="../notes/Circle_USDC_投研分析.pdf" download>⬇ 下载 PDF</a></div>
+  </div>
+  <article>
+<p><strong>Circle Internet Group（NASDAQ: CRCL）｜ 2026年7月15日 ｜ 现价约 $62–65</strong></p>
+<hr />
+<h2 id="缘起一场关于-circle-的讨论">缘起：一场关于 Circle 的讨论</h2>
+<p>本文源于一次朋友间的投资讨论。席间围绕 Circle 及其发行的 USDC（USD Coin，美元稳定币）提出了若干观点：币安上线美股交易将成为 USDC 的分发渠道；USDC 正在抢占 USDT 的市场份额；新加坡 Moomoo 已支持用加密货币兑换美元买股票；日本某大型支付机构已接入 Circle；创始人正在持续抛售自家股票；以及 AI Agent 之间的自主交易将成为 USDC 的下一个增量引擎。</p>
+<p>讨论得出的核心结论是：<strong>Circle 因其合规属性，与加密货币市场并非单一绑定——它既吃加密周期的贝塔，又拥有支付结算这条第二增长曲线；即便币市走弱，只要应用场景铺开，它依然能获得独立的成长。</strong></p>
+<p>口头讨论难免信息失准。本文对上述每一条论据做了信息确认（详见文末附录的事实修正对照表），并在此基础上重新审视这套投资逻辑是否成立、成色几何。</p>
+<h2 id="一先看商业模式circle-的命门不是币价是流通量-利率">一、先看商业模式：Circle 的命门不是币价，是“流通量 × 利率”</h2>
+<p>分析所有需求侧论据之前，必须先锚定一个事实：<strong>Circle 收入的绝大部分来自 USDC 储备资产（以短期美债为主）的利息收益</strong>，可以近似为一个公式：</p>
+<blockquote>
+<p>收入 ≈ USDC 流通量 × 美元短端利率</p>
+</blockquote>
+<p>这意味着两点。第一，讨论中“与币价不完全绑定”的判断方向正确，但真正的敏感变量被漏掉了——<strong>利率</strong>。降息周期里，即便流通量增长 50%，短端利率下行 150 个基点就能大幅对冲掉收入增长。第二，下文所有“应用场景”，最终都必须回答同一个问题：<strong>它能带来多少 USDC 的净新增沉淀量？</strong> 场景本身不直接产生收入，沉淀量才产生。</p>
+<p>以此为标尺，我们逐一检视各需求引擎的成色。</p>
+<h2 id="二需求引擎之一币安美股逻辑成立的长期渠道">二、需求引擎之一：币安美股——逻辑成立的长期渠道</h2>
+<p>2026年6月1日，币安正式上线美股交易，覆盖 7,000 余只美股和 ETF（Exchange-Traded Fund，交易所交易基金），零佣金、<span class="math inline">5<em>起</em><em>碎</em><em>股</em>。<em>经</em><em>确</em><em>认</em><em>的</em><em>关</em><em>键</em><em>机</em><em>制</em><em>是</em>： *  * <em>买</em><em>入</em><em>以</em><em>U</em><em>S</em><em>D</em><em>C</em><em>为</em><em>主</em><em>要</em><em>计</em><em>价</em><em>通</em><em>道</em>（<em>同</em><em>时</em><em>支</em><em>持</em><em>B</em><em>N</em><em>B</em>、<em>U</em><em>S</em><em>D</em><em>T</em>、<em>U</em><em>S</em><em>D</em>1、</span>U），而卖出所得统一以 USDC 结算**。代币化证券产品 bStocks（部署于 BNB Chain）尚待监管批准。</p>
+<p>“币安＝分发渠道、美股代币化＝应用场景 → USDC 需求”这条逻辑链成立，其中“卖出强制回款 USDC”的设计对沉淀量的贡献比买入端更实在——用户卖股票后，资金天然停留在 USDC 里。</p>
+<p>但要给量级刻度：首月资产规模 $10 亿、累计成交近 $30 亿，相对 USDC 约 $730 亿的流通盘，弹性约 1%。<strong>这是 3–5 年维度的长逻辑，不是未来几个季度的业绩弹性。</strong></p>
+<h2 id="三需求引擎之二稳定币格局增量市场而非零和蚕食">三、需求引擎之二：稳定币格局——增量市场，而非零和蚕食</h2>
+<p>讨论中的一个疑问是：USDC 的增长究竟来自整个市场的增量，还是蚕食了 USDT 的存量？数据给出了明确答案——<strong>以增量为主</strong>：</p>
+<table>
+<thead>
+<tr class="header">
+<th>指标</th>
+<th>2025年初</th>
+<th>2026年中</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>USDT 流通量</td>
+<td>约 $1,180 亿</td>
+<td>约 $1,840–1,900 亿（+约35%/年）</td>
+</tr>
+<tr class="even">
+<td>USDC 流通量</td>
+<td>约 $440 亿</td>
+<td>约 $730–750 亿（2025年 +73%）</td>
+</tr>
+<tr class="odd">
+<td>稳定币总盘子</td>
+<td>约 $2,000 亿</td>
+<td>约 $2,900–3,200 亿</td>
+</tr>
+</tbody>
+</table>
+<p>USDT 的绝对量不但没有萎缩，还在创新高——所以“把 USDT 的份额转化过来”并不成立。真实图景是三层：</p>
+<ol type="1">
+<li><strong>总盘子在扩张</strong>：GENIUS Act（美国稳定币立法）通过后，合规稳定币需求被系统性激活，整个市场一年半扩容约 50%。</li>
+<li><strong>相对份额向 USDC 倾斜</strong>：USDT 市占率从 2022–23 年的 65–70% 降至约 57–63%，USDC 增速连续两年跑赢（73% vs 36%）。</li>
+<li><strong>两者正在分层共存</strong>：USDC 占据机构、大额、合规结算——2026年6月经调整结算量占比约 67%（约 $1.2 万亿），已反超 USDT 的 25–32%；USDT 则守住离岸美元需求与小额转账。两个市场重叠度不高，竞争烈度低于表面观感。</li>
+</ol>
+<p>对 Circle 而言这是最好的格局：<strong>不需要打赢 USDT，只需要合规市场持续扩容。</strong></p>
+<h2 id="四需求引擎之三券商与支付渠道故事真实落地尚早">四、需求引擎之三：券商与支付渠道——故事真实，落地尚早</h2>
+<h3 id="新加坡-moomoo路径走得通闭环正在打开2026-07-15-实测更新">4.1 新加坡 Moomoo：路径走得通，闭环正在打开（2026-07-15 实测更新）</h3>
+<p>经官方帮助中心确认，“卖出 BTC/ETH/USDC 换成美元、再买股票”的路径在 Moomoo SG 平台内确实走得通：其为新加坡首家获 MPI（Major Payment Institution，大型支付机构）牌照开展加密交易的数字券商，受 MAS（Monetary Authority of Singapore，新加坡金融管理局）监管，支持 20 余种币（含 BTC、ETH、SOL、BNB、USDC、USDT 等）的 T+0 交易，卖币现金可划转回证券账户购股。</p>
+<p>官网 FAQ（截至 2026 年 7 月）仍写着“目前平台不支持加密货币的充值或提取”。<strong>但一手实测证明该口径已过时</strong>：2026-07-15，受邀参与内测的用户实测并出示截图——Moomoo SG 的「充币」功能已上线，充币列表含 BTC、ETH、USDC、XRP，从外部钱包转入的完整链条已跑通。该功能目前为<strong>定向邀请内测</strong>（面向特定私行客户），计划 2026 年下半年全面开放，官方帮助中心尚未更新。</p>
+<p>这意味着原先的判断需要翻转：此前的“闭环”限制正在解除——外部 USDC 能转入 Moomoo 卖成美元买股票，这条通道将构成 USDC 面向传统投资者的<strong>净新增入口</strong>（上一版留的观察点“美国版已于 2026年5月开放链上出入金、看新加坡是否跟进”已应验：新加坡正在跟进）。待下半年全面开放后，此判断可升级为确定性结论。</p>
+<blockquote>
+<p>更新记录：2026-07-15 晚，依据内测用户一手实测截图修订本节；在官方文档更新前，此为唯一信源，标注为“一手实测·内测阶段”。</p>
+</blockquote>
+<h3 id="日本合作方规格很高但全部处于意向试点阶段">4.2 日本：合作方规格很高，但全部处于意向/试点阶段</h3>
+<p>讨论中提到的“日本第二大支付商”，经确认应为 <strong>JCB（Japan Credit Bureau）——日本最大（而非第二大）的信用卡网络</strong>，定位类似“日本版 Visa/银联”（类支付宝的 PayPay 并无接入 USDC 的公开信息），全球 1.4 亿持卡人、4,000 万商户。Circle 在日本的布局全景：</p>
+<table>
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 32%" />
+<col style="width: 44%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>时间</th>
+<th>合作方</th>
+<th>内容与阶段</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2025.03</td>
+<td>SBI（SBI VC Trade）</td>
+<td>USDC 成为日本首个获批流通的海外美元稳定币（已落地）</td>
+</tr>
+<tr class="even">
+<td>2026.06</td>
+<td>野村证券（Nomura）</td>
+<td>USDC 企业外汇结算，瞄准日均约 $4,400 亿市场，<strong>最早 2027 年部署</strong></td>
+</tr>
+<tr class="odd">
+<td>2026.07</td>
+<td>JCB</td>
+<td>MOU（Memorandum of Understanding，谅解备忘录）+ 内部划转 POC（Proof of Concept，概念验证），<strong>意向阶段</strong></td>
+</tr>
+</tbody>
+</table>
+<p>规格与方向毋庸置疑——日本最大卡组织和最大券商同时下注 USDC。但需清醒：<strong>目前没有任何一项进入规模化商用</strong>，线下实证也只做过一周（大阪两家门店）。“线下铺开后的非线性爆发”若发生，更可能是 2027–2028 年的事件。</p>
+<h2 id="五需求引擎之四agent-经济最原生的第二曲线">五、需求引擎之四：Agent 经济——最“原生”的第二曲线</h2>
+<p>讨论中最具前瞻性的观点是 AI Agent 之间的自主交易。经确认，这已经不是实验概念，而是正在成形的基础设施，核心是 <strong>x402 协议</strong>：由 Coinbase 发起，激活 HTTP 402（“Payment Required”，需要付款）状态码——Agent 访问收费接口，服务器返回价格，<strong>Agent 用链上钱包直接支付 USDC 后完成请求，全程无人介入</strong>，配合预设额度的钱包运行。</p>
+<p>落地进展（截至 2026 年中）：2026年4月协议捐赠给 Linux 基金会，成员包括 Google、Visa、AWS、Circle、Anthropic、Vercel 等 20 余家；2026年7月，Cloudflare 与 AWS 两周内先后在边缘网络接入，CloudFront 背后的任何网站可按请求向 AI Agent 收取 USDC；协议首年处理超 1.69 亿笔支付（59 万买方、10 万卖方），<strong>结算以 USDC 为绝对主导</strong>，主要运行在 Base 和 Solana 上。</p>
+<p>这是所有场景中质地最好的一条：<strong>Agent 没有银行账户、无法刷信用卡，稳定币是其唯一天然的支付介质</strong>，而合规基础设施商们已集体选择了 USDC。这条曲线与加密币价几乎无关，是真正意义上的独立增长引擎。刻度同样要给足：目前全部是微支付（单笔多为几美分到几美元的 API 调用费），对流通盘的贡献还很小；v1.0 规范要到 2026 年 Q3 才冻结。<strong>3–5 年维度最具想象力，近几个季度不会出现在报表里。</strong></p>
+<h2 id="六治理信号管理层减持温和利空而非实锤">六、治理信号：管理层减持——温和利空，而非实锤</h2>
+<p>CEO Jeremy Allaire 经 SEC Form 4 确认的减持记录：</p>
+<table>
+<thead>
+<tr class="header">
+<th>日期</th>
+<th>数量</th>
+<th>成交价区间</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2025.12.22</td>
+<td>7,055 股</td>
+<td>约 $90</td>
+</tr>
+<tr class="even">
+<td>2026.06.05</td>
+<td>55,232 股</td>
+<td>$78.5–88（约 $491 万）</td>
+</tr>
+<tr class="odd">
+<td>2026.07.06</td>
+<td>59,232 股</td>
+<td>$63.2–69.9</td>
+</tr>
+</tbody>
+</table>
+<p>三点定性：其一，“都卖了”不属实——Allaire 仍持有大量 Class B 超级投票权股，减持相对总持仓占比很小；其二，多数交易在 10b5-1 预设交易计划（SEC 允许的预先排期卖出机制）下执行，属程序化套现；其三，但“从 $90 跌到 $65 一路在卖、没有停”叠加管理层整体净卖出，信号确实不佳。<strong>计入负面项合理，但权重不宜给到“实锤利空”。</strong></p>
+<h2 id="七估值与赔率三个判断的压力测试">七、估值与赔率：三个判断的压力测试</h2>
+<p><strong>判断一：“1–2 年内回到前高”</strong>。前高为 2025年6月23日收盘 $263.45，现价约 $62–65——回前高需要约 <strong>4 倍</strong>，这不是估值修复，是再造一个四倍股。结合第一节的收入公式，它要求“流通量大爆发 + 利率不大降 + 情绪修复”三者同时成立。方向可以乐观，但“大概率”这个置信度给不出。</p>
+<p><strong>判断二：“比 BTC 赔率好、有安全边界”</strong>。下跌 75% 不等于便宜——估值的锚应是“流通量 × 净息差”能否撑住当前市值。且需修正一个认知：CRCL 与币市并非低相关，币市走熊 → 链上交易萎缩 → USDC 交易性需求下降，第一曲线仍绑着加密周期。真正的差异化在合规红利：GENIUS Act 落地、2026年7月初获 OCC（Office of the Comptroller of the Currency，美国货币监理署）批准设立国家信托银行——这部分判断成立。</p>
+<p><strong>判断三：“线下铺开后非线性爆发”</strong>。方向对，节奏错。所有支付场景（JCB、野村、日本线下）目前均为意向或试点，Agent 经济量级尚小。非线性若出现，时间窗更可能在 2027–2028 年。</p>
+<h2 id="八结论">八、结论</h2>
+<p>原讨论的核心命题——<strong>“合规属性使 Circle 拥有独立于币价的第二增长曲线”——方向成立，但需要两个修正</strong>：</p>
+<ol type="1">
+<li>Circle 的真实命门是“USDC 流通量 × 美元短端利率”，利率是被整场讨论忽略的最大变量，降息周期构成核心逆风。</li>
+<li>第二曲线（币安美股、日本支付、Agent 经济）目前贡献的是<strong>叙事与期权价值，尚未贡献报表</strong>。它决定这家公司 3–5 年的天花板，但决定未来 4–8 个季度股价的，仍是流通量增速、利率路径和加密市场温度。</li>
+</ol>
+<p>一句话概括：<strong>长逻辑扎实、短逻辑脆弱——适合以时间换空间的仓位，不适合博短期修复的仓位。</strong></p>
+<hr />
+<h2 id="附录讨论观点与核实结果对照">附录：讨论观点与核实结果对照</h2>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 50%" />
+<col style="width: 37%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>#</th>
+<th>讨论中的说法</th>
+<th>核实结果</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>币安买美股必须先换 USDC</td>
+<td>大体属实：USDC 为主通道但非唯一，卖出回款强制 USDC</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>USDC 在抢 USDT 存量份额</td>
+<td>不属实：USDT 同期 +35%，USDC 增长以市场增量为主</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>Moomoo SG 可卖币换美元买股票</td>
+<td>属实；支持 20 余种币而非 3 种；<strong>链上充提已上线定向内测（2026-07-15 一手实测，充币列表含 BTC/ETH/USDC/XRP），计划下半年全面开放，官方 FAQ 未更新</strong></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>日本第二大支付商（类支付宝）接入 Circle</td>
+<td>主体有误：是 JCB，日本最大卡组织（类 Visa）；且仅为 MOU</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>创始人把股票都卖了</td>
+<td>夸大：持续减持属实（$90→$65 三个价位段），但远未清仓</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>Agent 间交易将是 USDC 增量引擎</td>
+<td>属实且已落地（x402 协议），但量级尚小、处早期</td>
+</tr>
+</tbody>
+</table>
+<h2 id="数据来源">数据来源</h2>
+<ul>
+<li>币安美股：PR Newswire《Binance Launches U.S. Stocks Trading》（2026.06.01）、Fortune、CryptoBriefing</li>
+<li>稳定币份额：DefiLlama、CoinLaw、CoinDesk（2026.01.06）、Visa 结算数据（Yahoo Finance 转引，2026.06）</li>
+<li>Moomoo：moomoo.com/sg 官方帮助中心（现金划转、加密账户入金）与产品页、MoneySmart SG</li>
+<li>日本：CoinDesk（2026.07.14 JCB×Circle；2026.06.25 Nomura）、Circle 官方新闻室、日经新闻、PR Times</li>
+<li>Agent 支付：Cloudflare 官方博客、InfoQ（2026.07）、The Defiant、BlockEden</li>
+<li>减持与股价：SEC Form 4（StockTitan 汇总）、Investing.com、MacroTrends、Yahoo Finance</li>
+</ul>
+<p><em>本文为基于公开信息的分析框架，不构成投资建议。</em></p>
+
+  </article>
+  <div class="disclaim">本文为个人学习笔记，由对话探讨与事实核查整理而成（2026-07-15 依一手实测更新 Moomoo 章节），仅作知识分享，不构成任何投资建议。</div>
+</main>
+</body>
+</html>
