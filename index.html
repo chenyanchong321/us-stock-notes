@@ -518,7 +518,7 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="stat vc xtra hidden" id="scalecard"><div class="k">🌍 市场规模</div><div class="v">总市值</div>
         <div id="scalemenu" class="hidden"></div>
       </div>
-      <div class="refresh-note" title="2026-07-10 实测：腾讯的 A股与美股盘中快照均为实时（用其分时数据反查验证）；港股实测延时15分钟（13:56的价14:11才返回）。2026-07-13 盘中实测：日股延时约15-20分钟、韩股约20-25分钟（时间戳法+Yahoo分钟线反查双法吻合）；A股复盘后实测秒级实时（快照=分时最新一分钟）；腾讯无台股行情（tw代码返回none_match），台股行仅每日流水线数据">盘中现价30秒刷新（A股·美股实时 · 港股延时15分钟 · 日股约15-20分钟 · 韩股约20-25分钟 · 台股仅每日数据）· 美股盘前盘后约1分钟 · 加密实时 · 其余指标数分钟刷新 · 市值为估算口径</div>
+      <div class="refresh-note" title="2026-07-10 实测：腾讯的 A股与美股盘中快照均为实时（用其分时数据反查验证）；港股实测延时15分钟（13:56的价14:11才返回）。2026-07-13 盘中实测：日股延时约15-20分钟、韩股约20-25分钟（时间戳法+Yahoo分钟线反查双法吻合）；A股复盘后实测秒级实时（快照=分时最新一分钟）；腾讯无台股行情（tw代码返回none_match），台股行仅每日流水线数据">盘中现价30秒刷新（A股·美股实时 · 港股延时15分钟 · 日股约15-20分钟 · 韩股约20-25分钟 · 台股仅每日数据）· 美股盘前盘后约1分钟 · 加密实时 · 其余指标数分钟刷新 · 市值为估算口径 · 成交列：A股/美股/港股盘中实时，日韩台为上一交易日；换手率口径 A股美股=流通股本(平台直给) 港股=成交额÷流通市值 日韩台=总股本；量比=今日成交÷近20日均值(盘中按已开盘时间折算)</div>
     </div>
     <div id="topbar">
       <div id="mbottom" class="mobile-only">
@@ -643,7 +643,7 @@ let DATA = [];
 
 /* 列序＝四个语义块：实时(现价·当日) → 位置(回撤) → 估值(市值·PE) → 历史(近1周~近1年)
    手机端只看得到前两格，所以把每30秒都在变的活数据放最前，静态的市值往后挪 */
-const COLS = ["名称","现价 / 1年","当日","回撤","市值","1周","1月","3月","半年","年初至今","1年"];
+const COLS = ["名称","现价 / 1年","当日","回撤","市值","成交","1周","1月","3月","半年","年初至今","1年"];
 let BUY = {};          /* 会员登录后=真实观察位；游客=空对象（数字不出服务器） */
 let SELL = {};         /* 卖点（会员可见），与 BUY 同源同规则 */
 let BUYCODES = new Set();  /* 设了点位的代码清单（公开）：画★、清单票名、锁 */
@@ -758,6 +758,75 @@ function mcapCell(r){
   const sub = usd ? `<span style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">${usd}</span>` : "";
   return `${stripCur(r[3])}${sub}`;
 }
+/* ===== 成交列（2026-07-15 主人需求：量能维度）=====
+   数据分工：A股/美股/港股 盘中实时（VLIVE，与现价同包30秒刷）；日韩台走每日流水线（r[21]）。
+   换手率口径（准确性第一，各市场用其最权威口径，宁缺毋假）：
+   A股/美股=腾讯直给字段（流通股本口径）；港股=成交额÷流通市值（同包直给流通市值）；
+   日韩台=成交量÷总股本（Yahoo总股本，标注口径）；指数/商品/外汇不适用；ETF只给成交额与量比。 */
+window.VLIVE = {};   /* code -> {amt元, to换手%, fcap流通市值亿, ts} */
+function sessFrac(mkt){
+  /* 今日交易时段已进行比例（量比的时间校正：开盘1小时只跟"往常前1小时"比）。收市=1 */
+  const st = (typeof mktStatus==="function") ? mktStatus(mkt.startsWith("美股")?"美股":mkt.slice(0,2)) : null;
+  const now=new Date(); const bj=new Date(now.getTime()+(480+now.getTimezoneOffset())*60000);
+  const mins=bj.getHours()*60+bj.getMinutes();
+  const SEG={ "A股":[[570,690],[780,900]], "港股":[[570,720],[780,960]],
+              "日股":[[480,630],[690,840]], "韩股":[[480,870]], "台股":[[540,810]] };
+  let segs=null;
+  for(const k in SEG){ if(mkt.startsWith(k.slice(0,2))||mkt.startsWith(k)) { segs=SEG[k]; break; } }
+  if(mkt.startsWith("美股")){
+    if(window.US_SES!=="盘中") return 1;
+    try{
+      const p=new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",hour12:false,hour:"2-digit",minute:"2-digit"}).formatToParts(new Date());
+      const g=n=>+p.find(x=>x.type===n).value;
+      return Math.min(1, Math.max(0,(g("hour")*60+g("minute")-570)/390));
+    }catch(e){ return 1; }
+  }
+  if(!segs) return 1;
+  if(!(st&&st.o)) return 1;                 /* 休市=用全天值 */
+  let done=0, total=0;
+  segs.forEach(([a,b])=>{ total+=b-a; done+=Math.min(Math.max(mins-a,0), b-a); });
+  return total? Math.max(done/total, 0.02) : 1;
+}
+function fmtAmt(mkt, v){
+  /* 本币成交额 → 「¥58亿」样式。v单位=本币元 */
+  const PRE={"A股":"¥","港股":"HK$","美股":"$","日股":"¥","韩股":"₩","台股":"NT$"};
+  let pre=""; for(const k in PRE){ if(String(mkt).startsWith(k)){ pre=PRE[k]; break; } }
+  const yi=v/1e8;
+  if(yi>=10000) return pre+(yi/10000).toFixed(2)+"万亿";
+  if(yi>=100)   return pre+yi.toFixed(0)+"亿";
+  if(yi>=1)     return pre+yi.toFixed(1)+"亿";
+  return pre+(v/1e4).toFixed(0)+"万";
+}
+function volCell(r){
+  const mkt=String(r[2]||"");
+  if(/指数|商品|外汇|宏观|加密/.test(mkt)) return `<span class="flat">–</span>`;
+  const d = Array.isArray(r[21]) ? r[21] : null;   /* [avg20额,昨额,昨量,总股本] */
+  const lv = window.VLIVE[r[1]];
+  const liveMkt = /^(A股|美股|港股)/.test(mkt);
+  const amt = (liveMkt && lv && lv.amt>0) ? lv.amt : (d && d[1]) || null;
+  if(!amt) return `<span class="flat">–</span>`;
+  const isLive = liveMkt && lv && lv.amt>0;
+  /* 换手率 */
+  let to=null, toNote="";
+  if(isLive && typeof lv.to==="number" && lv.to>0 && /^(A股|美股)/.test(mkt)) to=lv.to;
+  else if(isLive && /^港股/.test(mkt) && lv.fcap>0) to=amt/(lv.fcap*1e8)*100;
+  else if(!liveMkt && d && d[2] && d[3]){ to=d[2]/d[3]*100; toNote=""; }
+  if(/ETF/.test(mkt)) to=null;   /* ETF不算换手 */
+  /* 量比（时间校正）*/
+  let lb=null;
+  if(d && d[0]){
+    const frac = isLive ? sessFrac(mkt) : 1;
+    if(frac>=0.05) lb = amt/(d[0]*frac);
+  }
+  const lbTxt = lb===null ? "" :
+    lb>=2   ? `<span style="color:var(--down)">量比 ${lb.toFixed(1)} 放量</span>` :
+    lb<=0.5 ? `<span style="opacity:.55">量比 ${lb.toFixed(1)} 缩量</span>` :
+              `量比 ${lb.toFixed(1)}`;
+  const toTxt = to===null ? "" : `换手 ${to>=10?to.toFixed(1):to.toFixed(2)}%`;
+  const sub = (toTxt||lbTxt) ? `<span style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">${toTxt}${toTxt&&lbTxt?" · ":""}${lbTxt}</span>` : "";
+  const stale = (!isLive && liveMkt) || !liveMkt ? "" : "";
+  return `<span style="display:block;white-space:nowrap">${fmtAmt(mkt,amt)}</span>${sub}`;
+}
 /* 各币种对美元汇率（1本币=?美元，粗略即可，只影响排名不影响展示；口径约2026年中） */
 const FX2USD = {USD:1, HKD:1/7.8, CNY:1/7.2, JPY:1/158, KRW:1/1370, TWD:1/32};
 function curOf(mkt){
@@ -820,6 +889,7 @@ function rowHTML(r, grp){
     <td>${dayWeekCell(r)}</td>
     <td class="athc">${athCell(r)}</td>
     <td class="mcapc">${mcapCell(r)}</td>
+    <td class="volc">${volCell(r)}</td>
     <td>${fmtPct(r[18])}</td>
     <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
     <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td><td class="fill"></td>
@@ -902,7 +972,7 @@ function renderDash(quotes){
   /* 排序 */
   /* 列序号 → quotes 行内字段号。COLS 每次改动务必同步此表（含最后一列，否则该列点了不排序）
      4=市值 走 mcapVal 数值排序，不查此表；3列(回撤)按距高点跌幅排序 */
-  const SORT_MAP = {0:0, 1:5, 2:16, 3:6, 5:18, 6:7, 7:8, 8:9, 9:10, 10:11};
+  const SORT_MAP = {0:0, 1:5, 2:16, 3:6, 6:18, 7:7, 8:8, 9:9, 10:10, 11:11};   /* 5=成交 暂不排序 */
   document.querySelectorAll("#view-dash th").forEach(th=>{
     th.addEventListener("click",()=>{
       const ci = +th.dataset.ci;
@@ -1129,6 +1199,7 @@ function renderDash(quotes){
       <td>${dayWeekCell(r)}</td>
       ${athFirst ? "" : ath}
       <td class="mcapc">${mcapCell(r)}</td>
+      <td class="volc">${volCell(r)}</td>
       ${pers}<td class="fill"></td>
     </tr>`;
   }
@@ -1136,7 +1207,7 @@ function renderDash(quotes){
     const ath = `<th>回撤</th>`;
     const PLBL = {18:"1周",7:"1月",8:"3月",9:"半年",10:"年初至今",11:"1年"};
     const pers = [18,7,8,9,10,11].filter(i=>i!==skipRi).map(i=>`<th>${PLBL[i]}</th>`).join("");
-    return `<thead><tr><th style="text-align:left">名称</th>${athFirst?ath:""}<th>${pxLabel||"现价 / 1年"}</th>${extra||""}<th>当日</th>${athFirst?"":ath}<th>市值</th>${pers}<th class="fill"></th></tr></thead>`;
+    return `<thead><tr><th style="text-align:left">名称</th>${athFirst?ath:""}<th>${pxLabel||"现价 / 1年"}</th>${extra||""}<th>当日</th>${athFirst?"":ath}<th>市值</th><th>成交</th>${pers}<th class="fill"></th></tr></thead>`;
   };
   window.buildFlat = function(){
     const v = window.CURVIEW;
@@ -1851,6 +1922,7 @@ function renderNotes(cfg){
       setHTML(tds[2], dayWeekCell(r));   /* 与 rowHTML 同一渲染函数，实时刷新不会错位 */
       setHTML(tds[3], athCell(r));
       setHTML(tds[4], mcapCell(r));
+      if(tds[5] && tds[5].classList.contains("volc")) setHTML(tds[5], volCell(r));
     });
   }
   function usSession(){   /* 纽约时区判定，自动处理夏令时 */
@@ -1896,6 +1968,19 @@ function renderNotes(cfg){
       /* 美股非常规时段：腾讯网页源为延时冻结口径，跳过，改由 Yahoo 盘前/盘后价承接 */
       if(sym.slice(0,2)==="us" && ses!=="盘中") return;
       const price=parseFloat(f[3]), pct=parseFloat(f[32]);
+      /* 成交实时层：只收已实测过字段布局的三个市场（准确性第一，日韩台勿收） */
+      const pfx=sym.slice(0,2);
+      if(pfx==="sh"||pfx==="sz"||pfx==="us"||pfx==="hk"){
+        const ent0=rowsByCode[sym];
+        const amtRaw=parseFloat(f[37]);
+        if(ent0 && isFinite(amtRaw) && amtRaw>0){
+          window.VLIVE[ent0.code]={
+            amt: (pfx==="sh"||pfx==="sz") ? amtRaw*1e4 : amtRaw,
+            to: parseFloat(f[38])||null,
+            fcap: parseFloat(f[44])||null,
+            ts: Date.now()};
+        }
+      }
       if(isFinite(price)&&price>0){ applyQuote(sym, price, isFinite(pct)?pct:null); got++; }
     });
     return got;
@@ -1957,11 +2042,11 @@ function renderNotes(cfg){
       got++;
       document.querySelectorAll(`#sections tr[data-code="${r[1]}"]`).forEach(tr=>{
         const t = tr.children;
-        if(t.length<11) return;
+        if(t.length<12) return;
         setHTML(t[1], priceCell(r));  setHTML(t[2], dayWeekCell(r));
         setHTML(t[3], athCell(r));    setHTML(t[4], mcapCell(r));
-        setHTML(t[5], fmtPct(r[18])); setHTML(t[6], fmtPct(r[7]));
-        setHTML(t[10],fmtPct(r[11]));
+        setHTML(t[6], fmtPct(r[18])); setHTML(t[7], fmtPct(r[7]));
+        setHTML(t[11],fmtPct(r[11]));
       });
     }));
     if(!got) return;

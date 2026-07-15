@@ -44,12 +44,21 @@ def fetch_series(sym, rng, itv, retries=3):
                     best = p
             if not best:
                 raise ValueError("empty series")
+            # 成交量（日线才存）：算「近20日均成交额/昨日成交额」用。与收盘价按时间戳对齐。
+            if itv == "1d":
+                try:
+                    vols = res["indicators"]["quote"][0]["volume"]
+                    VOL_CACHE[sym] = {t: v for t, v in zip(ts, vols) if v}
+                except (KeyError, IndexError):
+                    pass
             return best
         except Exception as e:
             if i == retries - 1:
                 print(f"  !! {sym} {rng}/{itv}: {e}", file=sys.stderr)
                 return None
             time.sleep(2 * (i + 1))
+
+VOL_CACHE = {}   # sym -> {ts: volume}，fetch_series 日线顺带填充
 
 TX_KLINE = "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param={code},day,,,1800,qfq"
 
@@ -154,6 +163,7 @@ def fetch_pe_map(symbols):
     ext = {}    # sym -> {"px","pct","st"} 美股盘前/盘后价；新鲜度＝本流水线触发频率（美股时段由 ECS 定时器每6分钟触发）
     fpe = {}    # sym -> 远期PE（亏损公司估值补位）
     mcap = {}   # sym -> 真实市值（美元）。稳定币价格恒为1，市值只随发行量变化，锚点推导会把它冻死，必须取真值
+    so = {}     # sym -> 总股本（sharesOutstanding，算日韩台换手率用；口径=总股本，页面已注明）
     import urllib.request as ur
     opener = ur.build_opener(ur.HTTPCookieProcessor())
     opener.addheaders = list(UA.items())
@@ -187,6 +197,9 @@ def fetch_pe_map(symbols):
                 mc = q.get("marketCap")
                 if mc:
                     mcap[q["symbol"]] = mc
+                sh = q.get("sharesOutstanding")
+                if sh:
+                    so[q["symbol"]] = sh
                 st = q.get("marketState", "")
                 if st.startswith("PRE") and q.get("preMarketPrice"):
                     ext[q["symbol"]] = {"px": q["preMarketPrice"], "pct": q.get("preMarketChangePercent"), "st": "盘前"}
@@ -202,7 +215,7 @@ def fetch_pe_map(symbols):
             print(f"  !! PE 批次 {i//40} 失败: {e}", file=sys.stderr)
         time.sleep(0.5)
     print(f"PE 覆盖 {len(pe)}/{len(syms)} 个代码，财报日 {len(earn)} 个，盘前后价 {len(ext)} 个，真实市值 {len(mcap)} 个")
-    return pe, earn, ext, fpe, mcap
+    return pe, earn, ext, fpe, mcap, so
 
 def _num(v):
     if v >= 10000:
@@ -316,7 +329,7 @@ def main():
     ts_ytd = int(datetime.datetime(now.year, 1, 1, tzinfo=datetime.timezone.utc).timestamp())  # 基准=上年最后一个收盘
 
     all_syms = [it["yahoo"] for sec in watch["sections"] for it in sec["items"]]
-    pe_map, earn_map, ext_map, fpe_map, mcap_map = fetch_pe_map(all_syms)
+    pe_map, earn_map, ext_map, fpe_map, mcap_map, so_map = fetch_pe_map(all_syms)
 
     cache = {}
     sections_out = []
@@ -334,7 +347,7 @@ def main():
             fetched = cache[sym]
             if fetched is None:
                 rows.append([it["name"], it["code"], it["market"], "获取失败",
-                             "-", "-", 0.0, "-", "-", "-", "-", "-", gmap.get(it["code"], ""), None, None, None, None, None, None, None, None])
+                             "-", "-", 0.0, "-", "-", "-", "-", "-", gmap.get(it["code"], ""), None, None, None, None, None, None, None, None, None])
                 continue
             pairs, hist_max = fetched
             price = pairs[-1][1]
@@ -354,6 +367,20 @@ def main():
                     else:
                         out.append(None)
                 return out
+
+            def vol_info():
+                """r[21]=[avg20成交额,昨日成交额,昨日成交量,总股本]（本币元/股）。
+                成交额=收盘价×成交量（日线近似，与各行情软件日口径一致）；缺任何一项该位为 None。"""
+                vc = VOL_CACHE.get(sym) or {}
+                amts, last_amt, last_vol = [], None, None
+                for t, c in pairs[-25:]:
+                    v = vc.get(t)
+                    if v:
+                        amts.append(c * v)
+                        last_amt, last_vol = c * v, v
+                avg20 = round(sum(amts[-20:]) / len(amts[-20:])) if len(amts[-20:]) >= 5 else None
+                return [avg20, round(last_amt) if last_amt else None, last_vol,
+                        so_map.get(sym)]
 
             def window(ts_base, label_ipo):
                 base = price_at(pairs, ts_base)
@@ -377,7 +404,7 @@ def main():
                          pe_map.get(sym), *pos_52w(pairs, ts_1y, cur),
                          round(pct(pairs[-1][1], pairs[-2][1]), 2) if len(pairs) >= 2 else None,
                          ext_map.get(sym) if it["market"].startswith("美股") else None,
-                         w1, fpe_map.get(sym), ma_list()])
+                         w1, fpe_map.get(sym), ma_list(), vol_info()])
             print(f"  {it['code']:>10} {it['name'][:12]:<14} 现价 {price:,.2f}  回撤 {dd:.1f}%")
         sections_out.append({"sec": sec["name"], "rows": rows})
 
