@@ -1,17 +1,11 @@
 {
- "updated": "2026-07-16 03:52 北京时间",
+ "updated": "2026-07-16 04:00 北京时间",
  "earnings": [
   {
    "d": "2026-07-15",
    "code": "ASML",
    "name": "阿斯麦",
    "est": false
-  },
-  {
-   "d": "2026-07-15",
-   "code": "AEHR",
-   "name": "Aehr Test",
-   "est": true
   },
   {
    "d": "2026-07-16",
