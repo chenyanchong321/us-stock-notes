@@ -71,9 +71,9 @@ def load_points():
     try:
         with open(POINTS, encoding="utf-8") as f:
             d = json.load(f)
-        return {"buy": d.get("buy", {}), "sell": d.get("sell", {})}
+        return {"buy": d.get("buy", {}), "sell": d.get("sell", {}), "tgt": d.get("tgt", {})}
     except Exception:
-        return {"buy": {}, "sell": {}}
+        return {"buy": {}, "sell": {}, "tgt": {}}
 
 
 class H(BaseHTTPRequestHandler):
@@ -139,7 +139,7 @@ class H(BaseHTTPRequestHandler):
             return self._json(200, {"ok": True, "ts": int(time.time())})
         if p == "/api/public":
             pts = load_points()
-            codes = sorted(set(pts["buy"]) | set(pts["sell"]))
+            codes = sorted(set(pts["buy"]) | set(pts["sell"]) | set(pts["tgt"]))
             return self._json(200, {"ok": True, "codes": codes})
         if p == "/api/points":
             u = self._user()

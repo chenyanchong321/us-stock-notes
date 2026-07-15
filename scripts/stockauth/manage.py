@@ -11,8 +11,9 @@
   import 文件      导入点位。支持两种格式：
                    ① 网站旧版 buypoints.json（{代码:文案} → 全部当作 buy）
                    ② {"buy":{...},"sell":{...}}
-  setbuy 代码 文案  单条增改买点（文案为空=删除）
+  setbuy 代码 文案  单条增改买点/观察位（文案为空=删除）
   setsell 代码 文案 单条增改卖点（文案为空=删除）
+  settgt 代码 文案  单条增改目标价（文案为空=删除；第一个数字会被前端解析为目标价）
   show             当前点位（buy/sell 全量）
   export           备份点位+用户库到 /root/stockauth/backup-<日期>/
 """
@@ -31,9 +32,9 @@ def load():
     try:
         with open(POINTS, encoding="utf-8") as f:
             d = json.load(f)
-        return {"buy": d.get("buy", {}), "sell": d.get("sell", {})}
+        return {"buy": d.get("buy", {}), "sell": d.get("sell", {}), "tgt": d.get("tgt", {})}
     except Exception:
-        return {"buy": {}, "sell": {}}
+        return {"buy": {}, "sell": {}, "tgt": {}}
 
 
 def save(pts):
@@ -41,7 +42,7 @@ def save(pts):
     with open(tmp, "w", encoding="utf-8") as f:
         json.dump(pts, f, ensure_ascii=False, indent=1)
     os.replace(tmp, POINTS)
-    print(f"已保存：buy {len(pts['buy'])} 条 / sell {len(pts['sell'])} 条")
+    print(f"已保存：buy {len(pts['buy'])} 条 / sell {len(pts['sell'])} 条 / tgt {len(pts.get('tgt',{}))} 条")
 
 
 def main():
@@ -89,10 +90,10 @@ def main():
     elif cmd == "import":
         with open(a[1], encoding="utf-8") as f:
             d = json.load(f)
-        pts = {"buy": d.get("buy", {}), "sell": d.get("sell", {})} if "buy" in d else {"buy": d, "sell": {}}
+        pts = {"buy": d.get("buy", {}), "sell": d.get("sell", {}), "tgt": d.get("tgt", {})} if "buy" in d else {"buy": d, "sell": {}, "tgt": {}}
         save(pts)
-    elif cmd in ("setbuy", "setsell"):
-        k = "buy" if cmd == "setbuy" else "sell"
+    elif cmd in ("setbuy", "setsell", "settgt"):
+        k = "buy" if cmd == "setbuy" else ("sell" if cmd == "setsell" else "tgt")
         pts = load()
         code, txt = a[1], " ".join(a[2:])
         if txt:

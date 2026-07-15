@@ -646,7 +646,8 @@ let DATA = [];
    手机端只看得到前两格，所以把每30秒都在变的活数据放最前，静态的市值往后挪 */
 const COLS = ["名称","现价 / 1年","当日","回撤","市值","成交","1周","1月","3月","半年","年初至今","1年"];
 let BUY = {};          /* 会员登录后=真实观察位；游客=空对象（数字不出服务器） */
-let SELL = {};         /* 卖点（会员可见），与 BUY 同源同规则 */
+let SELL = {};         /* 卖点（会员可见），动作规则，显示在现价浮窗 */
+let TGT = {};          /* 目标价（会员可见），估值锚，显示在重点清单列（2026-07-15 主人定稿） */
 let BUYCODES = new Set();  /* 设了点位的代码清单（公开）：画★、清单票名、锁 */
 window.MEMBER = false; window.AUSER = "";
 const AUTH_API = location.host==="stock.ziyuanai.top" ? "/api" : "https://stock.ziyuanai.top/api";
@@ -723,6 +724,30 @@ function buyThreshold(b){
   const tier1 = head.split(/[\/;；、]/)[0];          /* 只看第一档 */
   const nums  = (tier1.match(/[\d.]+/g)||[]).map(parseFloat).filter(n=>n>0);
   return nums.length ? Math.max(...nums) : null;    /* 该档的上沿 */
+}
+function tgtNum(code){
+  /* 目标价文案里第一个数字=目标价（如 "45（07/15锚·…）"→45、"50港元（…）"→50） */
+  const t = (typeof TGT!=="undefined") && TGT[code];
+  if(!t) return null;
+  const m = String(t).split(/[（(]/)[0].match(/[\d.]+/);
+  return m ? parseFloat(m[0]) : null;
+}
+function tgtCell(r){
+  /* 重点清单「目标价」列：双行=目标价 + 距目标涨幅（随实时现价刷新）。
+     游客=🔒磨砂（数字未下发）；无目标价="–"。现价已超目标→金色提示（天然的减仓信号）。 */
+  if(!window.MEMBER) return `<span class="lockg" data-auth style="cursor:pointer">🔒</span><span class="bpmask"></span>`;
+  const th = tgtNum(r[1]);
+  if(!th) return `<span class="flat">–</span>`;
+  const px = parseFloat(String(r[5]).replace(/[^\d.]/g,""));
+  const lab = String(TGT[r[1]]).split(/[（(]/)[0].trim();
+  let sub = "";
+  if(px>0){
+    const up = (th/px-1)*100;
+    sub = up>=0
+      ? `<span style="display:block;font-size:11px;color:var(--up)">还有 +${up.toFixed(1)}% 空间</span>`
+      : `<span style="display:block;font-size:11px;color:var(--gold);font-weight:600">已达目标 +${(-up).toFixed(1)}%</span>`;
+  }
+  return `<span style="display:block;white-space:nowrap">${lab}</span>${sub}`;
 }
 function buyHit(r){
   const th = buyThreshold(BUY[r[1]]);
@@ -1282,8 +1307,8 @@ function renderDash(quotes){
         if(a.hit!==b.hit) return a.hit?-1:1;
         return (a.dist??9e9)-(b.dist??9e9);
       });
-      title=`⭐ 重点清单（${list.length}）`; note="标注了观察位的标的 · 按距观察位由近到远排序，🎯已进观察区置顶 · 观察位为个人学习记录，不构成投资建议";
-      head=FV_HEAD(`<th>距观察位</th>`, "现价 / 观察位");
+      title=`⭐ 重点清单（${list.length}）`; note="标注了观察位的标的 · 按距观察位由近到远排序，🎯已进观察区置顶 · 观察位=接的位置（安全边际），目标价=估值锚（源自研究笔记，第一个数字用于算距目标空间）· 均为个人学习记录，不构成投资建议";
+      head=FV_HEAD(`<th>距观察位</th><th>目标价</th>`, "现价 / 观察位");
       const guestBanner = window.MEMBER ? "" :
         `<tr><td colspan="99" style="text-align:left;padding:8px 10px"><span style="display:inline-block;font-size:12px;color:var(--gold);border:1px dashed var(--gold);border-radius:8px;padding:5px 10px;cursor:pointer" data-auth>🔒 观察位为会员用户专属内容 · 会员请登录</span></td></tr>`;
       body=guestBanner + list.map(x=>{
@@ -1291,7 +1316,7 @@ function renderDash(quotes){
           : x.dist===null ? `<span class="flat">–</span>`
           : x.hit ? `<span class="dist-hit">🎯已触达</span>`
           : `<span class="dist-far">还差 ${x.dist.toFixed(1)}%</span>`;
-        return fvRow(x, `<td>${d}</td>`, "buy");
+        return fvRow(x, `<td>${d}</td><td class="tgtc">${tgtCell(x.r)}</td>`, "buy");
       }).join("");
     }else if(v==="turn"){
       /* 成交热度榜（2026-07-15 主人需求）：双档位——成交额=绝对热（钱最多），量比=相对热（比自己平时热多少，天天换人）。
@@ -2746,8 +2771,10 @@ let PROFILES = {};
       return `${wk}${gline}${usdLine}${maBlock(r)}`;
     }
     const b = (typeof BUY!=="undefined") && BUY[code];
-    const sline = (window.MEMBER && typeof SELL!=="undefined" && SELL[code])
-      ? `<span style="display:block;margin-top:5px"><b>💰 卖点</b>　<span style="color:var(--down);font-weight:600">${SELL[code]}</span></span>` : "";
+    const sline = ((window.MEMBER && typeof SELL!=="undefined" && SELL[code])
+      ? `<span style="display:block;margin-top:5px"><b>💰 卖点</b>　<span style="color:var(--down);font-weight:600">${SELL[code]}</span></span>` : "")
+      + ((window.MEMBER && typeof TGT!=="undefined" && TGT[code])
+      ? `<span style="display:block;margin-top:5px"><b>🏁 目标价</b>　<span style="color:var(--up);font-weight:600">${TGT[code]}</span></span>` : "");
     if(!b){ const body = wk + sline + usdLine + maBlock(r); return body || null; }   /* 无观察位：52周区间 + 美元换算 + 均线 */
     const px = parseFloat(String(r[5]).replace(/[^\d.]/g,""));
     const th = buyThreshold(b);   /* 与重点清单「距买点」同源，避免两处口径打架 */
@@ -2944,8 +2971,8 @@ let PROFILES = {};
         try{
           const r = await fetch(AUTH_API+"/points",{headers:{Authorization:"Bearer "+tk}});
           if(r.ok){ const d = await r.json();
-            return {member:true, user:d.user, buy:d.buy||{}, sell:d.sell||{},
-                    codes:[...new Set([...Object.keys(d.buy||{}),...Object.keys(d.sell||{})])]}; }
+            return {member:true, user:d.user, buy:d.buy||{}, sell:d.sell||{}, tgt:d.tgt||{},
+                    codes:[...new Set([...Object.keys(d.buy||{}),...Object.keys(d.sell||{}),...Object.keys(d.tgt||{})])]}; }
           if(r.status===401||r.status===403){ localStorage.removeItem("atk"); localStorage.removeItem("auser"); }
         }catch(e){}
       }
@@ -2966,7 +2993,7 @@ let PROFILES = {};
       fetch("data/levratio.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null)
     ]);
     window.MEMBER = auth.member; window.AUSER = auth.user||"";
-    BUY = auth.buy || {}; SELL = auth.sell || {}; BUYCODES = new Set(auth.codes||[]);
+    BUY = auth.buy || {}; SELL = auth.sell || {}; TGT = auth.tgt || {}; BUYCODES = new Set(auth.codes||[]);
     window.updateAuthBtn && window.updateAuthBtn();
     if(glossary){ window.GLOSSARY = glossary; renderDict(glossary); }
     fetch("config/profiles.json"+bust).then(r=>r.ok?r.json():{}).then(p=>{ PROFILES = p || {}; }).catch(()=>{});
