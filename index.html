@@ -840,35 +840,28 @@ function volCell(r){
   return `<span style="display:block;white-space:nowrap">${fmtAmt(mkt,amt)}</span>${sub}`;
 }
 function volTip(tr){
-  /* 成交格悬停浮窗：动态判读（这只票的量比/换手处于什么水平）+ 固定说明（定义与档位表） */
+  /* 量能浮窗（2026-07-15 主人二次定稿：只留数值+档位+高亮档位条，删一切解释性长文） */
   const code=tr && tr.dataset ? tr.dataset.code : null; if(!code) return null;
   const i = window.LBOF && window.LBOF[code]; if(!i) return null;
-  const lines=[];
-  lines.push(`<b>📊 量能读数</b>`);
+  const seg=(items,idx)=>`<span style="display:flex;gap:4px;margin-top:6px">`+items.map((x,j)=>
+    `<span style="flex:1;text-align:center;font-size:10.5px;line-height:1.5;padding:3px 2px;border-radius:5px;white-space:nowrap;${
+      j===idx?"border:1px solid var(--gold);color:var(--gold);font-weight:600":"border:1px solid var(--border);color:var(--text2);opacity:.8"}">${x}</span>`).join("")+`</span>`;
+  const parts=[];
   if(i.lb!==null){
-    const lb=i.lb;
-    const tag = lb>=5?["极端放量","var(--down)"]:lb>=2.5?["明显放量","var(--down)"]:lb>=1.5?["温和放量","var(--gold)"]
-             :lb>0.5?["正常水平","var(--text2)"]:["明显缩量","var(--text2)"];
-    const expl = lb>=2.5?"平时"+lb.toFixed(1)+"倍的资金涌入，一定有事发生（新闻/财报/资金异动），今天的涨跌'动真格'"
-             :lb>=1.5?"资金参与度高于平时，关注度在升温"
-             :lb>0.5?"和这只票平时的成交节奏差不多"
-             :"连平时一半的人都没来，此时的价格波动参考意义有限";
-    lines.push(`<span style="display:block;margin-top:5px">量比 <b style="color:${tag[1]}">${lb.toFixed(2)}</b>　<span style="color:${tag[1]}">${tag[0]}</span></span>`);
-    lines.push(`<span style="display:block;font-size:12px;color:var(--text2)">${expl}</span>`);
-    lines.push(`<span style="display:block;font-size:11px;color:var(--text2);opacity:.8;margin-top:2px">样本=它自己近20个交易日的日均成交${i.isLive?"，盘中已按开盘时长折算（开盘1小时只跟往常前1小时比）":""}</span>`);
-  }else{
-    lines.push(`<span style="display:block;margin-top:4px;font-size:12px;color:var(--text2)">量比暂无（20日均量基准生成中，或该市场不适用）</span>`);
+    const lb=i.lb, idx= lb<0.5?0: lb<1.5?1: lb<2.5?2: lb<5?3:4;
+    const names=["缩量","正常水平","温和放量","明显放量","极端异动"];
+    const col = idx>=3?"var(--down)":idx===2?"var(--gold)":"var(--text2)";
+    parts.push(`<span style="display:block"><b>量比 ${lb.toFixed(2)}</b>　<span style="color:${col};font-weight:600">${names[idx]}</span></span>`+
+      seg(["&lt;0.5<br>缩量","0.5–1.5<br>正常","1.5–2.5<br>温和","2.5–5<br>放量","&gt;5<br>异动"],idx));
   }
   if(typeof i.to==="number" && i.to>0){
-    const t=i.to;
-    const ttag = t>=20?"极度亢奋（常见于情绪顶点附近）":t>=7?"偏高，交投火热":t>=3?"活跃":t>=1?"正常":"偏低，筹码安静";
-    lines.push(`<span style="display:block;margin-top:7px">换手率 <b>${t>=10?t.toFixed(1):t.toFixed(2)}%</b>　<span style="color:var(--text2)">${ttag}</span></span>`);
+    const t=i.to, idx= t<1?0: t<3?1: t<7?2: t<20?3:4;
+    const names=["安静","正常","活跃","火热","极度亢奋"];
+    const col = idx>=3?"var(--down)":idx===2?"var(--gold)":"var(--text2)";
+    parts.push(`<span style="display:block;margin-top:${parts.length?"12px":"0"}"><b>换手${i.mkt==="加密"?"(24h)":""} ${t>=10?t.toFixed(1):t.toFixed(2)}%</b>　<span style="color:${col};font-weight:600">${names[idx]}</span></span>`+
+      seg(["&lt;1%<br>安静","1–3%<br>正常","3–7%<br>活跃","7–20%<br>火热","&gt;20%<br>亢奋"],idx));
   }
-  lines.push(`<span style="display:block;margin-top:8px;border-top:1px solid var(--border);padding-top:6px;font-size:11.5px;color:var(--text2);line-height:1.75">`+
-    `<b>量比</b>=今日成交÷自己近20日均值：&lt;0.5缩量 · 0.5–1.5正常 · 1.5–2.5温和放量 · &gt;2.5明显放量 · &gt;5极端异动<br>`+
-    `<b>换手率</b>=今日换了主人的筹码比例：&lt;1%安静 · 1–3%正常 · 3–7%活跃 · 7–20%火热 · &gt;20%极度亢奋<br>`+
-    `<span style="opacity:.8">口径：A股美股=流通股本(平台直给)、港股=成交额÷流通市值、日韩台=总股本(昨日值)、加密=volume/mcap(24h)</span></span>`);
-  return lines.join("");
+  return parts.length ? parts.join("") : null;
 }
 /* 各币种对美元汇率（1本币=?美元，粗略即可，只影响排名不影响展示；口径约2026年中） */
 const FX2USD = {USD:1, HKD:1/7.8, CNY:1/7.2, JPY:1/158, KRW:1/1370, TWD:1/32};
