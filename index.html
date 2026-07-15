@@ -852,7 +852,8 @@ function volTip(tr){
     const names=["缩量","正常水平","温和放量","明显放量","极端异动"];
     const col = idx>=3?"var(--down)":idx===2?"var(--gold)":"var(--text2)";
     parts.push(`<span style="display:block"><b>量比 ${lb.toFixed(2)}</b>　<span style="color:${col};font-weight:600">${names[idx]}</span></span>`+
-      seg(["&lt;0.5<br>缩量","0.5–1.5<br>正常","1.5–2.5<br>温和","2.5–5<br>放量","&gt;5<br>异动"],idx));
+      seg(["&lt;0.5<br>缩量","0.5–1.5<br>正常","1.5–2.5<br>温和","2.5–5<br>放量","&gt;5<br>异动"],idx)+
+      `<span style="display:block;font-size:11px;color:var(--text2);opacity:.75;margin-top:4px">量比 = 今日成交 ÷ 它自己近20日的日均成交</span>`);
   }
   if(typeof i.to==="number" && i.to>0){
     const t=i.to, idx= t<1?0: t<3?1: t<7?2: t<20?3:4;
