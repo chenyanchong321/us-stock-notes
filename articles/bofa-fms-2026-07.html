@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美银基金经理调查（FMS）拆解：从现金比例到逆向赔率 · 烟囱的美股学习笔记</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<style>
+:root{--bg:#ffffff;--panel:#f6f8fa;--panel2:#eef1f4;--border:#e2e5e9;--text:#1f2328;--text2:#6b7280;--accent:#2563eb;--gold:#b8860b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:16px;line-height:1.85}
+#bar{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);z-index:10}
+#bar .in{max-width:760px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px}
+#bar a{color:var(--text2);text-decoration:none;font-size:14px}
+#bar a:hover{color:var(--accent)}
+#bar .site{margin-left:auto;font-size:13px;color:var(--text2)}
+#bar .site b{color:var(--accent);font-weight:600}
+main{max-width:760px;margin:0 auto;padding:28px 20px 90px}
+.head h1{font-size:26px;line-height:1.4;margin-bottom:12px}
+.meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.meta .date{font-size:13px;color:var(--text2)}
+.meta .tag{font-size:12px;color:var(--accent);background:rgba(74,140,240,.12);border-radius:4px;padding:2px 8px}
+.meta .pdf{font-size:13px;color:var(--text2);text-decoration:none;border:1px solid var(--border);border-radius:6px;padding:3px 10px}
+.meta .pdf:hover{color:var(--text);border-color:var(--text2)}
+.head{border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:26px}
+article h1{font-size:22px;margin:38px 0 14px;line-height:1.4}
+article h2{font-size:20px;margin:34px 0 12px;padding-left:10px;border-left:3px solid var(--accent);line-height:1.4}
+article h3{font-size:17px;margin:26px 0 10px}
+article p{margin:0 0 16px}
+article ul,article ol{margin:0 0 16px 1.4em}
+article li{margin-bottom:6px}
+article img,article svg{max-width:100%;height:auto;border-radius:10px;display:block;margin:18px auto;background:#fff;border:1px solid var(--border)}
+article blockquote{border-left:3px solid var(--gold);background:var(--panel);border-radius:0 8px 8px 0;padding:12px 16px;margin:0 0 16px;color:var(--text2)}
+article table{border-collapse:collapse;width:100%;margin:0 0 18px;font-size:14px;word-break:break-word}
+article th,article td{border:1px solid var(--border);padding:8px 12px;text-align:left}
+article th{background:var(--panel);color:var(--text2)}
+article tr:nth-child(even) td{background:rgba(246,248,250,.7)}
+article code{background:var(--panel2);border-radius:4px;padding:1px 6px;font-size:14px}
+article pre{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:14px;overflow-x:auto;margin:0 0 16px}
+article pre code{background:none;padding:0}
+article a{color:var(--accent)}
+article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+.disclaim{margin-top:50px;padding:14px 18px;background:var(--panel);border:1px solid var(--border);border-radius:10px;font-size:13px;color:var(--text2)}
+</style>
+</head>
+<body>
+<div id="bar"><div class="in">
+  <a href="../index.html?view=notes">← 返回笔记库</a>
+  <span class="site">📓 <b>烟囱</b>的美股学习笔记</span>
+</div></div>
+<main>
+  <div class="head">
+    <h1>美银基金经理调查（FMS）拆解：从现金比例到逆向赔率</h1>
+    <div class="meta"><span class="date">2026-07-15</span><span class="tag">FMS</span><span class="tag">现金比例</span><span class="tag">逆向指标</span><span class="tag">宏观</span><a class="pdf" href="../notes/美银基金经理调查学习笔记.pdf" download>⬇ 下载 PDF</a></div>
+  </div>
+  <article>
+<p><strong>从现金比例到逆向赔率——2026年7月美银全球基金经理调查（FMS）拆解</strong></p>
+<p>整理日期：2026年7月15日 · 数据时点：美银7月FMS（调查期7月2日至9日）及2026年7月14日市场行情</p>
+<blockquote>
+<p>阅读提示：本笔记由对话整理而成，按“概念工具箱 → 宏观剧本 → 赔率机制 → 逆向线索 → 案例复盘 → 全景总结”的认知阶梯重组，不按聊天时间线排列。全文用一个贯穿类比：把市场想成一辆公交车，现金是还站在站台上没上车的人。涉及股票与市场的内容仅供学习，不构成投资建议。</p>
+</blockquote>
+<h2 id="目录">目录</h2>
+<p>第一章 概念工具箱：现金比例、牛熊指标与净超配</p>
+<p>第二章 宏观剧本：三种着陆与“完美组合”的脆弱假设</p>
+<p>第三章 赔率转差：牛市里赚钱为什么变难</p>
+<p>第四章 逆向赔率：被遗忘资产的保险价值</p>
+<p>第五章 案例复盘：2026年7月的存储板块回调</p>
+<p>第六章 全景总结：一条完整的逻辑链</p>
+<p>附录 一句话记忆卡合集</p>
+<h2 id="第一章-概念工具箱现金比例牛熊指标与净超配">第一章 概念工具箱：现金比例、牛熊指标与净超配</h2>
+<blockquote>
+<p>你当时的问题：现金比例从4.1%降到3.6%，是不是代表持仓股票多、现金少，边际买盘力量变差？牛熊指标是什么意思？为什么两者都进入卖出区间？除了这两个还会看什么？“全球股票超配净42%”“美国股票超配净24%”又是什么意思？</p>
+</blockquote>
+<p><strong>先交代背景</strong>：BofA = Bank of America（美国银行）每月发布的 FMS = Fund Manager Survey（基金经理调查），7月这期覆盖210名受访者、合计管理资产约5550亿美元，受访者加权平均投资期限只有7.1个月。所以它是一张全球机构的<strong>战术仓位地图</strong>，不是三五年的长期价值判断。</p>
+<p><strong>现金比例</strong>指受访基金经理组合中现金的占比。从4.1%降到3.6%，意思是经理们把钱买成了股票，场内“还没上车的钱”变少了。它衡量的不是“卖不卖得掉”，而是<strong>还剩多少子弹能继续买</strong>——子弹打光了，边际买盘自然就弱。美银的历史规则：现金不高于4%是卖出信号，不低于5%是买入信号。3.6%明显进入前者。</p>
+<p>历史数据（报告口径）：2002年以来现金降至3.6%或更低出现过16次，此后2周全球股票平均跌0.8%、1个月平均跌0.5%，同期美债反而上涨0.6%和0.4%；若降到3.5%，1个月平均跌幅扩大到1.5%。报告自己也提醒：16次样本的平均值掩盖了很大分布差异，<strong>它不是指数预测，而是仓位约束</strong>。</p>
+<p><strong>美银牛熊指标（Bull &amp; Bear Indicator）</strong>是一个0至10分的市场情绪温度计，由资金流向、基金仓位、对冲基金持仓、市场宽度、信用市场状况等维度合成。0是极度恐慌，10是极度贪婪。它是<strong>逆向指标</strong>：历史上高于8触发卖出信号，低于2触发买入信号——因为大家都贪婪时没人剩钱再买，大家都恐慌时没人剩票再卖。本期9.4，非常接近顶格。</p>
+<p>用公交车类比：现金就是还站在站台上没上车的人。现在站台快空了，车上挤满了人——车还能开，但没有新乘客推着它往前跑了。</p>
+<p><strong>净超配（net overweight）</strong>= 说自己超配的经理比例减去说自己低配的比例。“超配”指持仓比基准指数配得更多，相当于用真金白银投票“我看多”。全球股票净42%超配、美国股票净24%超配（2024年12月以来最高，较历史均值高1.4个标准差），意思是<strong>绝大多数专业投资者已经把仓位加满了</strong>——这和现金3.6%是同一件事的两面。</p>
+<p>判断市场是否过热/拥挤，除了现金和牛熊指标，常用的还有：</p>
+<table>
+<thead>
+<tr class="header">
+<th>指标</th>
+<th>看什么</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Put/Call Ratio（认沽/认购期权比）</td>
+<td>期权市场在赌涨还是赌跌</td>
+</tr>
+<tr class="even">
+<td>VIX（Volatility Index，波动率指数）</td>
+<td>恐慌保险的价格，太低说明没人防守</td>
+</tr>
+<tr class="odd">
+<td>AAII 散户情绪调查</td>
+<td>散户看多比例是否极端</td>
+</tr>
+<tr class="even">
+<td>融资余额（Margin Debt）</td>
+<td>借钱炒股的杠杆有多满</td>
+</tr>
+<tr class="odd">
+<td>拥挤交易（Crowded Trade）</td>
+<td>大家是不是全挤在同一个题材</td>
+</tr>
+<tr class="even">
+<td>资金流（Fund Flows）</td>
+<td>股票基金是净流入还是流出</td>
+</tr>
+</tbody>
+</table>
+<p>逻辑都一样：<strong>找“所有人都站在船同一侧”的证据</strong>。本期FMS里这些补充证据包括：82%认为做多全球半导体是最拥挤交易（第2名只有7%）、45%把AI泡沫列为最大尾部风险、以及相对历史均值的标准差偏离。报告还特别强调<strong>信用利差是前置指标</strong>——股价报警之前，信用市场往往先动。</p>
+<p><strong>记忆卡：情绪指标的本质是数“站台上还剩多少没上车的人”——现金&lt;4%、牛熊&gt;8、净超配创新高，说明人都在车上了，涨靠惯性，跌有燃料。</strong></p>
+<h2 id="第二章-宏观剧本三种着陆与完美组合的脆弱假设">第二章 宏观剧本：三种着陆与“完美组合”的脆弱假设</h2>
+<blockquote>
+<p>你当时的问题：报告说全球经济“不着陆”是啥意思？“软着陆”和“硬着陆”又是啥意思？</p>
+</blockquote>
+<p>这三个词来自一个飞机类比：把<strong>经济增速</strong>想成飞机的高度，把<strong>央行加息压通胀</strong>想成主动让飞机降落的过程。</p>
+<p><strong>硬着陆（Hard Landing）</strong>：飞机砸在跑道上——央行为压通胀把利率加得太狠，经济骤降、企业裁员、衰退来了。通胀压住了，但经济摔伤。典型例子是1980年代初沃尔克加息后的美国衰退。</p>
+<p><strong>软着陆（Soft Landing）</strong>：飞机平稳落地——加息刚好压住通胀，经济只温和放缓，不衰退、失业率不明显上升。央行梦寐以求但很少做到，公认的成功案例只有1995年那次。</p>
+<p><strong>不着陆（No Landing）</strong>：飞机根本不降落，继续在高空飞——经济增速压根没怎么放缓。听起来最好，但隐藏问题是：<strong>经济一直太热，通胀就可能压不下去，央行没法降息、甚至要重新加息</strong>。所以“不着陆”往往和“利率维持高位更久”绑在一起，对股市不一定是好事。</p>
+<p>本期调查：54%的经理预计“不着陆”（创调查纪录），39%预计软着陆，硬着陆只有2%；净21%预计未来12个月全球经济走强；<strong>同时</strong>净4%预计通胀下降、83%认为美联储中期选举前不会加息，年末油价加权预期从每桶86美元降至71美元。</p>
+<p>这就是报告说“完美组合里藏着最脆弱的假设”的原因——市场同时押注<strong>增长强、通胀降、政策松、AI资本开支不断</strong>四件好事，而他们相信的是“飞机不降落、发动机却自己变凉”。历史上“不着陆”通常伴随通胀顽固，三者同时成立是小概率的理想剧本。底层分歧也没消失：认为处于“繁荣”的比例升至41%（2022年2月以来最高），但认为“滞胀”的仍有47%——表面共识、底层分歧。一旦经济强导致通胀反弹，“不会加息”的假设就破了，高仓位的市场会先挨打。</p>
+<p><strong>记忆卡：硬着陆是摔下来，软着陆是平稳落地，不着陆是一直飞——但一直飞的飞机烧的是“通胀不反弹”这箱油，油不够，市场就要颠簸。</strong></p>
+<h2 id="第三章-赔率转差牛市里赚钱为什么变难">第三章 赔率转差：牛市里赚钱为什么变难</h2>
+<blockquote>
+<p>你当时的问题：“基本面仍可兑现，但新增买盘变少，任何低于预期的数据都容易引发仓位调整”怎么理解？报告没说牛市结束，没改基本面和趋势，但改变了赔率——所以是牛市中的震荡行情、赚钱变难了，是这个意思吗？</p>
+</blockquote>
+<p>先拆那句话的三层意思。<strong>基本面仍可兑现</strong>：盈利、经济数据可能继续不错——车本身没坏。<strong>新增买盘变少</strong>：想买的人都已经买了（超配42%、现金3.6%），站台上没人了；股价上涨需要新买家，而不是老持有者的信心。<strong>低于预期就调仓</strong>：满仓的人对坏消息<strong>不对称敏感</strong>——好消息他没钱加仓（涨不动），坏消息他有一整个仓位可以卖（跌得动）。哪怕小小的不及预期，也可能触发集体减仓，不是基本面崩了，而是<strong>仓位太满、容错空间没了</strong>。</p>
+<p>再用赌局语言给“赔率转差、趋势未反转”精确定义：</p>
+<p><strong>胜率没怎么变</strong>：基本面在兑现、盈利在增长、AI资本开支没拐点，趋势向上的概率仍占优——所以报告不喊“牛市结束”。</p>
+<p><strong>赔率变差了</strong>：同样押注上涨，赢了赚得少、输了亏得多。你现在才上公交车，能坐的路程变短了；一旦急刹车，站着的人摔得最狠。</p>
+<p>“赚钱变难”是对的，但难的具体形式有三种可能，报告没有锁定是哪一种：一是<strong>震荡消化</strong>，横盘或上下颠簸，用时间换仓位换手；二是<strong>继续涨但对好消息麻木</strong>，必须“显著超预期”才涨一点，回报率平庸化；三是<strong>某个假设破裂引发一次急跌</strong>，比如通胀反弹逼得加息预期回来。前两种是“赚钱难”，第三种是“亏钱快”。</p>
+<p>关于“本质上是熊市/结构性牛市”的说法，要区分两个层面：<strong>指数层面</strong>它还是牛市（盈利在涨、信用市场稳定）；<strong>个股体感层面</strong>——当82%的人挤在一条窄赛道并透支了未来收益，大部分股票确实进入“赢面小、输面大”的状态。“结构性牛市”是个准确的词：指数由极少数还能兑现盈利的公司撑着，其余在还债。注意广义科技股仓位只有净18%超配（较上月26%下降，比长期均值还低0.2个标准差）——<strong>拥挤的是半导体这个单点，不是整个科技板块</strong>。</p>
+<p>所以报告的建议不是“减仓看戏”，而是“停止为同一套好消息重复付费”：核心资产（盈利能兑现的）留着吃趋势，但不再往最拥挤的方向无脑加价，同时用低配的防御资产买一份便宜的保险，让组合能扛住四个假设里至少一个失效。</p>
+<p><strong>记忆卡：调查改变的不是方向而是性价比——牛市可能还在，但从“闭眼买都赚”变成了“赢了赚小钱、输了亏大钱”，所以策略从加注变成留核心＋买保险。</strong></p>
+<h2 id="第四章-逆向赔率被遗忘资产的保险价值">第四章 逆向赔率：被遗忘资产的保险价值</h2>
+<blockquote>
+<p>你当时的问题：报告说“极端低配的防御资产提供了更好的逆向赔率”，什么叫逆向赔率？</p>
+</blockquote>
+<p><strong>逆向赔率就是反着人群下注时的性价比</strong>，它是第三章赔率逻辑的镜像。</p>
+<p>拥挤那头（半导体82%）：人都在车上，好消息没人加买（涨得少），坏消息一堆人夺门（跌得狠）——赔率差。</p>
+<p>被遗忘那头：必需消费品净32%低配（2014年2月以来最低，较历史均值低2.0个标准差）、英国股票净37%低配（低1.8个标准差）、能源股净20%低配（低1.4个标准差）——<strong>能卖的人早就卖光了</strong>，不对称性反过来了。下跌空间有限：坏消息来了没人砸盘，想卖的人已经不在里面。上涨弹性很大：一旦风向变了（美联储转鹰、增长见顶、AI资本开支预期松动），满仓半导体的机构要找地方避险，这些低配资产是空车——一点点回补买盘就能推起价格，因为里面没有套牢盘等着解套出货。</p>
+<p>“2.0个标准差”是在说低配的极端程度：仓位偏离到历史均值以下2个标准差，统计上这种极端状态出现概率只有约2%。<strong>位置越极端，弹簧压得越紧。</strong></p>
+<p>但注意分寸：“逆向赔率好”不等于“马上会涨”。这些资产被低配有基本面理由（英国增长疲弱、消费品盈利下修、油价预期下降），弹簧可能被压很久。它们的角色不是进攻，而是<strong>便宜的保险</strong>——平时不涨没关系，主流叙事出事时它们跌得少、弹得快。赔率好，但需要触发条件才兑现，这就是报告说“先写好触发条件”的原因。</p>
+<p>报告给出的三条逆向线索：<strong>久期</strong>（低现金状态后的历史样本中美债相对股票表现更好；债券仓位从净42%低配修复至净34%低配）；<strong>股息</strong>（市场9年多来首次押注低股息跑赢高股息——共识越偏向高贝塔，利率或增长意外越可能放大高股息资产的相对表现）；<strong>防御</strong>（若美联储意外转鹰，相对做多必需消费品与黄金、回避半导体和医疗；若经济繁荣见顶，相对做多久期、英国和高股息，回避工业与银行）。</p>
+<p>AI相关的风险重心也在转移：48%的受访者认为AI股票不是泡沫、61%不信超大规模云厂商2026年会砍资本开支（基本面共识仍在），但48%认为下一次系统性信用事件最可能来自云厂商资本开支（超过私人信贷的34%）——<strong>风险中心正在从盈利表转向资产负债表</strong>：只要资本开支由现金流覆盖，系统性风险难成立；一旦靠债务维持而回报未验证，风险会从云厂商现金流传导至信用利差、设备订单和芯片估值。</p>
+<p>报告的跟踪框架浓缩成四组变量：<strong>现金</strong>（下期继续降说明上涨更依赖盈利兑现）、<strong>AI资本开支的资金来源</strong>（资本开支占经营现金流比例、自由现金流、净债务、信用利差）、<strong>通胀与增长是否分叉</strong>（最危险的是增长强但通胀反弹）、<strong>信用</strong>（投资级与高收益利差、云厂商债券发行、订单取消——信用市场先于股价报警）。</p>
+<p><strong>记忆卡：逆向赔率 = 买没人要的空车——平时开得慢，但翻车风险小，而且一旦人群换车，它是第一个被挤满的。</strong></p>
+<h2 id="第五章-案例复盘2026年7月的存储板块回调">第五章 案例复盘：2026年7月的存储板块回调</h2>
+<blockquote>
+<p>你当时的问题：海力士下跌那么严重，半导体尤其存储回撤蛮多，是不是就是震荡消化？这种因拥挤引发的调整，空间上回撤多少、时间上是不是要两三个月才能消化？另外朋友们吃饭聊出三个结论：2026下半年AI赛道不太会有超额收益；未来增量在Physical AI（物理人工智能）但拐点未到；存储、光模块、半导体设备材料都没有好的赔率——你怎么看？</p>
+</blockquote>
+<p><strong>事实层面（截至2026年7月14日，来源：CNBC、Yahoo Finance、TradingKey等）</strong>：SK海力士从6月25日高点回撤约37%~38%，其中7月13日在首尔单日暴跌15.4%，为其<strong>历史最大单日跌幅</strong>；美光从6月高点回撤约25%。触发因素三层叠加：纳斯达克上市前爆炒后的获利了结、ADR（American Depositary Receipt，美国存托凭证）与韩股之间20%以上价差的套利压缩、HBM4放量从Q2推迟到Q3导致盈利预期下修8%。注意最后一条——<strong>这次不纯是仓位问题，基本面预期也动了一格</strong>。这正是FMS“82%拥挤度”的具体化：拥挤本身不是做空理由，但它决定了坏消息来临时跌幅被放大的程度。</p>
+<p><strong>空间维度</strong>：高贝塔拥挤股的仓位出清，历史典型幅度是25%~40%——美光的25%和海力士的37%已落在区间内。海力士多跌的部分主要是ADR溢价压缩这个特殊因素，不全是行业信号。</p>
+<p><strong>时间维度</strong>：“两三个月”作为基准情景合理——2024年7至9月那轮AI回调约两个半月，2018年、2021年的半导体拥挤出清也多在2至4个月量级。但<strong>时间没有固定公式</strong>，真正决定何时结束的是两个信号：一是HBM4的Q3实际出货能否把下修的预期接回来（下一个财报季就是验证点），二是信用利差和云厂商资本开支指引是否稳定。如果Q3兑现，这就是震荡消化；如果资本开支指引松动，那就不是“消化”而是“变盘”，时间框架作废。</p>
+<p><strong>对三个饭局结论的看法</strong>：</p>
+<p>第一条（2026下半年AI无超额收益）：方向与FMS数据吻合，但留一个口子——61%的机构仍不信云厂商砍资本开支，华尔街主流把这次回调定性为“上行周期中的健康调整”而非叙事终结。“无超额收益”和“会亏钱”是两回事，更可能的形态是第三章说的第二种：继续涨但对好消息麻木，回报平庸化。</p>
+<p>第二条（Physical AI拐点未到）：“早”的判断成立。它处于“叙事饱满、订单稀薄”阶段，和2022年的AI大模型类似——方向大概率对，但没有盈利锚，买早了要用回撤扛时间。适合观察触发条件（量产订单、单位成本拐点），而不是提前重仓。</p>
+<p>第三条（存储/光模块/设备/材料赔率差）：这恰是82%拥挤度的具体化。但拥挤消化后赔率会重新变好，所以它是<strong>时点判断</strong>而不是<strong>终局判断</strong>。</p>
+<p><strong>记忆卡：这轮存储回调 = 仓位出清（主因）＋ HBM4延期（次因），空间已到历史典型区间下沿，时间上盯Q3财报验证而不是数日历——消化还是变盘，取决于盈利预期能不能接住。</strong></p>
+<h2 id="第六章-全景总结一条完整的逻辑链">第六章 全景总结：一条完整的逻辑链</h2>
+<p>把全部内容串成一条公交车的故事线：</p>
+<p><strong>第一步，数站台</strong>（第一章）：现金3.6%、牛熊指标9.4、净超配42%——站台快空了，人都在车上。这些情绪指标不预测方向，只说明市场结构变得不对称。</p>
+<p><strong>第二步，看路况</strong>（第二章）：车上的人集体相信“不着陆＋通胀降＋不加息”的完美路线——飞机不降落、发动机自己变凉。四个假设（增长强、通胀降、政策松、资本开支不断）同时成立才撑得住当前仓位。</p>
+<p><strong>第三步，算赔率</strong>（第三章）:车还在开（胜率没变），但现在上车路程短、急刹车摔得狠（赔率变差）。牛市没结束，但从“闭眼买都赚”变成“赢了赚小钱、输了亏大钱”——结构性牛市的体感由此而来。</p>
+<p><strong>第四步，找空车</strong>（第四章）：必需消费品、英国、能源被极端低配，逆向赔率好——不是马上涨，而是便宜的保险，等触发条件（转鹰、见顶、资本开支松动）兑现。</p>
+<p><strong>第五步，看实战</strong>（第五章）：存储板块用37%的回撤演示了“拥挤+坏消息”的化学反应；出清的空间有历史区间可参照，时间则要盯Q3财报和信用市场，而不是数日历。</p>
+<p>最终落点是报告的结论：<strong>不要和强趋势赌气，但要停止为同一套好消息重复付费</strong>——留住能用盈利兑现高预期的核心资产，降低对单一共识的依赖，把仓位放在能承受至少一个假设失效的位置上。</p>
+<h2 id="附录一句话记忆卡合集">附录：一句话记忆卡合集</h2>
+<table>
+<thead>
+<tr class="header">
+<th>主题</th>
+<th>记忆卡</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>情绪指标</td>
+<td>本质是数“站台上还剩多少没上车的人”——现金&lt;4%、牛熊&gt;8、净超配创新高，人都在车上了，涨靠惯性，跌有燃料</td>
+</tr>
+<tr class="even">
+<td>三种着陆</td>
+<td>硬着陆是摔下来，软着陆是平稳落地，不着陆是一直飞——但一直飞烧的是“通胀不反弹”这箱油</td>
+</tr>
+<tr class="odd">
+<td>胜率与赔率</td>
+<td>调查改变的不是方向而是性价比——从“闭眼买都赚”变成“赢了赚小钱、输了亏大钱”，策略从加注变成留核心＋买保险</td>
+</tr>
+<tr class="even">
+<td>逆向赔率</td>
+<td>买没人要的空车——平时开得慢，但翻车风险小，人群换车时它第一个被挤满</td>
+</tr>
+<tr class="odd">
+<td>存储回调</td>
+<td>仓位出清（主因）＋HBM4延期（次因），空间到历史区间下沿，时间盯Q3财报验证而不是数日历</td>
+</tr>
+</tbody>
+</table>
+<p><em>信息时点：美银2026年7月FMS（调查期7月2日至9日，210名受访者、管理资产约5550亿美元）；海力士/美光行情数据截至2026年7月14日，来源CNBC、Yahoo Finance、TradingKey、ad-hoc-news。本笔记全部内容仅供学习参考，不构成任何投资建议。</em></p>
+
+  </article>
+  <div class="disclaim">本文为个人学习笔记，由对话探讨整理而成，仅作知识分享，不构成任何投资建议。</div>
+</main>
+</body>
+</html>
