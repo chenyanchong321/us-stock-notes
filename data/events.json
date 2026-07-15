@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-15 12:37 北京时间",
+ "updated": "2026-07-15 13:07 北京时间",
  "earnings": [
   {
    "d": "2026-07-15",
@@ -167,6 +167,12 @@
    "d": "2026-07-29",
    "code": "KLAC",
    "name": "科磊",
+   "est": false
+  },
+  {
+   "d": "2026-07-29",
+   "code": "TER",
+   "name": "泰瑞达",
    "est": false
   },
   {
@@ -369,6 +375,12 @@
   },
   {
    "d": "2026-08-04",
+   "code": "ENTG",
+   "name": "英特格（Entegris）",
+   "est": false
+  },
+  {
+   "d": "2026-08-04",
    "code": "7011",
    "name": "三菱重工",
    "est": false
@@ -509,6 +521,12 @@
    "d": "2026-08-07",
    "code": "VST",
    "name": "Vistra Energy",
+   "est": false
+  },
+  {
+   "d": "2026-08-07",
+   "code": "NET",
+   "name": "Cloudflare",
    "est": false
   },
   {
