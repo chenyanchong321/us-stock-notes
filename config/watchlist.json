@@ -5718,6 +5718,20 @@
      "ath_floor": 0
     },
     {
+     "name": "群核科技",
+     "code": "00068",
+     "market": "港股",
+     "yahoo": "0068.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 17.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "AeroVironment",
      "code": "AVAV",
      "market": "美股",
@@ -5808,6 +5822,12 @@
      "codes": [
       "ISRG",
       "SYM"
+     ]
+    },
+    {
+     "name": "仿真与场景资产",
+     "codes": [
+      "00068"
      ]
     },
     {
