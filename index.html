@@ -3623,18 +3623,22 @@ document.addEventListener("click", e=>{
        不能要求用户先切回"全景"才跳得对 */
     setTimeout(()=>{
       let tr = document.querySelector(`#sections tr[data-code="${code}"]`);
-      let blocked = !tr || tr.offsetParent === null;
-      if(blocked){
+      if(!tr || tr.offsetParent === null){
         if(window.CURMKT && window.setMkt) setMkt("");
         const inp = document.getElementById("search");
         if(inp && inp.value){ inp.value = ""; inp.dispatchEvent(new Event("input")); const c=document.getElementById("search-clear"); if(c) c.style.display="none"; }
       }
-      setTimeout(()=>{
-        tr = document.querySelector(`#sections tr[data-code="${code}"]`);
-        if(!tr || tr.offsetParent === null) return;
-        tr.scrollIntoView({block:"center"});
-        tr.classList.remove("ev-flash"); void tr.offsetWidth; tr.classList.add("ev-flash");
-      }, blocked ? 140 : 0);
+      /* 重置筛选会触发整表重渲染，行元素会被换掉——轮询等新行就位再定位（不赌时序） */
+      let n = 0;
+      const t = setInterval(()=>{
+        n++;
+        const row = document.querySelector(`#sections tr[data-code="${code}"]`);
+        if(row && row.offsetParent !== null){
+          clearInterval(t);
+          row.scrollIntoView({block:"center"});
+          row.classList.remove("ev-flash"); void row.offsetWidth; row.classList.add("ev-flash");
+        } else if(n > 12){ clearInterval(t); }
+      }, 120);
     }, 60);
   }
 
