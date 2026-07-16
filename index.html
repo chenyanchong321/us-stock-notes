@@ -2642,8 +2642,16 @@ let PROFILES = {};
   tip.style.cssText = "position:fixed;display:none;z-index:300;max-width:330px;background:var(--panel2);border-left:3px solid var(--accent);border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);border-radius:0 10px 10px 0;padding:11px 13px;font-size:13px;line-height:1.65;color:var(--text2);box-shadow:0 8px 28px rgba(0,0,0,.5);pointer-events:none";
   document.body.appendChild(tip);
   const st = document.createElement("style");
-  st.textContent = "#stip b{color:var(--text);font-weight:600} #stip .mtag{color:var(--text2);font-size:10.5px}";
+  st.textContent = "#stip b{color:var(--text);font-weight:600} #stip .mtag{color:var(--text2);font-size:10.5px}"
+    /* 手机端（无悬停/粗指针）：浮窗里的链接一律变整行大按钮（≥44px触区，iOS HIG），防点偏 */
+    + "@media (hover:none),(pointer:coarse){#stip a{display:block;min-height:44px;box-sizing:border-box;padding:11px 12px;margin-top:6px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;line-height:1.5}}";
   document.head.appendChild(st);
+  /* 手机端误触修复（2026-07-16）：浮窗钉住时垫透明遮罩，点浮窗外只收起、绝不触发底下的格子 */
+  const TOUCHY = matchMedia("(hover: none), (pointer: coarse)").matches;
+  const msk = document.createElement("div");
+  msk.id = "stipmsk";
+  msk.style.cssText = "position:fixed;inset:0;z-index:299;display:none;background:transparent";
+  document.body.appendChild(msk);
   function codeOf(td){
     const s = td.querySelector(".sub");
     return s ? s.childNodes[0].textContent.trim() : "";
@@ -2901,13 +2909,16 @@ let PROFILES = {};
     const ipc = e.target.closest(".ipoflag");
     const trig = td || tdp || tda || tdm || tdv || ipc;   /* 本次点中的触发格 */
     /* 再点同一格＝关闭（开关式）。这样手机上不必再去点空白处收浮窗。 */
-    if(pinned && trig && trig===pinnedEl){ tip.style.display="none"; pinned=false; pinnedEl=null; return; }
+    if(pinned && trig && trig===pinnedEl){ tip.style.display="none"; msk.style.display="none"; pinned=false; pinnedEl=null; return; }
+    /* 遮罩兜底：钉住状态下点到遮罩（＝浮窗外任何位置），只收起，不让点击落到底下的格子 */
+    if(pinned && e.target===msk){ tip.style.display="none"; msk.style.display="none"; pinned=false; pinnedEl=null; return; }
     const h = td ? tipHTML(td) : (tdp ? posTip(tdp.parentElement) : (tda ? athTip(tda.parentElement) : (tdm ? usdMcapTip(rowOfTr(tdm.parentElement)) : (tdv ? volTip(tdv.parentElement) : (ipc ? ipc.dataset.tip : null)))));
     if(h){
       tip.innerHTML = h; tip.style.display = "block"; tip.style.pointerEvents = "auto";
       pinned = true; pinnedEl = trig;
+      if(TOUCHY) msk.style.display = "block";
       place(e.clientX||20, e.clientY||100);
-    } else { tip.style.display = "none"; pinned = false; pinnedEl = null; }
+    } else { tip.style.display = "none"; msk.style.display = "none"; pinned = false; pinnedEl = null; }
   });
 })();
 
