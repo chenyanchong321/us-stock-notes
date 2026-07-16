@@ -3124,11 +3124,12 @@ function imapBrick(m, cfg){
     `<span class="dayi" style="color:${day>=0?"var(--up)":"var(--down)"};background:${day>=0?"rgba(63,185,80,.12)":"rgba(248,81,73,.12)"}">${day>0?"+":""}${day.toFixed(1)}%</span>`;
   const yrTxt = yr===null ? "" : ` · <span style="color:${yr>=0?"var(--up)":"var(--down)"}">1年${yr>0?"+":""}${yr.toFixed(0)}%</span>`;
   const crown = m.k===2 ? " 👑板块龙头" : (m.k===1 ? " 👑" : "");
-  const intro = (PROFILES[m.c]||"").replace(/<[^>]+>/g,"").slice(0,110);
-  return `<div class="imap-brick${m.k?" big":""}" data-code="${m.c}" data-intro="${intro.replace(/"/g,"&quot;")}" style="border-left:3px solid ${camp.color||"var(--border)"}">
+  /* 简介不在渲染时烤入（PROFILES异步晚到会烤成空），悬停/点击时现取 */
+  return `<div class="imap-brick${m.k?" big":""}" data-code="${m.c}" style="border-left:3px solid ${camp.color||"var(--border)"}">
     <b>${r[0]}</b>${dayTag}
     <div class="m">${r[3]||"–"}${yrTxt}${crown}</div></div>`;
 }
+function imapIntro(code){ return (PROFILES[code]||"").replace(/<[^>]+>/g,"").slice(0,110); }
 function imapSort(list){
   return list.slice().sort((x,y)=>{
     const rx=imapRowOf(x.c), ry=imapRowOf(y.c);
@@ -3234,8 +3235,9 @@ function renderImap(){
       });
       body.addEventListener("mouseover", e=>{
         const b = e.target.closest(".imap-brick");
-        if(!b || !b.dataset.intro){ t.style.display="none"; return; }
-        t.textContent = b.dataset.intro;
+        const intro = b ? imapIntro(b.dataset.code) : "";
+        if(!intro){ t.style.display="none"; return; }
+        t.textContent = intro;
         t.style.display = "block";
         move(e);
       });
@@ -3258,7 +3260,7 @@ function renderImap(){
         cur = b;
         const name = (b.querySelector("b")||{}).textContent || "";
         const m = (b.querySelector(".m")||{}).textContent || "";
-        const intro = b.dataset.intro || "暂无简介";
+        const intro = imapIntro(b.dataset.code) || "暂无简介";
         t.id = "imap-tipcard";
         t.style.pointerEvents = "auto";
         t.innerHTML = `<div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px">${name}</div>
