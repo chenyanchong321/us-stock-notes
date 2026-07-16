@@ -381,7 +381,7 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 .repb{display:inline-block;margin-left:5px;padding:0 4px;border-radius:3px;font-size:10px;line-height:15px;vertical-align:1px;
   color:var(--gold);border:1px solid var(--gold);opacity:.85;font-weight:500;letter-spacing:.5px;cursor:pointer;white-space:nowrap}
 .repb:hover{opacity:1;background:rgba(232,182,76,.12)}
-.rep-main{max-width:820px;margin:0 auto;padding:0 18px}
+.rep-main{max-width:820px;margin:var(--header-h) auto 0;padding:26px 18px 60px}
 .rep-intro{background:linear-gradient(135deg,rgba(232,182,76,.12),rgba(74,140,240,.06));border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:20px}
 .rep-intro h2{font-size:18px;margin-bottom:6px}
 .rep-intro p{font-size:13px;color:var(--text2);line-height:1.7}
@@ -394,7 +394,24 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 .rep-d{font-size:12.5px;color:var(--text2);line-height:1.65}
 .rep-act{margin-top:9px;font-size:12px;color:var(--gold)}
 .rep-empty{text-align:center;color:var(--text2);font-size:13px;padding:40px 0}
-@media(max-width:860px){.rep-main{padding:0 14px}}
+@media(max-width:860px){.rep-main{padding:20px 14px 50px}}
+/* 研报阅读页正文（与学习笔记文章观感一致） */
+#rr-head h1{font-size:22px;line-height:1.45;margin:2px 0 10px}
+#rr-head .rr-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--text2);margin-bottom:18px}
+#rr-head .rr-tag{padding:1px 8px;border-radius:8px;background:rgba(74,140,240,.15);border:1px solid var(--border)}
+#rr-head .rr-pdf{padding:4px 12px;border:1px solid var(--gold);border-radius:8px;color:var(--gold);cursor:pointer;background:none;font-size:12px}
+.rr-article{font-size:14.5px;line-height:1.85;color:var(--text)}
+.rr-article h2{font-size:17px;margin:30px 0 12px;padding-left:9px;border-left:3px solid var(--gold)}
+.rr-article h3{font-size:14.5px;margin:20px 0 8px;color:var(--gold)}
+.rr-article p{margin:0 0 12px}
+.rr-article b{color:var(--text)}
+.rr-article .rr-box{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:10px 14px;margin:14px 0;font-size:13.5px}
+.rr-article table{width:100%;border-collapse:collapse;margin:14px 0;font-size:12.5px}
+.rr-article th,.rr-article td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top}
+.rr-article th{background:var(--panel);color:var(--text2);font-weight:600;white-space:nowrap}
+.rr-article .num{font-variant-numeric:tabular-nums}
+@media(max-width:860px){.rr-article table{display:block;overflow-x:auto}}
+.rr-load{text-align:center;color:var(--text2);padding:50px 0;font-size:13px}
 
 /* ========== 学习笔记卡片 ========== */
 .notes-intro{background:linear-gradient(135deg,rgba(74,140,240,.12),rgba(232,182,76,.08));border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:26px}
@@ -574,9 +591,19 @@ body.resizing{user-select:none;cursor:col-resize}
   <div class="rep-main">
     <div class="rep-intro">
       <h2>📑 投研报告 <span style="font-size:12px;color:var(--gold);font-weight:400">会员专属</span></h2>
-      <p>针对重点标的的深度研究报告，含估值推演与观察点位，与数据面板的「研报」标记一一对应。已收录 <b id="rep-total">–</b> 篇 · <span id="rep-hint">游客可浏览目录，阅读全文需登录会员</span></p>
+      <p>重点标的深度研究报告，含估值推演与观察点位，与数据面板的「研报」标记一一对应。</p>
     </div>
     <div id="rep-cards"></div>
+  </div>
+</div>
+
+<!-- ================= 视图：研报阅读页（会员空壳，正文验token后注入）================= -->
+<div id="view-repread" class="hidden">
+  <div class="rep-main">
+    <div style="margin-bottom:14px"><a href="javascript:;" onclick="switchTab('reports')" style="color:var(--text2);text-decoration:none;font-size:13px">← 返回投研报告</a></div>
+    <div id="rr-head"></div>
+    <article id="rr-body" class="rr-article"></article>
+    <div style="margin-top:28px;font-size:12px;color:var(--text2);border-top:1px solid var(--border);padding-top:12px">本报告为会员专属内容，仅供个人学习研究，请勿转发外传。不构成任何投资建议。</div>
   </div>
 </div>
 
@@ -681,7 +708,7 @@ let SELL = {};         /* 卖点（会员可见），动作规则，显示在现
 let TGT = {};          /* 目标价（会员可见），估值锚，显示在重点清单列（2026-07-15 主人定稿） */
 let BUYCODES = new Set();  /* 设了点位的代码清单（公开）：画★、清单票名、锁 */
 let REPORTS = [], REPBY = {}, RCODES = new Set();  /* 研报目录（公开橱窗）：徽标、浮窗行、集合页；PDF本体走 /api/report 验token */
-function repBadge(code){ return RCODES.has(code) ? `<span class="repb" data-code="${code}" title="有投研报告">研报</span>` : ""; }
+function repBadge(code){ return RCODES.has(code) ? `<span class="repb" data-code="${code}">研报</span>` : ""; }
 window.MEMBER = false; window.AUSER = "";
 const AUTH_API = location.host==="stock.ziyuanai.top" ? "/api" : "https://stock.ziyuanai.top/api";
 
@@ -2937,36 +2964,84 @@ let PROFILES = {};
     if(inZone(e.target) && !inZone(e.relatedTarget))
       tip.style.display = "none";
   });
+  /* —— 触发格识别与开关（2026-07-16 重构）——
+     开关按「行代码+格子类型」识别而非元素引用：行情30秒刷新会换掉格子元素，
+     旧写法第二下点的是"新格子"认不出，开关失灵（主人实测）。 */
+  function findTrig(el){
+    if(!el || !el.closest) return null;
+    const ipc = el.closest(".ipoflag");
+    if(ipc) return {el:ipc, type:"ipo"};
+    for(const t of ["name","pxc","athc","mcapc","volc"]){
+      const td = el.closest("td."+t);
+      if(td) return {el:td, type:t};
+    }
+    return null;
+  }
+  function trigKey(tg){
+    const tr = tg.el.closest("tr");
+    return (tr && tr.dataset.code || "x") + "|" + tg.type;
+  }
+  function trigHTML(tg){
+    const td = tg.el;
+    switch(tg.type){
+      case "name":  return tipHTML(td);
+      case "pxc":   return posTip(td.parentElement);
+      case "athc":  return athTip(td.parentElement);
+      case "mcapc": return usdMcapTip(rowOfTr(td.parentElement));
+      case "volc":  return volTip(td.parentElement);
+      case "ipo":   return td.dataset.tip;
+    }
+    return null;
+  }
+  let pinnedKey = null;
+  function closeTip(){ tip.style.display="none"; msk.style.display="none"; pinned=false; pinnedEl=null; pinnedKey=null; }
+  function openTipFor(tg, x, y){
+    const h = trigHTML(tg);
+    if(!h){ closeTip(); return; }
+    tip.innerHTML = h; tip.style.display = "block"; tip.style.pointerEvents = "auto";
+    pinned = true; pinnedEl = tg.el; pinnedKey = trigKey(tg);
+    if(TOUCHY) msk.style.display = "block";
+    place(x||20, y||100);
+  }
   document.addEventListener("click", e=>{      /* 手机端：点触发格弹出，再点同一格收起（桌面端仍靠悬停，不受影响） */
     if(e.target.closest && e.target.closest("#stip")) return;   /* 点浮窗内链接不收起 */
-    const td = e.target.closest("td.name");
-    const tdp = e.target.closest("td.pxc");
-    const tda = e.target.closest("td.athc");
-    const tdm = e.target.closest("td.mcapc");
-    const tdv = e.target.closest("td.volc");
-    const ipc = e.target.closest(".ipoflag");
-    const trig = td || tdp || tda || tdm || tdv || ipc;   /* 本次点中的触发格 */
-    /* 再点同一格＝关闭（开关式）。这样手机上不必再去点空白处收浮窗。 */
-    if(pinned && trig && trig===pinnedEl){ tip.style.display="none"; msk.style.display="none"; pinned=false; pinnedEl=null; return; }
-    /* 遮罩兜底：钉住状态下点到遮罩（＝浮窗外任何位置），只收起，不让点击落到底下的格子 */
-    if(pinned && e.target===msk){ tip.style.display="none"; msk.style.display="none"; pinned=false; pinnedEl=null; return; }
-    const h = td ? tipHTML(td) : (tdp ? posTip(tdp.parentElement) : (tda ? athTip(tda.parentElement) : (tdm ? usdMcapTip(rowOfTr(tdm.parentElement)) : (tdv ? volTip(tdv.parentElement) : (ipc ? ipc.dataset.tip : null)))));
-    if(h){
-      tip.innerHTML = h; tip.style.display = "block"; tip.style.pointerEvents = "auto";
-      pinned = true; pinnedEl = trig;
-      if(TOUCHY) msk.style.display = "block";
-      place(e.clientX||20, e.clientY||100);
-    } else { tip.style.display = "none"; msk.style.display = "none"; pinned = false; pinnedEl = null; }
+    /* 遮罩上的点击：穿透看一眼底下是什么——同一格=收起；另一个触发格=切换；其他=收起。
+       这样手机上「点A弹A、再点A收起、点B换B、点空白关闭」四条规则齐活，且绝不误开。 */
+    if(pinned && e.target===msk){
+      msk.style.pointerEvents = "none";
+      const under = document.elementFromPoint(e.clientX, e.clientY);
+      msk.style.pointerEvents = "";
+      const utg = findTrig(under);
+      if(utg && trigKey(utg)!==pinnedKey){ openTipFor(utg, e.clientX, e.clientY); }
+      else closeTip();
+      return;
+    }
+    const tg = findTrig(e.target);
+    if(tg && pinned && trigKey(tg)===pinnedKey){ closeTip(); return; }   /* 再点同一格＝关闭 */
+    if(tg) openTipFor(tg, e.clientX, e.clientY);
+    else closeTip();
   });
+  /* —— 手机端浮窗内链接「触摸抬起即走」（2026-07-16）——
+     跳转挂在真实触摸事件上并 preventDefault 掐断系统补发的模拟鼠标事件串，
+     防止悬停监听器在 click 落地前动浮窗导致点空/误触（主人真机复现的病根）。 */
+  let _tx=0, _ty=0;
+  tip.addEventListener("touchstart", e=>{ const t=e.touches[0]; _tx=t.clientX; _ty=t.clientY; }, {passive:true});
+  tip.addEventListener("touchend", e=>{
+    const a = e.target.closest && e.target.closest("a");
+    if(!a) return;
+    const t = e.changedTouches[0];
+    if(Math.abs(t.clientX-_tx)>12 || Math.abs(t.clientY-_ty)>12) return;   /* 滑动松手不算点击 */
+    e.preventDefault(); e.stopPropagation();
+    if(a.classList.contains("repa")){
+      if(window.goReport) goReport(a.dataset.rid);
+    } else if(a.href){ location.href = a.href; }
+  }, {passive:false});
 })();
 
 /* ===== 投研报告（2026-07-16 会员专属）：目录公开橱窗，PDF 本体验 token 才吐 ===== */
 function renderReports(){
   const box = document.getElementById("rep-cards");
   if(!box) return;
-  const tot = document.getElementById("rep-total"), hint = document.getElementById("rep-hint");
-  if(tot) tot.textContent = REPORTS.length || "–";
-  if(hint) hint.textContent = window.MEMBER ? `欢迎回来，${window.AUSER||"会员"} · 点击卡片直接阅读` : "游客可浏览目录，阅读全文需登录会员";
   if(!REPORTS.length){ box.innerHTML = '<div class="rep-empty">研报整理中，敬请期待</div>'; return; }
   const nameOf = code=>{ for(const s of DATA){ for(const r of s.rows){ if(r[1]===code) return r[0]; } } return ""; };
   box.innerHTML = REPORTS.map(x=>`
@@ -2978,7 +3053,7 @@ function renderReports(){
       <div class="rep-act">${window.MEMBER ? "▸ 点击阅读（PDF）" : "🔒 会员专属 · 登录后阅读"}</div>
     </div>`).join("");
 }
-/* 会员打开PDF：先同步开新窗（保住用户手势），再带token取文件塞进去；游客一律弹登录 */
+/* 下载原版PDF：先同步开新窗（保住用户手势），再带token取文件塞进去 */
 window.openReport = function(id){
   if(!window.MEMBER){ window.openAuth && openAuth("login"); return; }
   const tk = localStorage.getItem("atk");
@@ -2994,21 +3069,66 @@ window.openReport = function(id){
     .then(b=>{ const u = URL.createObjectURL(b); if(w) w.location = u; else location.href = u; })
     .catch(e=>{ if(e===0) return; if(w) w.close(); alert("报告获取失败，请稍后再试"); });
 };
+/* 研报阅读页（2026-07-16 主人定稿：主阅读走网页文章，PDF只作下载备选）。
+   空壳+验票取货：页面外壳公开，正文经 /api/report-html 验 token 后注入，游客只会看到登录提示。 */
+window.openReader = function(id){
+  const rec = REPORTS.find(x=>x.id===id);
+  switchTab("repread");
+  const u = new URL(location.href); u.searchParams.set("read", id); history.replaceState(null,"",u);
+  const head = document.getElementById("rr-head"), body = document.getElementById("rr-body");
+  head.innerHTML = rec ? `<h1>${rec.title}</h1>
+    <div class="rr-meta"><span>${rec.date||""}</span><span>${rec.src||""}</span>
+      ${(rec.codes||[]).map(c=>`<span class="rr-tag">${c}</span>`).join("")}
+      <button class="rr-pdf" onclick="openReport('${id}')">⬇ 下载原版 PDF</button></div>` : "";
+  if(!window.MEMBER){
+    body.innerHTML = '<div class="rr-load">🔒 本报告为会员专属，请先登录</div>';
+    window.openAuth && openAuth("login");
+    return;
+  }
+  body.innerHTML = '<div class="rr-load">📑 正文加载中…</div>';
+  const tk = localStorage.getItem("atk");
+  fetch(AUTH_API+"/report-html?id="+encodeURIComponent(id), {headers:{Authorization:"Bearer "+tk}})
+    .then(r=>{
+      if(r.status===401||r.status===403){ localStorage.removeItem("atk"); body.innerHTML='<div class="rr-load">🔒 登录已过期，请重新登录</div>'; openAuth("login"); throw 0; }
+      if(!r.ok) throw new Error("HTTP "+r.status);
+      return r.json();
+    })
+    .then(d=>{ body.innerHTML = d.html || '<div class="rr-load">正文整理中，可先下载原版 PDF 阅读</div>'; window.scrollTo(0,0); })
+    .catch(e=>{ if(e===0) return; body.innerHTML = '<div class="rr-load">正文加载失败，可点上方按钮下载原版 PDF</div>'; });
+};
+/* 统一跳转入口：会员进阅读页，游客弹登录 */
+window.goReport = function(id){
+  if(!window.MEMBER){ window.openAuth && openAuth("login"); return; }
+  openReader(id);
+};
+function goRepCode(code){
+  const list = REPBY[code] || [];
+  if(!window.MEMBER){ window.openAuth && openAuth("login"); return; }
+  if(list.length===1) goReport(list[0].id);
+  else if(window.switchTab) switchTab("reports");
+}
 /* 研报点击总入口（捕获阶段，先于简介浮窗的全局click，防止误开浮窗）：
-   .repb 名称徽标 → 会员单篇直达/多篇去集合页；.repa 浮窗行 → 直达；.rep-card 集合页卡片 → 直达；游客一律弹登录 */
+   .repb 名称徽标；.repa 浮窗行；.rep-card 集合页卡片。游客一律弹登录。 */
 document.addEventListener("click", e=>{
   const t = e.target.closest ? (e.target.closest(".repb,.repa,.rep-card")) : null;
   if(!t) return;
   e.preventDefault(); e.stopPropagation();
-  if(!window.MEMBER){ window.openAuth && openAuth("login"); return; }
-  if(t.classList.contains("repb")){
-    const list = REPBY[t.dataset.code] || [];
-    if(list.length===1) openReport(list[0].id);
-    else if(window.switchTab) switchTab("reports");
-    return;
-  }
-  openReport(t.dataset.rid);
+  if(t.classList.contains("repb")){ goRepCode(t.dataset.code); return; }
+  goReport(t.dataset.rid);
 }, true);
+/* 手机端徽标：触摸抬起即走（捕获+preventDefault 掐断补发事件串），滑动松手不算 */
+(function(){
+  let sx=0, sy=0;
+  document.addEventListener("touchstart", e=>{ const t=e.touches[0]; sx=t.clientX; sy=t.clientY; }, {passive:true, capture:true});
+  document.addEventListener("touchend", e=>{
+    const b = e.target.closest ? e.target.closest(".repb") : null;
+    if(!b) return;
+    const t = e.changedTouches[0];
+    if(Math.abs(t.clientX-sx)>12 || Math.abs(t.clientY-sy)>12) return;
+    e.preventDefault(); e.stopPropagation();
+    goRepCode(b.dataset.code);
+  }, {passive:false, capture:true});
+})();
 
 /* ===== 会员登录/注册（2026-07-15）：token 存 localStorage("atk")，成功后整页刷新用会员数据重渲染 ===== */
 (function(){
@@ -3118,6 +3238,7 @@ document.addEventListener("click", e=>{
     try{ renderHistory(histCfg, spxHist); }catch(e){ console.warn("history:", e); }
     try{ renderLev(levData); }catch(e){ console.warn("lev:", e); }
     try{ renderReports(); }catch(e){ console.warn("reports:", e); }
+    try{ const rid = new URLSearchParams(location.search).get("read"); if(rid) openReader(rid); }catch(e){}
     window.checkStale(quotes.updated);
   }catch(e){
     document.getElementById("loading").textContent =
@@ -3201,10 +3322,10 @@ document.addEventListener("click", e=>{
      桌面手机统一，为未来加栏目留门）。所有切页签一律走 switchTab()。 */
   const MORE_VIEWS = ["events","dict","history","lev"];
   window.switchTab = function(v){
-    document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active", t.dataset.view===v));
+    document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active", t.dataset.view===v || (v==="repread" && t.dataset.view==="reports")));
     const tm = document.getElementById("tab-more");
     if(tm) tm.classList.toggle("active", MORE_VIEWS.includes(v));
-    ["dash","events","notes","dict","history","lev","reports"].forEach(x=>{
+    ["dash","events","notes","dict","history","lev","reports","repread"].forEach(x=>{
       const el = document.getElementById("view-"+x);
       if(el) el.classList.toggle("hidden", v!==x);
     });
@@ -3215,6 +3336,7 @@ document.addEventListener("click", e=>{
     const u = new URL(location.href);
     if(v!=="dash") u.searchParams.set("view",v);
     else u.searchParams.delete("view");
+    if(v!=="repread") u.searchParams.delete("read");
     u.hash="";
     history.replaceState(null,"",u);
     window.scrollTo(0,0);

@@ -158,6 +158,19 @@ class H(BaseHTTPRequestHandler):
             cat = [{k: r.get(k) for k in ("id", "codes", "title", "date", "src", "pages", "d")}
                    for r in load_reports()]
             return self._json(200, {"ok": True, "reports": cat})
+        if p == "/api/report-html":
+            u = self._user()
+            if not u:
+                return self._json(401, {"ok": False, "err": "研报为会员专属，请先登录"})
+            rid = (parse_qs(urlparse(self.path).query).get("id") or [""])[-1]
+            rec = next((r for r in load_reports() if r.get("id") == rid), None)
+            if not rec:
+                return self._json(404, {"ok": False, "err": "报告不存在"})
+            hp = os.path.join(MEMBER, "html", os.path.basename(rid) + ".html")
+            if not os.path.isfile(hp):
+                return self._json(200, {"ok": True, "html": ""})   # 正文尚未整理：前端提示下载PDF
+            with open(hp, encoding="utf-8") as f:
+                return self._json(200, {"ok": True, "html": f.read()})
         if p == "/api/report":
             u = self._user()
             if not u:
