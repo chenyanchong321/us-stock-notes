@@ -6379,6 +6379,34 @@
      },
      "mcap_base_price": 1.0,
      "ath_floor": 0
+    },
+    {
+     "name": "东鹏饮料",
+     "code": "605499",
+     "market": "A股",
+     "yahoo": "605499.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 935.88,
+      "approx": true
+     },
+     "mcap_base_price": 127.47,
+     "ath_floor": 0
+    },
+    {
+     "name": "东鹏饮料",
+     "code": "09980",
+     "market": "港股",
+     "yahoo": "9980.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 853.14,
+      "approx": true
+     },
+     "mcap_base_price": 116.2,
+     "ath_floor": 0
     }
    ],
    "groups": [
@@ -6438,6 +6466,13 @@
       "605117",
       "002460",
       "002466"
+     ]
+    },
+    {
+     "name": "消费（能量饮料）",
+     "codes": [
+      "605499",
+      "09980"
      ]
     }
    ]
