@@ -3251,16 +3251,7 @@ document.addEventListener("click", e=>{
   }
   document.getElementById("loading").remove();
   document.getElementById("view-dash").classList.remove("hidden");
-  /* 冷启动直达研报阅读页（分享链接/刷新）。两个前置：①必须在 view-dash 揭开之后（否则被盖回面板）；
-     ②必须等文档解析完（数据加载可能快过HTML解析，switchTab 那段脚本还没定义——实测踩过 ReferenceError）。 */
-  try{
-    const rid = new URLSearchParams(location.search).get("read");
-    if(rid){
-      const go = ()=>{ try{ openReader(rid); }catch(e){ console.warn("coldRead:", e); } };
-      if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", go);
-      else go();
-    }
-  }catch(e){ console.warn("coldRead:", e); }
+  /* 冷启动直达研报阅读页：见文件末尾的独立轮询脚本（时序竞态踩过两次，别在这里内联） */
 
   /* ============ 大事件日历 ============ */
   function renderEvents(cfg, auto){
@@ -3412,6 +3403,27 @@ document.addEventListener("click", e=>{
     });
   },{rootMargin:"-15% 0px -70% 0px"});
   document.querySelectorAll(".section,.note-cat").forEach(s=>obs.observe(s));
+})();
+</script>
+<script>
+/* 冷启动直达研报阅读页（?read=xx 分享链接/刷新用）。
+   不赌任何时序：轮询等三件事齐活——①启动流程结束（#loading已移除）②openReader/switchTab已定义③研报目录已加载——再跳。
+   教训（2026-07-16 两次踩坑）：数据加载可能快过HTML解析，内联在启动流程里会撞 switchTab 未定义；
+   挪去 DOMContentLoaded 仍有版本/时序边角。轮询150ms×100次上限15秒，兜底放弃（停留数据面板无害）。 */
+(function(){
+  let rid = null;
+  try{ rid = new URLSearchParams(location.search).get("read"); }catch(e){}
+  if(!rid) return;
+  let n = 0;
+  const t = setInterval(function(){
+    n++;
+    const ready = !document.getElementById("loading")
+      && typeof window.openReader === "function"
+      && typeof window.switchTab === "function"
+      && typeof REPORTS !== "undefined" && REPORTS.length;
+    if(ready){ clearInterval(t); try{ openReader(rid); }catch(e){ console.warn("coldRead:", e); } }
+    else if(n > 100){ clearInterval(t); }
+  }, 150);
 })();
 </script>
 </body>
