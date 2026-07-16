@@ -175,7 +175,7 @@ class H(BaseHTTPRequestHandler):
             self.send_header("Content-Type", "application/pdf")
             self.send_header("Content-Length", str(len(data)))
             self.send_header("Content-Disposition", "inline; filename=report.pdf")
-            self.send_header("Cache-Control", "private, max-age=3600")
+            self.send_header("Cache-Control", "no-store")
             self._cors()
             self.end_headers()
             self.wfile.write(data)
