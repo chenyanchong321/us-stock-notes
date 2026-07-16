@@ -394,7 +394,12 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 .rep-d{font-size:12.5px;color:var(--text2);line-height:1.65}
 .rep-act{margin-top:9px;font-size:12px;color:var(--gold)}
 .rep-empty{text-align:center;color:var(--text2);font-size:13px;padding:40px 0}
-@media(max-width:860px){.rep-main{padding:20px 14px 50px}}
+/* 搜索框铁律：手机端 font-size 必须≥16px，否则 iOS 聚焦自动放大页面（主搜索/词典/研报搜索第三次踩坑后定版） */
+#rep-search{font-size:14px}
+#rep-search::-webkit-search-cancel-button{display:none}
+#rep-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text2);cursor:pointer;font-size:15px;padding:6px 8px;display:none}
+#rep-clear:hover{color:var(--text)}
+@media(max-width:860px){.rep-main{padding:20px 14px 50px} #rep-search{font-size:16px}}
 /* 研报阅读页正文（与学习笔记文章观感一致：白纸黑字阅读模式，2026-07-16 主人定）。
    用局部 CSS 变量覆盖实现"纸张"：正文里所有 var(--text2)/var(--gold) 等引用自动切到浅色适配值 */
 #view-repread{--text:#1f2328;--text2:#57606a;--border:#d8dee4;--panel:#f3f5f8;--panel2:#fff;--accent:#0969da;--gold:#9a6b00;--up:#1a7f37;--down:#cf222e;
@@ -596,8 +601,11 @@ body.resizing{user-select:none;cursor:col-resize}
       <h2>📑 投研报告 <span style="font-size:12px;color:var(--gold);font-weight:400">会员专属</span></h2>
       <p>重点标的深度研究报告，含估值推演与观察点位，与数据面板的「研报」标记一一对应。按日期倒序排列。</p>
     </div>
-    <input id="rep-search" type="search" enterkeyhint="search" autocomplete="off" placeholder="🔍 搜报告：名称 / 代码 / 关键词，如 潍柴、09980、数据中心…"
-      style="width:100%;box-sizing:border-box;margin-bottom:14px;padding:10px 14px;font-size:14px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;color:var(--text);outline:none">
+    <div style="position:relative;margin-bottom:14px">
+      <input id="rep-search" type="search" enterkeyhint="search" autocomplete="off" placeholder="🔍 搜报告：名称 / 代码 / 关键词，如 潍柴、09980、数据中心…"
+        style="width:100%;box-sizing:border-box;padding:10px 34px 10px 14px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;color:var(--text);outline:none">
+      <span id="rep-clear" title="清空">✕</span>
+    </div>
     <div id="rep-cards"></div>
   </div>
 </div>
@@ -3010,6 +3018,7 @@ let PROFILES = {};
   }
   let pinnedKey = null;
   function closeTip(){ tip.style.display="none"; msk.style.display="none"; pinned=false; pinnedEl=null; pinnedKey=null; }
+  window.closeStip = closeTip;   /* 供研报跳转等外部模块收浮窗（防跳转后残留） */
   function openTipFor(tg, x, y){
     const h = trigHTML(tg);
     if(!h){ closeTip(); return; }
@@ -3083,10 +3092,19 @@ function renderReports(kw){
       <div class="rep-act">${window.MEMBER ? "▸ 点击阅读" : "🔒 会员专属 · 登录后阅读"}</div>
     </div>`).join("");
 }
-/* 研报搜索（2026-07-16 主人需求）：标题/代码/名称/简介/来源 全字段实时过滤，空格分词=与 */
+/* 研报搜索（2026-07-16 主人需求）：标题/代码/名称/简介/来源 全字段实时过滤，空格分词=与。
+   ✕清空按钮自绘（iOS 不给 search 型输入框原生清空钮，桌面的是 WebKit 送的——不能依赖） */
 (function(){
-  const inp = document.getElementById("rep-search");
-  if(inp) inp.addEventListener("input", ()=>renderReports(inp.value));
+  const inp = document.getElementById("rep-search"), clr = document.getElementById("rep-clear");
+  if(!inp) return;
+  inp.addEventListener("input", ()=>{
+    renderReports(inp.value);
+    if(clr) clr.style.display = inp.value ? "block" : "none";
+  });
+  if(clr) clr.addEventListener("click", ()=>{
+    inp.value = ""; clr.style.display = "none";
+    renderReports(""); inp.focus();
+  });
 })();
 /* 页面版本水印：document.lastModified＝这份HTML的出厂时间。手机上看页脚就知道跑的是不是新版（缓存排查用） */
 (function(){
@@ -3172,12 +3190,14 @@ window.openReader = function(id){
     .then(d=>{ body.innerHTML = d.html || '<div class="rr-load">正文整理中，可先下载原版 PDF 阅读</div>'; window.scrollTo(0,0); })
     .catch(e=>{ if(e===0) return; body.innerHTML = '<div class="rr-load">正文加载失败，可点上方按钮下载原版 PDF</div>'; });
 };
-/* 统一跳转入口：会员进阅读页，游客弹登录 */
+/* 统一跳转入口：会员进阅读页，游客弹登录。跳转前先收浮窗（跳转后浮窗残留＝主人真机反馈的bug） */
 window.goReport = function(id){
+  window.closeStip && closeStip();
   if(!window.MEMBER){ window.openAuth && openAuth("login"); return; }
   openReader(id);
 };
 function goRepCode(code){
+  window.closeStip && closeStip();
   const list = REPBY[code] || [];
   if(!window.MEMBER){ window.openAuth && openAuth("login"); return; }
   if(list.length===1) goReport(list[0].id);
