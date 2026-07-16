@@ -3252,7 +3252,11 @@ document.addEventListener("click", e=>{
   document.getElementById("loading").remove();
   document.getElementById("view-dash").classList.remove("hidden");
   /* 冷启动直达研报阅读页（分享链接/刷新）：必须放在 view-dash 揭开之后，否则会被盖回数据面板 */
-  try{ const rid = new URLSearchParams(location.search).get("read"); if(rid) openReader(rid); }catch(e){}
+  try{
+    const rid = new URLSearchParams(location.search).get("read");
+    window.__cold = "rid:" + rid;
+    if(rid){ openReader(rid); window.__cold += " opened"; }
+  }catch(e){ window.__cold = "ERR:" + (e && e.message); }
 
   /* ============ 大事件日历 ============ */
   function renderEvents(cfg, auto){
