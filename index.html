@@ -3552,7 +3552,12 @@ document.addEventListener("click", e=>{
     try{ renderHistory(histCfg, spxHist); }catch(e){ console.warn("history:", e); }
     try{ renderLev(levData); }catch(e){ console.warn("lev:", e); }
     try{ renderReports(); }catch(e){ console.warn("reports:", e); }
-    try{ IMAPCFG = imapCfg; renderImap(); }catch(e){ console.warn("imap:", e); }
+      try{ IMAPCFG = imapCfg; renderImap(); }catch(e){ console.warn("imap:", e); }
+    /* 地图跟面板保持同步（2026-07-17 主人时差疑问引出）：切进来重渲染 + 停留时每60秒自刷 */
+    setInterval(()=>{
+      const v = document.getElementById("view-imap");
+      if(v && !v.classList.contains("hidden")){ try{ renderImap(); }catch(e){} }
+    }, 60000);
     window.checkStale(quotes.updated);
   }catch(e){
     document.getElementById("loading").textContent =
@@ -3669,6 +3674,7 @@ document.addEventListener("click", e=>{
     document.getElementById("searchwrap").style.display = v==="dash" ? "" : "none";
     const rz = document.getElementById("resizer");
     if(rz) rz.style.display = (v==="dash"||v==="notes") ? "" : "none";   /* 侧栏拖拽条只在有侧栏的视图出现 */
+    if(v==="imap" && typeof renderImap==="function"){ try{ renderImap(); }catch(e){} }   /* 切进地图即重渲染，行情与面板同步 */
     const mb=document.getElementById("mbottom");
     if(mb) mb.style.display = v==="dash" ? "" : "none";
     try{ localStorage.setItem("lastView", v); }catch(e){}
