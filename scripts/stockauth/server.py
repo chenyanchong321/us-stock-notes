@@ -10,11 +10,14 @@
 """
 import json, os, re, sqlite3, hashlib, secrets, time, threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 DB = os.path.join(BASE, "auth.db")
 POINTS = os.path.join(BASE, "points.json")
+MEMBER = os.path.join(BASE, "member")          # us-stock-member 私有仓库的克隆（cron 定时 git pull）
+REPORTS_JSON = os.path.join(MEMBER, "reports.json")
+REPORTS_DIR = os.path.join(MEMBER, "reports")
 PORT = 8600
 ALLOW_ORIGINS = {"https://stock.ziyuanai.top", "https://www.ziyuanai.top",
                  "https://chenyanchong321.github.io"}
@@ -74,6 +77,15 @@ def load_points():
         return {"buy": d.get("buy", {}), "sell": d.get("sell", {}), "tgt": d.get("tgt", {})}
     except Exception:
         return {"buy": {}, "sell": {}, "tgt": {}}
+
+
+def load_reports():
+    """研报目录。元数据（标题/标的/日期/简介）是公开橱窗，PDF 本体只走 /api/report 验 token。"""
+    try:
+        with open(REPORTS_JSON, encoding="utf-8") as f:
+            return json.load(f).get("reports", [])
+    except Exception:
+        return []
 
 
 class H(BaseHTTPRequestHandler):
@@ -140,7 +152,34 @@ class H(BaseHTTPRequestHandler):
         if p == "/api/public":
             pts = load_points()
             codes = sorted(set(pts["buy"]) | set(pts["sell"]) | set(pts["tgt"]))
-            return self._json(200, {"ok": True, "codes": codes})
+            rcodes = sorted({c for r in load_reports() for c in r.get("codes", [])})
+            return self._json(200, {"ok": True, "codes": codes, "rcodes": rcodes})
+        if p == "/api/reports":
+            cat = [{k: r.get(k) for k in ("id", "codes", "title", "date", "src", "pages", "d")}
+                   for r in load_reports()]
+            return self._json(200, {"ok": True, "reports": cat})
+        if p == "/api/report":
+            u = self._user()
+            if not u:
+                return self._json(401, {"ok": False, "err": "研报为会员专属，请先登录"})
+            rid = (parse_qs(urlparse(self.path).query).get("id") or [""])[-1]
+            rec = next((r for r in load_reports() if r.get("id") == rid), None)
+            if not rec:
+                return self._json(404, {"ok": False, "err": "报告不存在"})
+            fp = os.path.join(REPORTS_DIR, os.path.basename(rec.get("file", "")))
+            if not os.path.isfile(fp):
+                return self._json(404, {"ok": False, "err": "报告文件缺失，请联系烟囱"})
+            with open(fp, "rb") as f:
+                data = f.read()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/pdf")
+            self.send_header("Content-Length", str(len(data)))
+            self.send_header("Content-Disposition", "inline; filename=report.pdf")
+            self.send_header("Cache-Control", "private, max-age=3600")
+            self._cors()
+            self.end_headers()
+            self.wfile.write(data)
+            return
         if p == "/api/points":
             u = self._user()
             if not u:
