@@ -379,7 +379,7 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 
 /* ========== 投研报告（2026-07-16 会员专属）========== */
 .repb{display:inline-block;margin-left:5px;padding:0 4px;border-radius:3px;font-size:10px;line-height:15px;vertical-align:1px;
-  color:var(--gold);border:1px solid var(--gold);opacity:.85;font-weight:500;letter-spacing:.5px;cursor:pointer;white-space:nowrap}
+  color:var(--gold);border:1px solid var(--gold);opacity:.85;font-weight:500;letter-spacing:.5px;cursor:pointer;white-space:nowrap;touch-action:manipulation}
 .repb:hover{opacity:1;background:rgba(232,182,76,.12)}
 .rep-main{max-width:820px;margin:var(--header-h) auto 0;padding:26px 18px 60px}
 .rep-intro{background:linear-gradient(135deg,rgba(232,182,76,.12),rgba(74,140,240,.06));border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:20px}
@@ -395,7 +395,10 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 .rep-act{margin-top:9px;font-size:12px;color:var(--gold)}
 .rep-empty{text-align:center;color:var(--text2);font-size:13px;padding:40px 0}
 @media(max-width:860px){.rep-main{padding:20px 14px 50px}}
-/* 研报阅读页正文（与学习笔记文章观感一致） */
+/* 研报阅读页正文（与学习笔记文章观感一致：白纸黑字阅读模式，2026-07-16 主人定）。
+   用局部 CSS 变量覆盖实现"纸张"：正文里所有 var(--text2)/var(--gold) 等引用自动切到浅色适配值 */
+#view-repread{--text:#1f2328;--text2:#57606a;--border:#d8dee4;--panel:#f3f5f8;--panel2:#fff;--accent:#0969da;--gold:#9a6b00;--up:#1a7f37;--down:#cf222e;
+  background:#fbfbf9;min-height:100vh}
 #rr-head h1{font-size:22px;line-height:1.45;margin:2px 0 10px}
 #rr-head .rr-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--text2);margin-bottom:18px}
 #rr-head .rr-tag{padding:1px 8px;border-radius:8px;background:rgba(74,140,240,.15);border:1px solid var(--border)}
@@ -2699,7 +2702,7 @@ let PROFILES = {};
 (function(){
   const tip = document.createElement("div");
   tip.id = "stip";
-  tip.style.cssText = "position:fixed;display:none;z-index:300;max-width:330px;background:var(--panel2);border-left:3px solid var(--accent);border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);border-radius:0 10px 10px 0;padding:11px 13px;font-size:13px;line-height:1.65;color:var(--text2);box-shadow:0 8px 28px rgba(0,0,0,.5);pointer-events:none";
+  tip.style.cssText = "position:fixed;display:none;z-index:300;max-width:330px;background:var(--panel2);border-left:3px solid var(--accent);border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);border-radius:0 10px 10px 0;padding:11px 13px;font-size:13px;line-height:1.65;color:var(--text2);box-shadow:0 8px 28px rgba(0,0,0,.5);pointer-events:none;touch-action:manipulation";
   document.body.appendChild(tip);
   const st = document.createElement("style");
   st.textContent = "#stip b{color:var(--text);font-weight:600} #stip .mtag{color:var(--text2);font-size:10.5px}"
@@ -2710,7 +2713,7 @@ let PROFILES = {};
   const TOUCHY = matchMedia("(hover: none), (pointer: coarse)").matches;
   const msk = document.createElement("div");
   msk.id = "stipmsk";
-  msk.style.cssText = "position:fixed;inset:0;z-index:299;display:none;background:transparent";
+  msk.style.cssText = "position:fixed;inset:0;z-index:299;display:none;background:transparent;touch-action:manipulation";
   document.body.appendChild(msk);
   function codeOf(td){
     const s = td.querySelector(".sub");
@@ -3027,14 +3030,16 @@ let PROFILES = {};
   let _tx=0, _ty=0;
   tip.addEventListener("touchstart", e=>{ const t=e.touches[0]; _tx=t.clientX; _ty=t.clientY; }, {passive:true});
   tip.addEventListener("touchend", e=>{
-    const a = e.target.closest && e.target.closest("a");
-    if(!a) return;
     const t = e.changedTouches[0];
     if(Math.abs(t.clientX-_tx)>12 || Math.abs(t.clientY-_ty)>12) return;   /* 滑动松手不算点击 */
+    const a = e.target.closest && e.target.closest("a");
     e.preventDefault(); e.stopPropagation();
-    if(a.classList.contains("repa")){
-      if(window.goReport) goReport(a.dataset.rid);
-    } else if(a.href){ location.href = a.href; }
+    if(a){
+      if(a.classList.contains("repa")){ if(window.goReport) goReport(a.dataset.rid); }
+      else if(a.href){ location.href = a.href; }
+    } else {
+      closeTip();   /* 手机习惯（主人定）：点浮窗空白处＝关闭，看完即收、循环下一只 */
+    }
   }, {passive:false});
 })();
 
@@ -3330,6 +3335,8 @@ document.addEventListener("click", e=>{
       if(el) el.classList.toggle("hidden", v!==x);
     });
     document.getElementById("searchwrap").style.display = v==="dash" ? "" : "none";
+    const rz = document.getElementById("resizer");
+    if(rz) rz.style.display = (v==="dash"||v==="notes") ? "" : "none";   /* 侧栏拖拽条只在有侧栏的视图出现 */
     const mb=document.getElementById("mbottom");
     if(mb) mb.style.display = v==="dash" ? "" : "none";
     try{ localStorage.setItem("lastView", v); }catch(e){}
