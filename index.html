@@ -3243,7 +3243,6 @@ document.addEventListener("click", e=>{
     try{ renderHistory(histCfg, spxHist); }catch(e){ console.warn("history:", e); }
     try{ renderLev(levData); }catch(e){ console.warn("lev:", e); }
     try{ renderReports(); }catch(e){ console.warn("reports:", e); }
-    try{ const rid = new URLSearchParams(location.search).get("read"); if(rid) openReader(rid); }catch(e){}
     window.checkStale(quotes.updated);
   }catch(e){
     document.getElementById("loading").textContent =
@@ -3252,6 +3251,8 @@ document.addEventListener("click", e=>{
   }
   document.getElementById("loading").remove();
   document.getElementById("view-dash").classList.remove("hidden");
+  /* 冷启动直达研报阅读页（分享链接/刷新）：必须放在 view-dash 揭开之后，否则会被盖回数据面板 */
+  try{ const rid = new URLSearchParams(location.search).get("read"); if(rid) openReader(rid); }catch(e){}
 
   /* ============ 大事件日历 ============ */
   function renderEvents(cfg, auto){
