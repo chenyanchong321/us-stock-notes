@@ -3212,14 +3212,13 @@ function renderImap(){
     renderImap();
   });
   try{ IMAP_MODE = localStorage.getItem("imapMode") || "chain"; }catch(x){}
-  body && body.addEventListener("click", e=>{
-    const brick = e.target.closest(".imap-brick");
-    if(brick && window.jumpToCode) jumpToCode(brick.dataset.code);
-  });
-  /* 简介浮层：站内风格、即时响应（原生 title 有~1秒系统延迟且样式丑，主人否掉）。仅桌面悬停。 */
-  if(body && !matchMedia("(hover: none), (pointer: coarse)").matches){
+  /* 简介浮层：站内风格、即时响应（原生 title 有~1秒系统延迟且样式丑，主人否掉）。
+     桌面＝悬停看简介、点击跳面板；手机＝点砖弹简介卡（含「查看行情→」按钮），再点同砖/空白收起
+     ——底图用户是来认股票的，直接跳价格行等于没介绍就散场（主人定，2026-07-17）。 */
+  if(body){
+    const isTouch = matchMedia("(hover: none), (pointer: coarse)").matches;
     const t = document.createElement("div");
-    t.style.cssText = "position:fixed;display:none;z-index:310;max-width:300px;background:var(--panel2);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:9px 12px;font-size:12.5px;line-height:1.6;color:var(--text2);box-shadow:0 8px 24px rgba(0,0,0,.5);pointer-events:none";
+    t.style.cssText = "position:fixed;display:none;z-index:310;max-width:300px;background:var(--panel2);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:9px 12px;font-size:12.5px;line-height:1.6;color:var(--text2);box-shadow:0 8px 24px rgba(0,0,0,.5);pointer-events:none;touch-action:manipulation";
     document.body.appendChild(t);
     const move = e=>{
       let L = e.clientX + 14, T = e.clientY + 16;
@@ -3228,15 +3227,54 @@ function renderImap(){
       if(T + h > innerHeight - 8) T = e.clientY - h - 12;
       t.style.left = L + "px"; t.style.top = T + "px";
     };
-    body.addEventListener("mouseover", e=>{
-      const b = e.target.closest(".imap-brick");
-      if(!b || !b.dataset.intro){ t.style.display="none"; return; }
-      t.textContent = b.dataset.intro;
-      t.style.display = "block";
-      move(e);
-    });
-    body.addEventListener("mousemove", e=>{ if(t.style.display==="block") move(e); });
-    body.addEventListener("mouseleave", ()=>{ t.style.display="none"; });
+    if(!isTouch){
+      body.addEventListener("click", e=>{
+        const brick = e.target.closest(".imap-brick");
+        if(brick && window.jumpToCode) jumpToCode(brick.dataset.code);
+      });
+      body.addEventListener("mouseover", e=>{
+        const b = e.target.closest(".imap-brick");
+        if(!b || !b.dataset.intro){ t.style.display="none"; return; }
+        t.textContent = b.dataset.intro;
+        t.style.display = "block";
+        move(e);
+      });
+      body.addEventListener("mousemove", e=>{ if(t.style.display==="block") move(e); });
+      body.addEventListener("mouseleave", ()=>{ t.style.display="none"; });
+    } else {
+      let cur = null;
+      const closeCard = ()=>{ t.style.display="none"; cur=null; };
+      document.addEventListener("click", e=>{
+        /* 卡内「查看行情」按钮 */
+        const go = e.target.closest(".imap-go");
+        if(go){ closeCard(); if(window.jumpToCode) jumpToCode(go.dataset.code); return; }
+        if(e.target.closest && e.target.closest("#imap-tipcard")) return;   /* 点卡片其他区域不收起 */
+        const b = e.target.closest ? e.target.closest(".imap-brick") : null;
+        if(!b || !document.getElementById("view-imap") || document.getElementById("view-imap").classList.contains("hidden")){
+          if(t.style.display==="block") closeCard();
+          return;
+        }
+        if(cur===b){ closeCard(); return; }   /* 再点同砖＝收起 */
+        cur = b;
+        const name = (b.querySelector("b")||{}).textContent || "";
+        const m = (b.querySelector(".m")||{}).textContent || "";
+        const intro = b.dataset.intro || "暂无简介";
+        t.id = "imap-tipcard";
+        t.style.pointerEvents = "auto";
+        t.innerHTML = `<div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px">${name}</div>
+          <div style="font-size:11px;color:var(--text2);margin-bottom:6px">${m}</div>
+          <div>${intro}</div>
+          <a class="imap-go" data-code="${b.dataset.code}" href="javascript:;" style="display:block;margin-top:9px;padding:9px 10px;min-height:40px;box-sizing:border-box;text-align:center;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;color:var(--accent);text-decoration:none;font-size:13px">📊 查看行情 →</a>`;
+        t.style.display = "block";
+        /* 定位：砖块下方，贴边收敛 */
+        const r = b.getBoundingClientRect();
+        t.style.maxWidth = Math.min(320, innerWidth - 24) + "px";
+        let L = Math.min(Math.max(8, r.left), innerWidth - Math.min(320, innerWidth-24) - 8);
+        let T = r.bottom + 8;
+        if(T + 180 > innerHeight - 90) T = Math.max(100, r.top - 8 - 190);
+        t.style.left = L + "px"; t.style.top = T + "px";
+      }, true);
+    }
   }
 })();
 
