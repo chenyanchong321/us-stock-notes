@@ -594,8 +594,10 @@ body.resizing{user-select:none;cursor:col-resize}
   <div class="rep-main">
     <div class="rep-intro">
       <h2>📑 投研报告 <span style="font-size:12px;color:var(--gold);font-weight:400">会员专属</span></h2>
-      <p>重点标的深度研究报告，含估值推演与观察点位，与数据面板的「研报」标记一一对应。</p>
+      <p>重点标的深度研究报告，含估值推演与观察点位，与数据面板的「研报」标记一一对应。按日期倒序排列。</p>
     </div>
+    <input id="rep-search" type="search" enterkeyhint="search" autocomplete="off" placeholder="🔍 搜报告：名称 / 代码 / 关键词，如 潍柴、09980、数据中心…"
+      style="width:100%;box-sizing:border-box;margin-bottom:14px;padding:10px 14px;font-size:14px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;color:var(--text);outline:none">
     <div id="rep-cards"></div>
   </div>
 </div>
@@ -692,7 +694,7 @@ body.resizing{user-select:none;cursor:col-resize}
   <div id="db-drag" title="拖拽调宽"></div>
 </div>
 
-<div id="footer">本站内容为个人学习笔记与数据整理，仅作知识分享，不构成任何投资建议。行情数据来自公开渠道，可能存在延迟或误差。</div>
+<div id="footer">本站内容为个人学习笔记与数据整理，仅作知识分享，不构成任何投资建议。行情数据来自公开渠道，可能存在延迟或误差。<span id="bstamp" style="opacity:.55"></span></div>
 
 <script>
 /* =====================================================================
@@ -2793,9 +2795,13 @@ let PROFILES = {};
   let pinned = false, pinnedEl = null;   /* pinnedEl＝当前钉住的触发格子，用于「再点一次关闭」 */
   function place(x, y){
     const w = tip.offsetWidth, h = tip.offsetHeight;
+    /* 手机端下沿避开底部菜单栏（96px≈栏高+安全区），上沿避开顶栏——浮窗和栏区永不重叠，杜绝"点研报误触重点清单" */
+    const botPad = TOUCHY ? 96 : 8;
+    const topPad = TOUCHY ? 100 : 8;
     let L = x + 14, T = y + 16;
     if(L + w > innerWidth - 8)  L = Math.max(8, x - w - 14);
-    if(T + h > innerHeight - 8) T = Math.max(8, y - h - 12);
+    if(T + h > innerHeight - botPad) T = Math.max(topPad, y - h - 12);
+    if(T + h > innerHeight - botPad) T = Math.max(topPad, innerHeight - botPad - h);
     tip.style.left = L + "px"; tip.style.top = T + "px";
   }
   /* 均线支撑区块（2026-07-13 主人需求）：五条关键均线（数据r[20]，流水线日更），
@@ -3011,6 +3017,10 @@ let PROFILES = {};
     /* 遮罩上的点击：穿透看一眼底下是什么——同一格=收起；另一个触发格=切换；其他=收起。
        这样手机上「点A弹A、再点A收起、点B换B、点空白关闭」四条规则齐活，且绝不误开。 */
     if(pinned && e.target===msk){
+      /* 贴边保护（2026-07-16 真机反馈）：落点在浮窗外沿28px缓冲带内＝瞄准浮窗但脱靶——只关闭，
+         绝不切换成底下格子的浮窗（"点研报却弹出价格浮窗"的最后缺口） */
+      const r = tip.getBoundingClientRect(), B = 28;
+      if(e.clientX > r.left-B && e.clientX < r.right+B && e.clientY > r.top-B && e.clientY < r.bottom+B){ closeTip(); return; }
       msk.style.pointerEvents = "none";
       const under = document.elementFromPoint(e.clientX, e.clientY);
       msk.style.pointerEvents = "";
@@ -3031,7 +3041,7 @@ let PROFILES = {};
   tip.addEventListener("touchstart", e=>{ const t=e.touches[0]; _tx=t.clientX; _ty=t.clientY; }, {passive:true});
   tip.addEventListener("touchend", e=>{
     const t = e.changedTouches[0];
-    if(Math.abs(t.clientX-_tx)>12 || Math.abs(t.clientY-_ty)>12) return;   /* 滑动松手不算点击 */
+    if(Math.abs(t.clientX-_tx)>26 || Math.abs(t.clientY-_ty)>26) return;   /* 滑动松手不算点击（26px：手指触面本身就有~10px漂移） */
     const a = e.target.closest && e.target.closest("a");
     e.preventDefault(); e.stopPropagation();
     if(a){
@@ -3044,20 +3054,70 @@ let PROFILES = {};
 })();
 
 /* ===== 投研报告（2026-07-16 会员专属）：目录公开橱窗，PDF 本体验 token 才吐 ===== */
-function renderReports(){
+function renderReports(kw){
   const box = document.getElementById("rep-cards");
   if(!box) return;
   if(!REPORTS.length){ box.innerHTML = '<div class="rep-empty">研报整理中，敬请期待</div>'; return; }
   const nameOf = code=>{ for(const s of DATA){ for(const r of s.rows){ if(r[1]===code) return r[0]; } } return ""; };
-  box.innerHTML = REPORTS.map(x=>`
+  let list = REPORTS;
+  if(kw){
+    const q = kw.trim().toLowerCase();
+    list = REPORTS.filter(x=>{
+      const hay = [x.title, x.d, x.src, ...(x.codes||[]), ...(x.codes||[]).map(nameOf)].join(" ").toLowerCase();
+      return q.split(/\s+/).every(w=>hay.includes(w));
+    });
+    if(!list.length){ box.innerHTML = '<div class="rep-empty">没有匹配「'+kw.trim()+'」的报告</div>'; return; }
+  }
+  box.innerHTML = list.map(x=>`
     <div class="rep-card" data-rid="${x.id}">
       <div class="rep-tags">${(x.codes||[]).map(c=>`<span class="rep-code">${nameOf(c)} ${c}</span>`).join("")}
         <span class="rep-meta">${x.date||""} · ${x.src||""}${x.pages?` · ${x.pages}页`:""}</span></div>
       <div class="rep-title">${x.title||""}</div>
       <div class="rep-d">${x.d||""}</div>
-      <div class="rep-act">${window.MEMBER ? "▸ 点击阅读（PDF）" : "🔒 会员专属 · 登录后阅读"}</div>
+      <div class="rep-act">${window.MEMBER ? "▸ 点击阅读" : "🔒 会员专属 · 登录后阅读"}</div>
     </div>`).join("");
 }
+/* 研报搜索（2026-07-16 主人需求）：标题/代码/名称/简介/来源 全字段实时过滤，空格分词=与 */
+(function(){
+  const inp = document.getElementById("rep-search");
+  if(inp) inp.addEventListener("input", ()=>renderReports(inp.value));
+})();
+/* 页面版本水印：document.lastModified＝这份HTML的出厂时间。手机上看页脚就知道跑的是不是新版（缓存排查用） */
+(function(){
+  const b = document.getElementById("bstamp");
+  if(b) b.textContent = " · 页面版本 " + document.lastModified;
+})();
+/* 真机黑匣子（2026-07-16）：环形记录最近40次触摸/点击（时间/类型/坐标/落点元素），
+   连点页脚5下（3秒内）上报到 /api/debug —— 主人手机上任何一次点击不听话，我都能亲眼回放。 */
+(function(){
+  const buf = [];
+  function desc(el){
+    if(!el || !el.tagName) return "?";
+    let s = el.tagName.toLowerCase();
+    if(el.id) s += "#"+el.id;
+    else if(el.className && typeof el.className==="string") s += "."+el.className.split(" ").slice(0,2).join(".");
+    const tx = (el.textContent||"").trim().slice(0,12);
+    return s + (tx?`(${tx})`:"");
+  }
+  function rec(e){
+    const t = e.touches && e.touches[0] || e.changedTouches && e.changedTouches[0] || e;
+    buf.push({ts:Date.now()%1e7, ty:e.type, x:Math.round(t.clientX||0), y:Math.round(t.clientY||0), tg:desc(e.target),
+               tip:document.getElementById("stip").style.display==="block"?1:0});
+    if(buf.length>40) buf.shift();
+  }
+  ["touchstart","touchend","click"].forEach(t=>document.addEventListener(t, rec, {capture:true, passive:true}));
+  let taps=[], ft=document.getElementById("footer");
+  if(ft) ft.addEventListener("click", ()=>{
+    const now=Date.now(); taps=taps.filter(x=>now-x<3000); taps.push(now);
+    if(taps.length>=5){
+      taps=[];
+      fetch(AUTH_API+"/debug",{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({ua:navigator.userAgent.slice(0,80), ver:document.lastModified, log:buf})})
+        .then(r=>alert(r.ok?"诊断已上报 ✓":"上报失败"))
+        .catch(()=>alert("上报失败"));
+    }
+  });
+})();
 /* 下载原版PDF：先同步开新窗（保住用户手势），再带token取文件塞进去 */
 window.openReport = function(id){
   if(!window.MEMBER){ window.openAuth && openAuth("login"); return; }

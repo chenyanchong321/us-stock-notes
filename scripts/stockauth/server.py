@@ -211,6 +211,20 @@ class H(BaseHTTPRequestHandler):
         if b is None:
             return self._json(400, {"ok": False, "err": "bad request"})
 
+        if p == "/api/debug":
+            # 真机黑匣子：接收手机端事件回放（排障用），落盘 debug/ 目录，≤20KB
+            if too_many(ip):
+                return self._json(429, {"ok": False})
+            raw = json.dumps(b, ensure_ascii=False)
+            if len(raw) > 20000:
+                return self._json(400, {"ok": False, "err": "too big"})
+            d = os.path.join(BASE, "debug")
+            os.makedirs(d, exist_ok=True)
+            fn = time.strftime("%Y%m%d-%H%M%S") + "-" + ip.replace(":", "_") + ".json"
+            with open(os.path.join(d, fn), "w", encoding="utf-8") as f:
+                f.write(raw)
+            return self._json(200, {"ok": True})
+
         if p == "/api/register":
             if too_many(ip):
                 return self._json(429, {"ok": False, "err": "尝试过于频繁，请1小时后再试"})
