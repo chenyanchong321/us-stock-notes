@@ -421,6 +421,36 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 @media(max-width:860px){.rr-article table{display:block;overflow-x:auto}}
 .rr-load{text-align:center;color:var(--text2);padding:50px 0;font-size:13px}
 
+/* ========== 产业地图（2026-07-17 主人定稿：A骨架+C灵魂，链路/阵营双投影）========== */
+.imap-main{max-width:1000px;margin:var(--header-h) auto 0;padding:22px 18px 60px}
+.imap-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.imap-pills button{background:var(--panel);border:1px solid var(--border);border-radius:16px;color:var(--text2);padding:5px 14px;font-size:13px;cursor:pointer}
+.imap-pills button.on{background:rgba(232,182,76,.14);border-color:var(--gold);color:var(--gold)}
+.imap-head{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:6px 0 4px}
+.imap-scale .v{font-size:22px;font-weight:700;color:var(--gold)}
+.imap-scale .g{color:var(--up);font-weight:600;font-size:13px}
+.imap-sharebar{display:flex;height:22px;border-radius:6px;overflow:hidden;font-size:11px;font-weight:600}
+.imap-sharebar>div{display:flex;align-items:center;padding-left:8px;white-space:nowrap;overflow:hidden;color:#10151c}
+.imap-note{font-size:11px;color:var(--text2);margin:8px 0 12px}
+.imap-stage{border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:6px;background:var(--panel)}
+.imap-stage-h{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;margin-bottom:9px}
+.imap-stage-h b{font-size:14px;color:var(--text)}
+.imap-stage-h .d{font-size:11px;color:var(--text2)}
+.imap-arrow{text-align:center;color:var(--text2);opacity:.5;font-size:13px;margin:1px 0}
+.imap-camp-l{font-size:11px;margin:6px 0 4px}
+.imap-bricks{display:flex;gap:6px;flex-wrap:wrap}
+.imap-brick{position:relative;flex:1 1 150px;max-width:240px;min-width:136px;background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:8px 10px;cursor:pointer;box-sizing:border-box}
+.imap-brick:hover{border-color:var(--gold)}
+.imap-brick.big{flex:1.6 1 180px;max-width:300px}
+.imap-brick b{color:var(--text);font-size:13px}
+.imap-brick .m{font-size:11px;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.imap-brick .day{position:absolute;top:6px;right:8px;font-size:10px;font-weight:700;border-radius:4px;padding:1px 5px}
+.imap-lane{border:1px solid var(--border);border-radius:10px;padding:10px;background:var(--panel);min-width:0}
+.imap-lanes{display:flex;gap:8px;align-items:stretch}
+.imap-read{margin-top:12px;background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:8px 12px;font-size:12px;color:var(--text2)}
+.imap-read b{color:var(--text)}
+@media(max-width:860px){.imap-main{padding:18px 12px 50px}.imap-lanes{flex-direction:column}.imap-brick{min-width:44%}}
+
 /* ========== 学习笔记卡片 ========== */
 .notes-intro{background:linear-gradient(135deg,rgba(74,140,240,.12),rgba(232,182,76,.08));border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:26px}
 .notes-intro h2{font-size:18px;margin-bottom:6px}
@@ -497,6 +527,7 @@ body.resizing{user-select:none;cursor:col-resize}
     <div class="tab" data-view="notes">📚 学习笔记</div>
     <div class="tab" id="tab-more">☰ 更多
       <div id="moremenu" class="hidden">
+        <button data-view="imap">🗺 产业地图</button>
         <button data-view="events">📅 大事件</button>
         <button data-view="dict">📖 术语词典</button>
         <button data-view="history">📜 金融史</button>
@@ -607,6 +638,15 @@ body.resizing{user-select:none;cursor:col-resize}
       <span id="rep-clear" title="清空">✕</span>
     </div>
     <div id="rep-cards"></div>
+  </div>
+</div>
+
+<!-- ================= 视图：产业地图 ================= -->
+<div id="view-imap" class="hidden">
+  <div class="imap-main">
+    <div style="margin-bottom:6px"><h2 style="font-size:18px;display:inline">🗺 产业地图</h2> <span style="font-size:12px;color:var(--text2)">一个板块一张底图：规模 · 阵营 · 上下游 · 全量标的</span></div>
+    <div class="imap-pills" id="imap-secs"></div>
+    <div id="imap-body"></div>
   </div>
 </div>
 
@@ -3069,6 +3109,116 @@ let PROFILES = {};
   }, {passive:false});
 })();
 
+/* ===== 产业地图（2026-07-17 主人定稿）：一份数据两种投影（链路/阵营），行情与简介全自动带出 ===== */
+let IMAPCFG = null, IMAP_SEC = null, IMAP_MODE = "chain";
+function imapRowOf(code){ for(const s of DATA){ for(const r of s.rows){ if(r[1]===code) return r; } } return null; }
+function imapBrick(m, cfg){
+  const r = imapRowOf(m.c);
+  if(!r) return "";
+  const camp = cfg.campMeta[m.a] || {};
+  const day = (typeof r[16]==="number" && isFinite(r[16])) ? r[16] : null;
+  const yr = (typeof r[11]==="number" && isFinite(r[11])) ? r[11] : null;
+  const dayTag = day===null ? "" :
+    `<span class="day" style="color:${day>=0?"var(--up)":"var(--down)"};background:${day>=0?"rgba(63,185,80,.13)":"rgba(248,81,73,.13)"}">${day>0?"+":""}${day.toFixed(1)}%</span>`;
+  const yrTxt = yr===null ? "" : ` · <span style="color:${yr>=0?"var(--up)":"var(--down)"}">1年${yr>0?"+":""}${yr.toFixed(0)}%</span>`;
+  const crown = m.k===2 ? " 👑板块龙头" : (m.k===1 ? " 👑" : "");
+  const intro = (PROFILES[m.c]||"").replace(/<[^>]+>/g,"").slice(0,80);
+  return `<div class="imap-brick${m.k?" big":""}" data-code="${m.c}" title="${intro.replace(/"/g,"&quot;")}" style="border-left:3px solid ${camp.color||"var(--border)"}">
+    ${dayTag}<b>${r[0]}</b><span style="font-size:10px;color:var(--text2)"> ${m.c}</span>
+    <div class="m">${r[3]||"–"}${yrTxt}${crown}</div></div>`;
+}
+function imapSort(list){
+  return list.slice().sort((x,y)=>{
+    const rx=imapRowOf(x.c), ry=imapRowOf(y.c);
+    return (ry?mcapVal(ry):0) - (rx?mcapVal(rx):0);
+  });
+}
+function renderImap(){
+  if(!IMAPCFG) return;
+  const secsBox = document.getElementById("imap-secs"), body = document.getElementById("imap-body");
+  if(!secsBox || !body) return;
+  if(!IMAP_SEC) IMAP_SEC = IMAPCFG.sectors[0].id;
+  const sec = IMAPCFG.sectors.find(s=>s.id===IMAP_SEC) || IMAPCFG.sectors[0];
+  const cfg = {campMeta: IMAPCFG.camps};
+  /* 板块选择 + 视角切换 pills */
+  secsBox.innerHTML = IMAPCFG.sectors.map(s=>`<button data-sec="${s.id}" class="${s.id===sec.id?"on":""}">${s.title}</button>`).join("")
+    + `<span style="flex:1"></span>`
+    + `<button data-mode="chain" class="${IMAP_MODE==="chain"?"on":""}">⛓ 链路视角</button>`
+    + `<button data-mode="camp" class="${IMAP_MODE==="camp"?"on":""}">🏳 阵营视角</button>`;
+  /* 板块今日（美元市值加权，公司标的） */
+  let wsum=0, w=0;
+  for(const m of sec.members){
+    if(m.s==="tool") continue;
+    const r=imapRowOf(m.c); if(!r) continue;
+    const mv=mcapVal(r), d=r[16];
+    if(mv>0 && typeof d==="number" && isFinite(d)){ wsum+=mv*d; w+=mv; }
+  }
+  const secDay = w>0 ? wsum/w : null;
+  const head = `
+  <div class="imap-head">
+    <div class="imap-scale"><span style="font-size:11px;color:var(--text2)">全球市场规模</span><br>
+      <span class="v">${sec.scale.v}<span style="font-size:12px;color:var(--text2)">${sec.scale.unit||""}</span></span>
+      <span class="g">${sec.scale.g}</span> <span style="font-size:11px;color:var(--text2)">${sec.scale.note||""}</span></div>
+    <div style="flex:1;min-width:230px">
+      <div style="font-size:11px;color:var(--text2);margin-bottom:3px">阵营份额 · ${sec.shareNote||""}</div>
+      <div class="imap-sharebar">${sec.share.map(x=>{
+        const cm=IMAPCFG.camps[x.a];
+        return `<div style="flex:${x.pct};background:${cm.color}" title="${cm.label} ${x.pct}% ${x.note||""}">${cm.label} ${x.pct}%</div>`;
+      }).join("")}</div></div>
+    ${secDay===null?"":`<div><span style="font-size:11px;color:var(--text2)">板块今日</span><br><b style="font-size:19px;color:${secDay>=0?"var(--up)":"var(--down)"}">${secDay>0?"+":""}${secDay.toFixed(2)}%</b><span style="font-size:10px;color:var(--text2)"> 市值加权</span></div>`}
+  </div>
+  <div class="imap-note">砖块：今日涨跌（角标）· 市值 · 近1年涨幅 · 左边条=阵营 · 👑=龙头 · 悬停看简介 · 点击跳数据面板 ｜ 规模与份额：${sec.scale.src}，截至 ${sec.scale.asof}</div>`;
+  const campOrder = sec.share.map(x=>x.a).concat(Object.keys(IMAPCFG.camps).filter(a=>!sec.share.some(x=>x.a===a)));
+  let main = "";
+  if(IMAP_MODE==="chain"){
+    main = sec.stages.map((st,i)=>{
+      const ms = sec.members.filter(m=>m.s===st.id);
+      if(!ms.length) return "";
+      const byCamp = campOrder.map(a=>({a, list: imapSort(ms.filter(m=>m.a===a))})).filter(g=>g.list.length);
+      const inner = byCamp.length===1
+        ? `<div class="imap-bricks">${byCamp[0].list.map(m=>imapBrick(m,cfg)).join("")}</div>`
+        : byCamp.map(g=>{
+            const cm=IMAPCFG.camps[g.a];
+            return `<div class="imap-camp-l" style="color:${cm.color}">${cm.label}</div><div class="imap-bricks">${g.list.map(m=>imapBrick(m,cfg)).join("")}</div>`;
+          }).join("");
+      return `<div class="imap-stage"><div class="imap-stage-h"><div><b>${st.name}</b> <span class="d">${st.desc}</span></div><span class="d">${st.hold||""}</span></div>${inner}</div>`
+        + (i<sec.stages.length-1 && sec.stages[i+1] && sec.members.some(m=>m.s===sec.stages[i+1].id) && st.id!=="tool" && sec.stages[i+1].id!=="tool" ? `<div class="imap-arrow">▼</div>` : "");
+    }).join("");
+  } else {
+    const stName = id=>({up:"①上游",mid:"②中游",down:"③下游",tool:"🧰"}[id]||"");
+    const lanes = campOrder.map(a=>{
+      const list = imapSort(sec.members.filter(m=>m.a===a));
+      if(!list.length) return "";
+      const cm=IMAPCFG.camps[a];
+      const sh = sec.share.find(x=>x.a===a);
+      return `<div class="imap-lane" style="flex:${Math.max(sh?sh.pct:8,14)}">
+        <div style="font-size:12px;margin-bottom:6px"><b style="color:${cm.color}">${cm.label}</b> ${sh?`<span style="color:var(--gold);font-weight:600">≈${sh.pct}%</span>`:""} <span style="font-size:11px;color:var(--text2)">${sh&&sh.note||""}</span></div>
+        <div class="imap-bricks">${list.map(m=>{
+          const b = imapBrick(m,cfg);
+          return b.replace('</b><span','</b><span style="font-size:9px;color:var(--text2)"> '+stName(m.s)+'</span><span');
+        }).join("")}</div></div>`;
+    }).join("");
+    main = `<div class="imap-lanes">${lanes}</div>`;
+  }
+  body.innerHTML = head + main + `<div class="imap-read">读图法：<b>${sec.read||""}</b></div>`;
+}
+(function(){
+  const secs = document.getElementById("imap-secs"), body = document.getElementById("imap-body");
+  if(!secs) return;
+  secs.addEventListener("click", e=>{
+    const b = e.target.closest("button"); if(!b) return;
+    if(b.dataset.sec) IMAP_SEC = b.dataset.sec;
+    if(b.dataset.mode) IMAP_MODE = b.dataset.mode;
+    try{ localStorage.setItem("imapMode", IMAP_MODE); }catch(x){}
+    renderImap();
+  });
+  try{ IMAP_MODE = localStorage.getItem("imapMode") || "chain"; }catch(x){}
+  body && body.addEventListener("click", e=>{
+    const brick = e.target.closest(".imap-brick");
+    if(brick && window.jumpToCode) jumpToCode(brick.dataset.code);
+  });
+})();
+
 /* ===== 投研报告（2026-07-16 会员专属）：目录公开橱窗，PDF 本体验 token 才吐 ===== */
 function renderReports(kw){
   const box = document.getElementById("rep-cards");
@@ -3307,7 +3457,7 @@ document.addEventListener("click", e=>{
         return {member:false, codes:p.codes||[]};
       }catch(e){ return {member:false, codes:[]}; }
     })();
-    const [quotes, notesCfg, auth, glossary, evCfg, evAuto, histCfg, spxHist, levData, repCat] = await Promise.all([
+    const [quotes, notesCfg, auth, glossary, evCfg, evAuto, histCfg, spxHist, levData, repCat, imapCfg] = await Promise.all([
       fetch("data/quotes.json"+bust).then(r=>r.json()),
       fetch("config/notes.json"+bust).then(r=>r.json()),
       authLoad,
@@ -3317,7 +3467,8 @@ document.addEventListener("click", e=>{
       fetch("config/history.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null),
       fetch("data/spx_history.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null),
       fetch("data/levratio.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null),
-      fetch(AUTH_API+"/reports").then(r=>r.ok?r.json():null).catch(()=>null)
+      fetch(AUTH_API+"/reports").then(r=>r.ok?r.json():null).catch(()=>null),
+      fetch("config/industrymap.json"+bust).then(r=>r.ok?r.json():null).catch(()=>null)
     ]);
     window.MEMBER = auth.member; window.AUSER = auth.user||"";
     BUY = auth.buy || {}; SELL = auth.sell || {}; TGT = auth.tgt || {}; BUYCODES = new Set(auth.codes||[]);
@@ -3335,6 +3486,7 @@ document.addEventListener("click", e=>{
     try{ renderHistory(histCfg, spxHist); }catch(e){ console.warn("history:", e); }
     try{ renderLev(levData); }catch(e){ console.warn("lev:", e); }
     try{ renderReports(); }catch(e){ console.warn("reports:", e); }
+    try{ IMAPCFG = imapCfg; renderImap(); }catch(e){ console.warn("imap:", e); }
     window.checkStale(quotes.updated);
   }catch(e){
     document.getElementById("loading").textContent =
@@ -3403,6 +3555,7 @@ document.addEventListener("click", e=>{
       ew.addEventListener("click",()=>window.switchTab("events"));
     }
   }
+  window.jumpToCode = jumpToCode;   /* 供产业地图砖块跳转 */
   function jumpToCode(code){
     window.switchTab("dash");
     if(window.CURVIEW!=="all" && window.setDashView) window.setDashView("all");
@@ -3417,12 +3570,12 @@ document.addEventListener("click", e=>{
   /* 视图切换（记住上次页签，并同步 URL 防止刷新跳走）。
      2026-07-13 改版：顶部只留 数据面板/学习笔记/更多（大事件·词典·金融史收进「更多」下拉，
      桌面手机统一，为未来加栏目留门）。所有切页签一律走 switchTab()。 */
-  const MORE_VIEWS = ["events","dict","history","lev"];
+  const MORE_VIEWS = ["events","dict","history","lev","imap"];
   window.switchTab = function(v){
     document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active", t.dataset.view===v || (v==="repread" && t.dataset.view==="reports")));
     const tm = document.getElementById("tab-more");
     if(tm) tm.classList.toggle("active", MORE_VIEWS.includes(v));
-    ["dash","events","notes","dict","history","lev","reports","repread"].forEach(x=>{
+    ["dash","events","notes","dict","history","lev","reports","repread","imap"].forEach(x=>{
       const el = document.getElementById("view-"+x);
       if(el) el.classList.toggle("hidden", v!==x);
     });
@@ -3482,7 +3635,7 @@ document.addEventListener("click", e=>{
   /* 初始页签：URL 明确指定 > 上次停留 > 默认数据面板 */
   const wantView = new URLSearchParams(location.search).get("view")
                 || (function(){ try{ return localStorage.getItem("lastView"); }catch(e){ return null; } })();
-  if(["notes","dict","history","events","lev","reports"].includes(wantView)){
+  if(["notes","dict","history","events","lev","reports","imap"].includes(wantView)){
     window.switchTab(wantView);
   }
 
