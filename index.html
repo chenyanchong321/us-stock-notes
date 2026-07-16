@@ -3251,12 +3251,16 @@ document.addEventListener("click", e=>{
   }
   document.getElementById("loading").remove();
   document.getElementById("view-dash").classList.remove("hidden");
-  /* 冷启动直达研报阅读页（分享链接/刷新）：必须放在 view-dash 揭开之后，否则会被盖回数据面板 */
+  /* 冷启动直达研报阅读页（分享链接/刷新）。两个前置：①必须在 view-dash 揭开之后（否则被盖回面板）；
+     ②必须等文档解析完（数据加载可能快过HTML解析，switchTab 那段脚本还没定义——实测踩过 ReferenceError）。 */
   try{
     const rid = new URLSearchParams(location.search).get("read");
-    window.__cold = "rid:" + rid;
-    if(rid){ openReader(rid); window.__cold += " opened"; }
-  }catch(e){ window.__cold = "ERR:" + (e && e.message); }
+    if(rid){
+      const go = ()=>{ try{ openReader(rid); }catch(e){ console.warn("coldRead:", e); } };
+      if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", go);
+      else go();
+    }
+  }catch(e){ console.warn("coldRead:", e); }
 
   /* ============ 大事件日历 ============ */
   function renderEvents(cfg, auto){
