@@ -445,8 +445,9 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 .imap-brick b{color:var(--text);font-size:13px}
 .imap-brick .m{font-size:11px;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .imap-brick .day{position:absolute;top:6px;right:8px;font-size:10px;font-weight:700;border-radius:4px;padding:1px 5px}
-.imap-lane{border:1px solid var(--border);border-radius:10px;padding:10px;background:var(--panel);min-width:0}
-.imap-lanes{display:flex;gap:8px;align-items:stretch}
+.imap-lane{border:1px solid var(--border);border-radius:10px;padding:10px;background:var(--panel);min-width:210px;overflow:hidden}
+.imap-lanes{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap}
+.imap-lane .imap-brick{min-width:126px}
 .imap-read{margin-top:12px;background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:8px 12px;font-size:12px;color:var(--text2)}
 .imap-read b{color:var(--text)}
 @media(max-width:860px){.imap-main{padding:18px 12px 50px}.imap-lanes{flex-direction:column}.imap-brick{min-width:44%}}
