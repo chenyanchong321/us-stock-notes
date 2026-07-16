@@ -2813,10 +2813,10 @@ let PROFILES = {};
     for(const k in NOTE_GRP){ if(grp && grp.includes(k)) return NOTE_GRP[k]; }
     return null;
   }
-  function tipHTML(td){
-    const code = codeOf(td), txt = PROFILES[code];
+  function tipHTML(td){ return tipHTMLByCode(codeOf(td), (td.parentElement.dataset.grp)||""); }
+  function tipHTMLByCode(code, grp){
+    const txt = PROFILES[code];
     if(!txt) return null;
-    const tr = td.parentElement;
     let alphaLine = "";
     try{
       if(window.benchOf && typeof DATA!=="undefined"){
@@ -2834,7 +2834,7 @@ let PROFILES = {};
         }
       }
     }catch(e){}
-    const nf = noteFor(code, tr.dataset.grp||"");
+    const nf = noteFor(code, grp||"");
     const links = [];
     /* 研报行置顶（金色，会员点击直达/游客弹登录），相关笔记在后 */
     for(const x of (REPBY[code]||[]))
@@ -3061,6 +3061,20 @@ let PROFILES = {};
   let pinnedKey = null;
   function closeTip(){ tip.style.display="none"; msk.style.display="none"; pinned=false; pinnedEl=null; pinnedKey=null; }
   window.closeStip = closeTip;   /* 供研报跳转等外部模块收浮窗（防跳转后残留） */
+  /* 按代码开完整人设卡（2026-07-17 产业地图用）：与点名称的浮窗同一张卡（简介+跑赢跑输+研报行+笔记行），
+     可附加额外行（如「查看行情→」）。返回 false=该代码无人设（调用方自行兜底）。 */
+  window.openStockCard = function(code, x, y, extra){
+    let grp = "";
+    for(const s of DATA){ for(const r of s.rows){ if(r[1]===code){ grp = r[12]||""; break; } } }
+    const h = tipHTMLByCode(code, grp);
+    if(!h) return false;
+    tip.innerHTML = h + (extra||"");
+    tip.style.display = "block"; tip.style.pointerEvents = "auto";
+    pinned = true; pinnedEl = null; pinnedKey = "card|" + code;
+    if(TOUCHY) msk.style.display = "block";
+    place(x||innerWidth/2, y||150);
+    return true;
+  };
   function openTipFor(tg, x, y){
     const h = trigHTML(tg);
     if(!h){ closeTip(); return; }
@@ -3103,6 +3117,7 @@ let PROFILES = {};
     e.preventDefault(); e.stopPropagation();
     if(a){
       if(a.classList.contains("repa")){ if(window.goReport) goReport(a.dataset.rid); }
+      else if(a.classList.contains("imap-go")){ closeTip(); if(window.jumpToCode) jumpToCode(a.dataset.code); }
       else if(a.href){ location.href = a.href; }
     } else {
       closeTip();   /* 手机习惯（主人定）：点浮窗空白处＝关闭，看完即收、循环下一只 */
@@ -3228,11 +3243,28 @@ function renderImap(){
       if(T + h > innerHeight - 8) T = e.clientY - h - 12;
       t.style.left = L + "px"; t.style.top = T + "px";
     };
+    /* 点击（双端统一，2026-07-17 主人定）：弹完整人设卡（简介+跑赢跑输+研报行+笔记行）+「查看行情→」，
+       地图成为枢纽：一块砖通研报/笔记/行情三条路。无人设的标的（极少）兜底直接跳行情。 */
+    body.addEventListener("click", e=>{
+      const brick = e.target.closest(".imap-brick");
+      if(!brick) return;
+      e.preventDefault(); e.stopPropagation();   /* 拦住简介浮窗系统的全局click，防止开卡即被关 */
+      const code = brick.dataset.code;
+      t.style.display = "none";   /* 收起悬停轻浮层 */
+      const extra = `<a class="imap-go" data-code="${code}" href="javascript:;" style="display:block;margin-top:7px;font-size:12px;border-top:1px solid var(--border);padding-top:6px;color:var(--accent);text-decoration:none">📊 查看行情 →</a>`;
+      if(!(window.openStockCard && openStockCard(code, e.clientX, e.clientY, extra))){
+        if(window.jumpToCode) jumpToCode(code);
+      }
+    });
+    /* 卡内「查看行情」（捕获，双端；手机 touchend 路径在浮窗模块单独处理） */
+    document.addEventListener("click", e=>{
+      const g = e.target.closest ? e.target.closest(".imap-go") : null;
+      if(!g) return;
+      e.preventDefault(); e.stopPropagation();
+      window.closeStip && closeStip();
+      if(window.jumpToCode) jumpToCode(g.dataset.code);
+    }, true);
     if(!isTouch){
-      body.addEventListener("click", e=>{
-        const brick = e.target.closest(".imap-brick");
-        if(brick && window.jumpToCode) jumpToCode(brick.dataset.code);
-      });
       body.addEventListener("mouseover", e=>{
         const b = e.target.closest(".imap-brick");
         const intro = b ? imapIntro(b.dataset.code) : "";
@@ -3243,39 +3275,6 @@ function renderImap(){
       });
       body.addEventListener("mousemove", e=>{ if(t.style.display==="block") move(e); });
       body.addEventListener("mouseleave", ()=>{ t.style.display="none"; });
-    } else {
-      let cur = null;
-      const closeCard = ()=>{ t.style.display="none"; cur=null; };
-      document.addEventListener("click", e=>{
-        /* 卡内「查看行情」按钮 */
-        const go = e.target.closest(".imap-go");
-        if(go){ closeCard(); if(window.jumpToCode) jumpToCode(go.dataset.code); return; }
-        if(e.target.closest && e.target.closest("#imap-tipcard")) return;   /* 点卡片其他区域不收起 */
-        const b = e.target.closest ? e.target.closest(".imap-brick") : null;
-        if(!b || !document.getElementById("view-imap") || document.getElementById("view-imap").classList.contains("hidden")){
-          if(t.style.display==="block") closeCard();
-          return;
-        }
-        if(cur===b){ closeCard(); return; }   /* 再点同砖＝收起 */
-        cur = b;
-        const name = (b.querySelector("b")||{}).textContent || "";
-        const m = (b.querySelector(".m")||{}).textContent || "";
-        const intro = imapIntro(b.dataset.code) || "暂无简介";
-        t.id = "imap-tipcard";
-        t.style.pointerEvents = "auto";
-        t.innerHTML = `<div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px">${name}</div>
-          <div style="font-size:11px;color:var(--text2);margin-bottom:6px">${m}</div>
-          <div>${intro}</div>
-          <a class="imap-go" data-code="${b.dataset.code}" href="javascript:;" style="display:block;margin-top:9px;padding:9px 10px;min-height:40px;box-sizing:border-box;text-align:center;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;color:var(--accent);text-decoration:none;font-size:13px">📊 查看行情 →</a>`;
-        t.style.display = "block";
-        /* 定位：砖块下方，贴边收敛 */
-        const r = b.getBoundingClientRect();
-        t.style.maxWidth = Math.min(320, innerWidth - 24) + "px";
-        let L = Math.min(Math.max(8, r.left), innerWidth - Math.min(320, innerWidth-24) - 8);
-        let T = r.bottom + 8;
-        if(T + 180 > innerHeight - 90) T = Math.max(100, r.top - 8 - 190);
-        t.style.left = L + "px"; t.style.top = T + "px";
-      }, true);
     }
   }
 })();
@@ -3620,11 +3619,22 @@ document.addEventListener("click", e=>{
   function jumpToCode(code){
     window.switchTab("dash");
     if(window.CURVIEW!=="all" && window.setDashView) window.setDashView("all");
+    /* 无条件直达（2026-07-17 主人定）：目标行被市场筛选/搜索藏住时，自动重置筛选再定位，
+       不能要求用户先切回"全景"才跳得对 */
     setTimeout(()=>{
-      const tr = document.querySelector(`#sections tr[data-code="${code}"]`);
-      if(!tr) return;
-      tr.scrollIntoView({block:"center"});
-      tr.classList.remove("ev-flash"); void tr.offsetWidth; tr.classList.add("ev-flash");
+      let tr = document.querySelector(`#sections tr[data-code="${code}"]`);
+      let blocked = !tr || tr.offsetParent === null;
+      if(blocked){
+        if(window.CURMKT && window.setMkt) setMkt("");
+        const inp = document.getElementById("search");
+        if(inp && inp.value){ inp.value = ""; inp.dispatchEvent(new Event("input")); const c=document.getElementById("search-clear"); if(c) c.style.display="none"; }
+      }
+      setTimeout(()=>{
+        tr = document.querySelector(`#sections tr[data-code="${code}"]`);
+        if(!tr || tr.offsetParent === null) return;
+        tr.scrollIntoView({block:"center"});
+        tr.classList.remove("ev-flash"); void tr.offsetWidth; tr.classList.add("ev-flash");
+      }, blocked ? 140 : 0);
     }, 60);
   }
 
