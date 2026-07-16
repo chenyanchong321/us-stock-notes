@@ -1,10 +1,16 @@
 {
- "updated": "2026-07-17 06:00 北京时间",
+ "updated": "2026-07-17 06:11 北京时间",
  "earnings": [
   {
    "d": "2026-07-16",
    "code": "TSM",
    "name": "台积电",
+   "est": false
+  },
+  {
+   "d": "2026-07-16",
+   "code": "DDOG",
+   "name": "Datadog",
    "est": false
   },
   {
@@ -297,6 +303,12 @@
   },
   {
    "d": "2026-07-31",
+   "code": "AMZN",
+   "name": "亚马逊",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
    "code": "285A",
    "name": "铠侠",
    "est": false
@@ -311,6 +323,12 @@
    "d": "2026-07-31",
    "code": "5802",
    "name": "住友电气",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "COHU",
+   "name": "科休半导体",
    "est": false
   },
   {
@@ -371,6 +389,12 @@
    "d": "2026-08-03",
    "code": "4203",
    "name": "住友电木",
+   "est": false
+  },
+  {
+   "d": "2026-08-04",
+   "code": "ON",
+   "name": "安森美半导体",
    "est": false
   },
   {
@@ -561,6 +585,12 @@
   },
   {
    "d": "2026-08-07",
+   "code": "AAOI",
+   "name": "Applied Optoelectronics",
+   "est": false
+  },
+  {
+   "d": "2026-08-07",
    "code": "ACMR",
    "name": "ACM Research",
    "est": false
@@ -587,6 +617,12 @@
    "d": "2026-08-07",
    "code": "NET",
    "name": "Cloudflare",
+   "est": false
+  },
+  {
+   "d": "2026-08-07",
+   "code": "TWLO",
+   "name": "Twilio",
    "est": false
   },
   {
