@@ -605,7 +605,7 @@ body.resizing{user-select:none;cursor:col-resize}
 <!-- ================= 视图：研报阅读页（会员空壳，正文验token后注入）================= -->
 <div id="view-repread" class="hidden">
   <div class="rep-main">
-    <div style="margin-bottom:14px"><a href="javascript:;" onclick="switchTab('reports')" style="color:var(--text2);text-decoration:none;font-size:13px">← 返回投研报告</a></div>
+    <div style="margin-bottom:14px"><a href="javascript:;" onclick="switchTab(window.__readerFrom||'reports')" style="color:var(--text2);text-decoration:none;font-size:13px">← 返回</a></div>
     <div id="rr-head"></div>
     <article id="rr-body" class="rr-article"></article>
     <div style="margin-top:28px;font-size:12px;color:var(--text2);border-top:1px solid var(--border);padding-top:12px">本报告为会员专属内容，仅供个人学习研究，请勿转发外传。不构成任何投资建议。</div>
@@ -2931,6 +2931,10 @@ let PROFILES = {};
     return null;
   }
   document.addEventListener("mouseover", e=>{
+    /* 触屏设备禁用悬停通道（2026-07-16 黑匣子铁证）：iOS"首次点击=悬停"会经此开出
+       幽灵浮窗（可穿透/无遮罩/未钉住），并因DOM变化吞掉真正的click——三大误触症状的总根源。
+       手机上浮窗只走"点击→钉住+遮罩"一条路。 */
+    if(TOUCHY) return;
     if(pinned) return;
     const ath = e.target.closest("td.athc");
     if(ath){ const h3=athTip(ath.parentElement); if(h3){ tip.innerHTML=h3; tip.style.display="block"; tip.style.pointerEvents="none"; place(e.clientX,e.clientY);} else tip.style.display="none"; return; }
@@ -2964,11 +2968,13 @@ let PROFILES = {};
   });
   const inZone = el => el && el.closest && (el.closest("td.name")||el.closest("td.pxc")||el.closest("td.athc")||el.closest("td.mcapc")||el.closest("td.volc")||el.closest(".ipoflag"));
   document.addEventListener("mousemove", e=>{
+    if(TOUCHY) return;
     if(pinned || tip.style.display !== "block") return;
     if(!inZone(e.target)){ tip.style.display = "none"; return; }
     place(e.clientX, e.clientY);
   });
   document.addEventListener("mouseout", e=>{
+    if(TOUCHY) return;
     if(pinned) return;
     if(inZone(e.target) && !inZone(e.relatedTarget))
       tip.style.display = "none";
@@ -3138,6 +3144,11 @@ window.openReport = function(id){
    空壳+验票取货：页面外壳公开，正文经 /api/report-html 验 token 后注入，游客只会看到登录提示。 */
 window.openReader = function(id){
   const rec = REPORTS.find(x=>x.id===id);
+  /* 记住来处（2026-07-16 主人需求）：从数据面板/集合页/浮窗进来的，返回时回到来处而非一律去集合页 */
+  try{
+    const cur = new URLSearchParams(location.search).get("view") || "dash";
+    if(cur !== "repread") window.__readerFrom = cur;
+  }catch(e){}
   switchTab("repread");
   const u = new URL(location.href); u.searchParams.set("read", id); history.replaceState(null,"",u);
   const head = document.getElementById("rr-head"), body = document.getElementById("rr-body");
