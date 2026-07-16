@@ -3628,16 +3628,22 @@ document.addEventListener("click", e=>{
         const inp = document.getElementById("search");
         if(inp && inp.value){ inp.value = ""; inp.dispatchEvent(new Event("input")); const c=document.getElementById("search-clear"); if(c) c.style.display="none"; }
       }
-      /* 重置筛选会触发整表重渲染，行元素会被换掉——轮询等新行就位再定位（不赌时序） */
-      let n = 0;
+      /* 重置筛选会触发整表重渲染，行元素会被整个换掉——轮询逮到"旧行"就滚会被重渲染冲掉。
+         判据：同一个行元素连续3拍(≈360ms)不变＝渲染尘埃落定，再滚动（不赌时序+等稳定）。 */
+      let n = 0, last = null, stable = 0;
       const t = setInterval(()=>{
         n++;
         const row = document.querySelector(`#sections tr[data-code="${code}"]`);
         if(row && row.offsetParent !== null){
-          clearInterval(t);
-          row.scrollIntoView({block:"center"});
-          row.classList.remove("ev-flash"); void row.offsetWidth; row.classList.add("ev-flash");
-        } else if(n > 12){ clearInterval(t); }
+          if(row === last) stable++; else { stable = 0; last = row; }
+          if(stable >= 2){
+            clearInterval(t);
+            row.scrollIntoView({block:"center"});
+            row.classList.remove("ev-flash"); void row.offsetWidth; row.classList.add("ev-flash");
+            return;
+          }
+        } else { stable = 0; last = null; }
+        if(n > 20) clearInterval(t);
       }, 120);
     }, 60);
   }
