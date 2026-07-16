@@ -444,7 +444,7 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 .imap-brick.big{flex:1.6 1 180px;max-width:300px}
 .imap-brick b{color:var(--text);font-size:13px}
 .imap-brick .m{font-size:11px;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.imap-brick .day{position:absolute;top:6px;right:8px;font-size:10px;font-weight:700;border-radius:4px;padding:1px 5px}
+.imap-brick .dayi{font-size:10.5px;font-weight:700;border-radius:4px;padding:0 5px;margin-left:6px;vertical-align:1px;white-space:nowrap}
 .imap-lane{border:1px solid var(--border);border-radius:10px;padding:10px;background:var(--panel);min-width:210px;overflow:hidden}
 .imap-lanes{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap}
 .imap-lane .imap-brick{min-width:126px}
@@ -3119,13 +3119,14 @@ function imapBrick(m, cfg){
   const camp = cfg.campMeta[m.a] || {};
   const day = (typeof r[16]==="number" && isFinite(r[16])) ? r[16] : null;
   const yr = (typeof r[11]==="number" && isFinite(r[11])) ? r[11] : null;
+  /* 主人定稿（07-17）：不显示代码（不需要背编号）；今日涨跌直接跟在名字后（角标会和窄砖块打架） */
   const dayTag = day===null ? "" :
-    `<span class="day" style="color:${day>=0?"var(--up)":"var(--down)"};background:${day>=0?"rgba(63,185,80,.13)":"rgba(248,81,73,.13)"}">${day>0?"+":""}${day.toFixed(1)}%</span>`;
+    `<span class="dayi" style="color:${day>=0?"var(--up)":"var(--down)"};background:${day>=0?"rgba(63,185,80,.12)":"rgba(248,81,73,.12)"}">${day>0?"+":""}${day.toFixed(1)}%</span>`;
   const yrTxt = yr===null ? "" : ` · <span style="color:${yr>=0?"var(--up)":"var(--down)"}">1年${yr>0?"+":""}${yr.toFixed(0)}%</span>`;
   const crown = m.k===2 ? " 👑板块龙头" : (m.k===1 ? " 👑" : "");
-  const intro = (PROFILES[m.c]||"").replace(/<[^>]+>/g,"").slice(0,80);
-  return `<div class="imap-brick${m.k?" big":""}" data-code="${m.c}" title="${intro.replace(/"/g,"&quot;")}" style="border-left:3px solid ${camp.color||"var(--border)"}">
-    ${dayTag}<b>${r[0]}</b><span style="font-size:10px;color:var(--text2)"> ${m.c}</span>
+  const intro = (PROFILES[m.c]||"").replace(/<[^>]+>/g,"").slice(0,110);
+  return `<div class="imap-brick${m.k?" big":""}" data-code="${m.c}" data-intro="${intro.replace(/"/g,"&quot;")}" style="border-left:3px solid ${camp.color||"var(--border)"}">
+    <b>${r[0]}</b>${dayTag}
     <div class="m">${r[3]||"–"}${yrTxt}${crown}</div></div>`;
 }
 function imapSort(list){
@@ -3186,7 +3187,7 @@ function renderImap(){
         + (i<sec.stages.length-1 && sec.stages[i+1] && sec.members.some(m=>m.s===sec.stages[i+1].id) && st.id!=="tool" && sec.stages[i+1].id!=="tool" ? `<div class="imap-arrow">▼</div>` : "");
     }).join("");
   } else {
-    const stName = id=>({up:"①上游",mid:"②中游",down:"③下游",tool:"🧰"}[id]||"");
+    /* 阵营视角不标段位（主人定：想看上下游就切链路视角，别挤占砖块空间） */
     const lanes = campOrder.map(a=>{
       const list = imapSort(sec.members.filter(m=>m.a===a));
       if(!list.length) return "";
@@ -3194,10 +3195,7 @@ function renderImap(){
       const sh = sec.share.find(x=>x.a===a);
       return `<div class="imap-lane" style="flex:${Math.max(sh?sh.pct:8,14)}">
         <div style="font-size:12px;margin-bottom:6px"><b style="color:${cm.color}">${cm.label}</b> ${sh?`<span style="color:var(--gold);font-weight:600">≈${sh.pct}%</span>`:""} <span style="font-size:11px;color:var(--text2)">${sh&&sh.note||""}</span></div>
-        <div class="imap-bricks">${list.map(m=>{
-          const b = imapBrick(m,cfg);
-          return b.replace('</b><span','</b><span style="font-size:9px;color:var(--text2)"> '+stName(m.s)+'</span><span');
-        }).join("")}</div></div>`;
+        <div class="imap-bricks">${list.map(m=>imapBrick(m,cfg)).join("")}</div></div>`;
     }).join("");
     main = `<div class="imap-lanes">${lanes}</div>`;
   }
@@ -3218,6 +3216,28 @@ function renderImap(){
     const brick = e.target.closest(".imap-brick");
     if(brick && window.jumpToCode) jumpToCode(brick.dataset.code);
   });
+  /* 简介浮层：站内风格、即时响应（原生 title 有~1秒系统延迟且样式丑，主人否掉）。仅桌面悬停。 */
+  if(body && !matchMedia("(hover: none), (pointer: coarse)").matches){
+    const t = document.createElement("div");
+    t.style.cssText = "position:fixed;display:none;z-index:310;max-width:300px;background:var(--panel2);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:9px 12px;font-size:12.5px;line-height:1.6;color:var(--text2);box-shadow:0 8px 24px rgba(0,0,0,.5);pointer-events:none";
+    document.body.appendChild(t);
+    const move = e=>{
+      let L = e.clientX + 14, T = e.clientY + 16;
+      const w = t.offsetWidth, h = t.offsetHeight;
+      if(L + w > innerWidth - 8) L = e.clientX - w - 14;
+      if(T + h > innerHeight - 8) T = e.clientY - h - 12;
+      t.style.left = L + "px"; t.style.top = T + "px";
+    };
+    body.addEventListener("mouseover", e=>{
+      const b = e.target.closest(".imap-brick");
+      if(!b || !b.dataset.intro){ t.style.display="none"; return; }
+      t.textContent = b.dataset.intro;
+      t.style.display = "block";
+      move(e);
+    });
+    body.addEventListener("mousemove", e=>{ if(t.style.display==="block") move(e); });
+    body.addEventListener("mouseleave", ()=>{ t.style.display="none"; });
+  }
 })();
 
 /* ===== 投研报告（2026-07-16 会员专属）：目录公开橱窗，PDF 本体验 token 才吐 ===== */
