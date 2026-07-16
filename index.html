@@ -3139,10 +3139,16 @@ function imapBrick(m, cfg){
     `<span class="dayi" style="color:${day>=0?"var(--up)":"var(--down)"};background:${day>=0?"rgba(63,185,80,.12)":"rgba(248,81,73,.12)"}">${day>0?"+":""}${day.toFixed(1)}%</span>`;
   const yrTxt = yr===null ? "" : ` · <span style="color:${yr>=0?"var(--up)":"var(--down)"}">1年${yr>0?"+":""}${yr.toFixed(0)}%</span>`;
   const crown = m.k===2 ? " 👑板块龙头" : (m.k===1 ? " 👑" : "");
+  /* 非美元标的补美元换算（沿用面板 needUSD/mcapVal 逻辑）——日韩台市值不换算完全没概念（主人定） */
+  let usd = "";
+  if(typeof needUSD==="function" && needUSD(r)){
+    const yi = mcapVal(r);
+    if(yi>0) usd = ` <span style="font-size:10px;opacity:.75">≈$${yi>=10000?(yi/10000).toFixed(2)+"万亿":yi.toFixed(0)+"亿"}</span>`;
+  }
   /* 简介不在渲染时烤入（PROFILES异步晚到会烤成空），悬停/点击时现取 */
   return `<div class="imap-brick${m.k?" big":""}" data-code="${m.c}" style="border-left:3px solid ${camp.color||"var(--border)"}">
     <b>${r[0]}</b>${dayTag}
-    <div class="m">${r[3]||"–"}${yrTxt}${crown}</div></div>`;
+    <div class="m">${r[3]||"–"}${usd}${yrTxt}${crown}</div></div>`;
 }
 function imapIntro(code){ return (PROFILES[code]||"").replace(/<[^>]+>/g,"").slice(0,110); }
 function imapSort(list){
