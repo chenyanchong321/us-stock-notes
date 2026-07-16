@@ -5744,19 +5744,6 @@
      },
      "mcap_base_price": 190.89,
      "ath_floor": 417.86
-    },
-    {
-     "name": "SpaceX",
-     "code": "SPCX",
-     "market": "美股",
-     "yahoo": "SPCX",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 17720.0,
-      "approx": true
-     },
-     "mcap_base_price": 135.27
     }
    ],
    "groups": [
@@ -5834,12 +5821,6 @@
      "name": "无人系统",
      "codes": [
       "AVAV"
-     ]
-    },
-    {
-     "name": "商业航天",
-     "codes": [
-      "SPCX"
      ]
     }
    ]
@@ -6906,6 +6887,24 @@
      },
      "mcap_base_price": 115.11,
      "ath_floor": 0
+    }
+   ]
+  },
+  {
+   "name": "22 商业航天",
+   "items": [
+    {
+     "name": "SpaceX",
+     "code": "SPCX",
+     "market": "美股",
+     "yahoo": "SPCX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 17720.0,
+      "approx": true
+     },
+     "mcap_base_price": 135.27
     }
    ]
   }
