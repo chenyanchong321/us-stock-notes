@@ -841,7 +841,7 @@ let DATA = [];
 
 /* 列序＝四个语义块：实时(现价·当日) → 位置(回撤) → 估值(市值·PE) → 历史(近1周~近1年)
    手机端只看得到前两格，所以把每30秒都在变的活数据放最前，静态的市值往后挪 */
-const COLS = ["名称","现价 / 1年","当日","回撤","市值","成交","1周","1月","3月","半年","年初至今","1年"];
+const COLS = ["名称","现价 / 1年","当日","回撤","市值","成交","昨日","前日","1周","1月","3月","半年","年初至今","1年"];
 let BUY = {};          /* 会员登录后=真实观察位；游客=空对象（数字不出服务器） */
 let SELL = {};         /* 卖点（会员可见），动作规则，显示在现价浮窗 */
 let TGT = {};          /* 目标价（会员可见），估值锚，显示在重点清单列（2026-07-15 主人定稿） */
@@ -894,6 +894,26 @@ function athCell(r){
 function dayWeekCell(r){
   /* 2026-07-13 主人定：只显示当日，去掉第二行1周（1周有独立列，双行干扰阅读） */
   return `<span style="display:block">${fmtPct(r[16])}</span>`;
+}
+/* 昨日/前日两列（2026-07-17 主人需求：三日节奏窗口——当日+昨日+前日看清连跌/企稳）。
+   数据 r[22]=[[yyyymmdd,pct]...] 新→旧（流水线日线顺手算，零额外请求）。
+   对齐规则：默认最新bar即「当日」列所示会话(S0)→昨日=a[1]、前日=a[2]；
+   唯一例外：该市场正盘中而流水线尚未包含今日bar（开盘后≤一班cron的空窗）→整体前移一位。 */
+function mktTodayYMD(mkt){
+  const m=String(mkt||"");
+  const tz = m.startsWith("美股")?"America/New_York" : m.startsWith("日股")?"Asia/Tokyo"
+           : m.startsWith("韩股")?"Asia/Seoul" : m.startsWith("加密")?"UTC" : "Asia/Shanghai";
+  try{ return +new Intl.DateTimeFormat("en-CA",{timeZone:tz}).format(new Date()).replace(/-/g,""); }catch(e){ return 0; }
+}
+function dayN(r,k){   /* k=1昨日 2前日…最大4 */
+  const a=r[22]; if(!Array.isArray(a)||!a.length) return null;
+  let off=1;
+  try{
+    const key=String(r[2]||"").startsWith("美股")?"美股":String(r[2]||"").slice(0,2);
+    const st=(typeof mktStatus==="function")?mktStatus(key):null;
+    if(st&&st.o&&a[0]&&a[0][0]!==mktTodayYMD(r[2])) off=0;
+  }catch(e){}
+  const e=a[k-1+off]; return (e&&typeof e[1]==="number")?e[1]:null;
 }
 function peCell(v){
   if(typeof v!=="number") return `<span class="flat">–</span>`;
@@ -1179,6 +1199,7 @@ function rowHTML(r, grp){
     <td class="athc">${athCell(r)}</td>
     <td class="mcapc">${mcapCell(r)}</td>
     <td class="volc">${volCell(r)}</td>
+    <td>${fmtPct(dayN(r,1))}</td><td>${fmtPct(dayN(r,2))}</td>
     <td>${fmtPct(r[18])}</td>
     <td>${fmtPct(r[7])}</td><td>${fmtPct(r[8])}</td><td>${fmtPct(r[9])}</td>
     <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td><td class="fill"></td>
@@ -1261,11 +1282,12 @@ function renderDash(quotes){
   /* 排序 */
   /* 列序号 → quotes 行内字段号。COLS 每次改动务必同步此表（含最后一列，否则该列点了不排序）
      4=市值 走 mcapVal 数值排序，不查此表；3列(回撤)按距高点跌幅排序 */
-  const SORT_MAP = {0:0, 1:5, 2:16, 3:6, 6:18, 7:7, 8:8, 9:9, 10:10, 11:11};   /* 5=成交 暂不排序 */
+  /* 2026-07-17 插入昨日(6)/前日(7)两列，1周及之后整体+2；6/7为r[22]派生值走 dayN 专用排序 */
+  const SORT_MAP = {0:0, 1:5, 2:16, 3:6, 8:18, 9:7, 10:8, 11:9, 12:10, 13:11};   /* 5=成交 暂不排序 */
   document.querySelectorAll("#view-dash th").forEach(th=>{
     th.addEventListener("click",()=>{
       const ci = +th.dataset.ci;
-      if(ci!==4 && !(ci in SORT_MAP)) return;   /* 4=市值 不查 SORT_MAP，单独走数值排序 */
+      if(ci!==4 && ci!==6 && ci!==7 && !(ci in SORT_MAP)) return;   /* 4=市值/6=昨日/7=前日 不查 SORT_MAP，单独走数值排序 */
       const ri = SORT_MAP[ci];
       const table = th.closest("table"), tbody = table.querySelector("tbody");
       const secIdx = +th.closest(".section").dataset.idx;
@@ -1276,6 +1298,9 @@ function renderDash(quotes){
       const rows = [...DATA[secIdx].rows];
       if(ci===4){   /* 市值列：按折算美元的数值大小排（默认已高→低，点击切低→高） */
         rows.sort((a,b)=> asc ? mcapVal(a)-mcapVal(b) : mcapVal(b)-mcapVal(a));
+      } else if(ci===6||ci===7){   /* 昨日/前日：dayN 派生值排序，缺数据沉底 */
+        const k=ci-5, val=r=>{ const v=dayN(r,k); return v==null ? (asc?Infinity:-Infinity) : v; };
+        rows.sort((a,b)=> asc ? val(a)-val(b) : val(b)-val(a));
       } else {
         rows.sort((a,b)=>{
           let x=a[ri], y=b[ri];
@@ -2919,13 +2944,29 @@ let PROFILES = {};
         }
       }
     }catch(e){}
+    /* 近5日逐日节奏（2026-07-17 主人需求）：表格只放昨日/前日两列保持克制，完整五日全貌收在这张卡里 */
+    let d5Line = "";
+    try{
+      let row5=null;
+      if(typeof DATA!=="undefined")
+        for(const s of DATA){ for(const r of s.rows){ if(r[1]===code){ row5=r; break; } } if(row5) break; }
+      const a5 = (row5 && Array.isArray(row5[22])) ? row5[22] : null;
+      if(a5 && a5.length){
+        const seg = a5.slice(0,5).map(e=>{
+          const v=e[1]; if(typeof v!=="number") return `<span class="flat">–</span>`;
+          const c = v>0?"var(--up)":v<0?"var(--down)":"var(--text2)";
+          return `<span style="color:${c};font-variant-numeric:tabular-nums">${v>0?"+":""}${v.toFixed(1)}</span>`;
+        }).join('<span style="color:var(--text2)"> · </span>');
+        d5Line = `<span style="display:block;margin-top:6px;font-size:12px;color:var(--text2)">📅 近5日 ${seg} %<span style="opacity:.75">（新→旧）</span></span>`;
+      }
+    }catch(e){}
     const nf = noteFor(code, grp||"");
     const links = [];
     /* 研报行置顶（金色，会员点击直达/游客弹登录），相关笔记在后 */
     for(const x of (REPBY[code]||[]))
       links.push(`<a class="repa" data-rid="${x.id}" href="javascript:;" style="display:block;color:var(--gold);text-decoration:none">📑 研报：${x.title} →</a>`);
     if(nf) links.push(`<a href="articles/${nf[0]}.html" style="display:block;color:var(--accent);text-decoration:none">📖 相关笔记：${nf[1]} →</a>`);
-    return txt + alphaLine + (links.length ? `<span style="display:block;margin-top:7px;font-size:12px;border-top:1px solid var(--border);padding-top:6px">${links.join("")}</span>` : "");
+    return txt + alphaLine + d5Line + (links.length ? `<span style="display:block;margin-top:7px;font-size:12px;border-top:1px solid var(--border);padding-top:6px">${links.join("")}</span>` : "");
   }
   let pinned = false, pinnedEl = null;   /* pinnedEl＝当前钉住的触发格子，用于「再点一次关闭」 */
   function place(x, y){

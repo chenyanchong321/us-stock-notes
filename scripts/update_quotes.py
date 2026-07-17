@@ -347,7 +347,7 @@ def main():
             fetched = cache[sym]
             if fetched is None:
                 rows.append([it["name"], it["code"], it["market"], "获取失败",
-                             "-", "-", 0.0, "-", "-", "-", "-", "-", gmap.get(it["code"], ""), None, None, None, None, None, None, None, None, None])
+                             "-", "-", 0.0, "-", "-", "-", "-", "-", gmap.get(it["code"], ""), None, None, None, None, None, None, None, None, None, None])
                 continue
             pairs, hist_max = fetched
             price = pairs[-1][1]
@@ -382,6 +382,20 @@ def main():
                 return [avg20, round(last_amt) if last_amt else None, last_vol,
                         so_map.get(sym)]
 
+            def last5_daily():
+                """r[22]=近5根日线的逐日涨跌 [[yyyymmdd,pct],...] 新→旧（2026-07-17 主人需求：三日节奏窗口）。
+                bar时间戳的UTC日期即会话日期（A股01:30Z/美股13:30Z/日股00:00Z均落在本地同日）。
+                前端据日期+盘中状态决定「昨日/前日」取第几个；浮窗「近5日」直接全量展示。零额外请求。"""
+                out = []
+                for i in range(1, 6):
+                    if len(pairs) < i + 1:
+                        break
+                    t, c = pairs[-i]
+                    prev_c = pairs[-i - 1][1]
+                    d = int(datetime.datetime.fromtimestamp(t, datetime.timezone.utc).strftime("%Y%m%d"))
+                    out.append([d, round(pct(c, prev_c), 2)])
+                return out or None
+
             def window(ts_base, label_ipo):
                 base = price_at(pairs, ts_base)
                 if base is None:  # 上市不足该窗口
@@ -404,16 +418,16 @@ def main():
                          pe_map.get(sym), *pos_52w(pairs, ts_1y, cur),
                          round(pct(pairs[-1][1], pairs[-2][1]), 2) if len(pairs) >= 2 else None,
                          ext_map.get(sym) if it["market"].startswith("美股") else None,
-                         w1, fpe_map.get(sym), ma_list(), vol_info()])
+                         w1, fpe_map.get(sym), ma_list(), vol_info(), last5_daily()])
             print(f"  {it['code']:>10} {it['name'][:12]:<14} 现价 {price:,.2f}  回撤 {dd:.1f}%")
         sections_out.append({"sec": sec["name"], "rows": rows})
 
-    # 完整性校验（2026-07-16 IAU 19字段坏行事故后加）：任何行长度不等于22一律拒绝发布，
-    # 让 workflow 失败、线上保留旧数据——坏数据比旧数据危害大得多。
+    # 完整性校验（2026-07-16 IAU 19字段坏行事故后加）：任何行长度不等于23一律拒绝发布，
+    # 让 workflow 失败、线上保留旧数据——坏数据比旧数据危害大得多。（2026-07-17 r[22]近5日 22→23）
     for _s in sections_out:
         for _r in _s["rows"]:
-            if len(_r) != 22:
-                raise SystemExit(f"::error::行完整性校验失败 {_r[1] if len(_r)>1 else _r} 长度{len(_r)}≠22，拒绝发布")
+            if len(_r) != 23:
+                raise SystemExit(f"::error::行完整性校验失败 {_r[1] if len(_r)>1 else _r} 长度{len(_r)}≠23，拒绝发布")
     out = {"updated": now.astimezone(datetime.timezone(datetime.timedelta(hours=8))).strftime("%Y-%m-%d %H:%M") + " 北京时间",
            "sections": sections_out}
     (ROOT / "data/quotes.json").write_text(
