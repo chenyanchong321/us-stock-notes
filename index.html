@@ -3190,8 +3190,16 @@ function renderImap(){
         return `<div style="flex:${x.pct};background:${cm.color}" title="${cm.label} ${x.pct}% ${x.note||""}">${cm.label} ${x.pct}%</div>`;
       }).join("")}</div></div>
     ${secDay===null?"":`<div><span style="font-size:11px;color:var(--text2)">板块今日</span><br><b style="font-size:19px;color:${secDay>=0?"var(--up)":"var(--down)"}">${secDay>0?"+":""}${secDay.toFixed(2)}%</b><span style="font-size:10px;color:var(--text2)"> 市值加权</span></div>`}
-  </div>
-  <div class="imap-note">砖块：今日涨跌（角标）· 市值 · 近1年涨幅 · 左边条=阵营 · 👑=龙头 · 悬停看简介 · 点击跳数据面板 ｜ 规模与份额：${sec.scale.src}，截至 ${sec.scale.asof}</div>`;
+  </div>`;
+  /* 口径保质期告警（2026-07-17 主人定）：asof超过一个季度，页面自己喊，不指望人盯时间戳 */
+  let stale = "";
+  try{
+    const [ay, am] = sec.scale.asof.split("-").map(Number);
+    const now = new Date();
+    if((now.getFullYear()-ay)*12 + (now.getMonth()+1-am) > 3)
+      stale = ` <span style="color:var(--gold);font-weight:600">⚠️ 口径已超一个季度未校准（截至 ${sec.scale.asof}），数字请打折看</span>`;
+  }catch(e){}
+  const head2 = `<div class="imap-note">砖块：今日涨跌（角标）· 市值 · 近1年涨幅 · 左边条=阵营 · 👑=龙头 · 悬停看简介 · 点击跳数据面板 ｜ 规模与份额：${sec.scale.src}，截至 ${sec.scale.asof}${stale}</div>`;
   const campOrder = sec.share.map(x=>x.a).concat(Object.keys(IMAPCFG.camps).filter(a=>!sec.share.some(x=>x.a===a)));
   let main = "";
   if(IMAP_MODE==="chain"){
@@ -3221,7 +3229,7 @@ function renderImap(){
     }).join("");
     main = `<div class="imap-lanes">${lanes}</div>`;
   }
-  body.innerHTML = head + main + `<div class="imap-read">读图法：<b>${sec.read||""}</b></div>`;
+  body.innerHTML = head + head2 + main + `<div class="imap-read">读图法：<b>${sec.read||""}</b></div>`;
 }
 (function(){
   const secs = document.getElementById("imap-secs"), body = document.getElementById("imap-body");
