@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-17 23:19 北京时间",
+ "updated": "2026-07-17 23:30 北京时间",
  "earnings": [
   {
    "d": "2026-07-17",
@@ -221,6 +221,12 @@
    "d": "2026-07-30",
    "code": "META",
    "name": "Meta Platforms",
+   "est": false
+  },
+  {
+   "d": "2026-07-30",
+   "code": "ARM",
+   "name": "Arm Holdings",
    "est": false
   },
   {
