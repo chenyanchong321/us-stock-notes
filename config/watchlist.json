@@ -5495,6 +5495,20 @@
      "ath_floor": 0
     },
     {
+     "name": "双环传动",
+     "code": "002472",
+     "market": "A股",
+     "yahoo": "002472.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 8.5,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "三花智控",
      "code": "002050",
      "market": "A股",
@@ -5535,6 +5549,34 @@
      },
      "mcap_base_price": 62.43,
      "ath_floor": 86.88
+    },
+    {
+     "name": "汇川技术",
+     "code": "300124",
+     "market": "A股",
+     "yahoo": "300124.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 26.8,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "埃斯顿",
+     "code": "002747",
+     "market": "A股",
+     "yahoo": "002747.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 8.7,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
     },
     {
      "name": "恒立液压",
@@ -5587,6 +5629,20 @@
      "mcap_base": {
       "prefix": "¥",
       "yi": 10.2,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "五洲新春",
+     "code": "603667",
+     "market": "A股",
+     "yahoo": "603667.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 3.7,
       "approx": true
      },
      "mcap_base_price": 1.0,
@@ -5705,6 +5761,20 @@
      "ath_floor": 0
     },
     {
+     "name": "禾赛",
+     "code": "02525",
+     "market": "港股",
+     "yahoo": "2525.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 1.3,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "Novanta",
      "code": "NOVT",
      "market": "美股",
@@ -5713,6 +5783,34 @@
      "mcap_base": {
       "prefix": "$",
       "yi": 0.356,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "奥比中光",
+     "code": "688322",
+     "market": "A股",
+     "yahoo": "688322.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 4.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "芯动联科",
+     "code": "688582",
+     "market": "A股",
+     "yahoo": "688582.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 4.0,
       "approx": true
      },
      "mcap_base_price": 1.0,
@@ -5830,15 +5928,18 @@
      "codes": [
       "6324",
       "6268",
-      "688017"
+      "688017",
+      "002472"
      ]
     },
     {
-     "name": "执行器与Tier1",
+     "name": "执行器·运动控制与Tier1",
      "codes": [
       "002050",
       "02050",
-      "601689"
+      "601689",
+      "300124",
+      "002747"
      ]
     },
     {
@@ -5847,7 +5948,8 @@
       "601100",
       "6481",
       "300809",
-      "000837"
+      "000837",
+      "603667"
      ]
     },
     {
@@ -5871,7 +5973,10 @@
      "codes": [
       "603662",
       "02498",
-      "NOVT"
+      "02525",
+      "NOVT",
+      "688322",
+      "688582"
      ]
     },
     {
