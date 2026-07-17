@@ -3611,19 +3611,23 @@ function buildReaderToc(body){
       if(e.target===fab){ drw.classList.add("show"); syncCur(); return; }
       if(e.target.closest("#rrtocdrw") && !e.target.closest("#rrtocdrw .pan")) drw.classList.remove("show");
     });
-    let tk=false;
+    /* 节流用 setTimeout 而非 rAF（toc.js 同教训）：rAF 后台暂停会卡死闸门 */
+    let last=0, pend=false;
+    const run=()=>{
+      last=Date.now();
+      if(view.classList.contains("hidden")||!document.getElementById("rrtocside")) return;
+      const y=(parseInt(getComputedStyle(document.documentElement).getPropertyValue("--header-h"))||56)+40;
+      let id=hs[0].id;
+      for(const h of hs){ if(h.getBoundingClientRect().top<=y) id=h.id; else break; }
+      if(id!==curId){ curId=id; syncCur(); }
+      fab.style.display=window.scrollY>300?"flex":"none";
+    };
     window.addEventListener("scroll",()=>{
-      if(tk) return; tk=true;
-      requestAnimationFrame(()=>{
-        tk=false;
-        if(view.classList.contains("hidden")||!document.getElementById("rrtocside")) return;
-        const y=(parseInt(getComputedStyle(document.documentElement).getPropertyValue("--header-h"))||56)+40;
-        let id=hs[0].id;
-        for(const h of hs){ if(h.getBoundingClientRect().top<=y) id=h.id; else break; }
-        if(id!==curId){ curId=id; syncCur(); }
-        fab.style.display=window.scrollY>300?"flex":"none";
-      });
+      const n=Date.now();
+      if(n-last>=120) run();
+      else if(!pend){ pend=true; setTimeout(()=>{ pend=false; run(); },140); }
     },{passive:true});
+    run();
   }catch(e){}
 }
 /* 统一跳转入口：会员进阅读页，游客弹登录。跳转前先收浮窗（跳转后浮窗残留＝主人真机反馈的bug） */

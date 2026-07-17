@@ -109,21 +109,25 @@
       var act = side.querySelector("a.cur");
       if(act) act.scrollIntoView({block:"nearest"});
     }
-    var tick = false;
+    /* 节流用 setTimeout 而非 rAF：rAF 在窗口遮挡/后台时暂停，闸门标志会卡死、监听永久失效
+       （2026-07-18 实测踩坑）。setTimeout 不受渲染暂停影响。 */
+    var last = 0, pend = false;
+    function run(){
+      last = Date.now();
+      var y = 100, id = items[0].id;
+      for(var i=0;i<items.length;i++){
+        if(items[i].getBoundingClientRect().top <= y) id = items[i].id; else break;
+      }
+      if(id !== curId){ curId = id; syncCur(); }
+      fab.style.display = window.scrollY > 300 ? "flex" : "none";
+    }
     function onScroll(){
-      if(tick) return; tick = true;
-      requestAnimationFrame(function(){
-        tick = false;
-        var y = 100, id = items[0].id;
-        for(var i=0;i<items.length;i++){
-          if(items[i].getBoundingClientRect().top <= y) id = items[i].id; else break;
-        }
-        if(id !== curId){ curId = id; syncCur(); }
-        fab.style.display = window.scrollY > 300 ? "flex" : "none";
-      });
+      var n = Date.now();
+      if(n - last >= 120) run();
+      else if(!pend){ pend = true; setTimeout(function(){ pend = false; run(); }, 140); }
     }
     window.addEventListener("scroll", onScroll, {passive:true});
-    onScroll();
+    run();
   }
   if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
