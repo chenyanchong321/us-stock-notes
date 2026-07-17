@@ -80,6 +80,10 @@ html[data-theme="light"] .sidebar a.sub{color:#5b6570}                         /
 html[data-theme="light"] .ev-item{border-bottom-color:rgba(0,0,0,.07)}         /* 大事分隔线：白透明→黑透明 */
 html[data-theme="light"] .evtag.macro{color:#c04545}                           /* 宏观标签：浅红加深 */
 @media (hover:none),(pointer:coarse){html[data-theme="light"] #stip a{background:rgba(0,0,0,.04)}} /* 手机浮窗链接底：白透明→黑透明（仅触屏，桌面无此底色） */
+/* 阅读态白衣（2026-07-18 主人定：研报阅读页整页白纸，顶栏黑白割裂→顶栏同步换白）。
+   实现＝body.reading 时给 #header 作用域覆盖变量（子树内生效），其余视图与深色模式零影响；
+   切出阅读页类名摘除即恢复。与笔记页样式统一，且保留页签导航。 */
+body.reading #header{--panel:#ffffff;--panel2:#f6f8fa;--bg:#f2f3f1;--border:#e2e5e9;--text:#1f2328;--text2:#5b6570;--accent:#2563eb;--gold:#b8860b;border-bottom-color:#e2e5e9}
 #themebtn{background:none;border:1px solid var(--border);border-radius:8px;color:var(--text2);padding:3px 9px;cursor:pointer;font-size:14px;line-height:1.4}
 #themebtn:hover{color:var(--text);border-color:var(--gold)}
 :root{
@@ -3915,6 +3919,7 @@ document.addEventListener("click", e=>{
     if(v==="imap" && typeof renderImap==="function"){ try{ renderImap(); }catch(e){} }   /* 切进地图即重渲染，行情与面板同步 */
     const mb=document.getElementById("mbottom");
     if(mb) mb.style.display = v==="dash" ? "" : "none";
+    document.body.classList.toggle("reading", v==="repread");   /* 阅读态白衣：顶栏与白纸统一 */
     try{ localStorage.setItem("lastView", v); }catch(e){}
     const u = new URL(location.href);
     if(v!=="dash") u.searchParams.set("view",v);
