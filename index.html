@@ -239,6 +239,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 @media(min-width:861px){
   #dictbar:not(.open){top:50%;bottom:auto;transform:translateY(-50%);height:auto;right:10px;
     border:1px solid var(--border);border-radius:10px;box-shadow:0 4px 14px rgba(0,0,0,.35);padding:6px 0}
+  /* 竖排铁律（同手机端2026-07-13坑）：把手必须固定高度，否则拆成多列右起→"典词语术" */
+  #dictbar:not(.open) #db-strip{flex:0 0 auto;height:148px;width:26px;box-sizing:border-box}
   html[data-theme="light"] #dictbar:not(.open){box-shadow:0 4px 14px rgba(86,80,68,.20)}
 }
 @media(max-width:860px){
