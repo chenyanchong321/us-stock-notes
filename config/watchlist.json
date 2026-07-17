@@ -577,6 +577,19 @@
      "ath_floor": 0
     },
     {
+     "name": "寒武纪",
+     "code": "688256",
+     "market": "A股",
+     "yahoo": "688256.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 10025.0,
+      "approx": true
+     },
+     "mcap_base_price": 1595.55
+    },
+    {
      "name": "天数智芯",
      "code": "09903",
      "market": "港股",
@@ -781,6 +794,7 @@
       "AMD",
       "INTC",
       "CBRS",
+      "688256",
       "09903"
      ]
     },
