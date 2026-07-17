@@ -409,7 +409,7 @@ td.name .mkt{margin-left:6px;background:var(--panel2);border-radius:4px;padding:
 /* ===== 股票宇宙（2026-07-18 主人需求，aha.wiki 概念宇宙式全量总图）=====
    颜色=涨跌方向（深浅=幅度）· 大小=美元市值三档 · 板块按当日中位涨跌从强到弱排。
    色块用固定 rgba 红绿（深浅两主题通用），文字走变量。 */
-.uni-main{max-width:1280px;margin:0 auto;padding:18px 16px 90px}
+.uni-main{max-width:1280px;margin:var(--header-h) auto 0;padding:18px 16px 90px}   /* margin-top=顶栏高度：漏掉会被固定顶栏盖住首行（2026-07-18踩坑） */
 #uni-head h2{font-size:19px;display:inline}
 #uni-head .stat{background:none;border:none;padding:0;font-size:13px;color:var(--text2);margin-left:10px}
 #uni-head .homebtn{margin-left:12px;background:var(--panel2);border:1px solid var(--border);border-radius:99px;color:var(--text2);font-size:12px;padding:4px 12px;cursor:pointer;vertical-align:2px}
@@ -420,7 +420,7 @@ td.name .mkt{margin-left:6px;background:var(--panel2);border-radius:4px;padding:
 .uni-sech .m{font-size:12.5px;font-weight:700}
 .uni-sech .n{font-size:11.5px;color:var(--text2)}
 .uni-cloud{display:flex;flex-wrap:wrap;gap:9px 8px;align-items:center}
-.upill{position:relative;border-radius:99px;padding:6px 14px;cursor:pointer;border:1.5px solid var(--border);background:var(--panel2);line-height:1.3;max-width:100%;transition:transform .12s}
+.upill{position:relative;border-radius:99px;padding:6px 14px;cursor:pointer;border:1.5px solid var(--border);background:var(--panel2);line-height:1.3;max-width:100%;transition:transform .12s;flex:0 0 auto}   /* flex:0 0 auto 禁收缩：flex子项默认可被压扁→文字截断"Zeta Globa…"（2026-07-18踩坑） */
 .upill:hover{transform:translateY(-1px)}
 .upill .un{font-weight:600;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
 .upill .us{display:block;font-size:.7em;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
