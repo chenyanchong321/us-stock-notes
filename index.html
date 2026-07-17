@@ -14,18 +14,38 @@
    浅色UI须靠 elevation 三板斧重建——背景拉深一档+描边加实一档+卡片投影；
    另修7处写死颜色在白底下的失效点。所有规则仅 light 生效，深色字节不动。 */
 html[data-theme="light"]{
-  --bg:#e8eaed;      /* 背景拉深：让白卡片跳出来 */
+  --bg:#edeae3;      /* 暖纸灰：纸张感，白卡片跳出来（askwise 启发，但比它克制，不与红绿数字打架） */
   --panel:#ffffff;
-  --panel2:#f7f8f9;
-  --border:#c9cfd8;  /* 描边加实：轮廓清晰 */
-  --text:#1f2328;
-  --text2:#5b6570;
+  --panel2:#f7f5f0;
+  --border:#d3cdc2;  /* 暖调描边，轮廓清晰 */
+  --text:#17191c;    /* 近黑：数字扎实 */
+  --text2:#4e565f;
   --up:#188f4d;      /* 仍是绿涨 */
   --down:#d43a3a;    /* 仍是红跌 */
   --accent:#2f6fd6;
   --gold:#b8860b;    /* 深琥珀：白底上更有精神 */
   --blue:#2f6fd6;    /* rep-code等回退浅蓝在白底发虚，浅色下走主题蓝 */
 }
+/* 三轮打磨（2026-07-17 晚二）：强调层级重建。深色下选中态用10%水洗色是对的（黑底一点亮色即显眼），
+   白底上10%的蓝≈隐形，全页无重音→"平、差点意思"（主人直觉，askwise 对照确诊）。
+   浅色下所有 .on 选中态改实心色块+白字（emphasis hierarchy：少量实心重音锚定视线）。 */
+html[data-theme="light"] .stat.vc.on,
+html[data-theme="light"] .perf-pill.on,
+html[data-theme="light"] #nav-mode button.on,
+html[data-theme="light"] #dict-cats button.on,
+html[data-theme="light"] #dict-az button.on,
+html[data-theme="light"] #db-cats button.on,
+html[data-theme="light"] #db-az button.on,
+html[data-theme="light"] .view-toggle button.on,
+html[data-theme="light"] #msheet .grid button.on,
+html[data-theme="light"] #mktfloat button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+html[data-theme="light"] .stat.vc.on .k{color:rgba(255,255,255,.82)}
+html[data-theme="light"] .stat.vc.on .v{color:#fff}
+html[data-theme="light"] .perf-pill.on .mksub{color:rgba(255,255,255,.78)}
+html[data-theme="light"] #msheet .grid button.on .s{color:rgba(255,255,255,.75)}
+html[data-theme="light"] .perf-pill.dirp.on,
+html[data-theme="light"] .imap-pills button.on{background:var(--gold);border-color:var(--gold);color:#fff}
+html[data-theme="light"] tr.grp td{background:rgba(47,111,214,.13)}  /* 分组行水洗加深一档（行带不宜实心） */
 html[data-theme="light"] #stip{box-shadow:0 8px 24px rgba(0,0,0,.16)}
 html[data-theme="light"] #moremenu,html[data-theme="light"] #mktfloat,html[data-theme="light"] #scalemenu{box-shadow:0 6px 16px rgba(0,0,0,.14)}
 /* 三板斧之投影：卡片/面板浮起来（Material elevation 思路） */
