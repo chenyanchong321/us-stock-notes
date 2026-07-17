@@ -9,21 +9,38 @@
 <script>/* 主题需在CSS解析前落位，防止刷新闪白/闪黑 */try{if(localStorage.getItem("theme")==="light")document.documentElement.dataset.theme="light";}catch(e){}</script>
 <style>
 /* 浅色主题（2026-07-17 会员Davis/Hazel需求）：一套变量覆盖全站生效；默认深色不变；
-   绿涨红跌铁律不动（浅色盘只加深红绿以保白底对比度）。整功能单commit可回退。 */
+   绿涨红跌铁律不动（浅色盘只加深红绿以保白底对比度）。整功能单commit可回退。
+   2026-07-17二轮打磨（主人指出"边界感/层次感弱"）：深色UI靠亮度分层天然有层次，
+   浅色UI须靠 elevation 三板斧重建——背景拉深一档+描边加实一档+卡片投影；
+   另修7处写死颜色在白底下的失效点。所有规则仅 light 生效，深色字节不动。 */
 html[data-theme="light"]{
-  --bg:#f2f3f1;
+  --bg:#e8eaed;      /* 背景拉深：让白卡片跳出来 */
   --panel:#ffffff;
-  --panel2:#fbfbf9;
-  --border:#d9dde3;
+  --panel2:#f7f8f9;
+  --border:#c9cfd8;  /* 描边加实：轮廓清晰 */
   --text:#1f2328;
   --text2:#5b6570;
   --up:#188f4d;      /* 仍是绿涨 */
   --down:#d43a3a;    /* 仍是红跌 */
   --accent:#2f6fd6;
-  --gold:#9a6b00;
+  --gold:#b8860b;    /* 深琥珀：白底上更有精神 */
+  --blue:#2f6fd6;    /* rep-code等回退浅蓝在白底发虚，浅色下走主题蓝 */
 }
 html[data-theme="light"] #stip{box-shadow:0 8px 24px rgba(0,0,0,.16)}
 html[data-theme="light"] #moremenu,html[data-theme="light"] #mktfloat,html[data-theme="light"] #scalemenu{box-shadow:0 6px 16px rgba(0,0,0,.14)}
+/* 三板斧之投影：卡片/面板浮起来（Material elevation 思路） */
+html[data-theme="light"] .stat,
+html[data-theme="light"] .card,
+html[data-theme="light"] .hcard,
+html[data-theme="light"] .rep-card{box-shadow:0 1px 3px rgba(0,0,0,.07)}
+html[data-theme="light"] .tbl-wrap{box-shadow:0 1px 4px rgba(0,0,0,.06)}
+/* 7处写死颜色的浅色修复 */
+html[data-theme="light"] #mbottom{background:rgba(255,255,255,.92)}            /* 底部三按钮栏：深色磨砂→白磨砂 */
+html[data-theme="light"] #db-head button.on{color:#fff}                        /* 金底选中：深字→白字 */
+html[data-theme="light"] .sidebar a.sub{color:#5b6570}                         /* 二级目录：淡蓝灰→深灰蓝 */
+html[data-theme="light"] .ev-item{border-bottom-color:rgba(0,0,0,.07)}         /* 大事分隔线：白透明→黑透明 */
+html[data-theme="light"] .evtag.macro{color:#c04545}                           /* 宏观标签：浅红加深 */
+@media (hover:none),(pointer:coarse){html[data-theme="light"] #stip a{background:rgba(0,0,0,.04)}} /* 手机浮窗链接底：白透明→黑透明（仅触屏，桌面无此底色） */
 #themebtn{background:none;border:1px solid var(--border);border-radius:8px;color:var(--text2);padding:3px 9px;cursor:pointer;font-size:14px;line-height:1.4}
 #themebtn:hover{color:var(--text);border-color:var(--gold)}
 :root{
