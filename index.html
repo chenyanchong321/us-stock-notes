@@ -6,7 +6,26 @@
 <title>烟囱的美股学习笔记 · 数据与知识</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<script>/* 主题需在CSS解析前落位，防止刷新闪白/闪黑 */try{if(localStorage.getItem("theme")==="light")document.documentElement.dataset.theme="light";}catch(e){}</script>
 <style>
+/* 浅色主题（2026-07-17 会员Davis/Hazel需求）：一套变量覆盖全站生效；默认深色不变；
+   绿涨红跌铁律不动（浅色盘只加深红绿以保白底对比度）。整功能单commit可回退。 */
+html[data-theme="light"]{
+  --bg:#f2f3f1;
+  --panel:#ffffff;
+  --panel2:#fbfbf9;
+  --border:#d9dde3;
+  --text:#1f2328;
+  --text2:#5b6570;
+  --up:#188f4d;      /* 仍是绿涨 */
+  --down:#d43a3a;    /* 仍是红跌 */
+  --accent:#2f6fd6;
+  --gold:#9a6b00;
+}
+html[data-theme="light"] #stip{box-shadow:0 8px 24px rgba(0,0,0,.16)}
+html[data-theme="light"] #moremenu,html[data-theme="light"] #mktfloat,html[data-theme="light"] #scalemenu{box-shadow:0 6px 16px rgba(0,0,0,.14)}
+#themebtn{background:none;border:1px solid var(--border);border-radius:8px;color:var(--text2);padding:3px 9px;cursor:pointer;font-size:14px;line-height:1.4}
+#themebtn:hover{color:var(--text);border-color:var(--gold)}
 :root{
   --bg:#0e1117;
   --panel:#161b24;
@@ -541,6 +560,7 @@ body.resizing{user-select:none;cursor:col-resize}
     <span id="search-clear" title="清空">✕</span>
   </div>
   <div class="slogan">看得懂的数据 · 讲得清的知识</div>
+  <button id="themebtn" title="切换深/浅色">🌓</button>
   <button id="authbtn">登录</button>
 </header>
 
@@ -3449,6 +3469,18 @@ document.addEventListener("click", e=>{
     e.preventDefault(); e.stopPropagation();
     goRepCode(b.dataset.code);
   }, {passive:false, capture:true});
+})();
+
+/* ===== 深浅色切换（2026-07-17）：只管明暗，绿涨红跌不动；默认深色；选择存 localStorage ===== */
+(function(){
+  const b = document.getElementById("themebtn");
+  if(!b) return;
+  b.addEventListener("click", ()=>{
+    const light = document.documentElement.dataset.theme === "light";
+    if(light) delete document.documentElement.dataset.theme;
+    else document.documentElement.dataset.theme = "light";
+    try{ localStorage.setItem("theme", light ? "dark" : "light"); }catch(e){}
+  });
 })();
 
 /* ===== 会员登录/注册（2026-07-15）：token 存 localStorage("atk")，成功后整页刷新用会员数据重渲染 ===== */
