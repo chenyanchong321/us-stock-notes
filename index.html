@@ -14,10 +14,10 @@
    浅色UI须靠 elevation 三板斧重建——背景拉深一档+描边加实一档+卡片投影；
    另修7处写死颜色在白底下的失效点。所有规则仅 light 生效，深色字节不动。 */
 html[data-theme="light"]{
-  --bg:#edeae3;      /* 暖纸灰：纸张感，白卡片跳出来（askwise 启发，但比它克制，不与红绿数字打架） */
+  --bg:#f0efeb;      /* 六轮减黄：暖纸灰退半步成"带一丝暖的灰白"——主人反馈#edeae3偏黄显脏、与白表格落差过猛（手机原彩屏放大黄感）；层次保留、过渡柔和 */
   --panel:#ffffff;
-  --panel2:#f7f5f0;
-  --border:#d3cdc2;  /* 暖调描边，轮廓清晰 */
+  --panel2:#f7f6f3;
+  --border:#d6d2ca;  /* 微暖描边，黄味同步减 */
   --text:#17191c;    /* 近黑：数字扎实 */
   --text2:#4e565f;
   --up:#188f4d;      /* 仍是绿涨 */
@@ -47,25 +47,32 @@ html[data-theme="light"] .perf-pill.dirp.on,
 html[data-theme="light"] .imap-pills button.on{background:var(--gold);border-color:var(--gold);color:#fff}
 html[data-theme="light"] tr.grp td{background:rgba(47,111,214,.13)}  /* 分组行水洗加深一档（行带不宜实心） */
 /* 四轮微调（zoom显微镜巡检）：深色残留重阴影在白底像"黑抹布"，浅色统一减淡 */
-html[data-theme="light"] #floatHead{box-shadow:0 2px 8px rgba(93,77,48,.16)}
-html[data-theme="light"] #toTop{box-shadow:0 3px 10px rgba(93,77,48,.20)}
+html[data-theme="light"] #floatHead{box-shadow:0 2px 8px rgba(86,80,68,.16)}
+html[data-theme="light"] #toTop{box-shadow:0 3px 10px rgba(86,80,68,.20)}
 html[data-theme="light"] #dictbar{box-shadow:none}
-html[data-theme="light"] #authmodal .abox{box-shadow:0 12px 36px rgba(93,77,48,.30)}
-html[data-theme="light"] .imapintro-tip{box-shadow:0 6px 18px rgba(93,77,48,.20) !important}
-@media(max-width:860px){html[data-theme="light"] #dictbar{box-shadow:0 6px 18px rgba(93,77,48,.20)}}
-/* 五轮（redesign-skill审计）：按压物理反馈 + 键盘焦点环（皆浅色专属，深色零动） */
-html[data-theme="light"] :is(button,.stat.vc,.tab,.repb,.rep-card):active{transform:scale(.98)}
+html[data-theme="light"] #authmodal .abox{box-shadow:0 12px 36px rgba(86,80,68,.30)}
+html[data-theme="light"] .imapintro-tip{box-shadow:0 6px 18px rgba(86,80,68,.20) !important}
+@media(max-width:860px){html[data-theme="light"] #dictbar{box-shadow:0 6px 18px rgba(86,80,68,.20)}}
+/* 五轮（redesign-skill审计）：按压物理反馈 + 键盘焦点环（皆浅色专属，深色零动）。
+   六轮修正：按压缩放只给桌面鼠标端——iOS在抬指瞬间做点击命中判定，元素缩放中会丢点击
+   （实锅：浅色手机端"更多"菜单点不动，2026-07-17 主人实测上报）。触屏自带按压变暗，不缺这反馈。 */
+@media(hover:hover) and (pointer:fine){
+  html[data-theme="light"] :is(button,.stat.vc,.tab,.repb,.rep-card):active{transform:scale(.98)}
+}
 html[data-theme="light"] :is(button,a,input,.tab):focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* 六轮减黄：研报/笔记集合页顶部介绍横幅——深色设计的金蓝渐变到白底成"米黄脏块"，浅色下洗淡转中性 */
+html[data-theme="light"] .rep-intro{background:linear-gradient(135deg,rgba(184,134,11,.05),rgba(47,111,214,.04))}
+html[data-theme="light"] .notes-intro{background:linear-gradient(135deg,rgba(47,111,214,.06),rgba(184,134,11,.03))}
 /* 五轮（redesign-skill审计）：浅色影子带底色色相（暖底投暖影），纯黑影在暖纸底显脏 */
-html[data-theme="light"] #stip{box-shadow:0 8px 24px rgba(93,77,48,.20)}
-html[data-theme="light"] #moremenu,html[data-theme="light"] #mktfloat,html[data-theme="light"] #scalemenu{box-shadow:0 6px 16px rgba(93,77,48,.18)}
+html[data-theme="light"] #stip{box-shadow:0 8px 24px rgba(86,80,68,.20)}
+html[data-theme="light"] #moremenu,html[data-theme="light"] #mktfloat,html[data-theme="light"] #scalemenu{box-shadow:0 6px 16px rgba(86,80,68,.18)}
 /* 三板斧之投影：卡片/面板浮起来（Material elevation 思路） */
 html[data-theme="light"] .stat,
 html[data-theme="light"] .card,
 html[data-theme="light"] .hcard,
 html[data-theme="light"] .imap-brick,
-html[data-theme="light"] .rep-card{box-shadow:0 1px 3px rgba(93,77,48,.11)}
-html[data-theme="light"] .tbl-wrap{box-shadow:0 1px 4px rgba(93,77,48,.10)}
+html[data-theme="light"] .rep-card{box-shadow:0 1px 3px rgba(86,80,68,.11)}
+html[data-theme="light"] .tbl-wrap{box-shadow:0 1px 4px rgba(86,80,68,.10)}
 /* 7处写死颜色的浅色修复 */
 html[data-theme="light"] #mbottom{background:rgba(255,255,255,.92)}            /* 底部三按钮栏：深色磨砂→白磨砂 */
 html[data-theme="light"] #db-head button.on{color:#fff}                        /* 金底选中：深字→白字 */
