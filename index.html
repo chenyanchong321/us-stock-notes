@@ -436,6 +436,22 @@ td.name .mkt{margin-left:6px;background:var(--panel2);border-radius:4px;padding:
 .upill.cd3{background:rgba(240,74,74,.33);border-color:rgba(240,74,74,.82)}
 .upill .ud.p{color:var(--up)} .upill .ud.n{color:var(--down)} .upill .ud.f{color:var(--text2)}
 @media(max-width:640px){.upill.sz3{font-size:14.5px;padding:7px 14px}.uni-cloud{gap:8px 6px}}
+/* 泡泡图模式（2026-07-18 主人参照 cryptobubbles.net）：DOM圆泡+贪心圆填充+CSS漂浮，
+   大小=当日涨跌幅度(默认)或市值，颜色=红绿方向。交互与胶囊同源（标的卡）。 */
+.uni-mode{display:inline-flex;gap:6px;margin-left:12px;vertical-align:2px}
+.uni-mode button{background:var(--panel2);border:1px solid var(--border);border-radius:99px;color:var(--text2);font-size:12px;padding:4px 12px;cursor:pointer}
+.uni-mode button.on{color:var(--accent);border-color:var(--accent);background:rgba(74,140,240,.10)}
+.uni-bwrap{position:relative;margin-top:10px}
+.ubub{position:absolute;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;text-align:center;background:var(--panel2);border:2px solid var(--border);overflow:hidden;box-sizing:border-box;animation:ubfloat 8s ease-in-out infinite}
+.ubub .n{font-weight:700;max-width:92%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+.ubub .m{color:var(--text2)}
+.ubub.bu1{background:rgba(47,191,113,.10);border-color:rgba(47,191,113,.50)}
+.ubub.bu2{background:rgba(47,191,113,.19);border-color:rgba(47,191,113,.72)}
+.ubub.bu3{background:rgba(47,191,113,.30);border-color:rgba(47,191,113,.95)}
+.ubub.bd1{background:rgba(240,74,74,.10);border-color:rgba(240,74,74,.48)}
+.ubub.bd2{background:rgba(240,74,74,.19);border-color:rgba(240,74,74,.68)}
+.ubub.bd3{background:rgba(240,74,74,.30);border-color:rgba(240,74,74,.92)}
+@keyframes ubfloat{0%,100%{transform:translate(0,0)}25%{transform:translate(3px,-5px)}50%{transform:translate(-4px,3px)}75%{transform:translate(3px,5px)}}
 /* 分组标题行 */
 tr.grp{scroll-margin-top:var(--anchor-grp, calc(var(--header-h) + 108px))}
 tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;font-weight:600;padding:9px 14px;text-align:left;letter-spacing:.5px;border-left:3px solid var(--accent)}
@@ -3704,6 +3720,9 @@ window.renderUniverse = function(){
   const head = document.getElementById("uni-head"), body = document.getElementById("uni-body");
   /* DATA 是脚本级 let（全局词法作用域，不在 window 上）——守卫必须用 typeof（2026-07-18 实测踩坑） */
   if(!head || typeof DATA==="undefined" || !DATA || !DATA.length) return;
+  const pref = k => { try{ return localStorage.getItem(k); }catch(e){ return null; } };
+  const mode = pref("uniMode")==="bubble" ? "bubble" : "cloud";
+  const sizeBy = pref("uniSize")==="mc" ? "mc" : "chg";
   const seen = new Set(), secs = [];
   const isIdx = r => /指数|ETF|商品|外汇/.test(String(r[2]||"")) || String(r[12]||"").includes("工具");
   DATA.forEach(s=>{
@@ -3717,17 +3736,26 @@ window.renderUniverse = function(){
   });
   secs.sort((a,b)=>{ if(a.isTool!==b.isTool) return a.isTool?1:-1; return (b.med??-999)-(a.med??-999); });
 
-  /* 全场战报 */
   let up=0,dn=0,fl=0;
   secs.forEach(s=>s.rows.forEach(r=>{ if(isIdx(r)) return;
     const d=r[16]; if(typeof d!=="number"||d===0) fl++; else if(d>0) up++; else dn++; }));
   const best = secs.find(s=>!s.isTool && s.med!=null);
   const mfmt = v => v==null ? "–" : `<span style="color:${v>0?"var(--up)":v<0?"var(--down)":"var(--text2)"}">${v>0?"+":""}${v.toFixed(1)}%</span>`;
-  const homeOn = (function(){ try{ return localStorage.getItem("homeView")==="universe"; }catch(e){ return false; } })();
-  head.innerHTML = `<div style="margin-bottom:14px"><h2>🌌 股票宇宙</h2>
+  const homeOn = pref("homeView")==="universe";
+  head.innerHTML = `<div style="margin-bottom:10px"><h2>🌌 股票宇宙</h2>
     <span class="stat">全量标的一屏总览 · <span style="color:var(--up)">涨 ${up}</span> · <span style="color:var(--down)">跌 ${dn}</span> · 平 ${fl}${best?` · 今日最强：${best.sec.replace(/^\d+\s*/,"")} ${mfmt(best.med)}`:""}</span>
+    <span class="uni-mode">
+      <button data-uniopt="mode:cloud" class="${mode==="cloud"?"on":""}">🧩 胶囊云</button>
+      <button data-uniopt="mode:bubble" class="${mode==="bubble"?"on":""}">🫧 泡泡图</button>
+      ${mode==="bubble"?`<button data-uniopt="size:chg" class="${sizeBy==="chg"?"on":""}">大小=涨跌</button>
+      <button data-uniopt="size:mc" class="${sizeBy==="mc"?"on":""}">大小=市值</button>`:""}
+    </span>
     <button class="homebtn${homeOn?" on":""}" id="uni-home">${homeOn?"⭐ 已设为默认首页":"☆ 设为默认首页"}</button>
-    <div style="font-size:11.5px;color:var(--text2);margin-top:5px">胶囊颜色=当日涨跌（越深幅度越大）· 大小=美元市值档位 · 板块按今日强弱排序 · 悬停/点击看简介与研报</div></div>`;
+    <div style="font-size:11.5px;color:var(--text2);margin-top:5px">${mode==="bubble"
+      ? `泡泡大小=${sizeBy==="mc"?"美元市值":"当日涨跌幅度（谁动静大谁大颗）"} · 颜色=红绿方向 · 悬停/点击看简介与研报`
+      : "胶囊颜色=当日涨跌（越深幅度越大）· 大小=美元市值档位 · 板块按今日强弱排序 · 悬停/点击看简介与研报"}</div></div>`;
+
+  if(mode==="bubble"){ renderUniBubbles(body, secs, sizeBy); return; }
 
   const uniMcap = r => { const v = mcapVal(r); if(!v) return "";
     return v>=10000 ? "$"+(v/10000).toFixed(1)+"万亿" : "$"+Math.round(v)+"亿"; };
@@ -3750,6 +3778,53 @@ window.renderUniverse = function(){
       <div class="uni-cloud">${s.rows.map(pill).join("")}</div>
     </div>`).join("");
 };
+/* 泡泡布局：贪心圆填充（按半径降序、黄金角螺旋从中心外扩找第一个不重叠位、x越界跳过）。
+   纯DOM不用canvas物理：视觉九成、交互零重写（标的卡体系全复用），390个一次布局约百毫秒级。 */
+function renderUniBubbles(body, secs, sizeBy){
+  const rows = secs.flatMap(s=>s.rows);
+  const W = Math.max(320, body.clientWidth || Math.min(1280, innerWidth) - 32);
+  const isM = W < 640;
+  const rmin = isM?19:24, rmax = isM?52:86;
+  const val = r => sizeBy==="mc" ? Math.sqrt(mcapVal(r)||1)
+                                 : Math.min(Math.abs(typeof r[16]==="number"?r[16]:0), 12);
+  let maxV = 0; rows.forEach(r=>{ const v=val(r); if(v>maxV) maxV=v; });
+  if(!maxV) maxV = 1;
+  const items = rows.map(r=>({r, rad: Math.round(rmin + (rmax-rmin)*Math.sqrt(val(r)/maxV))}))
+                    .sort((a,b)=>b.rad-a.rad);
+  const placed = [], cx = W/2;
+  items.forEach(it=>{
+    let X=cx, Y=0;
+    for(let i=0;i<30000;i++){
+      const a=i*2.39996, d=3.4*Math.sqrt(i);
+      const x=cx+d*Math.cos(a), y=d*Math.sin(a);
+      if(x-it.rad<0 || x+it.rad>W) continue;
+      let ok=true;
+      for(const p of placed){
+        const dx=x-p.x, dy=y-p.y, rr=it.rad+p.rad+2;
+        if(dx*dx+dy*dy < rr*rr){ ok=false; break; }
+      }
+      if(ok){ X=x; Y=y; break; }
+    }
+    placed.push({x:X, y:Y, rad:it.rad, r:it.r});
+  });
+  let minY=1e9, maxY=-1e9;
+  placed.forEach(p=>{ minY=Math.min(minY,p.y-p.rad); maxY=Math.max(maxY,p.y+p.rad); });
+  const fmtMc = v => v>=10000 ? "$"+(v/10000).toFixed(1)+"万亿" : "$"+Math.round(v)+"亿";
+  const html = placed.map(p=>{
+    const r=p.r, d=r[16];
+    const mag = typeof d==="number" ? Math.abs(d) : 0;
+    const co = (typeof d!=="number"||d===0) ? "" : (d>0?"bu":"bd")+(mag>=5?3:mag>=2?2:1);
+    const fs = Math.max(9, Math.min(17, p.rad*0.30));
+    const mc = mcapVal(r);
+    const dur=(6+Math.random()*5).toFixed(1), del=(-Math.random()*8).toFixed(1);
+    return `<div class="ubub ${co}" data-code="${r[1]}" title="${r[0]}" style="left:${Math.round(p.x-p.rad)}px;top:${Math.round(p.y-minY+8-p.rad)}px;width:${p.rad*2}px;height:${p.rad*2}px;animation-duration:${dur}s;animation-delay:${del}s">
+      <span class="n" style="font-size:${fs}px">${r[0]}</span>
+      <span class="d" style="font-size:${Math.max(8,Math.round(fs*0.82))}px;font-weight:700;color:${typeof d==="number"?(d>0?"var(--up)":d<0?"var(--down)":"var(--text2)"):"var(--text2)"}">${typeof d==="number"?(d>0?"+":"")+d.toFixed(1)+"%":"–"}</span>
+      ${(mc && p.rad>=(isM?40:52))?`<span class="m" style="font-size:${Math.max(8,Math.round(fs*0.66))}px">${fmtMc(mc)}</span>`:""}
+    </div>`;
+  }).join("");
+  body.innerHTML = `<div class="uni-bwrap" style="height:${Math.round(maxY-minY+16)}px">${html}</div>`;
+}
 /* 宇宙交互：点击=钉住标的卡；桌面悬停=同卡即览（鼠标可移入卡内点链接，移出即收）。
    触屏不做悬停（幽灵浮窗铁律），点击走卡。默认首页开关同处委托。 */
 (function(){
@@ -3764,7 +3839,11 @@ window.renderUniverse = function(){
       if(window.renderUniverse) renderUniverse();
       return;
     }
-    const p = e.target.closest ? e.target.closest(".upill") : null;
+    const ob = e.target.closest ? e.target.closest("[data-uniopt]") : null;
+    if(ob){ const kv=ob.dataset.uniopt.split(":");
+      try{ localStorage.setItem(kv[0]==="mode"?"uniMode":"uniSize", kv[1]); }catch(x){}
+      if(window.renderUniverse) renderUniverse(); return; }
+    const p = e.target.closest ? e.target.closest(".upill,.ubub") : null;
     if(!p) return;
     e.stopPropagation();
     const rc = p.getBoundingClientRect();
@@ -3777,7 +3856,7 @@ window.renderUniverse = function(){
     const cancelClose = ()=>{ if(ct){ clearTimeout(ct); ct=null; } };
     const scheduleClose = ()=>{ cancelClose(); ct=setTimeout(()=>{ window.closeStip && closeStip(); }, 280); };
     document.addEventListener("mouseover", e=>{
-      const p = e.target.closest ? e.target.closest(".upill") : null;
+      const p = e.target.closest ? e.target.closest(".upill,.ubub") : null;
       if(p){
         cancelClose(); clearTimeout(ht);
         ht = setTimeout(()=>{ const rc=p.getBoundingClientRect();
@@ -3787,9 +3866,9 @@ window.renderUniverse = function(){
       if(e.target.closest && e.target.closest("#stip")){ cancelClose(); }
     });
     document.addEventListener("mouseout", e=>{
-      const p = e.target.closest ? e.target.closest(".upill") : null;
+      const p = e.target.closest ? e.target.closest(".upill,.ubub") : null;
       const toTip = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest("#stip");
-      const toPill = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(".upill");
+      const toPill = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(".upill,.ubub");
       if(p){ clearTimeout(ht); if(!toTip && !toPill) scheduleClose(); return; }
       if(e.target.closest && e.target.closest("#stip") && !toTip){
         const v = document.getElementById("view-universe");
