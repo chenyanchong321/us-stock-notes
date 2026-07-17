@@ -5732,6 +5732,19 @@
      "ath_floor": 0
     },
     {
+     "name": "石头科技",
+     "code": "688169",
+     "market": "A股",
+     "yahoo": "688169.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 257.11,
+      "approx": false
+     },
+     "mcap_base_price": 99.17
+    },
+    {
      "name": "群核科技",
      "code": "00068",
      "market": "港股",
@@ -5822,7 +5835,8 @@
      "name": "应用场景整机",
      "codes": [
       "ISRG",
-      "SYM"
+      "SYM",
+      "688169"
      ]
     },
     {
