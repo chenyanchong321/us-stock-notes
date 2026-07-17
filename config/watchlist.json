@@ -1137,6 +1137,20 @@
      "ath_floor": 0
     },
     {
+     "name": "德明利",
+     "code": "001309",
+     "market": "A股",
+     "yahoo": "001309.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1352,
+      "approx": true
+     },
+     "mcap_base_price": 596.16,
+     "ath_floor": 0
+    },
+    {
      "name": "兆易创新",
      "code": "603986",
      "market": "A股",
@@ -1210,7 +1224,8 @@
      "name": "存储模组（A股）",
      "codes": [
       "301308",
-      "688525"
+      "688525",
+      "001309"
      ]
     },
     {
