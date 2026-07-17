@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>投研报告 · 烟囱的美股学习笔记</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+/* 独立研报阅读页（2026-07-18 主人定稿：与学习笔记同一套白纸模板、真实页面跳转→iOS右滑返回可用）。
+   壳公开，正文经 /api/report-html 验token注入，游客只见登录提示——会员安全机制与SPA内嵌版完全一致。 */
+:root{--bg:#ffffff;--panel:#f6f8fa;--panel2:#eef1f4;--border:#e2e5e9;--text:#1f2328;--text2:#6b7280;--accent:#2563eb;--gold:#b8860b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:16px;line-height:1.85}
+#bar{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);z-index:10}
+#bar .in{max-width:760px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px}
+#bar a{color:var(--text2);text-decoration:none;font-size:14px;cursor:pointer}
+#bar a:hover{color:var(--accent)}
+#bar .site{margin-left:auto;font-size:13px;color:var(--text2)}
+#bar .site b{color:var(--accent);font-weight:600}
+main{max-width:760px;margin:0 auto;padding:28px 20px 90px}
+.head h1{font-size:26px;line-height:1.4;margin-bottom:12px}
+.meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.meta .date{font-size:13px;color:var(--text2)}
+.meta .tag{font-size:12px;color:var(--accent);background:rgba(74,140,240,.12);border-radius:4px;padding:2px 8px}
+.meta .pdf{font-size:13px;color:var(--gold);text-decoration:none;border:1px solid var(--gold);border-radius:6px;padding:3px 10px;background:none;cursor:pointer}
+.head{border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:26px}
+article h1{font-size:22px;margin:38px 0 14px;line-height:1.4}
+article h2{font-size:20px;margin:34px 0 12px;padding-left:10px;border-left:3px solid var(--accent);line-height:1.4}
+article h3{font-size:17px;margin:26px 0 10px}
+article p{margin:0 0 16px}
+article ul,article ol{margin:0 0 16px 1.4em}
+article li{margin-bottom:6px}
+article img,article svg{max-width:100%;height:auto;border-radius:10px;display:block;margin:18px auto;background:#fff;border:1px solid var(--border)}
+article blockquote{border-left:3px solid var(--gold);background:var(--panel);border-radius:0 8px 8px 0;padding:12px 16px;margin:0 0 16px;color:var(--text2)}
+article table{border-collapse:collapse;width:100%;margin:0 0 18px;font-size:14px;word-break:break-word;table-layout:auto;max-width:100%}
+article th,article td{border:1px solid var(--border);padding:8px 12px;text-align:left;white-space:normal;vertical-align:top}
+article th{background:var(--panel);color:var(--text2)}
+article tr:nth-child(even) td{background:rgba(246,248,250,.7)}
+article a{color:var(--accent)}
+article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+article .rr-box{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:10px 14px;margin:14px 0;font-size:14px}
+.rr-load{text-align:center;color:var(--text2);padding:60px 0;font-size:14px;line-height:2.2}
+.rr-load a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<div id="bar"><div class="in">
+  <a id="back">← 返回</a>
+  <span class="site">📓 <b>烟囱</b>的美股学习笔记</span>
+</div></div>
+<main>
+  <div class="head" id="head" style="display:none">
+    <h1 id="t"></h1>
+    <div class="meta" id="meta"></div>
+  </div>
+  <article id="body"><div class="rr-load">📑 加载中…</div></article>
+</main>
+<script>
+(function(){
+  var API = location.host==="stock.ziyuanai.top" ? "/api" : "https://stock.ziyuanai.top/api";
+  var id = new URLSearchParams(location.search).get("id") || "";
+  var body = document.getElementById("body");
+
+  /* 返回：来处是本站→浏览器真返回（右滑同源）；直链进入→回研报集合页 */
+  document.getElementById("back").addEventListener("click", function(){
+    if(document.referrer && document.referrer.indexOf(location.host)>-1 && history.length>1) history.back();
+    else location.href = "index.html?view=reports";
+  });
+
+  function lock(msg){
+    body.innerHTML = '<div class="rr-load">'+msg+'<br><a href="index.html?view=reports">→ 去主站登录 / 返回报告列表</a></div>';
+  }
+  if(!id){ lock("未指定报告"); return; }
+
+  /* 公开目录：标题/日期/代码标签/页数（橱窗信息） */
+  fetch(API+"/reports").then(function(r){return r.json();}).then(function(list){
+    var arr = (list && list.reports) || [];
+    var rec = arr.find(function(x){return x.id===id;});
+    if(!rec) return;
+    document.title = rec.title + " · 烟囱的美股学习笔记";
+    document.getElementById("t").textContent = rec.title;
+    var m = document.getElementById("meta");
+    m.innerHTML = '<span class="date">'+(rec.date||"")+'</span><span class="date">'+(rec.src||"")+'</span>'
+      + (rec.codes||[]).map(function(c){return '<span class="tag">'+c+'</span>';}).join("")
+      + '<button class="pdf" id="pdfbtn">⬇ 下载原版 PDF</button>';
+    document.getElementById("head").style.display = "";
+    document.getElementById("pdfbtn").addEventListener("click", openPdf);
+  }).catch(function(){});
+
+  function openPdf(){
+    var tk = localStorage.getItem("atk");
+    if(!tk){ lock("🔒 请先登录会员"); return; }
+    var w = window.open("", "_blank");
+    if(w) try{ w.document.write('<title>报告加载中…</title><body style="font:14px sans-serif;padding:40px 20px;text-align:center">📑 报告加载中，请稍候…</body>'); }catch(e){}
+    fetch(API+"/report?id="+encodeURIComponent(id), {headers:{Authorization:"Bearer "+tk}})
+      .then(function(r){ if(!r.ok) throw 0; return r.blob(); })
+      .then(function(b){ var u=URL.createObjectURL(b); if(w) w.location=u; else location.href=u; })
+      .catch(function(){ if(w) w.close(); alert("报告获取失败，请确认登录状态"); });
+  }
+
+  /* 正文：验票取货 */
+  var tk = localStorage.getItem("atk");
+  if(!tk){ lock("🔒 本报告为会员专属"); return; }
+  fetch(API+"/report-html?id="+encodeURIComponent(id), {headers:{Authorization:"Bearer "+tk}})
+    .then(function(r){
+      if(r.status===401||r.status===403){ localStorage.removeItem("atk"); lock("🔒 登录已过期"); throw 0; }
+      if(!r.ok) throw new Error("HTTP "+r.status);
+      return r.json();
+    })
+    .then(function(d){
+      body.innerHTML = d.html || '<div class="rr-load">正文整理中，可先下载原版 PDF 阅读</div>';
+      /* 目录：与学习笔记同一份脚本，正文注入后再挂载（DOMContentLoaded 已过，toc.js 会立即初始化） */
+      var s=document.createElement("script"); s.src="articles/toc.js?v=4"; document.body.appendChild(s);
+    })
+    .catch(function(e){ if(e===0) return; body.innerHTML='<div class="rr-load">正文加载失败，可尝试下载原版 PDF</div>'; });
+})();
+</script>
+</body>
+</html>

@@ -3536,6 +3536,10 @@ window.openReport = function(id){
 /* 研报阅读页（2026-07-16 主人定稿：主阅读走网页文章，PDF只作下载备选）。
    空壳+验票取货：页面外壳公开，正文经 /api/report-html 验 token 后注入，游客只会看到登录提示。 */
 window.openReader = function(id){
+  /* 2026-07-18 主人定稿：研报阅读页独立成页（reader.html，与学习笔记同模板），真实跳转→
+     浏览器历史入栈→iOS右滑返回可用；正文仍走 /api/report-html 验票。SPA内嵌 repread 视图退役（下方旧代码保留仅作回退保险）。 */
+  location.href = "reader.html?id=" + encodeURIComponent(id);
+  return;
   const rec = REPORTS.find(x=>x.id===id);
   /* 记住来处（2026-07-16 主人需求）：从数据面板/集合页/浮窗进来的，返回时回到来处而非一律去集合页 */
   try{
