@@ -97,6 +97,7 @@ html[data-theme="light"] .evtag.macro{color:#c04545}                           /
   --header-h:56px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}   /* 禁iOS字体膨胀：宽容器文字被系统放大的元凶（2026-07-18） */
 html,body{overflow-x:clip;overscroll-behavior-x:none;max-width:100%}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:14px}
 
@@ -498,11 +499,13 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 .rr-article p{margin:0 0 12px}
 .rr-article b{color:var(--text)}
 .rr-article .rr-box{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:10px 14px;margin:14px 0;font-size:13.5px}
-.rr-article table{width:100%;border-collapse:collapse;margin:14px 0;font-size:12.5px}
-.rr-article th,.rr-article td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top}
-.rr-article th{background:var(--panel);color:var(--text2);font-weight:600;white-space:nowrap}
+/* 表格铁律（2026-07-18 主人定）：单元格文字直接换行、表格永不超屏宽——用户不会也不该左右滑；
+   横滚容器还会触发 iOS 字体膨胀把文字撑到巨大（燃机GTCC表实测）。 */
+.rr-article table{width:100%;border-collapse:collapse;margin:14px 0;font-size:12.5px;table-layout:auto;word-break:break-word;max-width:100%}
+.rr-article th,.rr-article td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top;white-space:normal}
+.rr-article th{background:var(--panel);color:var(--text2);font-weight:600}
 .rr-article .num{font-variant-numeric:tabular-nums}
-@media(max-width:860px){.rr-article table{display:block;overflow-x:auto}}
+@media(max-width:860px){.rr-article table{font-size:12px}.rr-article th,.rr-article td{padding:5px 6px}}   /* 原 display:block+overflow-x 横滚方案已废：反模式+触发iOS字体膨胀 */
 .rr-load{text-align:center;color:var(--text2);padding:50px 0;font-size:13px}
 
 /* ========== 产业地图（2026-07-17 主人定稿：A骨架+C灵魂，链路/阵营双投影）========== */

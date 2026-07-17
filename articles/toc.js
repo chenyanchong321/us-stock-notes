@@ -34,6 +34,12 @@
 
     var st = document.createElement("style");
     st.textContent =
+      /* 全站铁律注入（2026-07-18 主人定）：①禁 iOS 字体膨胀（宽表格文字被系统放大的元凶）；
+         ②表格单元格直接换行、永不横向滚动（用户不会也不该左右滑） */
+      "html{-webkit-text-size-adjust:100%;text-size-adjust:100%}" +
+      "article table{table-layout:auto;word-break:break-word;max-width:100%}" +
+      "article th,article td{white-space:normal}" +
+      "@media(max-width:640px){article table{font-size:12.5px}article th,article td{padding:6px 7px}}" +
       "article h1,article h2,article h3{scroll-margin-top:74px}" +
       /* 文首目录卡（窄屏用） */
       "#autotoc{background:var(--panel,#f6f8fa);border:1px solid var(--border,#e2e5e9);border-radius:10px;padding:14px 18px;margin:0 0 28px}" +
@@ -60,6 +66,12 @@
       "font-size:17px;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.12)}" +
       "#tocfab:hover{color:var(--accent,#2563eb);border-color:var(--accent,#2563eb)}" +
       "@media" + WIDE + "{#tocfab{display:none !important}}" +
+      /* ↑ 回到顶部（2026-07-18 主人定：☰管换章、↑管回顶，两个动作都要有）：窄屏叠在☰上方，宽屏（☰隐藏）落回下角 */
+      "#toctop{position:fixed;right:16px;bottom:70px;z-index:60;width:42px;height:42px;border-radius:50%;" +
+      "background:var(--panel,#f6f8fa);border:1px solid var(--border,#e2e5e9);color:var(--text2,#6b7280);" +
+      "font-size:17px;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.12)}" +
+      "#toctop:hover{color:var(--accent,#2563eb);border-color:var(--accent,#2563eb)}" +
+      "@media" + WIDE + "{#toctop{bottom:18px}}" +
       "#tocdrw{position:fixed;inset:0;z-index:120;display:none}" +
       "#tocdrw.show{display:block}" +
       "#tocdrw .msk{position:absolute;inset:0;background:rgba(0,0,0,.45)}" +
@@ -90,6 +102,10 @@
     var fab = document.createElement("button");
     fab.id = "tocfab"; fab.title = "目录"; fab.textContent = "☰";
     document.body.appendChild(fab);
+    var topBtn = document.createElement("button");
+    topBtn.id = "toctop"; topBtn.title = "回到顶部"; topBtn.textContent = "↑";
+    topBtn.addEventListener("click", function(){ window.scrollTo(0,0); });
+    document.body.appendChild(topBtn);
     var drw = document.createElement("div");
     drw.id = "tocdrw";
     drw.innerHTML = '<div class="msk"></div><div class="pan"><div class="t">📑 目录</div>' + linksHTML("") + "</div>";
@@ -119,7 +135,9 @@
         if(items[i].getBoundingClientRect().top <= y) id = items[i].id; else break;
       }
       if(id !== curId){ curId = id; syncCur(); }
-      fab.style.display = window.scrollY > 300 ? "flex" : "none";
+      var on = window.scrollY > 300;
+      fab.style.display = on ? "flex" : "none";
+      topBtn.style.display = on ? "flex" : "none";
     }
     function onScroll(){
       var n = Date.now();
