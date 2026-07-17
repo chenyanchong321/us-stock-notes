@@ -47,20 +47,25 @@ html[data-theme="light"] .perf-pill.dirp.on,
 html[data-theme="light"] .imap-pills button.on{background:var(--gold);border-color:var(--gold);color:#fff}
 html[data-theme="light"] tr.grp td{background:rgba(47,111,214,.13)}  /* 分组行水洗加深一档（行带不宜实心） */
 /* 四轮微调（zoom显微镜巡检）：深色残留重阴影在白底像"黑抹布"，浅色统一减淡 */
-html[data-theme="light"] #floatHead{box-shadow:0 2px 8px rgba(0,0,0,.12)}
-html[data-theme="light"] #toTop{box-shadow:0 3px 10px rgba(0,0,0,.15)}
+html[data-theme="light"] #floatHead{box-shadow:0 2px 8px rgba(93,77,48,.16)}
+html[data-theme="light"] #toTop{box-shadow:0 3px 10px rgba(93,77,48,.20)}
 html[data-theme="light"] #dictbar{box-shadow:none}
-html[data-theme="light"] #authmodal .abox{box-shadow:0 12px 36px rgba(0,0,0,.25)}
-html[data-theme="light"] .imapintro-tip{box-shadow:0 6px 18px rgba(0,0,0,.15) !important}
-@media(max-width:860px){html[data-theme="light"] #dictbar{box-shadow:0 6px 18px rgba(0,0,0,.15)}}
-html[data-theme="light"] #stip{box-shadow:0 8px 24px rgba(0,0,0,.16)}
-html[data-theme="light"] #moremenu,html[data-theme="light"] #mktfloat,html[data-theme="light"] #scalemenu{box-shadow:0 6px 16px rgba(0,0,0,.14)}
+html[data-theme="light"] #authmodal .abox{box-shadow:0 12px 36px rgba(93,77,48,.30)}
+html[data-theme="light"] .imapintro-tip{box-shadow:0 6px 18px rgba(93,77,48,.20) !important}
+@media(max-width:860px){html[data-theme="light"] #dictbar{box-shadow:0 6px 18px rgba(93,77,48,.20)}}
+/* 五轮（redesign-skill审计）：按压物理反馈 + 键盘焦点环（皆浅色专属，深色零动） */
+html[data-theme="light"] :is(button,.stat.vc,.tab,.repb,.rep-card):active{transform:scale(.98)}
+html[data-theme="light"] :is(button,a,input,.tab):focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* 五轮（redesign-skill审计）：浅色影子带底色色相（暖底投暖影），纯黑影在暖纸底显脏 */
+html[data-theme="light"] #stip{box-shadow:0 8px 24px rgba(93,77,48,.20)}
+html[data-theme="light"] #moremenu,html[data-theme="light"] #mktfloat,html[data-theme="light"] #scalemenu{box-shadow:0 6px 16px rgba(93,77,48,.18)}
 /* 三板斧之投影：卡片/面板浮起来（Material elevation 思路） */
 html[data-theme="light"] .stat,
 html[data-theme="light"] .card,
 html[data-theme="light"] .hcard,
-html[data-theme="light"] .rep-card{box-shadow:0 1px 3px rgba(0,0,0,.07)}
-html[data-theme="light"] .tbl-wrap{box-shadow:0 1px 4px rgba(0,0,0,.06)}
+html[data-theme="light"] .imap-brick,
+html[data-theme="light"] .rep-card{box-shadow:0 1px 3px rgba(93,77,48,.11)}
+html[data-theme="light"] .tbl-wrap{box-shadow:0 1px 4px rgba(93,77,48,.10)}
 /* 7处写死颜色的浅色修复 */
 html[data-theme="light"] #mbottom{background:rgba(255,255,255,.92)}            /* 底部三按钮栏：深色磨砂→白磨砂 */
 html[data-theme="light"] #db-head button.on{color:#fff}                        /* 金底选中：深字→白字 */
