@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-17 16:45 北京时间",
+ "updated": "2026-07-17 17:00 北京时间",
  "earnings": [
   {
    "d": "2026-07-16",
@@ -51,18 +51,6 @@
   },
   {
    "d": "2026-07-23",
-   "code": "NOK",
-   "name": "诺基亚",
-   "est": false
-  },
-  {
-   "d": "2026-07-23",
-   "code": "STM",
-   "name": "意法半导体",
-   "est": false
-  },
-  {
-   "d": "2026-07-23",
    "code": "IBM",
    "name": "IBM",
    "est": false
@@ -101,12 +89,6 @@
    "d": "2026-07-27",
    "code": "011070",
    "name": "LG Innotek",
-   "est": false
-  },
-  {
-   "d": "2026-07-28",
-   "code": "GLW",
-   "name": "康宁",
    "est": false
   },
   {
@@ -153,18 +135,6 @@
   },
   {
    "d": "2026-07-29",
-   "code": "STX",
-   "name": "希捷科技",
-   "est": false
-  },
-  {
-   "d": "2026-07-29",
-   "code": "APH",
-   "name": "安费诺",
-   "est": false
-  },
-  {
-   "d": "2026-07-29",
    "code": "VRT",
    "name": "Vertiv Holdings",
    "est": false
@@ -173,12 +143,6 @@
    "d": "2026-07-29",
    "code": "KLAC",
    "name": "科磊",
-   "est": false
-  },
-  {
-   "d": "2026-07-29",
-   "code": "TER",
-   "name": "泰瑞达",
    "est": false
   },
   {
@@ -345,12 +309,6 @@
   },
   {
    "d": "2026-07-31",
-   "code": "ETN",
-   "name": "伊顿",
-   "est": false
-  },
-  {
-   "d": "2026-07-31",
    "code": "6981",
    "name": "村田制作所",
    "est": false
@@ -425,12 +383,6 @@
    "d": "2026-08-04",
    "code": "PLTR",
    "name": "Palantir",
-   "est": false
-  },
-  {
-   "d": "2026-08-05",
-   "code": "AMD",
-   "name": "AMD",
    "est": false
   },
   {
