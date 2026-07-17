@@ -1,16 +1,16 @@
-/* 文章自动目录（2026-07-18 主人需求：所有长文可点击跳转章节）。
+/* 文章自动目录 v2（2026-07-18 主人定稿，参照 deepread.to 文档阅读器布局）。
    用法：文章 </body> 前加 <script defer src="toc.js"></script>，零配置。
-   行为：扫描 article 内 h1/h2 → 生成目录卡（插在 .head 之后）；
-   标题文本为「目录」的手写目录块整段隐藏（避免与自动目录重复）；
-   点击平滑滚动（吸顶栏补偿）；滚过目录后右下角出现 ☰ 浮钮一键回目录；
-   章节标题少于3个的短文不生成（没必要）。 */
+   桌面(≥1280px)：目录常驻左侧栏，随滚动高亮当前章节，点击瞬时跳转（文首不再放目录卡）。
+   窄屏/手机：文首目录卡（开篇总览）+ 右下 ☰ 弹出目录抽屉（就地选章，不用回顶部）。
+   手写「目录」块自动隐藏；章节<3不生成。跳转一律瞬时（smooth 长文动画慢且易被吞，铁律）。 */
 (function(){
+  var WIDE = "(min-width:1280px)";
   function init(){
     var art = document.querySelector("article") || document.querySelector("main");
     if(!art) return;
     var hs = [].slice.call(art.querySelectorAll("h1,h2"));
 
-    /* 隐藏手写目录块：标题=「目录」→ 该标题与其后兄弟节点直到下一个 h1/h2 全部隐藏 */
+    /* 隐藏手写目录块 */
     var hidden = [];
     hs.forEach(function(h){
       if(h.textContent.trim().replace(/^[📑📖\s]+/,"") === "目录"){
@@ -20,57 +20,110 @@
         while(n && !/^H[12]$/.test(n.tagName)){ n.style.display = "none"; n = n.nextElementSibling; }
       }
     });
-
     var items = hs.filter(function(h){ return hidden.indexOf(h) < 0; });
     if(items.length < 3) return;
 
-    /* 样式（脚本自带，文章文件零改动） */
+    var hasH1 = items.some(function(h){ return h.tagName === "H1"; });
+    items.forEach(function(h,i){ if(!h.id) h.id = "sec-toc-" + i; });
+    function linksHTML(cls){
+      return items.map(function(h){
+        var lv = (hasH1 && h.tagName === "H2") ? 2 : 1;
+        return '<a class="' + cls + '" href="#' + h.id + '" data-tid="' + h.id + '" data-lv="' + lv + '">' + h.textContent.trim() + "</a>";
+      }).join("");
+    }
+
     var st = document.createElement("style");
-    /* 不用 scroll-behavior:smooth：长文一跳几千像素，平滑动画又慢又易被打断（2026-07-18 实测跳转被吞）。
-       原生锚点瞬时跳转=维基百科式，干脆可靠，scroll-margin 负责吸顶补偿。 */
     st.textContent =
       "article h1,article h2,article h3{scroll-margin-top:74px}" +
+      /* 文首目录卡（窄屏用） */
       "#autotoc{background:var(--panel,#f6f8fa);border:1px solid var(--border,#e2e5e9);border-radius:10px;padding:14px 18px;margin:0 0 28px}" +
       "#autotoc .t{font-weight:700;font-size:15px;margin-bottom:8px}" +
-      "#autotoc .ls{}" +
       "@media(min-width:640px){#autotoc .ls{column-count:2;column-gap:30px}}" +
+      "@media" + WIDE + "{#autotoc{display:none}}" +
       "#autotoc a{display:block;color:var(--accent,#2563eb);text-decoration:none;font-size:14px;line-height:1.55;padding:2.5px 0;break-inside:avoid}" +
       "#autotoc a:hover{text-decoration:underline}" +
       "#autotoc a[data-lv='2']{padding-left:1.1em;color:var(--text2,#6b7280)}" +
-      "#autotoc a[data-lv='2']:hover{color:var(--accent,#2563eb)}" +
+      /* 左侧常驻目录（桌面） */
+      "#tocside{display:none}" +
+      "@media" + WIDE + "{#tocside{display:block;position:fixed;z-index:5;top:86px;bottom:30px;width:224px;" +
+      "left:max(14px,calc(50% - 380px - 250px));overflow-y:auto;overscroll-behavior:contain;" +
+      "font-size:13px;padding-right:6px}}" +
+      "#tocside .t{font-weight:700;font-size:13px;color:var(--text2,#6b7280);margin:0 0 8px;letter-spacing:.5px}" +
+      "#tocside a{display:block;color:var(--text2,#6b7280);text-decoration:none;line-height:1.5;padding:4px 8px;" +
+      "border-left:2px solid var(--border,#e2e5e9);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}" +
+      "#tocside a:hover{color:var(--accent,#2563eb)}" +
+      "#tocside a[data-lv='2']{padding-left:20px}" +
+      "#tocside a.cur{color:var(--accent,#2563eb);border-left-color:var(--accent,#2563eb);font-weight:600;background:rgba(37,99,235,.06)}" +
+      /* ☰ 抽屉（窄屏） */
       "#tocfab{position:fixed;right:16px;bottom:18px;z-index:60;width:42px;height:42px;border-radius:50%;" +
       "background:var(--panel,#f6f8fa);border:1px solid var(--border,#e2e5e9);color:var(--text2,#6b7280);" +
       "font-size:17px;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.12)}" +
-      "#tocfab:hover{color:var(--accent,#2563eb);border-color:var(--accent,#2563eb)}";
+      "#tocfab:hover{color:var(--accent,#2563eb);border-color:var(--accent,#2563eb)}" +
+      "@media" + WIDE + "{#tocfab{display:none !important}}" +
+      "#tocdrw{position:fixed;inset:0;z-index:120;display:none}" +
+      "#tocdrw.show{display:block}" +
+      "#tocdrw .msk{position:absolute;inset:0;background:rgba(0,0,0,.45)}" +
+      "#tocdrw .pan{position:absolute;left:0;top:0;bottom:0;width:min(78vw,320px);background:var(--bg,#fff);" +
+      "border-right:1px solid var(--border,#e2e5e9);padding:18px 14px calc(18px + env(safe-area-inset-bottom));overflow-y:auto;overscroll-behavior:contain}" +
+      "#tocdrw .t{font-weight:700;font-size:15px;margin-bottom:10px}" +
+      "#tocdrw a{display:block;color:var(--text,#1f2328);text-decoration:none;font-size:14.5px;line-height:1.5;" +
+      "padding:9px 8px;border-radius:6px;border-left:2px solid transparent}" +
+      "#tocdrw a[data-lv='2']{padding-left:24px;color:var(--text2,#6b7280)}" +
+      "#tocdrw a.cur{color:var(--accent,#2563eb);background:rgba(37,99,235,.07);border-left-color:var(--accent,#2563eb);font-weight:600}";
     document.head.appendChild(st);
 
-    /* 目录卡：一级=文内h1（多章大部头），二级=h2；纯h2文章全部按一级排 */
-    var hasH1 = items.some(function(h){ return h.tagName === "H1"; });
-    var links = items.map(function(h, i){
-      if(!h.id) h.id = "sec-toc-" + i;
-      var lv = (hasH1 && h.tagName === "H2") ? 2 : 1;
-      return '<a href="#' + h.id + '" data-lv="' + lv + '">' + h.textContent.trim() + "</a>";
-    }).join("");
+    /* 文首目录卡 */
     var box = document.createElement("nav");
     box.id = "autotoc";
-    box.innerHTML = '<div class="t">📑 目录 · 点击跳转</div><div class="ls">' + links + "</div>";
+    box.innerHTML = '<div class="t">📑 目录 · 点击跳转</div><div class="ls">' + linksHTML("") + "</div>";
     var head = document.querySelector(".head");
     if(head && head.parentElement) head.parentElement.insertBefore(box, head.nextElementSibling);
     else art.insertBefore(box, art.firstChild);
 
-    /* ☰ 浮钮：滚过目录卡后出现，点击回目录 */
+    /* 左侧栏 */
+    var side = document.createElement("nav");
+    side.id = "tocside";
+    side.innerHTML = '<div class="t">目录</div>' + linksHTML("");
+    document.body.appendChild(side);
+
+    /* ☰ + 抽屉 */
     var fab = document.createElement("button");
-    fab.id = "tocfab"; fab.title = "回到目录"; fab.textContent = "☰";
-    fab.addEventListener("click", function(){ box.scrollIntoView({block:"start"}); });
+    fab.id = "tocfab"; fab.title = "目录"; fab.textContent = "☰";
     document.body.appendChild(fab);
+    var drw = document.createElement("div");
+    drw.id = "tocdrw";
+    drw.innerHTML = '<div class="msk"></div><div class="pan"><div class="t">📑 目录</div>' + linksHTML("") + "</div>";
+    document.body.appendChild(drw);
+    fab.addEventListener("click", function(){ drw.classList.add("show"); syncCur(); });
+    drw.addEventListener("click", function(e){
+      if(e.target.closest("a")){ drw.classList.remove("show"); return; }   /* 原生锚点跳转后关抽屉 */
+      if(!e.target.closest(".pan")) drw.classList.remove("show");
+    });
+
+    /* 当前章节高亮（滚动驱动，三处列表同步） */
+    var curId = "";
+    function syncCur(){
+      document.querySelectorAll("#tocside a,#tocdrw a").forEach(function(a){
+        a.classList.toggle("cur", a.dataset.tid === curId);
+      });
+      var act = side.querySelector("a.cur");
+      if(act) act.scrollIntoView({block:"nearest"});
+    }
     var tick = false;
-    window.addEventListener("scroll", function(){
+    function onScroll(){
       if(tick) return; tick = true;
       requestAnimationFrame(function(){
         tick = false;
-        fab.style.display = (window.scrollY > box.offsetTop + box.offsetHeight + 100) ? "flex" : "none";
+        var y = 100, id = items[0].id;
+        for(var i=0;i<items.length;i++){
+          if(items[i].getBoundingClientRect().top <= y) id = items[i].id; else break;
+        }
+        if(id !== curId){ curId = id; syncCur(); }
+        fab.style.display = window.scrollY > 300 ? "flex" : "none";
       });
-    }, {passive:true});
+    }
+    window.addEventListener("scroll", onScroll, {passive:true});
+    onScroll();
   }
   if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();

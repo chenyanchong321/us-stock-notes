@@ -3553,22 +3553,77 @@ window.openReader = function(id){
     .then(d=>{ body.innerHTML = d.html || '<div class="rr-load">正文整理中，可先下载原版 PDF 阅读</div>'; buildReaderToc(body); window.scrollTo(0,0); })
     .catch(e=>{ if(e===0) return; body.innerHTML = '<div class="rr-load">正文加载失败，可点上方按钮下载原版 PDF</div>'; });
 };
-/* 研报阅读页自动目录（2026-07-18 主人需求，与 articles/toc.js 同款逻辑的内嵌版）：
-   扫正文 h2 生成可点击目录卡，插在正文最前；点击平滑滚动（scroll-margin 吸顶补偿）。 */
+/* 研报阅读页自动目录 v2（2026-07-18 主人定稿，与 articles/toc.js 同款 deepread 布局）：
+   桌面(≥1400px)左侧常驻目录+滚动高亮；窄屏=文首目录卡+右下☰弹抽屉就地选章。
+   全部元素挂在 #view-repread 内——切走视图自动隐藏；每次装载先清旧件。跳转一律瞬时。 */
 function buildReaderToc(body){
   try{
+    const view=document.getElementById("view-repread");
+    view.querySelectorAll("#rrtocside,#rrtocfab,#rrtocdrw,#rrtocst").forEach(x=>x.remove());
     const hs=[...body.querySelectorAll("h2")].filter(h=>h.textContent.trim()!=="目录");
     if(hs.length<3) return;
-    const links=hs.map((h,i)=>{ if(!h.id) h.id="rr-sec-"+i; h.style.scrollMarginTop="calc(var(--header-h) + 14px)";
-      return `<a href="javascript:;" data-t="${h.id}" style="display:block;color:var(--accent);text-decoration:none;font-size:13.5px;line-height:1.6;padding:2px 0;break-inside:avoid">${h.textContent.trim()}</a>`; }).join("");
+    hs.forEach((h,i)=>{ if(!h.id) h.id="rr-sec-"+i; h.style.scrollMarginTop="calc(var(--header-h) + 14px)"; });
+    const links=cls=>hs.map(h=>`<a class="${cls}" href="javascript:;" data-t="${h.id}">${h.textContent.trim()}</a>`).join("");
+    const st=document.createElement("style"); st.id="rrtocst";
+    st.textContent=
+      `#rrtocside{display:none}
+       @media(min-width:1400px){#rrtocside{display:block;position:fixed;z-index:5;top:calc(var(--header-h) + 26px);bottom:30px;width:224px;left:max(14px,calc(50% - 430px - 250px));overflow-y:auto;overscroll-behavior:contain;font-size:13px}
+         .rr-toc{display:none}}
+       #rrtocside .t{font-weight:700;font-size:13px;color:var(--text2);margin:0 0 8px;letter-spacing:.5px}
+       #rrtocside a{display:block;color:var(--text2);text-decoration:none;line-height:1.5;padding:4px 8px;border-left:2px solid var(--border);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+       #rrtocside a:hover{color:var(--accent)}
+       #rrtocside a.cur{color:var(--accent);border-left-color:var(--accent);font-weight:600;background:rgba(47,111,214,.07)}
+       #rrtocfab{position:fixed;right:22px;bottom:74px;z-index:60;width:42px;height:42px;border-radius:50%;background:var(--panel2);border:1px solid var(--border);color:var(--text2);font-size:17px;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.25)}
+       #rrtocfab:hover{color:var(--accent);border-color:var(--accent)}
+       @media(min-width:1400px){#rrtocfab{display:none !important}}
+       @media(max-width:860px){#rrtocfab{right:14px;bottom:126px}}
+       #rrtocdrw{position:fixed;inset:0;z-index:250;display:none}
+       #rrtocdrw.show{display:block}
+       #rrtocdrw .msk{position:absolute;inset:0;background:rgba(0,0,0,.5)}
+       #rrtocdrw .pan{position:absolute;left:0;top:0;bottom:0;width:min(78vw,320px);background:var(--panel);border-right:1px solid var(--border);padding:18px 14px calc(18px + env(safe-area-inset-bottom));overflow-y:auto;overscroll-behavior:contain}
+       #rrtocdrw .t{font-weight:700;font-size:15px;margin-bottom:10px}
+       #rrtocdrw a{display:block;color:var(--text);text-decoration:none;font-size:14.5px;line-height:1.5;padding:9px 8px;border-radius:6px;border-left:2px solid transparent}
+       #rrtocdrw a.cur{color:var(--accent);background:rgba(47,111,214,.08);border-left-color:var(--accent);font-weight:600}`;
+    view.appendChild(st);
+    /* 文首目录卡（窄屏总览） */
     const box=document.createElement("nav");
     box.className="rr-toc";
     box.style.cssText="background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:13px 16px;margin:0 0 22px";
-    box.innerHTML=`<div style="font-weight:700;font-size:14px;margin-bottom:7px">📑 目录 · 点击跳转</div><div style="column-count:${innerWidth>=640?2:1};column-gap:26px">${links}</div>`;
-    box.addEventListener("click",e=>{ const a=e.target.closest("a[data-t]"); if(!a) return;
-      /* 瞬时跳转：长文平滑动画又慢又易被打断（toc.js 同教训） */
-      const t=document.getElementById(a.dataset.t); t && t.scrollIntoView({block:"start"}); });
+    box.innerHTML=`<div style="font-weight:700;font-size:14px;margin-bottom:7px">📑 目录 · 点击跳转</div><div style="column-count:${innerWidth>=640?2:1};column-gap:26px">${links('rrtca')}</div>`;
+    box.querySelectorAll("a").forEach(a=>a.style.cssText="display:block;color:var(--accent);text-decoration:none;font-size:13.5px;line-height:1.6;padding:2px 0;break-inside:avoid");
     body.insertBefore(box, body.firstChild);
+    /* 左侧栏 + ☰ 抽屉 */
+    const side=document.createElement("nav"); side.id="rrtocside";
+    side.innerHTML='<div class="t">目录</div>'+links("");
+    view.appendChild(side);
+    const fab=document.createElement("button"); fab.id="rrtocfab"; fab.title="目录"; fab.textContent="☰";
+    view.appendChild(fab);
+    const drw=document.createElement("div"); drw.id="rrtocdrw";
+    drw.innerHTML='<div class="msk"></div><div class="pan"><div class="t">📑 目录</div>'+links("")+'</div>';
+    view.appendChild(drw);
+    let curId="";
+    const jump=id=>{ const t=document.getElementById(id); t && t.scrollIntoView({block:"start"}); };
+    const syncCur=()=>{ view.querySelectorAll("#rrtocside a,#rrtocdrw a").forEach(a=>a.classList.toggle("cur",a.dataset.t===curId));
+      const act=side.querySelector("a.cur"); if(act) act.scrollIntoView({block:"nearest"}); };
+    view.addEventListener("click",e=>{
+      const a=e.target.closest("a[data-t]");
+      if(a){ jump(a.dataset.t); drw.classList.remove("show"); return; }
+      if(e.target===fab){ drw.classList.add("show"); syncCur(); return; }
+      if(e.target.closest("#rrtocdrw") && !e.target.closest("#rrtocdrw .pan")) drw.classList.remove("show");
+    });
+    let tk=false;
+    window.addEventListener("scroll",()=>{
+      if(tk) return; tk=true;
+      requestAnimationFrame(()=>{
+        tk=false;
+        if(view.classList.contains("hidden")||!document.getElementById("rrtocside")) return;
+        const y=(parseInt(getComputedStyle(document.documentElement).getPropertyValue("--header-h"))||56)+40;
+        let id=hs[0].id;
+        for(const h of hs){ if(h.getBoundingClientRect().top<=y) id=h.id; else break; }
+        if(id!==curId){ curId=id; syncCur(); }
+        fab.style.display=window.scrollY>300?"flex":"none";
+      });
+    },{passive:true});
   }catch(e){}
 }
 /* 统一跳转入口：会员进阅读页，游客弹登录。跳转前先收浮窗（跳转后浮窗残留＝主人真机反馈的bug） */
