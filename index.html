@@ -3702,7 +3702,8 @@ function goRepCode(code){
    悬停/点击复用 openStockCard 标的卡（简介/研报/笔记/查看行情），跨板块重复标的按首次出现去重。 */
 window.renderUniverse = function(){
   const head = document.getElementById("uni-head"), body = document.getElementById("uni-body");
-  if(!head || !window.DATA || !DATA.length) return;
+  /* DATA 是脚本级 let（全局词法作用域，不在 window 上）——守卫必须用 typeof（2026-07-18 实测踩坑） */
+  if(!head || typeof DATA==="undefined" || !DATA || !DATA.length) return;
   const seen = new Set(), secs = [];
   const isIdx = r => /指数|ETF|商品|外汇/.test(String(r[2]||"")) || String(r[12]||"").includes("工具");
   DATA.forEach(s=>{
