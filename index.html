@@ -46,6 +46,13 @@ html[data-theme="light"] #msheet .grid button.on .s{color:rgba(255,255,255,.75)}
 html[data-theme="light"] .perf-pill.dirp.on,
 html[data-theme="light"] .imap-pills button.on{background:var(--gold);border-color:var(--gold);color:#fff}
 html[data-theme="light"] tr.grp td{background:rgba(47,111,214,.13)}  /* 分组行水洗加深一档（行带不宜实心） */
+/* 四轮微调（zoom显微镜巡检）：深色残留重阴影在白底像"黑抹布"，浅色统一减淡 */
+html[data-theme="light"] #floatHead{box-shadow:0 2px 8px rgba(0,0,0,.12)}
+html[data-theme="light"] #toTop{box-shadow:0 3px 10px rgba(0,0,0,.15)}
+html[data-theme="light"] #dictbar{box-shadow:none}
+html[data-theme="light"] #authmodal .abox{box-shadow:0 12px 36px rgba(0,0,0,.25)}
+html[data-theme="light"] .imapintro-tip{box-shadow:0 6px 18px rgba(0,0,0,.15) !important}
+@media(max-width:860px){html[data-theme="light"] #dictbar{box-shadow:0 6px 18px rgba(0,0,0,.15)}}
 html[data-theme="light"] #stip{box-shadow:0 8px 24px rgba(0,0,0,.16)}
 html[data-theme="light"] #moremenu,html[data-theme="light"] #mktfloat,html[data-theme="light"] #scalemenu{box-shadow:0 6px 16px rgba(0,0,0,.14)}
 /* 三板斧之投影：卡片/面板浮起来（Material elevation 思路） */
@@ -3305,6 +3312,7 @@ function renderImap(){
   if(body){
     const isTouch = matchMedia("(hover: none), (pointer: coarse)").matches;
     const t = document.createElement("div");
+    t.className = "imapintro-tip"; /* 仅供浅色主题减淡阴影定位，无深色影响 */
     t.style.cssText = "position:fixed;display:none;z-index:310;max-width:300px;background:var(--panel2);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:9px 12px;font-size:12.5px;line-height:1.6;color:var(--text2);box-shadow:0 8px 24px rgba(0,0,0,.5);pointer-events:none;touch-action:manipulation";
     document.body.appendChild(t);
     const move = e=>{
