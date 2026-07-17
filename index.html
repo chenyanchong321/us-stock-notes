@@ -406,6 +406,36 @@ td.name .mkt{margin-left:6px;background:var(--panel2);border-radius:4px;padding:
 .neg{color:var(--down)}
 .flat{color:var(--text2)}
 
+/* ===== 股票宇宙（2026-07-18 主人需求，aha.wiki 概念宇宙式全量总图）=====
+   颜色=涨跌方向（深浅=幅度）· 大小=美元市值三档 · 板块按当日中位涨跌从强到弱排。
+   色块用固定 rgba 红绿（深浅两主题通用），文字走变量。 */
+.uni-main{max-width:1280px;margin:0 auto;padding:18px 16px 90px}
+#uni-head h2{font-size:19px;display:inline}
+#uni-head .stat{background:none;border:none;padding:0;font-size:13px;color:var(--text2);margin-left:10px}
+#uni-head .homebtn{margin-left:12px;background:var(--panel2);border:1px solid var(--border);border-radius:99px;color:var(--text2);font-size:12px;padding:4px 12px;cursor:pointer;vertical-align:2px}
+#uni-head .homebtn.on{color:var(--gold);border-color:var(--gold)}
+.uni-sec{margin:0 0 24px}
+.uni-sech{display:flex;gap:10px;align-items:baseline;margin:0 0 9px;flex-wrap:wrap}
+.uni-sech b{font-size:15px}
+.uni-sech .m{font-size:12.5px;font-weight:700}
+.uni-sech .n{font-size:11.5px;color:var(--text2)}
+.uni-cloud{display:flex;flex-wrap:wrap;gap:9px 8px;align-items:center}
+.upill{position:relative;border-radius:99px;padding:6px 14px;cursor:pointer;border:1.5px solid var(--border);background:var(--panel2);line-height:1.3;max-width:100%;transition:transform .12s}
+.upill:hover{transform:translateY(-1px)}
+.upill .un{font-weight:600;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+.upill .us{display:block;font-size:.7em;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.upill .ud{position:absolute;top:-8px;right:8px;font-size:10px;font-weight:700;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:0 5px;line-height:1.5;font-variant-numeric:tabular-nums}
+.upill.sz3{font-size:16px;padding:9px 18px}
+.upill.sz2{font-size:13.5px}
+.upill.sz1{font-size:11.5px;padding:4px 10px}
+.upill.cu1{background:rgba(47,191,113,.10);border-color:rgba(47,191,113,.45)}
+.upill.cu2{background:rgba(47,191,113,.20);border-color:rgba(47,191,113,.62)}
+.upill.cu3{background:rgba(47,191,113,.33);border-color:rgba(47,191,113,.85)}
+.upill.cd1{background:rgba(240,74,74,.10);border-color:rgba(240,74,74,.42)}
+.upill.cd2{background:rgba(240,74,74,.20);border-color:rgba(240,74,74,.58)}
+.upill.cd3{background:rgba(240,74,74,.33);border-color:rgba(240,74,74,.82)}
+.upill .ud.p{color:var(--up)} .upill .ud.n{color:var(--down)} .upill .ud.f{color:var(--text2)}
+@media(max-width:640px){.upill.sz3{font-size:14.5px;padding:7px 14px}.uni-cloud{gap:8px 6px}}
 /* 分组标题行 */
 tr.grp{scroll-margin-top:var(--anchor-grp, calc(var(--header-h) + 108px))}
 tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;font-weight:600;padding:9px 14px;text-align:left;letter-spacing:.5px;border-left:3px solid var(--accent)}
@@ -624,6 +654,7 @@ body.resizing{user-select:none;cursor:col-resize}
     <div class="tab" data-view="notes">📚 学习笔记</div>
     <div class="tab" id="tab-more">☰ 更多
       <div id="moremenu" class="hidden">
+        <button data-view="universe">🌌 股票宇宙</button>
         <button data-view="imap">🗺 产业地图</button>
         <button data-view="events">📅 大事件</button>
         <button data-view="dict">📖 术语词典</button>
@@ -740,6 +771,12 @@ body.resizing{user-select:none;cursor:col-resize}
 </div>
 
 <!-- ================= 视图：产业地图 ================= -->
+<div id="view-universe" class="hidden">
+  <div class="uni-main">
+    <div id="uni-head"></div>
+    <div id="uni-body"></div>
+  </div>
+</div>
 <div id="view-imap" class="hidden">
   <div class="imap-main">
     <div style="margin-bottom:6px"><h2 style="font-size:18px;display:inline">🗺 产业地图</h2> <span style="font-size:12px;color:var(--text2)">一个板块一张底图：规模 · 阵营 · 上下游 · 全量标的</span></div>
@@ -3659,6 +3696,107 @@ function goRepCode(code){
   if(list.length===1) goReport(list[0].id);
   else if(window.switchTab) switchTab("reports");
 }
+/* ===== 股票宇宙（2026-07-18 主人需求，aha.wiki 式全量总图）=====
+   颜色=当日涨跌（深浅=幅度分档 2%/5%）· 大小=美元市值三档（>1000亿/100-1000/以下）·
+   板块按当日中位涨跌从强到弱排（打开第一眼=今天谁最强）· 指数与ETF收尾团。
+   悬停/点击复用 openStockCard 标的卡（简介/研报/笔记/查看行情），跨板块重复标的按首次出现去重。 */
+window.renderUniverse = function(){
+  const head = document.getElementById("uni-head"), body = document.getElementById("uni-body");
+  if(!head || !window.DATA || !DATA.length) return;
+  const seen = new Set(), secs = [];
+  const isIdx = r => /指数|ETF|商品|外汇/.test(String(r[2]||"")) || String(r[12]||"").includes("工具");
+  DATA.forEach(s=>{
+    const rows = [];
+    s.rows.forEach(r=>{ if(r[3]==="获取失败" || seen.has(r[1])) return; seen.add(r[1]); rows.push(r); });
+    if(!rows.length) return;
+    const isTool = s.sec.includes("指数与行业");
+    const vals = rows.filter(r=>typeof r[16]==="number" && !isIdx(r)).map(r=>r[16]).sort((a,b)=>a-b);
+    const med = vals.length ? (vals.length%2 ? vals[(vals.length-1)/2] : (vals[vals.length/2-1]+vals[vals.length/2])/2) : null;
+    secs.push({sec:s.sec, rows, med, isTool});
+  });
+  secs.sort((a,b)=>{ if(a.isTool!==b.isTool) return a.isTool?1:-1; return (b.med??-999)-(a.med??-999); });
+
+  /* 全场战报 */
+  let up=0,dn=0,fl=0;
+  secs.forEach(s=>s.rows.forEach(r=>{ if(isIdx(r)) return;
+    const d=r[16]; if(typeof d!=="number"||d===0) fl++; else if(d>0) up++; else dn++; }));
+  const best = secs.find(s=>!s.isTool && s.med!=null);
+  const mfmt = v => v==null ? "–" : `<span style="color:${v>0?"var(--up)":v<0?"var(--down)":"var(--text2)"}">${v>0?"+":""}${v.toFixed(1)}%</span>`;
+  const homeOn = (function(){ try{ return localStorage.getItem("homeView")==="universe"; }catch(e){ return false; } })();
+  head.innerHTML = `<div style="margin-bottom:14px"><h2>🌌 股票宇宙</h2>
+    <span class="stat">全量标的一屏总览 · <span style="color:var(--up)">涨 ${up}</span> · <span style="color:var(--down)">跌 ${dn}</span> · 平 ${fl}${best?` · 今日最强：${best.sec.replace(/^\d+\s*/,"")} ${mfmt(best.med)}`:""}</span>
+    <button class="homebtn${homeOn?" on":""}" id="uni-home">${homeOn?"⭐ 已设为默认首页":"☆ 设为默认首页"}</button>
+    <div style="font-size:11.5px;color:var(--text2);margin-top:5px">胶囊颜色=当日涨跌（越深幅度越大）· 大小=美元市值档位 · 板块按今日强弱排序 · 悬停/点击看简介与研报</div></div>`;
+
+  const uniMcap = r => { const v = mcapVal(r); if(!v) return "";
+    return v>=10000 ? "$"+(v/10000).toFixed(1)+"万亿" : "$"+Math.round(v)+"亿"; };
+  const pill = r => {
+    const d = r[16], mc = mcapVal(r)||0;
+    const sz = mc>=1000 ? "sz3" : mc>=100 ? "sz2" : "sz1";
+    const mag = typeof d==="number" ? Math.abs(d) : 0;
+    const co = (typeof d!=="number"||d===0) ? "" : (d>0?"cu":"cd") + (mag>=5?3:mag>=2?2:1);
+    const bc = (typeof d!=="number") ? "f" : d>0?"p":d<0?"n":"f";
+    const grp = String(r[12]||"").replace(/（.*?）/g,"");
+    const sub = [grp, uniMcap(r)].filter(Boolean).join(" · ");
+    return `<span class="upill ${sz} ${co}" data-code="${r[1]}" title="${r[0]}">
+      <span class="ud ${bc}">${typeof d==="number" ? (d>0?"+":"")+d.toFixed(1)+"%" : "–"}</span>
+      <span class="un">${r[0]}</span>${sub?`<span class="us">${sub}</span>`:""}</span>`;
+  };
+  body.innerHTML = secs.map(s=>`
+    <div class="uni-sec">
+      <div class="uni-sech"><b>${s.isTool?"🧰 ":""}${s.sec.replace(/^\d+\s*/,"")}</b>
+        <span class="m">${mfmt(s.med)}</span><span class="n">${s.rows.length} 只</span></div>
+      <div class="uni-cloud">${s.rows.map(pill).join("")}</div>
+    </div>`).join("");
+};
+/* 宇宙交互：点击=钉住标的卡；桌面悬停=同卡即览（鼠标可移入卡内点链接，移出即收）。
+   触屏不做悬停（幽灵浮窗铁律），点击走卡。默认首页开关同处委托。 */
+(function(){
+  const TOUCHY2 = matchMedia("(hover: none), (pointer: coarse)").matches;
+  const extraOf = code => `<a class="imap-go" data-code="${code}" href="javascript:;" style="display:block;margin-top:7px;font-size:12px;border-top:1px solid var(--border);padding-top:6px;color:var(--accent);text-decoration:none">📊 查看行情 →</a>`;
+  document.addEventListener("click", e=>{
+    if(e.target.closest && e.target.closest("#uni-home")){
+      try{
+        const on = localStorage.getItem("homeView")==="universe";
+        if(on) localStorage.removeItem("homeView"); else localStorage.setItem("homeView","universe");
+      }catch(x){}
+      if(window.renderUniverse) renderUniverse();
+      return;
+    }
+    const p = e.target.closest ? e.target.closest(".upill") : null;
+    if(!p) return;
+    e.stopPropagation();
+    const rc = p.getBoundingClientRect();
+    if(!(window.openStockCard && openStockCard(p.dataset.code, rc.left+24, rc.bottom-4, extraOf(p.dataset.code)))){
+      if(window.jumpToCode) jumpToCode(p.dataset.code);
+    }
+  }, true);
+  if(!TOUCHY2){
+    let ht=null, ct=null;
+    const cancelClose = ()=>{ if(ct){ clearTimeout(ct); ct=null; } };
+    const scheduleClose = ()=>{ cancelClose(); ct=setTimeout(()=>{ window.closeStip && closeStip(); }, 280); };
+    document.addEventListener("mouseover", e=>{
+      const p = e.target.closest ? e.target.closest(".upill") : null;
+      if(p){
+        cancelClose(); clearTimeout(ht);
+        ht = setTimeout(()=>{ const rc=p.getBoundingClientRect();
+          window.openStockCard && openStockCard(p.dataset.code, rc.left+24, rc.bottom-4, extraOf(p.dataset.code)); }, 150);
+        return;
+      }
+      if(e.target.closest && e.target.closest("#stip")){ cancelClose(); }
+    });
+    document.addEventListener("mouseout", e=>{
+      const p = e.target.closest ? e.target.closest(".upill") : null;
+      const toTip = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest("#stip");
+      const toPill = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(".upill");
+      if(p){ clearTimeout(ht); if(!toTip && !toPill) scheduleClose(); return; }
+      if(e.target.closest && e.target.closest("#stip") && !toTip){
+        const v = document.getElementById("view-universe");
+        if(v && !v.classList.contains("hidden")) scheduleClose();
+      }
+    });
+  }
+})();
 /* 研报点击总入口（捕获阶段，先于简介浮窗的全局click，防止误开浮窗）：
    .repb 名称徽标；.repa 浮窗行；.rep-card 集合页卡片。游客一律弹登录。 */
 document.addEventListener("click", e=>{
@@ -3809,6 +3947,11 @@ document.addEventListener("click", e=>{
       const v = document.getElementById("view-imap");
       if(v && !v.classList.contains("hidden")){ try{ renderImap(); }catch(e){} }
     }, 60000);
+    try{ renderUniverse(); }catch(e){ console.warn("universe:", e); }
+    setInterval(()=>{
+      const v = document.getElementById("view-universe");
+      if(v && !v.classList.contains("hidden")){ try{ renderUniverse(); }catch(e){} }
+    }, 60000);
     window.checkStale(quotes.updated);
   }catch(e){
     document.getElementById("loading").textContent =
@@ -3913,12 +4056,12 @@ document.addEventListener("click", e=>{
   /* 视图切换（记住上次页签，并同步 URL 防止刷新跳走）。
      2026-07-13 改版：顶部只留 数据面板/学习笔记/更多（大事件·词典·金融史收进「更多」下拉，
      桌面手机统一，为未来加栏目留门）。所有切页签一律走 switchTab()。 */
-  const MORE_VIEWS = ["events","dict","history","lev","imap"];
+  const MORE_VIEWS = ["events","dict","history","lev","imap","universe"];
   window.switchTab = function(v){
     document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active", t.dataset.view===v || (v==="repread" && t.dataset.view==="reports")));
     const tm = document.getElementById("tab-more");
     if(tm) tm.classList.toggle("active", MORE_VIEWS.includes(v));
-    ["dash","events","notes","dict","history","lev","reports","repread","imap"].forEach(x=>{
+    ["dash","events","notes","dict","history","lev","reports","repread","imap","universe"].forEach(x=>{
       const el = document.getElementById("view-"+x);
       if(el) el.classList.toggle("hidden", v!==x);
     });
@@ -3926,6 +4069,7 @@ document.addEventListener("click", e=>{
     const rz = document.getElementById("resizer");
     if(rz) rz.style.display = (v==="dash"||v==="notes") ? "" : "none";   /* 侧栏拖拽条只在有侧栏的视图出现 */
     if(v==="imap" && typeof renderImap==="function"){ try{ renderImap(); }catch(e){} }   /* 切进地图即重渲染，行情与面板同步 */
+    if(v==="universe" && typeof renderUniverse==="function"){ try{ renderUniverse(); }catch(e){} }   /* 宇宙同款：切入即刷 */
     const mb=document.getElementById("mbottom");
     if(mb) mb.style.display = v==="dash" ? "" : "none";
     document.body.classList.toggle("reading", v==="repread");   /* 阅读态白衣：顶栏与白纸统一 */
@@ -3979,8 +4123,9 @@ document.addEventListener("click", e=>{
 
   /* 初始页签：URL 明确指定 > 上次停留 > 默认数据面板 */
   const wantView = new URLSearchParams(location.search).get("view")
+                || (function(){ try{ return localStorage.getItem("homeView"); }catch(e){ return null; } })()   /* 设为默认首页（宇宙页开关，2026-07-18） */
                 || (function(){ try{ return localStorage.getItem("lastView"); }catch(e){ return null; } })();
-  if(["notes","dict","history","events","lev","reports","imap"].includes(wantView)){
+  if(["notes","dict","history","events","lev","reports","imap","universe"].includes(wantView)){
     window.switchTab(wantView);
   }
 
