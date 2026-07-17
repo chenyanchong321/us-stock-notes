@@ -3785,11 +3785,18 @@ function renderUniBubbles(body, secs, sizeBy){
   const W = Math.max(320, body.clientWidth || Math.min(1280, innerWidth) - 32);
   const isM = W < 640;
   const rmin = isM?19:24, rmax = isM?52:86;
-  const val = r => sizeBy==="mc" ? Math.sqrt(mcapVal(r)||1)
-                                 : Math.min(Math.abs(typeof r[16]==="number"?r[16]:0), 12);
+  /* NaN 防呆铁律（2026-07-18 事故）：mcapVal 对无市值标的（指数/ETF/商品/外汇）返回 -1，
+     而 -1||1 === -1（-1 是 truthy，||拦不住）→ sqrt(-1)=NaN → 半径NaN → 排序比较器失效+
+     hit()的NaN比较恒假(碰撞检测形同虚设)+occR被Math.max污染成NaN → i0=NaN → 螺旋循环
+     条件NaN<NaN恒假一步不走 → 390个泡泡全掉兜底 → top/height:NaNpx 全堆top:0并溢出盖页脚。
+     一个 -1 放倒整个市值模式。同 IAU 坏行事故：坏数据必须在入口截断，别让它往下游传染。 */
+  const val = r => { if(sizeBy!=="mc") return Math.min(Math.abs(typeof r[16]==="number"?r[16]:0), 12);
+                     const v = mcapVal(r); return Math.sqrt(v>0 ? v : 1); };   /* 无市值→最小泡泡 */
   let maxV = 0; rows.forEach(r=>{ const v=val(r); if(v>maxV) maxV=v; });
   if(!maxV) maxV = 1;
-  const items = rows.map(r=>({r, rad: Math.round(rmin + (rmax-rmin)*Math.sqrt(val(r)/maxV))}))
+  const items = rows.map(r=>{ let rad = Math.round(rmin + (rmax-rmin)*Math.sqrt(val(r)/maxV));
+                              if(!Number.isFinite(rad)) rad = rmin;   /* 二道闸：半径永远是有限数 */
+                              return {r, rad}; })
                     .sort((a,b)=>b.rad-a.rad);
   /* 网格空间索引加速碰撞检测（2026-07-18 实测：朴素O(n²)全场1.25秒/60秒重排会卡→网格后百毫秒内）；
      螺旋耗尽的兜底不再堆中心（会叠罗汉），改沉到已有泡泡下方另起一行 */
