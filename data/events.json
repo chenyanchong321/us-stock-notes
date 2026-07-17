@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-17 16:15 北京时间",
+ "updated": "2026-07-17 16:23 北京时间",
  "earnings": [
   {
    "d": "2026-07-16",
@@ -26,12 +26,6 @@
    "est": false
   },
   {
-   "d": "2026-07-22",
-   "code": "EQT",
-   "name": "EQT（天然气）",
-   "est": false
-  },
-  {
    "d": "2026-07-23",
    "code": "GOOGL",
    "name": "谷歌（Alphabet）",
@@ -47,18 +41,6 @@
    "d": "2026-07-23",
    "code": "TXN",
    "name": "德州仪器",
-   "est": false
-  },
-  {
-   "d": "2026-07-23",
-   "code": "NOK",
-   "name": "诺基亚",
-   "est": false
-  },
-  {
-   "d": "2026-07-23",
-   "code": "STM",
-   "name": "意法半导体",
    "est": false
   },
   {
@@ -129,12 +111,6 @@
   },
   {
    "d": "2026-07-28",
-   "code": "CLS",
-   "name": "天弘科技（Celestica）",
-   "est": false
-  },
-  {
-   "d": "2026-07-28",
    "code": "ECL",
    "name": "艺康集团（Ecolab）",
    "est": false
@@ -159,12 +135,6 @@
   },
   {
    "d": "2026-07-29",
-   "code": "APH",
-   "name": "安费诺",
-   "est": false
-  },
-  {
-   "d": "2026-07-29",
    "code": "VRT",
    "name": "Vertiv Holdings",
    "est": false
@@ -173,12 +143,6 @@
    "d": "2026-07-29",
    "code": "KLAC",
    "name": "科磊",
-   "est": false
-  },
-  {
-   "d": "2026-07-29",
-   "code": "TER",
-   "name": "泰瑞达",
    "est": false
   },
   {
@@ -345,12 +309,6 @@
   },
   {
    "d": "2026-07-31",
-   "code": "ETN",
-   "name": "伊顿",
-   "est": false
-  },
-  {
-   "d": "2026-07-31",
    "code": "6981",
    "name": "村田制作所",
    "est": false
@@ -359,12 +317,6 @@
    "d": "2026-07-31",
    "code": "6762",
    "name": "TDK",
-   "est": false
-  },
-  {
-   "d": "2026-07-31",
-   "code": "CCJ",
-   "name": "Cameco",
    "est": false
   },
   {
