@@ -899,20 +899,30 @@ function dayWeekCell(r){
    数据 r[22]=[[yyyymmdd,pct]...] 新→旧（流水线日线顺手算，零额外请求）。
    对齐规则：默认最新bar即「当日」列所示会话(S0)→昨日=a[1]、前日=a[2]；
    唯一例外：该市场正盘中而流水线尚未包含今日bar（开盘后≤一班cron的空窗）→整体前移一位。 */
-function mktTodayYMD(mkt){
+function s0YMD(mkt){
+  /* 估算「当日」列所示会话(S0)的日期：市场时区内，工作日且已过开盘时刻→今天；
+     否则回退到上一个工作日（跳过周末；节假日会高估，此时昨日与当日同值，误差可接受）。
+     实战教训（2026-07-18）：Yahoo A股日线会滞后一天，"最新bar=当日"的假设不成立，必须按日期对齐。 */
   const m=String(mkt||"");
-  const tz = m.startsWith("美股")?"America/New_York" : m.startsWith("日股")?"Asia/Tokyo"
-           : m.startsWith("韩股")?"Asia/Seoul" : m.startsWith("加密")?"UTC" : "Asia/Shanghai";
-  try{ return +new Intl.DateTimeFormat("en-CA",{timeZone:tz}).format(new Date()).replace(/-/g,""); }catch(e){ return 0; }
+  const cfg = m.startsWith("美股")?["America/New_York",570] : m.startsWith("日股")?["Asia/Tokyo",540]
+            : m.startsWith("韩股")?["Asia/Seoul",540] : m.startsWith("台股")?["Asia/Taipei",540]
+            : (m.startsWith("加密")||m.startsWith("商品")||m.startsWith("外汇"))?["UTC",0] : ["Asia/Shanghai",570];
+  try{
+    const p=new Intl.DateTimeFormat("en-CA",{timeZone:cfg[0],hour12:false,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",weekday:"short"}).formatToParts(new Date());
+    const g=n=>p.find(x=>x.type===n).value;
+    let d=new Date(Date.UTC(+g("year"),+g("month")-1,+g("day")));
+    const dow={Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6}[g("weekday")];
+    const mins=(+g("hour"))*60+(+g("minute"));
+    if(!(dow>=1&&dow<=5&&mins>=cfg[1])){          /* 未到今日开盘（含周末）→回退上一工作日 */
+      do{ d=new Date(d.getTime()-864e5); }while(d.getUTCDay()===0||d.getUTCDay()===6);
+    }
+    return d.getUTCFullYear()*10000+(d.getUTCMonth()+1)*100+d.getUTCDate();
+  }catch(e){ return 0; }
 }
-function dayN(r,k){   /* k=1昨日 2前日…最大4 */
+function dayN(r,k){   /* k=1昨日 2前日…最大4。按日期对齐：a[0]是S0本尊→跳过它，否则a[0]就是昨日 */
   const a=r[22]; if(!Array.isArray(a)||!a.length) return null;
   let off=1;
-  try{
-    const key=String(r[2]||"").startsWith("美股")?"美股":String(r[2]||"").slice(0,2);
-    const st=(typeof mktStatus==="function")?mktStatus(key):null;
-    if(st&&st.o&&a[0]&&a[0][0]!==mktTodayYMD(r[2])) off=0;
-  }catch(e){}
+  try{ if(a[0] && a[0][0]!==s0YMD(r[2])) off=0; }catch(e){}
   const e=a[k-1+off]; return (e&&typeof e[1]==="number")?e[1]:null;
 }
 function peCell(v){
