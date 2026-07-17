@@ -3549,9 +3549,26 @@ window.openReader = function(id){
       if(!r.ok) throw new Error("HTTP "+r.status);
       return r.json();
     })
-    .then(d=>{ body.innerHTML = d.html || '<div class="rr-load">正文整理中，可先下载原版 PDF 阅读</div>'; window.scrollTo(0,0); })
+    .then(d=>{ body.innerHTML = d.html || '<div class="rr-load">正文整理中，可先下载原版 PDF 阅读</div>'; buildReaderToc(body); window.scrollTo(0,0); })
     .catch(e=>{ if(e===0) return; body.innerHTML = '<div class="rr-load">正文加载失败，可点上方按钮下载原版 PDF</div>'; });
 };
+/* 研报阅读页自动目录（2026-07-18 主人需求，与 articles/toc.js 同款逻辑的内嵌版）：
+   扫正文 h2 生成可点击目录卡，插在正文最前；点击平滑滚动（scroll-margin 吸顶补偿）。 */
+function buildReaderToc(body){
+  try{
+    const hs=[...body.querySelectorAll("h2")].filter(h=>h.textContent.trim()!=="目录");
+    if(hs.length<3) return;
+    const links=hs.map((h,i)=>{ if(!h.id) h.id="rr-sec-"+i; h.style.scrollMarginTop="calc(var(--header-h) + 14px)";
+      return `<a href="javascript:;" data-t="${h.id}" style="display:block;color:var(--accent);text-decoration:none;font-size:13.5px;line-height:1.6;padding:2px 0;break-inside:avoid">${h.textContent.trim()}</a>`; }).join("");
+    const box=document.createElement("nav");
+    box.className="rr-toc";
+    box.style.cssText="background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:13px 16px;margin:0 0 22px";
+    box.innerHTML=`<div style="font-weight:700;font-size:14px;margin-bottom:7px">📑 目录 · 点击跳转</div><div style="column-count:${innerWidth>=640?2:1};column-gap:26px">${links}</div>`;
+    box.addEventListener("click",e=>{ const a=e.target.closest("a[data-t]"); if(!a) return;
+      const t=document.getElementById(a.dataset.t); t && t.scrollIntoView({behavior:"smooth",block:"start"}); });
+    body.insertBefore(box, body.firstChild);
+  }catch(e){}
+}
 /* 统一跳转入口：会员进阅读页，游客弹登录。跳转前先收浮窗（跳转后浮窗残留＝主人真机反馈的bug） */
 window.goReport = function(id){
   window.closeStip && closeStip();
