@@ -83,7 +83,12 @@ html[data-theme="light"] .evtag.macro{color:#c04545}                           /
 /* 阅读态白衣（2026-07-18 主人定：研报阅读页整页白纸，顶栏黑白割裂→顶栏同步换白）。
    实现＝body.reading 时给 #header 作用域覆盖变量（子树内生效），其余视图与深色模式零影响；
    切出阅读页类名摘除即恢复。与笔记页样式统一，且保留页签导航。 */
-body.reading #header{--panel:#ffffff;--panel2:#f6f8fa;--bg:#f2f3f1;--border:#e2e5e9;--text:#1f2328;--text2:#5b6570;--accent:#2563eb;--gold:#b8860b;border-bottom-color:#e2e5e9}
+body.reading #header,body.reading #dictbar,body.reading #toTop,
+body.reading #rrtocfab,body.reading #rrtocdrw,body.reading #rrtocside{
+  --panel:#ffffff;--panel2:#f6f8fa;--bg:#f2f3f1;--border:#e2e5e9;--text:#1f2328;--text2:#5b6570;--accent:#2563eb;--gold:#b8860b;
+  color:var(--text)   /* 必须重设color：变量作用域只影响子树内的var()引用，继承自body的已计算色不会重算（烟囱二字实测） */
+}
+body.reading #header{border-bottom-color:#e2e5e9}
 #themebtn{background:none;border:1px solid var(--border);border-radius:8px;color:var(--text2);padding:3px 9px;cursor:pointer;font-size:14px;line-height:1.4}
 #themebtn:hover{color:var(--text);border-color:var(--gold)}
 :root{
