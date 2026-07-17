@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-17 13:07 北京时间",
+ "updated": "2026-07-17 13:17 北京时间",
  "earnings": [
   {
    "d": "2026-07-16",
@@ -14,21 +14,9 @@
    "est": false
   },
   {
-   "d": "2026-07-21",
-   "code": "VICR",
-   "name": "Vicor",
-   "est": false
-  },
-  {
    "d": "2026-07-22",
    "code": "GEV",
    "name": "GE Vernova",
-   "est": false
-  },
-  {
-   "d": "2026-07-22",
-   "code": "EQT",
-   "name": "EQT（天然气）",
    "est": false
   },
   {
@@ -53,18 +41,6 @@
    "d": "2026-07-23",
    "code": "NOK",
    "name": "诺基亚",
-   "est": false
-  },
-  {
-   "d": "2026-07-23",
-   "code": "STM",
-   "name": "意法半导体",
-   "est": false
-  },
-  {
-   "d": "2026-07-23",
-   "code": "IBM",
-   "name": "IBM",
    "est": false
   },
   {
@@ -98,12 +74,6 @@
    "est": false
   },
   {
-   "d": "2026-07-27",
-   "code": "011070",
-   "name": "LG Innotek",
-   "est": false
-  },
-  {
    "d": "2026-07-28",
    "code": "GLW",
    "name": "康宁",
@@ -113,30 +83,6 @@
    "d": "2026-07-28",
    "code": "APLD",
    "name": "Applied Digital",
-   "est": false
-  },
-  {
-   "d": "2026-07-28",
-   "code": "AMKR",
-   "name": "艾马克技术（Amkor）",
-   "est": false
-  },
-  {
-   "d": "2026-07-28",
-   "code": "NVTS",
-   "name": "纳微半导体",
-   "est": false
-  },
-  {
-   "d": "2026-07-28",
-   "code": "CLS",
-   "name": "天弘科技（Celestica）",
-   "est": false
-  },
-  {
-   "d": "2026-07-28",
-   "code": "ECL",
-   "name": "艺康集团（Ecolab）",
    "est": false
   },
   {
@@ -191,12 +137,6 @@
    "d": "2026-07-29",
    "code": "00522",
    "name": "ASMPT",
-   "est": false
-  },
-  {
-   "d": "2026-07-29",
-   "code": "FLEX",
-   "name": "伟创力",
    "est": false
   },
   {
@@ -267,18 +207,6 @@
   },
   {
    "d": "2026-07-30",
-   "code": "ASX",
-   "name": "日月光半导体 ADR",
-   "est": false
-  },
-  {
-   "d": "2026-07-30",
-   "code": "FTNT",
-   "name": "飞塔信息（Fortinet）",
-   "est": false
-  },
-  {
-   "d": "2026-07-30",
    "code": "AEM",
    "name": "伊格尔矿业（Agnico Eagle）",
    "est": false
@@ -333,24 +261,6 @@
   },
   {
    "d": "2026-07-31",
-   "code": "7741",
-   "name": "保谷光学（HOYA）",
-   "est": false
-  },
-  {
-   "d": "2026-07-31",
-   "code": "MPWR",
-   "name": "Monolithic Power",
-   "est": false
-  },
-  {
-   "d": "2026-07-31",
-   "code": "ETN",
-   "name": "伊顿",
-   "est": false
-  },
-  {
-   "d": "2026-07-31",
    "code": "6981",
    "name": "村田制作所",
    "est": false
@@ -359,12 +269,6 @@
    "d": "2026-07-31",
    "code": "6762",
    "name": "TDK",
-   "est": false
-  },
-  {
-   "d": "2026-07-31",
-   "code": "CCJ",
-   "name": "Cameco",
    "est": false
   },
   {
@@ -399,32 +303,8 @@
   },
   {
    "d": "2026-08-04",
-   "code": "Q",
-   "name": "Qnity Electronics",
-   "est": false
-  },
-  {
-   "d": "2026-08-04",
-   "code": "ENTG",
-   "name": "英特格（Entegris）",
-   "est": false
-  },
-  {
-   "d": "2026-08-04",
    "code": "7011",
    "name": "三菱重工",
-   "est": false
-  },
-  {
-   "d": "2026-08-04",
-   "code": "WMB",
-   "name": "Williams Companies",
-   "est": false
-  },
-  {
-   "d": "2026-08-04",
-   "code": "PLTR",
-   "name": "Palantir",
    "est": false
   },
   {
@@ -443,24 +323,6 @@
    "d": "2026-08-05",
    "code": "ALAB",
    "name": "Astera Labs",
-   "est": false
-  },
-  {
-   "d": "2026-08-05",
-   "code": "3110",
-   "name": "日东纺织",
-   "est": false
-  },
-  {
-   "d": "2026-08-05",
-   "code": "IFNNY",
-   "name": "英飞凌 ADR",
-   "est": false
-  },
-  {
-   "d": "2026-08-05",
-   "code": "6963",
-   "name": "罗姆半导体",
    "est": false
   },
   {
@@ -543,12 +405,6 @@
   },
   {
    "d": "2026-08-06",
-   "code": "5016",
-   "name": "JX金属",
-   "est": false
-  },
-  {
-   "d": "2026-08-06",
    "code": "CEG",
    "name": "Constellation Energy",
    "est": false
@@ -557,18 +413,6 @@
    "d": "2026-08-06",
    "code": "TLN",
    "name": "Talen Energy",
-   "est": false
-  },
-  {
-   "d": "2026-08-06",
-   "code": "DDOG",
-   "name": "Datadog",
-   "est": false
-  },
-  {
-   "d": "2026-08-06",
-   "code": "APP",
-   "name": "Applovin",
    "est": false
   },
   {
@@ -603,20 +447,8 @@
   },
   {
    "d": "2026-08-07",
-   "code": "5803",
-   "name": "藤仓（Fujikura）",
-   "est": false
-  },
-  {
-   "d": "2026-08-07",
    "code": "VST",
    "name": "Vistra Energy",
-   "est": false
-  },
-  {
-   "d": "2026-08-07",
-   "code": "NET",
-   "name": "Cloudflare",
    "est": false
   },
   {
@@ -677,12 +509,6 @@
    "d": "2026-09-04",
    "code": "DELL",
    "name": "戴尔科技",
-   "est": false
-  },
-  {
-   "d": "2026-09-11",
-   "code": "ADBE",
-   "name": "Adobe",
    "est": false
   },
   {
