@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-18 06:07 北京时间",
+ "updated": "2026-07-18 06:15 北京时间",
  "earnings": [
   {
    "d": "2026-07-21",
@@ -11,6 +11,12 @@
    "d": "2026-07-22",
    "code": "GEV",
    "name": "GE Vernova",
+   "est": false
+  },
+  {
+   "d": "2026-07-22",
+   "code": "EQT",
+   "name": "EQT（天然气）",
    "est": false
   },
   {
@@ -29,6 +35,12 @@
    "d": "2026-07-23",
    "code": "TXN",
    "name": "德州仪器",
+   "est": false
+  },
+  {
+   "d": "2026-07-23",
+   "code": "NOK",
+   "name": "诺基亚",
    "est": false
   },
   {
@@ -111,6 +123,12 @@
   },
   {
    "d": "2026-07-28",
+   "code": "CLS",
+   "name": "天弘科技（Celestica）",
+   "est": false
+  },
+  {
+   "d": "2026-07-28",
    "code": "ECL",
    "name": "艺康集团（Ecolab）",
    "est": false
@@ -137,6 +155,12 @@
    "d": "2026-07-29",
    "code": "STX",
    "name": "希捷科技",
+   "est": false
+  },
+  {
+   "d": "2026-07-29",
+   "code": "APH",
+   "name": "安费诺",
    "est": false
   },
   {
@@ -335,6 +359,12 @@
    "d": "2026-07-31",
    "code": "NVT",
    "name": "nVent Electric",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "CCJ",
+   "name": "Cameco",
    "est": false
   },
   {
