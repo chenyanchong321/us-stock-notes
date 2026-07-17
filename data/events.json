@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-17 08:30 北京时间",
+ "updated": "2026-07-17 08:45 北京时间",
  "earnings": [
   {
    "d": "2026-07-16",
@@ -87,18 +87,6 @@
   },
   {
    "d": "2026-07-24",
-   "code": "4063",
-   "name": "信越化学",
-   "est": false
-  },
-  {
-   "d": "2026-07-24",
-   "code": "SHECY",
-   "name": "信越化学",
-   "est": false
-  },
-  {
-   "d": "2026-07-24",
    "code": "03750",
    "name": "宁德时代",
    "est": false
@@ -171,36 +159,6 @@
   },
   {
    "d": "2026-07-29",
-   "code": "VRT",
-   "name": "Vertiv Holdings",
-   "est": false
-  },
-  {
-   "d": "2026-07-29",
-   "code": "KLAC",
-   "name": "科磊",
-   "est": false
-  },
-  {
-   "d": "2026-07-29",
-   "code": "TER",
-   "name": "泰瑞达",
-   "est": false
-  },
-  {
-   "d": "2026-07-29",
-   "code": "6857",
-   "name": "爱德万测试",
-   "est": false
-  },
-  {
-   "d": "2026-07-29",
-   "code": "00522",
-   "name": "ASMPT",
-   "est": false
-  },
-  {
-   "d": "2026-07-29",
    "code": "FLEX",
    "name": "伟创力",
    "est": false
@@ -252,24 +210,6 @@
    "code": "SKHY",
    "name": "SK海力士(美股ADR)",
    "est": true
-  },
-  {
-   "d": "2026-07-30",
-   "code": "EQIX",
-   "name": "易昆尼克斯（Equinix）",
-   "est": false
-  },
-  {
-   "d": "2026-07-30",
-   "code": "LRCX",
-   "name": "泛林集团",
-   "est": false
-  },
-  {
-   "d": "2026-07-30",
-   "code": "FORM",
-   "name": "FormFactor",
-   "est": false
   },
   {
    "d": "2026-07-30",
@@ -327,18 +267,6 @@
   },
   {
    "d": "2026-07-31",
-   "code": "COHU",
-   "name": "科休半导体",
-   "est": false
-  },
-  {
-   "d": "2026-07-31",
-   "code": "4626",
-   "name": "太阳控股",
-   "est": false
-  },
-  {
-   "d": "2026-07-31",
    "code": "7741",
    "name": "保谷光学（HOYA）",
    "est": false
@@ -386,27 +314,9 @@
    "est": false
   },
   {
-   "d": "2026-08-03",
-   "code": "4203",
-   "name": "住友电木",
-   "est": false
-  },
-  {
    "d": "2026-08-04",
    "code": "ON",
    "name": "安森美半导体",
-   "est": false
-  },
-  {
-   "d": "2026-08-04",
-   "code": "4062",
-   "name": "揖斐电（IBIDEN）",
-   "est": false
-  },
-  {
-   "d": "2026-08-04",
-   "code": "Q",
-   "name": "Qnity Electronics",
    "est": false
   },
   {
@@ -525,30 +435,6 @@
   },
   {
    "d": "2026-08-06",
-   "code": "NVMI",
-   "name": "Nova",
-   "est": false
-  },
-  {
-   "d": "2026-08-06",
-   "code": "MKSI",
-   "name": "MKS仪器",
-   "est": false
-  },
-  {
-   "d": "2026-08-06",
-   "code": "3436",
-   "name": "胜高（SUMCO）",
-   "est": false
-  },
-  {
-   "d": "2026-08-06",
-   "code": "4186",
-   "name": "东京应化",
-   "est": false
-  },
-  {
-   "d": "2026-08-06",
    "code": "5016",
    "name": "JX金属",
    "est": false
@@ -587,18 +473,6 @@
    "d": "2026-08-07",
    "code": "AAOI",
    "name": "Applied Optoelectronics",
-   "est": false
-  },
-  {
-   "d": "2026-08-07",
-   "code": "ACMR",
-   "name": "ACM Research",
-   "est": false
-  },
-  {
-   "d": "2026-08-07",
-   "code": "ONTO",
-   "name": "Onto Innovation",
    "est": false
   },
   {
@@ -662,12 +536,6 @@
    "est": false
   },
   {
-   "d": "2026-08-14",
-   "code": "AMAT",
-   "name": "应用材料",
-   "est": false
-  },
-  {
    "d": "2026-08-27",
    "code": "NVDA",
    "name": "英伟达",
@@ -683,12 +551,6 @@
    "d": "2026-09-11",
    "code": "ADBE",
    "name": "Adobe",
-   "est": false
-  },
-  {
-   "d": "2026-10-14",
-   "code": "ASML",
-   "name": "阿斯麦",
    "est": false
   }
  ]
