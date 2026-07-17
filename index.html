@@ -234,6 +234,13 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 /* 展开时主内容让位（与左侧栏 margin-left 对称）；#toTop 跟着避让 */
 #view-dash,#view-events,#view-notes,#view-dict,#view-history,#footer{padding-right:var(--rdict);box-sizing:border-box;transition:padding-right .15s ease}
 #toTop{right:calc(var(--rdict) + 12px) !important}
+/* 桌面收起态改"悬浮书签"（2026-07-17 主人上报：macOS悬浮滚动条与贴边把手同占最右边缘，
+   点击被滚动条截胡）：内缩10px+垂直居中+圆角，躲开滚动条热区；展开态与手机端零改动 */
+@media(min-width:861px){
+  #dictbar:not(.open){top:50%;bottom:auto;transform:translateY(-50%);height:auto;right:10px;
+    border:1px solid var(--border);border-radius:10px;box-shadow:0 4px 14px rgba(0,0,0,.35);padding:6px 0}
+  html[data-theme="light"] #dictbar:not(.open){box-shadow:0 4px 14px rgba(86,80,68,.20)}
+}
 @media(max-width:860px){
   #view-dash,#view-events,#view-notes,#view-dict,#view-history,#footer{padding-right:0}
   #toTop{right:14px !important}
