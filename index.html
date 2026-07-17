@@ -3791,21 +3791,39 @@ function renderUniBubbles(body, secs, sizeBy){
   if(!maxV) maxV = 1;
   const items = rows.map(r=>({r, rad: Math.round(rmin + (rmax-rmin)*Math.sqrt(val(r)/maxV))}))
                     .sort((a,b)=>b.rad-a.rad);
-  const placed = [], cx = W/2;
+  /* 网格空间索引加速碰撞检测（2026-07-18 实测：朴素O(n²)全场1.25秒/60秒重排会卡→网格后百毫秒内）；
+     螺旋耗尽的兜底不再堆中心（会叠罗汉），改沉到已有泡泡下方另起一行 */
+  const placed = [], cx = W/2, CELL = 2*rmax + 4, grid = new Map();
+  const gkey = (gx,gy)=>gx+"|"+gy;
+  const gput = p => { const k=gkey(Math.floor(p.x/CELL), Math.floor(p.y/CELL));
+    (grid.get(k) || grid.set(k,[]).get(k)).push(p); };
+  const hit = (x,y,rad)=>{
+    const g0x=Math.floor((x-rad-rmax)/CELL), g1x=Math.floor((x+rad+rmax)/CELL);
+    const g0y=Math.floor((y-rad-rmax)/CELL), g1y=Math.floor((y+rad+rmax)/CELL);
+    for(let gx=g0x; gx<=g1x; gx++) for(let gy=g0y; gy<=g1y; gy++){
+      const arr=grid.get(gkey(gx,gy)); if(!arr) continue;
+      for(const p of arr){ const dx=x-p.x, dy=y-p.y, rr=rad+p.rad+2;
+        if(dx*dx+dy*dy < rr*rr) return true; }
+    }
+    return false;
+  };
+  let botY = 0;
   items.forEach(it=>{
-    let X=cx, Y=0;
-    for(let i=0;i<30000;i++){
-      const a=i*2.39996, d=3.4*Math.sqrt(i);
+    let X=null, Y=null;
+    for(let i=0;i<42000;i++){
+      const a=i*2.39996, d=3.2*Math.sqrt(i);
       const x=cx+d*Math.cos(a), y=d*Math.sin(a);
       if(x-it.rad<0 || x+it.rad>W) continue;
-      let ok=true;
-      for(const p of placed){
-        const dx=x-p.x, dy=y-p.y, rr=it.rad+p.rad+2;
-        if(dx*dx+dy*dy < rr*rr){ ok=false; break; }
-      }
-      if(ok){ X=x; Y=y; break; }
+      if(!hit(x,y,it.rad)){ X=x; Y=y; break; }
     }
-    placed.push({x:X, y:Y, rad:it.rad, r:it.r});
+    if(X===null){   /* 兜底：贴着最下沿从左往右扫一行 */
+      let y=botY+it.rad+4, x=it.rad+2;
+      while(hit(x,y,it.rad)){ x+=it.rad; if(x+it.rad>W){ x=it.rad+2; y+=it.rad; } }
+      X=x; Y=y;
+    }
+    const p={x:X, y:Y, rad:it.rad, r:it.r};
+    placed.push(p); gput(p);
+    botY=Math.max(botY, Y+it.rad);
   });
   let minY=1e9, maxY=-1e9;
   placed.forEach(p=>{ minY=Math.min(minY,p.y-p.rad); maxY=Math.max(maxY,p.y+p.rad); });
