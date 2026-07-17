@@ -3807,10 +3807,12 @@ function renderUniBubbles(body, secs, sizeBy){
     }
     return false;
   };
-  let botY = 0;
+  let botY = 0, occR = 0;   /* occR=当前占用半径：螺旋从它附近起步，跳过必然碰撞的内区死区
+                               （2026-07-18 实测：每次从圆心扫，后期泡泡空转→11秒；自适应起点后百毫秒） */
   items.forEach(it=>{
     let X=null, Y=null;
-    for(let i=0;i<42000;i++){
+    const i0 = Math.max(0, Math.floor(Math.pow(Math.max(0, occR - it.rad*2 - 8)/3.2, 2)));
+    for(let i=i0; i<i0+50000; i++){
       const a=i*2.39996, d=3.2*Math.sqrt(i);
       const x=cx+d*Math.cos(a), y=d*Math.sin(a);
       if(x-it.rad<0 || x+it.rad>W) continue;
@@ -3824,6 +3826,7 @@ function renderUniBubbles(body, secs, sizeBy){
     const p={x:X, y:Y, rad:it.rad, r:it.r};
     placed.push(p); gput(p);
     botY=Math.max(botY, Y+it.rad);
+    occR=Math.max(occR, Math.sqrt((X-cx)*(X-cx)+Y*Y)+it.rad);
   });
   let minY=1e9, maxY=-1e9;
   placed.forEach(p=>{ minY=Math.min(minY,p.y-p.rad); maxY=Math.max(maxY,p.y+p.rad); });
