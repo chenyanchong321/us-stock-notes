@@ -26,8 +26,10 @@
 
     /* 样式（脚本自带，文章文件零改动） */
     var st = document.createElement("style");
+    /* 不用 scroll-behavior:smooth：长文一跳几千像素，平滑动画又慢又易被打断（2026-07-18 实测跳转被吞）。
+       原生锚点瞬时跳转=维基百科式，干脆可靠，scroll-margin 负责吸顶补偿。 */
     st.textContent =
-      "html{scroll-behavior:smooth}article h1,article h2,article h3{scroll-margin-top:74px}" +
+      "article h1,article h2,article h3{scroll-margin-top:74px}" +
       "#autotoc{background:var(--panel,#f6f8fa);border:1px solid var(--border,#e2e5e9);border-radius:10px;padding:14px 18px;margin:0 0 28px}" +
       "#autotoc .t{font-weight:700;font-size:15px;margin-bottom:8px}" +
       "#autotoc .ls{}" +
@@ -59,7 +61,7 @@
     /* ☰ 浮钮：滚过目录卡后出现，点击回目录 */
     var fab = document.createElement("button");
     fab.id = "tocfab"; fab.title = "回到目录"; fab.textContent = "☰";
-    fab.addEventListener("click", function(){ box.scrollIntoView({behavior:"smooth", block:"start"}); });
+    fab.addEventListener("click", function(){ box.scrollIntoView({block:"start"}); });
     document.body.appendChild(fab);
     var tick = false;
     window.addEventListener("scroll", function(){
