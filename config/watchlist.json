@@ -5774,6 +5774,34 @@
      "ath_floor": 0
     },
     {
+     "name": "地平线机器人",
+     "code": "09660",
+     "market": "港股",
+     "yahoo": "9660.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 131.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "瑞芯微",
+     "code": "603893",
+     "market": "A股",
+     "yahoo": "603893.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 4.2,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "AeroVironment",
      "code": "AVAV",
      "market": "美股",
@@ -5858,6 +5886,13 @@
      "name": "仿真与场景资产",
      "codes": [
       "00068"
+     ]
+    },
+    {
+     "name": "端侧芯片与计算",
+     "codes": [
+      "09660",
+      "603893"
      ]
     },
     {
