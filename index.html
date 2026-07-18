@@ -190,13 +190,15 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 .mmk-col{flex:1 1 0;min-width:0;background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden}
 .mmk-colh{font-weight:700;font-size:13.5px;padding:9px 10px;background:var(--panel2);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:6px}
 .mmk-cn{font-size:11px;color:var(--text2);font-weight:400;flex:0 0 auto}
-.mmk-cell{display:flex;align-items:center;gap:6px;padding:6px 9px;border-bottom:1px solid var(--border);cursor:pointer;font-size:13px}
+/* 桌面格=两行（2026-07-18 主人定，与手机节奏统一）：第一行 序号+名字，第二行 涨跌%对齐名字起点。
+   单行"名字左%右"在宽列下两者隔太远，眼睛难配对。 */
+.mmk-cell{display:flex;align-items:center;gap:6px;padding:6px 9px;border-bottom:1px solid var(--border);cursor:pointer;font-size:13px;flex-wrap:wrap;row-gap:1px}
 .mmk-cell:last-child{border-bottom:0}
 .mmk-cell:hover{background:rgba(74,140,240,.07)}
 .mmk-rk{flex:0 0 auto;width:18px;color:var(--text2);font-size:11px;text-align:right}
 .mmk-nm{flex:1 1 auto;min-width:0;word-break:break-word;line-height:1.25}   /* 铁律：名称折行不截断（2026-07-18 主人抓包：手机四列下省略号把名称截成一个字） */
 .mmk-src{display:inline-block;font-size:10px;color:var(--text2);border:1px solid var(--border);border-radius:3px;padding:0 3px;margin-right:4px}
-.mmk-pc{flex:0 0 auto;font-variant-numeric:tabular-nums;font-weight:600}
+.mmk-pc{flex:0 0 100%;padding-left:24px;font-variant-numeric:tabular-nums;font-weight:600}   /* 24px=序号18+间隙6，与名字左缘对齐 */
 .mmk-empty{padding:14px 10px;color:var(--text2);font-size:12px;text-align:center}
 @media(max-width:860px){
   /* 手机端排版终版（2026-07-18 主人定）：去序号（排序即序号，30行内是噪音）+ 流式排版——
@@ -207,7 +209,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
   .mmk-cell{display:block;padding:6px 5px;font-size:12px;line-height:1.4}
   .mmk-rk{display:none}
   .mmk-nm{display:inline;font-size:11.5px}
-  .mmk-pc{display:inline;white-space:nowrap;margin-left:5px}   /* nowrap=%作为整体折行，绝不从中间断开 */
+  .mmk-pc{display:inline;white-space:nowrap;margin-left:5px;padding-left:0}   /* nowrap=%作为整体折行，绝不从中间断开；抵消桌面版的对齐缩进 */
   .mmk-colh{padding:8px 6px;font-size:12px}
   .mmk-src{margin-right:2px;padding:0 2px}
 }
@@ -1657,6 +1659,7 @@ function renderDash(quotes){
         const b=buckets.find(x=>x.test(m));
         if(!b) return;
         if(seen.has(r[1])) return; seen.add(r[1]);          /* 按代码全局去重 */
+        if(m.indexOf("指数")>=0) return;   /* 指数不是票（VIX/VXN波动率、恒指、日经等），涨幅榜只收能买的；ETF保留（2026-07-18 主人定） */
         if(typeof r[ri]!=="number" || !Number.isFinite(r[ri])) return;   /* 只收该周期为有限数的（"上市后x%"字符串行自然出局） */
         b.rows.push(r);
       }));
