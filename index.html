@@ -2486,7 +2486,7 @@ window.updateFresh = function(){
   const d=new Date(), pad=n=>String(n).padStart(2,"0");
   const today=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
   const parts=[];
-  if(window.REPORTS && REPORTS.length){
+  if(typeof REPORTS!=="undefined" && REPORTS.length){   /* REPORTS 是脚本级 let 不在 window 上——DATA 同款坑，守卫必须 typeof */
     const r=REPORTS[0];
     const lab=(typeof repCatOf==="function" && repCatOf(r)==="财报点评") ? "📄" : "📑";
     parts.push(`${lab} <a href="javascript:;" class="fresh-rep" data-rid="${r.id}">${r.title}</a><span class="fd">${String(r.date||"").slice(5)}${String(r.date)===today?" 🆕":""}</span>`);
