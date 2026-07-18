@@ -578,8 +578,16 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 #rep-search::-webkit-search-cancel-button{display:none}
 #rep-clear,#note-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text2);cursor:pointer;font-size:15px;padding:6px 8px;display:none}
 #rep-clear:hover,#note-clear:hover{color:var(--text)}
-/* 笔记页与研报页格式对齐（2026-07-18 主人定）：内容居中窄列（保留左侧分类目录）+ 研报卡同款单列大卡 */
-#view-notes .main>*{max-width:820px;margin-left:auto;margin-right:auto}
+/* 笔记页与研报页格式对齐（2026-07-18 主人定）：内容窄列+研报卡同款单列大卡。
+   坑：居中是无侧栏页面（研报页）的方案——有侧栏时"剩余空间居中"会在目录与正文间撕出大空白带（主人抓包割裂感），
+   正解=内容列紧跟侧栏左起，只限宽不居中。 */
+#view-notes .main>*{max-width:820px}
+/* 知识库切换条（2026-07-18 主人定）：学习笔记/术语词典/金融史/产业地图同属知识类内容，四页顶部互切；
+   股票宇宙/大事件/杠杆率是行情工具不进此条。「更多」菜单入口保留（收纳铁律不动）。 */
+.kbar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+.kbar button{background:var(--panel);border:1px solid var(--border);color:var(--text2);border-radius:99px;padding:6px 16px;font-size:13px;cursor:pointer}
+.kbar button.on{color:var(--accent);border-color:var(--accent);background:rgba(74,140,240,.08)}
+.kbar button:hover{border-color:var(--accent)}
 .ncard{display:block;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:12px;cursor:pointer;transition:border-color .15s;color:inherit;text-decoration:none}
 .ncard:hover{border-color:var(--accent)}
 @media(max-width:860px){#note-search{font-size:16px}}
@@ -841,6 +849,7 @@ body.resizing{user-select:none;cursor:col-resize}
 </div>
 <div id="view-imap" class="hidden">
   <div class="imap-main">
+    <div class="kbar"><button data-view="notes">📚 学习笔记</button><button data-view="dict">📖 术语词典</button><button data-view="history">📜 金融史</button><button data-view="imap" class="on">🗺 产业地图</button></div>
     <div style="margin-bottom:6px"><h2 style="font-size:18px;display:inline">🗺 产业地图</h2> <span style="font-size:12px;color:var(--text2)">一个板块一张底图：规模 · 阵营 · 上下游 · 全量标的</span></div>
     <div class="imap-pills" id="imap-secs"></div>
     <div id="imap-body"></div>
@@ -864,6 +873,7 @@ body.resizing{user-select:none;cursor:col-resize}
     <div id="note-nav"></div>
   </nav>
   <div class="main">
+    <div class="kbar"><button data-view="notes" class="on">📚 学习笔记</button><button data-view="dict">📖 术语词典</button><button data-view="history">📜 金融史</button><button data-view="imap">🗺 产业地图</button></div>
     <div class="notes-intro">
       <h2>写给投资者的 AI 底层知识</h2>
       <p>这里的每一篇笔记，都是我和 AI 一起把一个知识点掰开揉碎的过程记录——大量示意图，用费曼学习法讲到"小白也能懂"。看懂产业的底层逻辑，再去看行情数据，判断才有根。文章为网页版，电脑和手机都能舒适阅读，每篇文内可下载 PDF 存档。</p>
@@ -885,6 +895,7 @@ body.resizing{user-select:none;cursor:col-resize}
 
 <div id="view-dict" class="hidden">
   <div class="dict-main">
+    <div class="kbar"><button data-view="notes">📚 学习笔记</button><button data-view="dict" class="on">📖 术语词典</button><button data-view="history">📜 金融史</button><button data-view="imap">🗺 产业地图</button></div>
     <div class="dict-head">
       <h2 style="font-size:18px">📖 术语词典 <span id="dict-n" style="font-size:12px;color:var(--text2);font-weight:400"></span></h2>
       <p style="font-size:12.5px;color:var(--text2);margin-top:4px">AI 投资黑话速查 · 每条都用大白话和类比讲透 · 与学习笔记同一套解释体系</p>
@@ -921,6 +932,7 @@ body.resizing{user-select:none;cursor:col-resize}
 
 <div id="view-history" class="hidden">
   <div class="hist-main">
+    <div class="kbar"><button data-view="notes">📚 学习笔记</button><button data-view="dict">📖 术语词典</button><button data-view="history" class="on">📜 金融史</button><button data-view="imap">🗺 产业地图</button></div>
     <div class="dict-head">
       <h2 style="font-size:18px">📜 金融史 · 危机编年 <span id="hist-n" style="font-size:12px;color:var(--text2);font-weight:400"></span></h2>
       <p style="font-size:12.5px;color:var(--text2);margin-top:4px">从股票诞生到最近一次熊市 · 每次危机当时都像世界末日，拉长看全是长河里的坑 · 与「大事件」互为镜像：那边看未来，这边读过去</p>
@@ -4480,6 +4492,13 @@ document.addEventListener("click", e=>{
     history.replaceState(null,"",u);
     window.scrollTo(0,0);
   };
+  /* 知识库切换条：四个知识页顶部互切（2026-07-18） */
+  document.addEventListener("click", e=>{
+    const b = e.target.closest ? e.target.closest(".kbar button[data-view]") : null;
+    if(!b) return;
+    if(b.dataset.view==="notes" && window.setNotesView) setNotesView("cat");   /* 进笔记页同规矩重置分类 */
+    switchTab(b.dataset.view);
+  });
   document.querySelectorAll(".tab[data-view]").forEach(tab=>
     tab.addEventListener("click",()=>{
       if(tab.dataset.view==="reports" && window.REP_CAT){   /* 顶部页签=总入口，重置分类回「全部」 */
