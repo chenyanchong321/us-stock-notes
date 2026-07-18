@@ -307,8 +307,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 @media(max-width:860px){#scalemenu{position:fixed;left:12px;right:12px;top:calc(var(--header-h) + 56px);max-height:65vh;overflow:auto}}
 .refresh-note{font-size:12px;color:var(--text2);margin-left:auto;white-space:nowrap}
 /* ②数据说明进浮层（2026-07-18 主人定：说明性文字不占黄金位置）：一行"更新时间+ⓘ"替代原五行大段 */
-#datainfo-btn{color:var(--text2);text-decoration:none;border:1px solid var(--border);border-radius:8px;padding:1px 8px;margin-left:8px;cursor:pointer}
-#datainfo-btn:hover{color:var(--accent);border-color:var(--accent)}
+#datainfo-btn,.fvinfo{color:var(--text2);text-decoration:none;border:1px solid var(--border);border-radius:8px;padding:1px 8px;margin-left:8px;cursor:pointer;font-size:12px;font-weight:400;white-space:nowrap;vertical-align:3px}
+#datainfo-btn:hover,.fvinfo:hover{color:var(--accent);border-color:var(--accent)}
 #datatip{position:fixed;z-index:320;display:none;max-width:340px;background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;font-size:12.5px;line-height:1.9;color:var(--text);box-shadow:0 8px 24px rgba(0,0,0,.35)}
 #datatip b{color:var(--accent)}
 /* 市场规模弹层 */
@@ -1784,7 +1784,7 @@ function renderDash(quotes){
       }
       if(met==="dd"||met==="hi") return `<span class="mmk-pc">${ddCell(r[6])}</span>`;   /* 复用全站回撤配色：>30%红 ≤30%黄 */
       const v=mcapVal(r);
-      return `<span class="mmk-pc" style="color:var(--gold)">${v>=10000?"$"+(v/10000).toFixed(1)+"万亿":"$"+Math.round(v)+"亿"}${mcTierBadge(r)}</span>`;   /* 金色=全站重点标注色；梯队金标与主表同源 */
+      return `<span class="mmk-pc" style="color:var(--accent)">${v>=10000?"$"+(v/10000).toFixed(1)+"万亿":"$"+Math.round(v)+"亿"}${mcTierBadge(r)}</span>`;   /* 数值主题蓝：名字白/数值蓝/梯队金三色分明（主人：全金堆一起不明显） */
     };
     const colHTML = b=>{
       const cells = b.rows.map((r,i)=>{
@@ -1806,11 +1806,10 @@ function renderDash(quotes){
       : met==="dd" ? "距历史高点回撤超30%，跌最深的在最上 · 捡深跌前先看简介和观察位"
       : met==="hi" ? "回撤不足30%，离新高最近的在最上（头部即新高区）"
       : "按美元折算市值排序（汇率为粗略口径）· 基金规模≠公司市值，ETF不参与 · 金标=市值梯队类比：大象>5000亿 · 水牛1000-5000 · 猎豹300-1000 · 狼群50-300 · 兔子10-50 · 种子<10（亿美元）";
-    const note = `美股 / A股 / 港股 / 日韩四大市场并排 · ${noteTail} · 指数不参与 · 日韩合并列名字前「日」「韩」标来源 · 悬停/点击名称看简介与研报 · 跨板块按代码去重`;
+    window.FV_TIP = `美股 / A股 / 港股 / 日韩四大市场并排 · ${noteTail} · 指数不参与 · 日韩合并列名字前「日」「韩」标来源 · 悬停/点击名称看简介与研报 · 跨板块按代码去重`;
     const mPill = k=>`<button class="mmk-dir${k===met?" on":""}" data-mmdir="${k}">${MET_LAB[k]}</button>`;
     const wPill = k=>`<button class="perf-pill${k===wk?" on":""}" data-mmw="${k}">${MMW[k][1]}</button>`;
-    const html = `<div class="section"><div class="section-head"><h2>${title}</h2></div>
-      <p class="fv-note">${note}</p>
+    const html = `<div class="section"><div class="section-head"><h2>${title} <a class="fvinfo" href="javascript:;">ⓘ 说明</a></h2></div>
       <div id="mmkbar">${Object.keys(MET_LAB).map(mPill).join("")}${isPerf?`<span style="flex:0 0 auto;width:1px;background:var(--border);margin:2px 4px"></span>${Object.keys(MMW).map(wPill).join("")}`:""}</div>
       <div class="mmk-grid">${buckets.map(colHTML).join("")}</div></div>`;
     /* 卡片角标=当前指标（涨/跌显示周期），单一出口在这里维护 */
@@ -1832,7 +1831,8 @@ function renderDash(quotes){
     const el = document.getElementById("flatview");
     if(v==="all"){ el.classList.add("hidden"); return; }
     if(v==="multimkt"){ buildMultiMkt(el); return; }
-    let title="", note="", head=FV_HEAD(), body="";
+    /* 说明性文字收进标题旁ⓘ浮层（2026-07-18 主人定：黄金位置不放说明）；note 只留功能组件（胶囊/切换条） */
+    let title="", note="", tip="", head=FV_HEAD(), body="";
     if(v==="focus"){
       const list = flatRows().filter(x=>BUYCODES.has(x.r[1]));
       list.forEach(x=>{
@@ -1844,7 +1844,7 @@ function renderDash(quotes){
         if(a.hit!==b.hit) return a.hit?-1:1;
         return (a.dist??9e9)-(b.dist??9e9);
       });
-      title=`⭐ 重点清单（${list.length}）`; note="标注了观察位的标的 · 按距观察位由近到远排序，🎯已进观察区置顶 · 观察位=接的位置（安全边际），目标价=估值锚（源自研究笔记，第一个数字用于算距目标空间）· 均为个人学习记录，不构成投资建议";
+      title=`⭐ 重点清单（${list.length}）`; tip="标注了观察位的标的 · 按距观察位由近到远排序，🎯已进观察区置顶 · 观察位=接的位置（安全边际），目标价=估值锚（源自研究笔记，第一个数字用于算距目标空间）· 均为个人学习记录，不构成投资建议";
       head=FV_HEAD(`<th>距观察位</th><th>目标价</th>`, "现价 / 观察位");
       const guestBanner = window.MEMBER ? "" :
         `<tr><td colspan="99" style="text-align:left;padding:8px 10px"><span style="display:inline-block;font-size:12px;color:var(--gold);border:1px dashed var(--gold);border-radius:8px;padding:5px 10px;cursor:pointer" data-auth>🔒 观察位为会员用户专属内容 · 会员请登录</span></td></tr>`;
@@ -1867,8 +1867,8 @@ function renderDash(quotes){
       const mktLab = window.CURMKT || "全市场";
       title=`🔥 成交榜 · ${mktLab}（共${uniq.length}）`;
       note=`<span class="turnpill" data-s="amt" style="cursor:pointer;border:1px solid ${vs==="amt"?"var(--accent)":"var(--border)"};color:${vs==="amt"?"var(--accent)":"var(--text2)"};border-radius:99px;padding:2px 12px;margin-right:8px">成交额（绝对热）</span>`+
-           `<span class="turnpill" data-s="lb" style="cursor:pointer;border:1px solid ${vs==="lb"?"var(--accent)":"var(--border)"};color:${vs==="lb"?"var(--accent)":"var(--text2)"};border-radius:99px;padding:2px 12px">量比（相对热·比自己平时热多少）</span>`+
-           `<span style="display:block;margin-top:6px">跨币种按美元折算排序 · 范围=本站关注池 · 指数/ETF/商品/加密不参与 · A股/美股/港股为盘中实时，日韩台为上一交易日</span>`;
+           `<span class="turnpill" data-s="lb" style="cursor:pointer;border:1px solid ${vs==="lb"?"var(--accent)":"var(--border)"};color:${vs==="lb"?"var(--accent)":"var(--text2)"};border-radius:99px;padding:2px 12px">量比（相对热·比自己平时热多少）</span>`;
+      tip="跨币种按美元折算排序 · 范围=本站关注池 · 指数/ETF/商品/加密不参与 · A股/美股/港股为盘中实时，日韩台为上一交易日";
       head=`<thead><tr><th style="width:34px">#</th><th style="text-align:left">名称</th><th>成交</th><th>现价 / 1年</th><th>当日</th><th>市值</th><th>回撤</th><th class="fill"></th></tr></thead>`;
       body=uniq.map((x,i)=>{
         const r=x.r, lb=x.vm.lb;
@@ -1898,7 +1898,7 @@ function renderDash(quotes){
       top.sort((a,b)=>mcapVal(b.r)-mcapVal(a.r));
       const mktLab = window.CURMKT || "全市场";
       title=`💰 市值排行榜 · ${mktLab}（共${top.length}）`;
-      note=`按市值从高到低一列到底 · 跨币种按美元折算排序（汇率为粗略口径，只影响排名）· 指数/ETF/商品不参与 · A/H 两地上市在全市场视图下各按上市地市值分别出现`;
+      tip=`按市值从高到低一列到底 · 跨币种按美元折算排序（汇率为粗略口径，只影响排名）· 指数/ETF/商品不参与 · A/H 两地上市在全市场视图下各按上市地市值分别出现`;
       head=`<thead><tr><th style="width:34px">#</th><th style="text-align:left">名称</th><th>市值</th><th>现价 / 1年</th><th>当日</th><th>回撤</th><th>年初至今</th><th>近1年</th><th class="fill"></th></tr></thead>`;
       body=top.map((x,i)=>{
         const r=x.r;
@@ -1923,10 +1923,10 @@ function renderDash(quotes){
       list.sort((a,b)=> v==="gain" ? b.r[ri]-a.r[ri] : a.r[ri]-b.r[ri]);
       const top=list.slice(0,30);
       title = `${v==="gain"?"📈":"📉"} ${wl}${v==="gain"?"涨幅":"跌幅"}榜 Top30`;
-      note = wk==="d" ? "跨板块去重 · 随实时行情自动刷新"
-                      : `按${wl}区间涨跌排序 · 跨板块去重 · 上市不满该窗口的标的不参与`;
+      tip = wk==="d" ? "跨板块去重 · 随实时行情自动刷新"
+                     : `按${wl}区间涨跌排序 · 跨板块去重 · 上市不满该窗口的标的不参与`;
       const pill=(k,lab)=>`<button class="perf-pill${k===wk?" on":""}" data-w="${k}">${lab}</button>`;
-      note += `</p><div id="perfbar">${Object.keys(W).map(k=>pill(k,W[k][1])).join("")}</div><p class="fv-note" style="display:none">`;
+      note = `<div id="perfbar">${Object.keys(W).map(k=>pill(k,W[k][1])).join("")}</div>`;
       if(wk==="d"){
         head=FV_HEAD();
         body=top.map(x=>fvRow(x)).join("");
@@ -1939,7 +1939,7 @@ function renderDash(quotes){
         .filter(x=>x.a && typeof x.a.aytd==="number" && !/ETF|指数|商品|外汇/.test(String(x.r[2])));
       list.sort((a,b)=>((b.a.sytd??b.a.aytd)-(a.a.sytd??a.a.aytd)));
       const top=list.slice(0,30);
-      title="🏆 超额榜 Top30（两步框架）"; note="第一列 vs赛道 = 个股 − 所在赛道指数（半导体系vs费城半导体 · 软件vsIGV · 中国互联网vs中概互联 · 加密vs比特币 · 巨头/云vs纳指100，为全球行业口径）→ 这才是个股 alpha；第二列 vs大盘 = 个股 − 所在市场宽基 → 市场层面超额。两列都为正标🏆双强；无干净赛道指数的板块显示 —，按 vs大盘参与排序（YTD口径）";
+      title="🏆 超额榜 Top30（两步框架）"; tip="第一列 vs赛道 = 个股 − 所在赛道指数（半导体系vs费城半导体 · 软件vsIGV · 中国互联网vs中概互联 · 加密vs比特币 · 巨头/云vs纳指100，为全球行业口径）→ 这才是个股 alpha；第二列 vs大盘 = 个股 − 所在市场宽基 → 市场层面超额。两列都为正标🏆双强；无干净赛道指数的板块显示 —，按 vs大盘参与排序（YTD口径）";
       head=FV_HEAD(`<th>vs赛道</th><th>vs大盘</th>`);
       body=top.map(x=>{
         const both = typeof x.a.sytd==="number" && x.a.sytd>0 && typeof x.a.aytd==="number" && x.a.aytd>0;
@@ -1951,20 +1951,20 @@ function renderDash(quotes){
          排序=离新高最近的在上（继承新高榜精神：头部即原新高榜内容，往下一路排到-30%边缘） */
       const list = flatRows().filter(x=>typeof x.r[6]==="number" && x.r[6]>-30);
       list.sort((a,b)=>b.r[6]-a.r[6]);
-      title=`🚀 回撤榜（<30%，共${list.length}）`; note="回撤不足30%的全部标的 · 离新高最近的在最上面（头部即新高区）· 强者恒强，但追高前先看简介、估值和观察位";
+      title=`🚀 回撤榜（<30%，共${list.length}）`; tip="回撤不足30%的全部标的 · 离新高最近的在最上面（头部即新高区）· 强者恒强，但追高前先看简介、估值和观察位";
       head=FV_HEAD(null, null, true);   /* 回撤列前置：看回撤判断是否创新高 */
       body=list.map(x=>fvRow(x, null, null, true)).join("");
     }else if(v==="dd"){
       const list = flatRows().filter(x=>typeof x.r[6]==="number" && x.r[6]<=-30);
       list.sort((a,b)=>a.r[6]-b.r[6]);
-      title=`🕳 回撤榜（>30%，共${list.length}）`; note="距历史高点回撤最深的在最上面 · 捡深跌前先看简介和观察位";
+      title=`🕳 回撤榜（>30%，共${list.length}）`; tip="距历史高点回撤最深的在最上面 · 捡深跌前先看简介和观察位";
       head=FV_HEAD(null, null, true);   /* 回撤列前置：本榜排序依据 */
       body=list.map(x=>fvRow(x, null, null, true)).join("");
     }else if(v==="ladder"){
       const asc = window.LADDER_ASC===true;   // false=回撤深在上(默认)，true=回撤浅在上
       const list=flatRows().map(x=>({x, L:ladderOf(x.r)})).filter(o=>o.L && !/指数/.test(String(o.x.r[2])));
       list.sort((a,b)=> asc ? (b.x.r[6]??-999)-(a.x.r[6]??-999) : (a.x.r[6]??0)-(b.x.r[6]??0));
-      title="🪜 回撤阶梯（全表横向对比）"; note=`每档＝历史高点往下的价格（−30%~−80%）· 金色▸＝当前所处台阶 · 灰色＝已跌破 · 点「历史高点」表头切换排序（现为${asc?"回撤浅→深":"回撤深→浅"}）· 单只详细移到该行「历史高点」列悬停`;
+      title="🪜 回撤阶梯（全表横向对比）"; tip=`每档＝历史高点往下的价格（−30%~−80%）· 金色▸＝当前所处台阶 · 灰色＝已跌破 · 点「历史高点」表头切换排序（现为${asc?"回撤浅→深":"回撤深→浅"}）· 单只详细移到该行「历史高点」列悬停`;
       head=`<thead><tr><th style="text-align:left">名称</th><th>现价</th><th id="ladder-sort" style="cursor:pointer;color:var(--accent)">历史高点 ${asc?"▲":"▼"}</th><th>−30%</th><th>−40%</th><th>−50%</th><th>−60%</th><th>−70%</th><th>−80%</th><th class="fill"></th></tr></thead>`;
       body=list.map(o=>{
         const r=o.x.r;
@@ -1992,9 +1992,9 @@ function renderDash(quotes){
         return {sec:s.sec, med, up, n:nums.length, lead, range, avgdd, idx:DATA.indexOf(s)};
       }).filter(Boolean);
       secs.sort((a,b)=>b.med-a.med);
-      title=`🌡 板块热力（按${hl}中位涨跌）`; note="中位数抗极端值 · 领涨可点击直达 · 分化=板块内最强减最弱（越大越撕裂）";
+      title=`🌡 板块热力（按${hl}中位涨跌）`; tip="中位数抗极端值 · 领涨可点击直达 · 分化=板块内最强减最弱（越大越撕裂）";
       const hpill=(k,lab)=>`<button class="perf-pill${k===hk?" on":""}" data-hw="${k}">${lab}</button>`;
-      note += `</p><div id="perfbar">${hpill("d","当日")}${hpill("w1","近1周")}${hpill("m1","近1月")}</div><p class="fv-note" style="display:none">`;
+      note = `<div id="perfbar">${hpill("d","当日")}${hpill("w1","近1周")}${hpill("m1","近1月")}</div>`;
       head=`<thead><tr><th style="text-align:left;min-width:200px">板块</th><th style="min-width:88px">${hl}中位</th><th style="min-width:80px">上涨/家数</th><th style="min-width:130px">领涨</th><th style="min-width:70px">分化</th><th style="min-width:96px">板块平均回撤</th><th class="fill"></th></tr></thead>`;
       body=secs.map(s=>{
         const mix = s.sec.includes("价值老登") ? ` <span style="font-size:10px;color:var(--text2);border:1px solid var(--border);border-radius:4px;padding:0 4px">混合</span>` : "";
@@ -2008,12 +2008,13 @@ function renderDash(quotes){
         <td>${ddCell(Math.round(s.avgdd*10)/10)}</td><td class="fill"></td>
       </tr>`;}).join("");
     }
-    /* 榜内市场快捷切换（全站所有榜单统一，主人指定）：追加在说明文字之后 */
+    /* 榜内市场快捷切换（全站所有榜单统一，主人指定）：追加在功能条区 */
     note += mktBarHTML();
+    window.FV_TIP = tip;   /* ⓘ 说明浮层内容（缓存命中也要更新，故放 __h 检查前） */
     const tstyle = '';
     /* 30秒自动刷新会整段重建本视图，导致手机端横向滚动位置归零。
        重建前记住滚动位置，重建后还原；仅当仍是同一个榜单时还原（切换榜单则回到最左）。 */
-    const html = `<div class="section"><div class="section-head"><h2>${title}</h2></div>
+    const html = `<div class="section"><div class="section-head"><h2>${title}${tip?` <a class="fvinfo" href="javascript:;">ⓘ 说明</a>`:""}</h2></div>
       <p class="fv-note">${note}</p>
       <div class="tbl-wrap"><table${tstyle}>${head}<tbody>${body}</tbody></table></div></div>`;
     /* 内容一字未变就整段跳过：否则每30秒把整张榜单推倒重建，是肉眼可见闪烁的最大来源 */
@@ -2489,12 +2490,13 @@ window.updateFresh = function(){
   const d=new Date(), pad=n=>String(n).padStart(2,"0");
   const today=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
   const rows=[];
+  /* 书名号包每篇标题（主人定：《》天然自分界，一眼两篇；去点号分隔） */
   if(typeof REPORTS!=="undefined" && REPORTS.length){   /* REPORTS 是脚本级 let 不在 window 上——DATA 同款坑，守卫必须 typeof */
-    const items=REPORTS.slice(0,2).map(r=>`<a href="javascript:;" class="fresh-rep" data-rid="${r.id}">${r.title}${String(r.date)===today?" 🆕":""}</a>`).join(`<span class="fsep">·</span>`);
+    const items=REPORTS.slice(0,2).map(r=>`<a href="javascript:;" class="fresh-rep" data-rid="${r.id}">《${r.title}》${String(r.date)===today?"🆕":""}</a>`).join(" ");
     rows.push(`<div class="fresh-row"><span class="ftag">📑 研报</span><span class="fitems">${items}</span></div>`);
   }
   if(window.NOTES_FLAT && NOTES_FLAT.length){
-    const items=NOTES_FLAT.slice(0,2).map(n=>`<a href="${n.page}">${n.t}${String(n.date)===today?" 🆕":""}</a>`).join(`<span class="fsep">·</span>`);
+    const items=NOTES_FLAT.slice(0,2).map(n=>`<a href="${n.page}">《${n.t}》${String(n.date)===today?"🆕":""}</a>`).join(" ");
     rows.push(`<div class="fresh-row"><span class="ftag">📚 笔记</span><span class="fitems">${items}</span></div>`);
   }
   if(!rows.length){ el.classList.add("hidden"); return; }
@@ -4331,8 +4333,8 @@ document.addEventListener("click", e=>{
 (function(){
   const HTML = `<b>数据更新频率</b><br>盘中现价30秒刷新：A股·美股实时 · 港股延时15分钟 · 日股约15-20分钟 · 韩股约20-25分钟 · 台股仅每日数据<br>美股盘前盘后约1分钟 · 加密实时 · 其余指标数分钟刷新<br><b>口径</b><br>市值为估算口径 · 成交列口径与量比说明见成交格悬停浮窗`;
   let tip=null;
-  const ensure=()=>{ if(!tip){ tip=document.createElement("div"); tip.id="datatip"; tip.innerHTML=HTML; document.body.appendChild(tip); } return tip; };
-  const show=(x,y)=>{ const t=ensure(); t.style.display="block";
+  const ensure=()=>{ if(!tip){ tip=document.createElement("div"); tip.id="datatip"; document.body.appendChild(tip); } return tip; };
+  const show=(html,x,y)=>{ const t=ensure(); t.innerHTML=html; t.style.display="block";
     const w=t.offsetWidth,h=t.offsetHeight;
     t.style.left=Math.max(8,Math.min(x,innerWidth-w-8))+"px";
     t.style.top=Math.max(8,Math.min(y,innerHeight-h-8))+"px"; };
@@ -4340,14 +4342,17 @@ document.addEventListener("click", e=>{
   document.addEventListener("click", e=>{
     const b=e.target.closest && e.target.closest("#datainfo-btn");
     if(b){ e.stopPropagation(); const r=b.getBoundingClientRect();
-      (tip&&tip.style.display==="block") ? hide() : show(r.left-120, r.bottom+8); return; }
+      (tip&&tip.style.display==="block") ? hide() : show(HTML, r.left-120, r.bottom+8); return; }
+    const fi=e.target.closest && e.target.closest(".fvinfo");   /* 各榜单标题旁ⓘ：内容=当前视图说明（window.FV_TIP） */
+    if(fi){ e.preventDefault(); e.stopPropagation(); const r=fi.getBoundingClientRect();
+      (tip&&tip.style.display==="block") ? hide() : show(window.FV_TIP||"", r.left-140, r.bottom+8); return; }
     if(tip && tip.style.display==="block" && !(e.target.closest&&e.target.closest("#datatip"))) hide();
   });
   if(matchMedia("(hover:hover) and (pointer:fine)").matches){   /* 桌面：slogan 悬停即弹 */
     const sl=document.querySelector("#header .slogan");
     if(sl){
       sl.style.cursor="default";
-      sl.addEventListener("mouseenter", ()=>{ const r=sl.getBoundingClientRect(); show(r.right-340, r.bottom+10); });
+      sl.addEventListener("mouseenter", ()=>{ const r=sl.getBoundingClientRect(); show(HTML, r.right-340, r.bottom+10); });
       sl.addEventListener("mouseleave", ()=>setTimeout(()=>{ if(!(tip&&tip.matches(":hover"))) hide(); },150));
     }
   }
