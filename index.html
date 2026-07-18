@@ -2491,6 +2491,9 @@ function renderNotes(cfg){
    数据两源异步到货（REPORTS 走 API、笔记走 notes.json），谁到都调一次，条子逐步补全。 */
 window.updateFresh = function(){
   const el=document.getElementById("freshbar"); if(!el) return;
+  /* 2026-07-18 主人定：最新条暂时下架（手机首屏太挤，读文章走顶部页签）。
+     恢复=删掉下面这行；将来可考虑瘦身版回归（每行只放1篇）。功能代码全部保留。 */
+  if(!window.FRESH_ON){ el.classList.add("hidden"); return; }
   const d=new Date(), pad=n=>String(n).padStart(2,"0");
   const today=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
   const rows=[];
