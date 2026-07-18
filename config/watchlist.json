@@ -5345,6 +5345,20 @@
      },
      "mcap_base_price": 20.7,
      "ath_floor": 0
+    },
+    {
+     "name": "奈飞",
+     "code": "NFLX",
+     "market": "美股",
+     "yahoo": "NFLX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2903.0,
+      "approx": true
+     },
+     "mcap_base_price": 68.95,
+     "ath_floor": 0
     }
    ],
    "groups": [
@@ -5402,7 +5416,8 @@
       "SHOP",
       "TOST",
       "ZM",
-      "ZETA"
+      "ZETA",
+      "NFLX"
      ]
     }
    ]

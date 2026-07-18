@@ -959,10 +959,15 @@ let REPORTS = [], REPBY = {}, RCODES = new Set();  /* 报告目录（公开橱�
    cat 字段传不下来——实测踩坑；靠 id 前缀零服务端改动）。挂点评的 SOP：id 必须 fin- 开头。
    徽标按类显示：有研报显示「研报」，只有财报点评显示「点评」。 */
 function repCatOf(x){ return /^fin-/.test(String(x.id||"")) ? "财报点评" : "研报"; }
+/* 双徽标（2026-07-18 主人定稿）：有研报挂「研报」、有点评挂「点评」，两类都有就挂两个，
+   各自可点（data-cat 路由到对应类：单篇直达/多篇去集合页该分类）。 */
 function repBadge(code){
-  if(!RCODES.has(code)) return "";
-  const lab = (REPBY[code]||[]).some(x=>repCatOf(x)!=="财报点评") ? "研报" : "点评";
-  return `<span class="repb" data-code="${code}">${lab}</span>`;
+  const list = REPBY[code]||[];
+  if(!list.length) return "";
+  let h="";
+  if(list.some(x=>repCatOf(x)==="研报")) h+=`<span class="repb" data-code="${code}" data-cat="研报">研报</span>`;
+  if(list.some(x=>repCatOf(x)==="财报点评")) h+=`<span class="repb" data-code="${code}" data-cat="财报点评">点评</span>`;
+  return h;
 }
 window.MEMBER = false; window.AUSER = "";
 const AUTH_API = location.host==="stock.ziyuanai.top" ? "/api" : "https://stock.ziyuanai.top/api";
@@ -3208,7 +3213,7 @@ let PROFILES = {};
     const links = [];
     /* 研报行置顶（金色，会员点击直达/游客弹登录），相关笔记在后 */
     for(const x of (REPBY[code]||[]))
-      links.push(`<a class="repa" data-rid="${x.id}" href="javascript:;" style="display:block;color:var(--gold);text-decoration:none">📑 研报：${x.title} →</a>`);
+      links.push(`<a class="repa" data-rid="${x.id}" href="javascript:;" style="display:block;color:var(--gold);text-decoration:none">${repCatOf(x)==="财报点评"?"📄 点评":"📑 研报"}：${x.title} →</a>`);
     if(nf) links.push(`<a href="articles/${nf[0]}.html" style="display:block;color:var(--accent);text-decoration:none">📖 相关笔记：${nf[1]} →</a>`);
     return txt + alphaLine + d5Line + (links.length ? `<span style="display:block;margin-top:7px;font-size:12px;border-top:1px solid var(--border);padding-top:6px">${links.join("")}</span>` : "");
   }
@@ -3891,12 +3896,17 @@ window.goReport = function(id){
   if(!window.MEMBER){ window.openAuth && openAuth("login"); return; }
   openReader(id);
 };
-function goRepCode(code){
+function goRepCode(code, cat){
   window.closeStip && closeStip();
-  const list = REPBY[code] || [];
+  let list = REPBY[code] || [];
+  if(cat) list = list.filter(x=>repCatOf(x)===cat);   /* 双徽标各管各类 */
   if(!window.MEMBER){ window.openAuth && openAuth("login"); return; }
   if(list.length===1) goReport(list[0].id);
-  else if(window.switchTab) switchTab("reports");
+  else if(window.switchTab){
+    window.REP_CAT = cat||"";
+    try{ renderReports(document.getElementById("rep-search")?.value||""); }catch(e){}
+    switchTab("reports");
+  }
 }
 /* ===== 股票宇宙（2026-07-18 主人需求，aha.wiki 式全量总图）=====
    颜色=当日涨跌（深浅=幅度分档 2%/5%）· 大小=美元市值三档（>1000亿/100-1000/以下）·
@@ -4162,7 +4172,7 @@ document.addEventListener("click", e=>{
   const t = e.target.closest ? (e.target.closest(".repb,.repa,.rep-card")) : null;
   if(!t) return;
   e.preventDefault(); e.stopPropagation();
-  if(t.classList.contains("repb")){ goRepCode(t.dataset.code); return; }
+  if(t.classList.contains("repb")){ goRepCode(t.dataset.code, t.dataset.cat); return; }
   goReport(t.dataset.rid);
 }, true);
 /* 手机端徽标：触摸抬起即走（捕获+preventDefault 掐断补发事件串），滑动松手不算 */
@@ -4175,7 +4185,7 @@ document.addEventListener("click", e=>{
     const t = e.changedTouches[0];
     if(Math.abs(t.clientX-sx)>12 || Math.abs(t.clientY-sy)>12) return;
     e.preventDefault(); e.stopPropagation();
-    goRepCode(b.dataset.code);
+    goRepCode(b.dataset.code, b.dataset.cat);
   }, {passive:false, capture:true});
 })();
 
