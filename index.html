@@ -71,7 +71,7 @@ html[data-theme="light"] .stat,
 html[data-theme="light"] .card,
 html[data-theme="light"] .hcard,
 html[data-theme="light"] .imap-brick,
-html[data-theme="light"] .rep-card{box-shadow:0 1px 3px rgba(86,80,68,.11)}
+html[data-theme="light"] .rep-card,html[data-theme="light"] .ncard{box-shadow:0 1px 3px rgba(86,80,68,.11)}
 html[data-theme="light"] .tbl-wrap{box-shadow:0 1px 4px rgba(86,80,68,.10)}
 /* 7处写死颜色的浅色修复 */
 html[data-theme="light"] #mbottom{background:rgba(255,255,255,.92)}            /* 底部三按钮栏：深色磨砂→白磨砂 */
@@ -576,8 +576,13 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 /* 搜索框铁律：手机端 font-size 必须≥16px，否则 iOS 聚焦自动放大页面（主搜索/词典/研报搜索第三次踩坑后定版） */
 #rep-search{font-size:14px}
 #rep-search::-webkit-search-cancel-button{display:none}
-#rep-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text2);cursor:pointer;font-size:15px;padding:6px 8px;display:none}
-#rep-clear:hover{color:var(--text)}
+#rep-clear,#note-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text2);cursor:pointer;font-size:15px;padding:6px 8px;display:none}
+#rep-clear:hover,#note-clear:hover{color:var(--text)}
+/* 笔记页与研报页格式对齐（2026-07-18 主人定）：内容居中窄列（保留左侧分类目录）+ 研报卡同款单列大卡 */
+#view-notes .main>*{max-width:820px;margin-left:auto;margin-right:auto}
+.ncard{display:block;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:12px;cursor:pointer;transition:border-color .15s;color:inherit;text-decoration:none}
+.ncard:hover{border-color:var(--accent)}
+@media(max-width:860px){#note-search{font-size:16px}}
 @media(max-width:860px){.rep-main{padding:20px 14px 50px} #rep-search{font-size:16px}}
 /* 研报阅读页正文（与学习笔记文章观感一致：白纸黑字阅读模式，2026-07-16 主人定）。
    用局部 CSS 变量覆盖实现"纸张"：正文里所有 var(--text2)/var(--gold) 等引用自动切到浅色适配值 */
@@ -709,7 +714,6 @@ body.resizing{user-select:none;cursor:col-resize}
     <div class="tab" data-view="notes">📚 学习笔记</div>
     <div class="tab" id="tab-more">☰ 更多
       <div id="moremenu" class="hidden">
-        <button data-view="reports" data-repcat="财报点评">📄 财报点评</button>
         <button data-view="universe">🌌 股票宇宙</button>
         <button data-view="imap">🗺 产业地图</button>
         <button data-view="events">📅 大事件</button>
@@ -864,10 +868,16 @@ body.resizing{user-select:none;cursor:col-resize}
       <h2>写给投资者的 AI 底层知识</h2>
       <p>这里的每一篇笔记，都是我和 AI 一起把一个知识点掰开揉碎的过程记录——大量示意图，用费曼学习法讲到"小白也能懂"。看懂产业的底层逻辑，再去看行情数据，判断才有根。文章为网页版，电脑和手机都能舒适阅读，每篇文内可下载 PDF 存档。</p>
     </div>
-    <div class="view-toggle">
-      <button id="vt-tl">时间线</button>
-      <button id="vt-cat">分类视图</button>
+    <div style="position:relative;margin-bottom:14px">
+      <input id="note-search" type="search" enterkeyhint="search" autocomplete="off" placeholder="🔍 搜笔记：标题 / 标签 / 关键词，如 HBM、光模块、护城河…"
+        style="width:100%;box-sizing:border-box;padding:10px 34px 10px 14px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;color:var(--text);outline:none">
+      <span id="note-clear">✕</span>
     </div>
+    <div class="view-toggle">
+      <button id="vt-cat">🗂 分类视图</button>
+      <button id="vt-tl">🕒 时间线</button>
+    </div>
+    <div id="note-noresult" style="display:none;color:var(--text2);font-size:13px;padding:20px 0;text-align:center">没有匹配的笔记</div>
     <div id="note-cats"></div>
     <div id="note-timeline" class="hidden"></div>
   </div>
@@ -2323,18 +2333,17 @@ function renderNotes(cfg){
     noteCount += c.items.length;
     noteNav.insertAdjacentHTML("beforeend",
       `<a href="#${id}" data-sec="${id}">${c.cat}<span class="cnt">${c.items.length}</span></a>`);
+    /* 卡片=研报卡同款单列大卡（2026-07-18 格式对齐）：标题/日期标签/简介/阅读行，与投研报告页统一视觉语言 */
     catEl.insertAdjacentHTML("beforeend",`
       <div class="note-cat" id="${id}">
         <h3>${c.cat}<span class="n">${c.items.length} 篇</span></h3>
-        <div class="cards">${c.items.map(n=>`
-          <a class="card" href="${n.page}">
-            <div class="body">
-              <div class="t">${n.t}</div>
-              <div class="meta"><span class="date">${n.date}</span>${n.tags.map(t=>`<span class="tag">${t}</span>`).join("")}</div>
-              <div class="d">${n.d}</div>
-            </div>
+        ${c.items.map(n=>`
+          <a class="ncard" href="${n.page}">
+            <div class="rep-tags">${n.tags.map(t=>`<span class="rep-code">${t}</span>`).join("")}<span class="rep-meta">${n.date}</span></div>
+            <div class="rep-title">${n.t}</div>
+            <div class="rep-d">${n.d}</div>
+            <div class="rep-act">▸ 阅读全文（免费 · 文内可下载PDF）</div>
           </a>`).join("")}
-        </div>
       </div>`);
   });
   document.getElementById("note-total").textContent = noteCount;
@@ -2358,13 +2367,31 @@ function renderNotes(cfg){
     vtc.classList.toggle("on",v==="cat"); vtt.classList.toggle("on",v==="tl");
     document.getElementById("note-cats").classList.toggle("hidden",v!=="cat");
     document.getElementById("note-timeline").classList.toggle("hidden",v!=="tl");
-    try{ localStorage.setItem("notesView",v); }catch(e){}
   }
+  window.setNotesView = setNotesView;   /* 暴露给页签点击：每次进入重置分类视图（2026-07-18 主人定，同涨跌幅榜/研报页规矩） */
   vtc.addEventListener("click",()=>setNotesView("cat"));
   vtt.addEventListener("click",()=>setNotesView("tl"));
-  /* 默认时间线；用户手动切过分类则记住 */
-  let nv="tl"; try{ nv=localStorage.getItem("notesView")||"tl"; }catch(e){}
-  setNotesView(nv);
+  setNotesView("cat");   /* 默认分类视图；时间线=手动切换，不再 localStorage 记忆 */
+
+  /* 笔记搜索（2026-07-18 格式对齐）：标题/标签/简介/分类全字段、空格分词取与，同时作用于分类与时间线视图 */
+  const inp=document.getElementById("note-search"), clr=document.getElementById("note-clear");
+  function noteFilter(q){
+    const ws=(q||"").trim().toLowerCase().split(/\s+/).filter(Boolean);
+    const match=el=>{ const t=el.textContent.toLowerCase(); return ws.every(w=>t.includes(w)); };
+    let any=false;
+    document.querySelectorAll("#note-cats .ncard").forEach(c=>{ const m=!ws.length||match(c); c.style.display=m?"":"none"; if(m)any=true; });
+    document.querySelectorAll("#note-cats .note-cat").forEach(cat=>{
+      const vis=[...cat.querySelectorAll(".ncard")].some(c=>c.style.display!=="none");
+      cat.style.display=vis?"":"none"; });
+    document.querySelectorAll("#note-timeline .tl-item").forEach(c=>{ c.style.display=(!ws.length||match(c))?"":"none"; });
+    document.querySelectorAll("#note-timeline .tl-month").forEach(m=>{ m.style.display=ws.length?"none":""; });   /* 搜索时月份标题失义，整体隐藏 */
+    const em=document.getElementById("note-noresult");
+    if(em) em.style.display=(ws.length&&!any)?"":"none";
+  }
+  if(inp){
+    inp.addEventListener("input",()=>{ noteFilter(inp.value); if(clr) clr.style.display=inp.value?"block":"none"; });
+    if(clr) clr.addEventListener("click",()=>{ inp.value=""; clr.style.display="none"; noteFilter(""); inp.focus(); });
+  }
 }
 
 /* ===== 悬浮表头（任意宽度吸顶，横滚同步） ===== */
@@ -4459,6 +4486,7 @@ document.addEventListener("click", e=>{
         window.REP_CAT="";
         try{ renderReports(document.getElementById("rep-search")?.value||""); }catch(x){}
       }
+      if(tab.dataset.view==="notes" && window.setNotesView) setNotesView("cat");   /* 笔记页同规矩：每次进入重置分类视图 */
       switchTab(tab.dataset.view);
     }));
   (function(){
