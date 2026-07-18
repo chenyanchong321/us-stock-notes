@@ -180,6 +180,31 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 #flatview td.sec-tag{font-size:11px;color:var(--text2);text-align:left;max-width:110px;white-space:normal;line-height:1.3}
 .dist-hit{color:var(--up);font-weight:600}
 .dist-far{color:var(--text2)}
+/* 🌐 多市场榜（2026-07-18）：四列并排（美股/A股/港股/日韩），手机端也不堆叠。
+   颜色全走 var()（绿涨红跌，双主题自适应）；排名/涨跌%子项 flex:0 0 auto 永不截断（边界三查）；
+   名字列可省略号（narrow列刻意，非bug）。#flatview 已在头下正常流，无需再补 header-h。 */
+#mmkbar{display:flex;gap:8px;margin:0 0 12px}
+.mmk-dir{background:var(--panel2);border:1px solid var(--border);color:var(--text2);border-radius:99px;padding:5px 16px;font-size:13px;cursor:pointer}
+.mmk-dir.on{color:var(--accent);border-color:var(--accent);background:rgba(74,140,240,.10)}
+.mmk-grid{display:flex;gap:10px;align-items:flex-start}
+.mmk-col{flex:1 1 0;min-width:0;background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.mmk-colh{font-weight:700;font-size:13.5px;padding:9px 10px;background:var(--panel2);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:6px}
+.mmk-cn{font-size:11px;color:var(--text2);font-weight:400;flex:0 0 auto}
+.mmk-cell{display:flex;align-items:center;gap:6px;padding:6px 9px;border-bottom:1px solid var(--border);cursor:pointer;font-size:13px}
+.mmk-cell:last-child{border-bottom:0}
+.mmk-cell:hover{background:rgba(74,140,240,.07)}
+.mmk-rk{flex:0 0 auto;width:18px;color:var(--text2);font-size:11px;text-align:right}
+.mmk-nm{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mmk-src{display:inline-block;font-size:10px;color:var(--text2);border:1px solid var(--border);border-radius:3px;padding:0 3px;margin-right:4px}
+.mmk-pc{flex:0 0 auto;font-variant-numeric:tabular-nums;font-weight:600}
+.mmk-empty{padding:14px 10px;color:var(--text2);font-size:12px;text-align:center}
+@media(max-width:860px){
+  .mmk-grid{gap:5px}
+  .mmk-cell{padding:6px 5px;gap:3px;font-size:12px}
+  .mmk-colh{padding:8px 6px;font-size:12px}
+  .mmk-rk{width:14px}
+  .mmk-src{margin-right:2px;padding:0 2px}
+}
 /* 市场筛选下拉 */
 #mktcard{position:relative}
 /* mktmenu 下拉已删除（2026-07-12）：选市场走横向切换条，开盘状态长在胶囊上 */
@@ -729,6 +754,7 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="stat vc" data-view="focus"><div class="k">⭐ 重点清单</div><div class="v" id="st-focus">–</div></div>
       <div class="stat vc" data-view="gain"><div class="k">📈 涨幅榜 Top30</div><div class="v" id="st-gain">今日</div></div>
       <div class="stat vc" data-view="loss"><div class="k">📉 跌幅榜 Top30</div><div class="v" id="st-loss">今日</div></div>
+      <div class="stat vc" data-view="multimkt"><div class="k">🌐 多市场榜</div><div class="v" id="st-mm">今日</div></div>
       <div class="stat vc" data-view="dd"><div class="k">回撤榜（&gt;30%）</div><div class="v" id="st-deep">–</div></div>
       <div class="stat vc" data-view="hi"><div class="k">🚀 回撤榜（&lt;30%）</div><div class="v" id="st-hi">–</div></div>
       <div class="stat vc" data-view="mcap"><div class="k">💰 市值排行榜</div><div class="v" id="st-mcap">全表</div></div>
@@ -1599,10 +1625,69 @@ function renderDash(quotes){
     const pers = [18,7,8,9,10,11].filter(i=>i!==skipRi).map(i=>`<th>${PLBL[i]}</th>`).join("");
     return `<thead><tr><th style="text-align:left">名称</th>${athFirst?ath:""}<th>${pxLabel||"现价 / 1年"}</th>${extra||""}<th>当日</th>${athFirst?"":ath}<th>市值</th><th>成交</th>${pers}<th class="fill"></th></tr></thead>`;
   };
+  /* 🌐 多市场榜（2026-07-18 主人需求）：四列并排——①美股 ②A股 ③港股 ④日韩（日+韩合并）。
+     每列=该市场今日 Top30，一格一行=排名/名称/今日涨跌%。涨=今日降序，跌=今日升序（方向存 localStorage）。
+     不用 flatRows()（内建 mktOk 会被全局市场筛选污染）——直接遍历 DATA 自己分桶，按代码全局去重（跨板块重复只留一次）。
+     组装段无条件拼 <table> 会错乱，故本视图在 buildFlat 开头自建完整 HTML 后提前 return（参考 renderUniverse）。 */
+  function buildMultiMkt(el){
+    let dir="gain"; try{ dir=localStorage.getItem("mmDir")||"gain"; }catch(e){}
+    const asc = dir==="loss";
+    const buckets = [
+      {lab:"美股", test:m=>m.indexOf("美股")===0, mix:false, rows:[]},
+      {lab:"A股",  test:m=>m.indexOf("A股")===0, mix:false, rows:[]},
+      {lab:"港股", test:m=>m.indexOf("港")===0,  mix:false, rows:[]},
+      {lab:"日韩", test:m=>m.indexOf("日")===0||m.indexOf("韩")===0, mix:true, rows:[]}
+    ];
+    /* DATA 是脚本级 let（不在 window 上），守卫必须用 typeof（2026-07-18 实测踩坑） */
+    if(typeof DATA!=="undefined" && DATA){
+      const seen=new Set();
+      DATA.forEach(s=>s.rows.forEach(r=>{
+        const m=String(r[2]||"");
+        const b=buckets.find(x=>x.test(m));
+        if(!b) return;
+        if(seen.has(r[1])) return; seen.add(r[1]);          /* 按代码全局去重 */
+        if(typeof r[16]!=="number" || !Number.isFinite(r[16])) return;   /* 只收有今日涨跌的有限数 */
+        b.rows.push(r);
+      }));
+    }
+    buckets.forEach(b=>{
+      b.rows.sort((p,q)=> asc ? p[16]-q[16] : q[16]-p[16]);
+      b.rows=b.rows.slice(0,30);
+    });
+    const colHTML = b=>{
+      const cells = b.rows.map((r,i)=>{
+        const d=r[16];
+        const co = d>0?"var(--up)":d<0?"var(--down)":"var(--text2)";
+        const pct = Number.isFinite(d) ? (d>0?"+":"")+d.toFixed(2)+"%" : "–";
+        const src = b.mix ? `<span class="mmk-src">${String(r[2]).indexOf("日")===0?"日":"韩"}</span>` : "";
+        return `<div class="mmk-cell" data-code="${r[1]}" title="${r[0]}">
+          <span class="mmk-rk">${i+1}</span>
+          <span class="mmk-nm">${src}${r[0]}</span>
+          <span class="mmk-pc" style="color:${co}">${pct}</span></div>`;
+      }).join("") || `<div class="mmk-empty">暂无数据</div>`;
+      return `<div class="mmk-col"><div class="mmk-colh">${b.lab}<span class="mmk-cn">${b.rows.length} 只</span></div>${cells}</div>`;
+    };
+    const zh = dir==="gain" ? "涨幅" : "跌幅";
+    const title = `🌐 多市场榜 · 各市场今日${zh} Top30`;
+    const note = `美股 / A股 / 港股 / 日韩四大市场并排 · 每列该市场今日${zh}前30名 · 日韩合并列名字前「日」「韩」标来源 · 点名称看简介与研报 · 跨板块按代码去重 · 随实时行情自动刷新`;
+    const dirPill = (k,lab)=>`<button class="mmk-dir${k===dir?" on":""}" data-mmdir="${k}">${lab}</button>`;
+    const html = `<div class="section"><div class="section-head"><h2>${title}</h2></div>
+      <p class="fv-note">${note}</p>
+      <div id="mmkbar">${dirPill("gain","涨幅")}${dirPill("loss","跌幅")}</div>
+      <div class="mmk-grid">${buckets.map(colHTML).join("")}</div></div>`;
+    if(el.__h===html){ el.classList.remove("hidden"); return; }   /* 内容没变就跳过重建，防30秒自刷闪烁 */
+    el.__h=html; el.innerHTML=html; el.dataset.fv="multimkt"; el.classList.remove("hidden");
+    el.querySelectorAll(".mmk-dir").forEach(btn=>btn.addEventListener("click",()=>{
+      try{ localStorage.setItem("mmDir", btn.dataset.mmdir); }catch(e){}
+      window.buildFlat();
+    }));
+  }
+
   window.buildFlat = function(){
     const v = window.CURVIEW;
     const el = document.getElementById("flatview");
     if(v==="all"){ el.classList.add("hidden"); return; }
+    if(v==="multimkt"){ buildMultiMkt(el); return; }
     let title="", note="", head=FV_HEAD(), body="";
     if(v==="focus"){
       const list = flatRows().filter(x=>BUYCODES.has(x.r[1]));
@@ -1963,9 +2048,10 @@ function renderDash(quotes){
           grid=document.getElementById("ms-grid");
     if(!mbMkt) return;
     const VIEWS=[["all","市场全景"],["focus","⭐ 重点清单"],["gain","📈 涨幅榜"],["loss","📉 跌幅榜"],
+                 ["multimkt","🌐 多市场榜"],
                  ["dd","回撤榜 >30%"],["hi","🚀 回撤榜 <30%"],["mcap","💰 市值排行榜"],["turn","🔥 成交榜"],
                  ["alpha","超额榜"],["ladder","🪜 回撤阶梯"],["heat","板块热力"]];
-    const VSHORT={all:"全景",focus:"重点清单",gain:"涨幅榜",loss:"跌幅榜",dd:"回撤>30%",hi:"回撤<30%",
+    const VSHORT={all:"全景",focus:"重点清单",gain:"涨幅榜",loss:"跌幅榜",multimkt:"多市场榜",dd:"回撤>30%",hi:"回撤<30%",
                   mcap:"市值榜",turn:"成交榜",alpha:"超额榜",ladder:"回撤阶梯",heat:"板块热力"};
     window.updateMbottom=function(){
       mbMkt.textContent = `🌐 ${window.CURMKT||"全部"}`;
@@ -3902,6 +3988,42 @@ function renderUniBubbles(body, secs, sizeBy){
         const v = document.getElementById("view-universe");
         if(v && !v.classList.contains("hidden")) scheduleClose();
       }
+    });
+  }
+})();
+/* 🌐 多市场榜交互：点格=钉住标的卡（复用 openStockCard 全套）；桌面悬停即览；触屏不做悬停（幽灵浮窗铁律）。
+   文档级委托一次绑定——buildFlat 每30秒整段重建本视图，委托比逐次挂监听更稳。 */
+(function(){
+  const TOUCHY3 = matchMedia("(hover: none), (pointer: coarse)").matches;
+  const extraOf = code => `<a class="imap-go" data-code="${code}" href="javascript:;" style="display:block;margin-top:7px;font-size:12px;border-top:1px solid var(--border);padding-top:6px;color:var(--accent);text-decoration:none">📊 查看行情 →</a>`;
+  document.addEventListener("click", e=>{
+    const c = e.target.closest ? e.target.closest(".mmk-cell") : null;
+    if(!c) return;
+    e.stopPropagation();
+    const rc = c.getBoundingClientRect();
+    if(!(window.openStockCard && openStockCard(c.dataset.code, rc.left+20, rc.bottom-4, extraOf(c.dataset.code)))){
+      if(window.jumpToCode) jumpToCode(c.dataset.code);
+    }
+  }, true);
+  if(!TOUCHY3){
+    let ht=null, ct=null;
+    const cancelClose = ()=>{ if(ct){ clearTimeout(ct); ct=null; } };
+    const scheduleClose = ()=>{ cancelClose(); ct=setTimeout(()=>{ window.closeStip && closeStip(); }, 280); };
+    document.addEventListener("mouseover", e=>{
+      const c = e.target.closest ? e.target.closest(".mmk-cell") : null;
+      if(c){
+        cancelClose(); clearTimeout(ht);
+        ht = setTimeout(()=>{ const rc=c.getBoundingClientRect();
+          window.openStockCard && openStockCard(c.dataset.code, rc.left+20, rc.bottom-4, extraOf(c.dataset.code)); }, 150);
+        return;
+      }
+      if(e.target.closest && e.target.closest("#stip")) cancelClose();
+    });
+    document.addEventListener("mouseout", e=>{
+      const c = e.target.closest ? e.target.closest(".mmk-cell") : null;
+      const toTip = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest("#stip");
+      const toCell = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(".mmk-cell");
+      if(c){ clearTimeout(ht); if(!toTip && !toCell) scheduleClose(); return; }
     });
   }
 })();
