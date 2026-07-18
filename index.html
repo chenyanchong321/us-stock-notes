@@ -2447,14 +2447,22 @@ function renderNotes(cfg){
     if(np && !vis) np.classList.remove("open");
   };
   window.syncNtoc();
-  /* 滚动高亮当前分类。坑：底部全局 IntersectionObserver 在脚本解析时注册，而 .note-cat 是数据到达后
-     才渲染的——注册时元素不存在，观察落空（老侧栏高亮其实从未生效）。必须在渲染后就地注册。 */
-  const obsN = new IntersectionObserver(es=>{
-    es.forEach(en=>{ if(en.isIntersecting){
-      document.querySelectorAll("#ntoc-links a").forEach(l=>l.classList.toggle("active", l.dataset.sec===en.target.id));
-    }});
-  },{rootMargin:"-15% 0px -70% 0px"});
-  document.querySelectorAll(".note-cat").forEach(s=>obsN.observe(s));
+  /* 滚动高亮当前分类。两个坑：①全局 IntersectionObserver 在脚本解析时注册，.note-cat 当时还没渲染，
+     观察落空（老侧栏高亮从未生效）；②IO 回调挂渲染帧，窗口遮挡/后台时不触发（同 rAF 闸门铁坑）。
+     正解=铁律同款：scroll + setTimeout 节流，自己算当前分类。 */
+  let ntTick=null;
+  function ntHighlight(){
+    ntTick=null;
+    if(document.getElementById("view-notes").classList.contains("hidden")) return;
+    const anchor = (window.innerHeight*0.28);
+    let cur=null;
+    document.querySelectorAll(".note-cat").forEach(s=>{
+      if(s.getBoundingClientRect().top <= anchor) cur=s.id;
+    });
+    document.querySelectorAll("#ntoc-links a").forEach(l=>l.classList.toggle("active", l.dataset.sec===cur));
+  }
+  addEventListener("scroll", ()=>{ if(!ntTick) ntTick=setTimeout(ntHighlight,120); }, {passive:true});
+  ntHighlight();
 }
 
 /* ===== 悬浮表头（任意宽度吸顶，横滚同步） ===== */
