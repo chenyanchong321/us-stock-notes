@@ -1686,16 +1686,16 @@ function renderDash(quotes){
       }
       if(met==="dd"||met==="hi") return `<span class="mmk-pc">${ddCell(r[6])}</span>`;   /* 复用全站回撤配色：>30%红 ≤30%黄 */
       const v=mcapVal(r);
-      return `<span class="mmk-pc" style="color:var(--text)">${v>=10000?"$"+(v/10000).toFixed(1)+"万亿":"$"+Math.round(v)+"亿"}</span>`;
+      return `<span class="mmk-pc" style="color:var(--gold)">${v>=10000?"$"+(v/10000).toFixed(1)+"万亿":"$"+Math.round(v)+"亿"}</span>`;   /* 金色=全站重点标注色，与白色名字拉开对比（主人：手机端全白看着累） */
     };
     const colHTML = b=>{
       const cells = b.rows.map((r,i)=>{
         const src = b.mix ? `<span class="mmk-src">${String(r[2]).indexOf("日")===0?"日":"韩"}</span>` : "";
         const nm = String(r[0]).replace(/（.*?）/g,"");   /* 去括号注（HOYA等），窄列少折一行；全名在 title 与标的卡 */
-        return `<div class="mmk-cell" data-code="${r[1]}" title="${r[0]}">
+        return `<div class="mmk-cell" data-code="${r[1]}">
           <span class="mmk-rk">${i+1}</span>
           <span class="mmk-nm">${src}${nm}</span>
-          ${valHTML(r)}</div>`;
+          ${valHTML(r)}</div>`;   /* 禁挂原生 title：系统灰框延迟弹出像bug（老规矩第三次踩，完整名称在标的卡里） */
       }).join("") || `<div class="mmk-empty">暂无数据</div>`;
       return `<div class="mmk-col"><div class="mmk-colh">${b.lab}<span class="mmk-cn">${b.rows.length} 只</span></div>${cells}</div>`;
     };
