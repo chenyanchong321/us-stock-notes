@@ -183,7 +183,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 /* 🌐 多市场榜（2026-07-18）：四列并排（美股/A股/港股/日韩），手机端也不堆叠。
    颜色全走 var()（绿涨红跌，双主题自适应）；排名/涨跌%子项 flex:0 0 auto 永不截断（边界三查）；
    名字列可省略号（narrow列刻意，非bug）。#flatview 已在头下正常流，无需再补 header-h。 */
-#mmkbar{display:flex;gap:8px;margin:0 0 12px}
+#mmkbar{display:flex;gap:8px;margin:0 0 12px;flex-wrap:wrap;align-items:stretch}
 .mmk-dir{background:var(--panel2);border:1px solid var(--border);color:var(--text2);border-radius:99px;padding:5px 16px;font-size:13px;cursor:pointer}
 .mmk-dir.on{color:var(--accent);border-color:var(--accent);background:rgba(74,140,240,.10)}
 .mmk-grid{display:flex;gap:10px;align-items:flex-start}
@@ -1636,6 +1636,11 @@ function renderDash(quotes){
   function buildMultiMkt(el){
     let dir="gain"; try{ dir=localStorage.getItem("mmDir")||"gain"; }catch(e){}
     const asc = dir==="loss";
+    /* 周期切换（2026-07-18 主人核心思想：横向=多市场并排，纵向=多周期对比缺一不可）。
+       档位与涨跌幅榜同源七档；每次点进重置为「今日」（setView 里重置 MM_W，同涨跌幅榜规矩）。 */
+    const MMW={d:[16,"今日"],w1:[18,"近1周"],m1:[7,"近1月"],m3:[8,"近3月"],m6:[9,"近半年"],ytd:[10,"年初至今"],y1:[11,"近1年"]};
+    const wk = MMW[window.MM_W] ? window.MM_W : "d";
+    const [ri,wl] = MMW[wk];
     const buckets = [
       {lab:"美股", test:m=>m.indexOf("美股")===0, mix:false, rows:[]},
       {lab:"A股",  test:m=>m.indexOf("A股")===0, mix:false, rows:[]},
@@ -1650,19 +1655,20 @@ function renderDash(quotes){
         const b=buckets.find(x=>x.test(m));
         if(!b) return;
         if(seen.has(r[1])) return; seen.add(r[1]);          /* 按代码全局去重 */
-        if(typeof r[16]!=="number" || !Number.isFinite(r[16])) return;   /* 只收有今日涨跌的有限数 */
+        if(typeof r[ri]!=="number" || !Number.isFinite(r[ri])) return;   /* 只收该周期为有限数的（"上市后x%"字符串行自然出局） */
         b.rows.push(r);
       }));
     }
     buckets.forEach(b=>{
-      b.rows.sort((p,q)=> asc ? p[16]-q[16] : q[16]-p[16]);
+      b.rows.sort((p,q)=> asc ? p[ri]-q[ri] : q[ri]-p[ri]);
       b.rows=b.rows.slice(0,30);
     });
     const colHTML = b=>{
       const cells = b.rows.map((r,i)=>{
-        const d=r[16];
+        const d=r[ri];
         const co = d>0?"var(--up)":d<0?"var(--down)":"var(--text2)";
-        const pct = Number.isFinite(d) ? (d>0?"+":"")+d.toFixed(2)+"%" : "–";
+        /* 今日两位小数；长周期一位（数值可到三位数，+123.45% 会撑爆手机窄列） */
+        const pct = Number.isFinite(d) ? (d>0?"+":"")+d.toFixed(wk==="d"?2:1)+"%" : "–";
         const src = b.mix ? `<span class="mmk-src">${String(r[2]).indexOf("日")===0?"日":"韩"}</span>` : "";
         const nm = String(r[0]).replace(/（.*?）/g,"");   /* 去括号注（HOYA等），窄列少折一行；全名在 title 与标的卡 */
         return `<div class="mmk-cell" data-code="${r[1]}" title="${r[0]}">
@@ -1673,17 +1679,23 @@ function renderDash(quotes){
       return `<div class="mmk-col"><div class="mmk-colh">${b.lab}<span class="mmk-cn">${b.rows.length} 只</span></div>${cells}</div>`;
     };
     const zh = dir==="gain" ? "涨幅" : "跌幅";
-    const title = `🌐 多市场榜 · 各市场今日${zh} Top30`;
-    const note = `美股 / A股 / 港股 / 日韩四大市场并排 · 每列该市场今日${zh}前30名 · 日韩合并列名字前「日」「韩」标来源 · 点名称看简介与研报 · 跨板块按代码去重 · 随实时行情自动刷新`;
+    const title = `🌐 多市场榜 · 各市场${wl}${zh} Top30`;
+    const note = `美股 / A股 / 港股 / 日韩四大市场并排 · 每列该市场${wl}${zh}前30名 · 日韩合并列名字前「日」「韩」标来源 · 悬停/点击名称看简介与研报 · 跨板块按代码去重${wk==="d"?" · 随实时行情自动刷新":" · 上市不满该窗口的标的不参与"}`;
     const dirPill = (k,lab)=>`<button class="mmk-dir${k===dir?" on":""}" data-mmdir="${k}">${lab}</button>`;
+    const wPill = k=>`<button class="perf-pill${k===wk?" on":""}" data-mmw="${k}">${MMW[k][1]}</button>`;
     const html = `<div class="section"><div class="section-head"><h2>${title}</h2></div>
       <p class="fv-note">${note}</p>
-      <div id="mmkbar">${dirPill("gain","涨幅")}${dirPill("loss","跌幅")}</div>
+      <div id="mmkbar">${dirPill("gain","涨幅")}${dirPill("loss","跌幅")}<span style="flex:0 0 auto;width:1px;background:var(--border);margin:2px 4px"></span>${Object.keys(MMW).map(wPill).join("")}</div>
       <div class="mmk-grid">${buckets.map(colHTML).join("")}</div></div>`;
     if(el.__h===html){ el.classList.remove("hidden"); return; }   /* 内容没变就跳过重建，防30秒自刷闪烁 */
     el.__h=html; el.innerHTML=html; el.dataset.fv="multimkt"; el.classList.remove("hidden");
     el.querySelectorAll(".mmk-dir").forEach(btn=>btn.addEventListener("click",()=>{
       try{ localStorage.setItem("mmDir", btn.dataset.mmdir); }catch(e){}
+      window.buildFlat();
+    }));
+    el.querySelectorAll("[data-mmw]").forEach(btn=>btn.addEventListener("click",()=>{
+      window.MM_W = btn.dataset.mmw;
+      const st=document.getElementById("st-mm"); if(st) st.textContent=MMW[window.MM_W][1];   /* 卡片角标随周期 */
       window.buildFlat();
     }));
   }
@@ -1913,6 +1925,10 @@ function renderDash(quotes){
     if(v==="gain"||v==="loss"){   /* 每次点进涨/跌幅榜都重置为「今日」（主人定：最高频用法是看今天） */
       window.PERF_W="d";
       ["st-gain","st-loss"].forEach(id=>{ const e=document.getElementById(id); if(e) e.textContent="今日"; });
+    }
+    if(v==="multimkt"){   /* 多市场榜同规矩：每次点进重置为「今日」（2026-07-18 主人定） */
+      window.MM_W="d";
+      const e=document.getElementById("st-mm"); if(e) e.textContent="今日";
     }
     window.updateMbottom && window.updateMbottom();
     const inXtra = ["alpha","ladder","heat"].includes(v);
@@ -4014,21 +4030,27 @@ function renderUniBubbles(body, secs, sizeBy){
     let ht=null, ct=null;
     const cancelClose = ()=>{ if(ct){ clearTimeout(ct); ct=null; } };
     const scheduleClose = ()=>{ cancelClose(); ct=setTimeout(()=>{ window.closeStip && closeStip(); }, 280); };
+    /* 悬停只认名字（2026-07-18 主人定方案1）：扫涨跌%列时浮窗绝不弹出遮行；点击整格仍弹卡（点击是主动动作） */
     document.addEventListener("mouseover", e=>{
-      const c = e.target.closest ? e.target.closest(".mmk-cell") : null;
+      const c = e.target.closest ? e.target.closest(".mmk-nm") : null;
       if(c){
+        const cell=c.closest(".mmk-cell");
         cancelClose(); clearTimeout(ht);
-        ht = setTimeout(()=>{ const rc=c.getBoundingClientRect();
-          window.openStockCard && openStockCard(c.dataset.code, rc.left+20, rc.bottom-4, extraOf(c.dataset.code)); }, 150);
+        ht = setTimeout(()=>{ const rc=cell.getBoundingClientRect();
+          window.openStockCard && openStockCard(cell.dataset.code, rc.left+20, rc.bottom-4, extraOf(cell.dataset.code)); }, 150);
         return;
       }
       if(e.target.closest && e.target.closest("#stip")) cancelClose();
     });
     document.addEventListener("mouseout", e=>{
-      const c = e.target.closest ? e.target.closest(".mmk-cell") : null;
+      const c = e.target.closest ? e.target.closest(".mmk-nm") : null;
       const toTip = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest("#stip");
-      const toCell = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(".mmk-cell");
-      if(c){ clearTimeout(ht); if(!toTip && !toCell) scheduleClose(); return; }
+      const toNm = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(".mmk-nm");
+      if(c){ clearTimeout(ht); if(!toTip && !toNm) scheduleClose(); return; }
+      if(e.target.closest && e.target.closest("#stip") && !toTip){
+        const fv=document.getElementById("flatview");
+        if(fv && fv.dataset.fv==="multimkt" && !fv.classList.contains("hidden")) scheduleClose();
+      }
     });
   }
 })();
