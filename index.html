@@ -4289,31 +4289,16 @@ function renderUniBubbles(body, secs, sizeBy){
     let ht=null, ct=null;
     const cancelClose = ()=>{ if(ct){ clearTimeout(ct); ct=null; } };
     const scheduleClose = ()=>{ cancelClose(); ct=setTimeout(()=>{ window.closeStip && closeStip(); }, 280); };
-    /* 悬停只认名字（2026-07-18 主人定方案1）：扫涨跌%列时浮窗绝不弹出遮行；点击整格仍弹卡（点击是主动动作） */
+    /* 多市场榜=只认点击（2026-07-18 主人终定：四列太密，扫读/滑动时悬停到处弹卡很烦）——
+       名字悬停不弹标的卡、榜内金标悬停不弹梯队卡，全部改点击触发；主表的悬停不受影响
+       （.mctier 悬停仅在 .mmk-grid 外生效）。悬停方案演进：整格悬停→只认名字→只认点击。 */
     document.addEventListener("mouseover", e=>{
       const tb = e.target.closest ? e.target.closest(".mctier") : null;
-      if(tb){ mmShowTier(tb); return; }
-      const c = e.target.closest ? e.target.closest(".mmk-nm") : null;
-      if(c){
-        const cell=c.closest(".mmk-cell");
-        cancelClose(); clearTimeout(ht);
-        ht = setTimeout(()=>{ const rc=cell.getBoundingClientRect();
-          window.openStockCard && openStockCard(cell.dataset.code, rc.left+20, rc.bottom-4, extraOf(cell.dataset.code)); }, 150);
-        return;
-      }
-      if(e.target.closest && e.target.closest("#stip")) cancelClose();
+      if(tb && !tb.closest(".mmk-grid")){ mmShowTier(tb); return; }
     });
     document.addEventListener("mouseout", e=>{
       const tb = e.target.closest ? e.target.closest(".mctier") : null;
-      if(tb && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(".mctier,#mmtiertip"))){ mmHideTier(); return; }
-      const c = e.target.closest ? e.target.closest(".mmk-nm") : null;
-      const toTip = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest("#stip");
-      const toNm = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(".mmk-nm");
-      if(c){ clearTimeout(ht); if(!toTip && !toNm) scheduleClose(); return; }
-      if(e.target.closest && e.target.closest("#stip") && !toTip){
-        const fv=document.getElementById("flatview");
-        if(fv && fv.dataset.fv==="multimkt" && !fv.classList.contains("hidden")) scheduleClose();
-      }
+      if(tb && !tb.closest(".mmk-grid") && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(".mctier,#mmtiertip"))){ mmHideTier(); return; }
     });
   }
 })();
