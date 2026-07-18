@@ -2447,6 +2447,14 @@ function renderNotes(cfg){
     if(np && !vis) np.classList.remove("open");
   };
   window.syncNtoc();
+  /* 滚动高亮当前分类。坑：底部全局 IntersectionObserver 在脚本解析时注册，而 .note-cat 是数据到达后
+     才渲染的——注册时元素不存在，观察落空（老侧栏高亮其实从未生效）。必须在渲染后就地注册。 */
+  const obsN = new IntersectionObserver(es=>{
+    es.forEach(en=>{ if(en.isIntersecting){
+      document.querySelectorAll("#ntoc-links a").forEach(l=>l.classList.toggle("active", l.dataset.sec===en.target.id));
+    }});
+  },{rootMargin:"-15% 0px -70% 0px"});
+  document.querySelectorAll(".note-cat").forEach(s=>obsN.observe(s));
 }
 
 /* ===== 悬浮表头（任意宽度吸顶，横滚同步） ===== */
