@@ -412,10 +412,13 @@ tr.buy .buyline.hit{color:var(--up)!important;font-weight:600}
 /* ③最新内容条（2026-07-18 主人定，替代本周大事黄条）：引导阅读——最新研报/笔记一眼可见。
    紫色系=区别于观察区绿/事件金的第三种语义色；叫「最新」不叫「今日」（可能是近几天的，省字防穿帮） */
 #freshbar{width:100%;background:rgba(150,110,255,.09);border:1px solid rgba(150,110,255,.38);border-radius:8px;padding:8px 14px;font-size:13px;color:var(--text);line-height:1.9}
-#freshbar .fresh-h{font-weight:600;color:#a68bff;margin-right:10px}
+/* 排版=观察区同款行标签（2026-07-18 主人定稿）：左「研报/笔记」小标签+右内容，每行最新2篇；
+   不写日期不写「最新」——时间序自明，当天新发的只标🆕 */
+#freshbar .fresh-row{display:flex;gap:10px;align-items:baseline}
+#freshbar .ftag{flex:0 0 auto;color:var(--text2);font-size:11.5px;border:1px solid var(--border);border-radius:4px;padding:0 7px;line-height:1.7;white-space:nowrap}
+#freshbar .fitems{flex:1;min-width:0}
 #freshbar a{color:#b9a4ff;text-decoration:none}
 #freshbar a:hover{text-decoration:underline}
-#freshbar .fd{font-size:11.5px;color:var(--text2);margin-left:4px;white-space:nowrap}
 #freshbar .fsep{color:var(--text2);margin:0 10px}
 html[data-theme="light"] #freshbar{background:rgba(110,70,220,.07);border-color:rgba(110,70,220,.35)}
 html[data-theme="light"] #freshbar .fresh-h{color:#6b46c1}
@@ -2485,18 +2488,17 @@ window.updateFresh = function(){
   const el=document.getElementById("freshbar"); if(!el) return;
   const d=new Date(), pad=n=>String(n).padStart(2,"0");
   const today=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-  const parts=[];
+  const rows=[];
   if(typeof REPORTS!=="undefined" && REPORTS.length){   /* REPORTS 是脚本级 let 不在 window 上——DATA 同款坑，守卫必须 typeof */
-    const r=REPORTS[0];
-    const lab=(typeof repCatOf==="function" && repCatOf(r)==="财报点评") ? "📄" : "📑";
-    parts.push(`${lab} <a href="javascript:;" class="fresh-rep" data-rid="${r.id}">${r.title}</a><span class="fd">${String(r.date||"").slice(5)}${String(r.date)===today?" 🆕":""}</span>`);
+    const items=REPORTS.slice(0,2).map(r=>`<a href="javascript:;" class="fresh-rep" data-rid="${r.id}">${r.title}${String(r.date)===today?" 🆕":""}</a>`).join(`<span class="fsep">·</span>`);
+    rows.push(`<div class="fresh-row"><span class="ftag">📑 研报</span><span class="fitems">${items}</span></div>`);
   }
   if(window.NOTES_FLAT && NOTES_FLAT.length){
-    const n=NOTES_FLAT[0];
-    parts.push(`📚 <a href="${n.page}">${n.t}</a><span class="fd">${String(n.date||"").slice(5)}${String(n.date)===today?" 🆕":""}</span>`);
+    const items=NOTES_FLAT.slice(0,2).map(n=>`<a href="${n.page}">${n.t}${String(n.date)===today?" 🆕":""}</a>`).join(`<span class="fsep">·</span>`);
+    rows.push(`<div class="fresh-row"><span class="ftag">📚 笔记</span><span class="fitems">${items}</span></div>`);
   }
-  if(!parts.length){ el.classList.add("hidden"); return; }
-  el.innerHTML = `<span class="fresh-h">✨ 最新</span>` + parts.join(`<span class="fsep">·</span>`);
+  if(!rows.length){ el.classList.add("hidden"); return; }
+  el.innerHTML = rows.join("");
   if(!window.CURVIEW || window.CURVIEW==="all") el.classList.remove("hidden");   /* ⑤固定模块只在全景 */
   el.querySelectorAll(".fresh-rep").forEach(a=>a.addEventListener("click",()=>window.goReport&&goReport(a.dataset.rid)));
 };
