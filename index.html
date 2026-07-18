@@ -200,7 +200,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 .mmk-src{display:inline-block;font-size:10px;color:var(--text2);border:1px solid var(--border);border-radius:3px;padding:0 3px;margin-right:4px}
 .mmk-pc{flex:0 0 auto;margin-left:auto;white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
 .mmk-empty{padding:14px 10px;color:var(--text2);font-size:12px;text-align:center}
-.mmk-tier{margin-left:4px;font-size:13px}
+.mctier{display:inline-block;margin-left:5px;padding:0 4px;border-radius:3px;font-size:10px;line-height:15px;vertical-align:1px;color:var(--gold);border:1px solid var(--gold);opacity:.8;font-weight:500;white-space:nowrap;touch-action:manipulation;cursor:pointer}
+.mctier:hover{opacity:1;background:rgba(232,182,76,.12)}
 #mmtiertip{position:fixed;z-index:320;display:none;max-width:280px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:10px 13px;font-size:12.5px;line-height:1.55;color:var(--text);box-shadow:0 8px 24px rgba(0,0,0,.35)}
 #mmtiertip b{color:var(--gold)}
 #mmtiertip .m{color:var(--text);font-weight:600}
@@ -1119,12 +1120,30 @@ function priceCell(r, mode){
      顶部说明已写明；真要下单时会去券商 App 看实时价。提示只保留在现价悬停的买点浮窗里（posTip）。 */
   return `<span style="display:block;white-space:nowrap">${stripCur(r[5])}${badge}</span>${sub}`;
 }
+/* 市值梯队金标（2026-07-18 主人创意，源自其与KTX交流的梯队框架）：市值后跟金色小字（大象/水牛/猎豹/
+   狼群/兔子/种子），把抽象数字变成体型直觉。全站凡走 mcapCell 的地方自动带标。
+   说明卡只做一句话区间映射（主人定：禁写回报倍数/风险/仓位——会被误读为承诺赔率）。 */
+window.MM_TIERS=[
+  {t:"大象",n:"超大盘",g:"市值 5000亿美元以上",min:5000},
+  {t:"水牛",n:"大盘",g:"市值 1000-5000亿美元",min:1000},
+  {t:"猎豹",n:"中大盘",g:"市值 300-1000亿美元",min:300},
+  {t:"狼群",n:"中盘",g:"市值 50-300亿美元",min:50},
+  {t:"兔子",n:"小盘",g:"市值 10-50亿美元",min:10},
+  {t:"种子",n:"微盘",g:"市值 10亿美元以下",min:0}
+];
+window.mcTierBadge = function(r){
+  const m=String(r[2]||"");
+  if(/ETF|指数|商品|外汇|加密|宏观/.test(m)) return "";   /* 梯队是公司市值框架，基金/指数/资产不适用 */
+  const v=mcapVal(r); if(!(v>0)) return "";
+  const i=window.MM_TIERS.findIndex(x=>v>=x.min);
+  return `<span class="mctier" data-ti="${i}">${window.MM_TIERS[i].t}</span>`;
+};
 function mcapCell(r){
-  /* 两行：①本币市值（去符号）②美元换算（保留 $，标志"折算美元"）。PE 挪进悬停浮窗（mcapTip）。 */
+  /* 两行：①本币市值（去符号）+梯队金标 ②美元换算（保留 $，标志"折算美元"）。PE 挪进悬停浮窗（mcapTip）。 */
   let usd="";
   if(needUSD(r)){ const yi=mcapVal(r); if(yi>0) usd = yi>=10000 ? `$${(yi/10000).toFixed(2)}万亿` : `$${yi.toFixed(1)}亿`; }
   const sub = usd ? `<span style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">${usd}</span>` : "";
-  return `${stripCur(r[3])}${sub}`;
+  return `${stripCur(r[3])}${mcTierBadge(r)}${sub}`;
 }
 /* ===== 成交列（2026-07-15 主人需求：量能维度）=====
    数据分工：A股/美股/港股 盘中实时（VLIVE，与现价同包30秒刷）；日韩台走每日流水线（r[21]）。
@@ -1642,16 +1661,6 @@ function renderDash(quotes){
      每列=该市场今日 Top30，一格一行=排名/名称/今日涨跌%。涨=今日降序，跌=今日升序（方向存 localStorage）。
      不用 flatRows()（内建 mktOk 会被全局市场筛选污染）——直接遍历 DATA 自己分桶，按代码全局去重（跨板块重复只留一次）。
      组装段无条件拼 <table> 会错乱，故本视图在 buildFlat 开头自建完整 HTML 后提前 return（参考 renderUniverse）。 */
-  /* 市值梯队动物标（2026-07-18 主人创意，源自其与KTX交流的梯队框架）：把抽象市值变成体型直觉，
-     梯队背后带仓位含义（压舱石/卫星仓/彩票仓）。悬停/点按动物弹说明卡（mmShowTier）。 */
-  window.MM_TIERS=[
-    {e:"🐘",n:"超大盘 · >5000亿美元",m:"「大象翻身」",r:"回报预期：稳健，但3-5年很难多倍",k:"核心风险：增速放缓、估值天花板",p:"更适合的位置：🟢 压舱石",min:5000},
-    {e:"🐂",n:"大盘 · 1000-5000亿美元",m:"「水牛奔跑」",r:"回报预期：2-3倍，超级周期可更高",k:"核心风险：从龙头走向万亿市值很难",p:"更适合的位置：🟢 压舱石 / 🔵 核心成长",min:1000},
-    {e:"🐆",n:"中大盘 · 300-1000亿美元",m:"「猎豹加速」",r:"回报预期：5-10倍最集中",k:"核心风险：波动加大，需持续高增长",p:"更适合的位置：🔵 卫星仓甜蜜区",min:300},
-    {e:"🐺",n:"中盘 · 50-300亿美元",m:"「狼群出击」",r:"回报预期：5-10倍甚至10-20倍",k:"核心风险：增速不达预期时跌幅很深",p:"更适合的位置：🟠 极端卫星仓",min:50},
-    {e:"🐇",n:"小盘 · 10-50亿美元",m:"「兔子狂奔」",r:"回报预期：10倍+温床",k:"核心风险：失败率很高",p:"更适合的位置：🟣 彩票仓",min:10},
-    {e:"🌱",n:"微盘 · <10亿美元",m:"「种子赌命」",r:"回报预期：极端赔率",k:"核心风险：信息不对称、流动性差、易被操纵",p:"更适合的位置：🔴 不建议",min:0}
-  ];
   function buildMultiMkt(el){
     /* 指标可插拔（2026-07-18 主人核心思想二段）：多市场榜=横向对比框架，涨跌只是第一个指标。
        五指标：涨幅/跌幅（配七档周期）+ 回撤>30%（跌最深在上）+ 回撤<30%（离新高最近在上）+ 市值（美元折算降序）。
@@ -1701,8 +1710,7 @@ function renderDash(quotes){
       }
       if(met==="dd"||met==="hi") return `<span class="mmk-pc">${ddCell(r[6])}</span>`;   /* 复用全站回撤配色：>30%红 ≤30%黄 */
       const v=mcapVal(r);
-      const ti=window.MM_TIERS.findIndex(t=>v>=t.min);
-      return `<span class="mmk-pc" style="color:var(--gold)">${v>=10000?"$"+(v/10000).toFixed(1)+"万亿":"$"+Math.round(v)+"亿"}<span class="mmk-tier" data-ti="${ti}">${window.MM_TIERS[ti].e}</span></span>`;   /* 金色=全站重点标注色；动物=市值梯队直觉标 */
+      return `<span class="mmk-pc" style="color:var(--gold)">${v>=10000?"$"+(v/10000).toFixed(1)+"万亿":"$"+Math.round(v)+"亿"}${mcTierBadge(r)}</span>`;   /* 金色=全站重点标注色；梯队金标与主表同源 */
     };
     const colHTML = b=>{
       const cells = b.rows.map((r,i)=>{
@@ -1723,7 +1731,7 @@ function renderDash(quotes){
     const noteTail = isPerf ? `每列该市场${wl}${MET_LAB[met]}前30名${wk==="d"?" · 随实时行情自动刷新":" · 上市不满该窗口的标的不参与"}`
       : met==="dd" ? "距历史高点回撤超30%，跌最深的在最上 · 捡深跌前先看简介和观察位"
       : met==="hi" ? "回撤不足30%，离新高最近的在最上（头部即新高区）"
-      : "按美元折算市值排序（汇率为粗略口径）· 基金规模≠公司市值，ETF不参与 · 动物=市值梯队：🐘>5000亿 🐂1000-5000 🐆300-1000 🐺50-300 🐇10-50 🌱<10（亿美元，悬停/点按动物看梯队说明）";
+      : "按美元折算市值排序（汇率为粗略口径）· 基金规模≠公司市值，ETF不参与 · 金标=市值梯队类比：大象>5000亿 · 水牛1000-5000 · 猎豹300-1000 · 狼群50-300 · 兔子10-50 · 种子<10（亿美元）";
     const note = `美股 / A股 / 港股 / 日韩四大市场并排 · ${noteTail} · 指数不参与 · 日韩合并列名字前「日」「韩」标来源 · 悬停/点击名称看简介与研报 · 跨板块按代码去重`;
     const mPill = k=>`<button class="mmk-dir${k===met?" on":""}" data-mmdir="${k}">${MET_LAB[k]}</button>`;
     const wPill = k=>`<button class="perf-pill${k===wk?" on":""}" data-mmw="${k}">${MMW[k][1]}</button>`;
@@ -3349,7 +3357,7 @@ let PROFILES = {};
       return;
     }
     const tdm = e.target.closest("td.mcapc");
-    if(tdm){
+    if(tdm && !e.target.closest(".mctier")){   /* 悬停梯队金标时让位给梯队说明卡，不开美元换算浮窗 */
       const hm = usdMcapTip(rowOfTr(tdm.parentElement));
       if(hm){ tip.innerHTML=hm; tip.style.display="block"; tip.style.pointerEvents="none"; place(e.clientX, e.clientY); }
       else tip.style.display="none";   /* 美股/指数等无换算的行：收掉残留 */
@@ -4065,8 +4073,10 @@ function renderUniBubbles(body, secs, sizeBy){
   window.mmHideTier = ()=>{ if(tipEl) tipEl.style.display="none"; };
   window.mmShowTier = b=>{
     const t=(window.MM_TIERS||[])[+b.dataset.ti]; if(!t) return;
+    window.closeStip && closeStip();   /* 市值格自己的美元换算浮窗若已开，先收掉防叠卡 */
     const el=tierTip();
-    el.innerHTML=`<b>${t.e} ${t.n}</b><br><span class="m">${t.m}</span> · ${t.r.replace("回报预期：","")}<span class="s">${t.k}</span><span class="s">${t.p}</span>`;
+    /* 一句话区间映射（主人定：不写回报倍数/风险/仓位，那些像承诺赔率） */
+    el.innerHTML=`<b>${t.n}</b> · ${t.g}（美元折算）· 类比「${t.t}」`;
     el.style.display="block";
     const rc=b.getBoundingClientRect(), w=el.offsetWidth, h=el.offsetHeight;
     let x=Math.min(rc.left, innerWidth-w-10), y=rc.bottom+6;
@@ -4074,8 +4084,8 @@ function renderUniBubbles(body, secs, sizeBy){
     el.style.left=Math.max(6,x)+"px"; el.style.top=Math.max(6,y)+"px";
   };
   document.addEventListener("click", e=>{
-    const tb = e.target.closest ? e.target.closest(".mmk-tier") : null;
-    if(tb){ e.stopPropagation(); e.preventDefault(); mmShowTier(tb); return; }   /* 点动物=梯队卡，不开标的卡 */
+    const tb = e.target.closest ? e.target.closest(".mctier") : null;
+    if(tb){ e.stopPropagation(); e.preventDefault(); mmShowTier(tb); return; }   /* 点金标=梯队卡，不开底下格子的浮窗（capture 先手） */
     if(tipEl && tipEl.style.display==="block" && !(e.target.closest && e.target.closest("#mmtiertip"))) mmHideTier();
     const c = e.target.closest ? e.target.closest(".mmk-cell") : null;
     if(!c) return;
@@ -4091,7 +4101,7 @@ function renderUniBubbles(body, secs, sizeBy){
     const scheduleClose = ()=>{ cancelClose(); ct=setTimeout(()=>{ window.closeStip && closeStip(); }, 280); };
     /* 悬停只认名字（2026-07-18 主人定方案1）：扫涨跌%列时浮窗绝不弹出遮行；点击整格仍弹卡（点击是主动动作） */
     document.addEventListener("mouseover", e=>{
-      const tb = e.target.closest ? e.target.closest(".mmk-tier") : null;
+      const tb = e.target.closest ? e.target.closest(".mctier") : null;
       if(tb){ mmShowTier(tb); return; }
       const c = e.target.closest ? e.target.closest(".mmk-nm") : null;
       if(c){
@@ -4104,8 +4114,8 @@ function renderUniBubbles(body, secs, sizeBy){
       if(e.target.closest && e.target.closest("#stip")) cancelClose();
     });
     document.addEventListener("mouseout", e=>{
-      const tb = e.target.closest ? e.target.closest(".mmk-tier") : null;
-      if(tb && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(".mmk-tier,#mmtiertip"))){ mmHideTier(); return; }
+      const tb = e.target.closest ? e.target.closest(".mctier") : null;
+      if(tb && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(".mctier,#mmtiertip"))){ mmHideTier(); return; }
       const c = e.target.closest ? e.target.closest(".mmk-nm") : null;
       const toTip = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest("#stip");
       const toNm = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(".mmk-nm");
