@@ -311,7 +311,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 #datainfo-btn,.datainfo-btn,.fvinfo{color:var(--text2);text-decoration:none;border:1px solid var(--border);border-radius:8px;padding:1px 8px;margin-left:8px;cursor:pointer;font-size:12px;font-weight:400;white-space:nowrap;vertical-align:3px}
 #datainfo-btn:hover,.datainfo-btn:hover,.fvinfo:hover{color:var(--accent);border-color:var(--accent)}
 /* 侧栏版=同款ⓘ胶囊的紧凑号（主人定：样式全站一套，只缩尺寸不换语言；教训：别为窄容器发明第三种样式） */
-#update-time .datainfo-btn{font-size:10.5px;padding:0 5px;margin-left:4px;border-radius:6px;vertical-align:1px}
+#update-time .datainfo-btn{display:inline-block;font-size:10.5px;padding:0 5px;margin-left:4px;border-radius:6px;vertical-align:1px;line-height:1.6}   /* display必须覆盖：.sidebar a 全局是flex，会把胶囊拉成通栏（最初"一大行"的真凶） */
 /* 桌面端隐藏视图条数据行（2026-07-18 主人定：侧栏已有更新时间+ⓘ、slogan悬停有说明，三处重复）；手机端保留（无处可放） */
 @media(min-width:861px){#refresh-note{display:none}}
 #datatip{position:fixed;z-index:320;display:none;max-width:340px;background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;font-size:12.5px;line-height:1.9;color:var(--text);box-shadow:0 8px 24px rgba(0,0,0,.35)}
