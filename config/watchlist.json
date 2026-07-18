@@ -6625,6 +6625,76 @@
      },
      "mcap_base_price": 116.2,
      "ath_floor": 0
+    },
+    {
+     "name": "标普全球",
+     "code": "SPGI",
+     "market": "美股",
+     "yahoo": "SPGI",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1334.0,
+      "approx": true
+     },
+     "mcap_base_price": 450.84,
+     "ath_floor": 0
+    },
+    {
+     "name": "麦当劳",
+     "code": "MCD",
+     "market": "美股",
+     "yahoo": "MCD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1902.0,
+      "approx": true
+     },
+     "mcap_base_price": 267.71,
+     "ath_floor": 0
+    },
+    {
+     "name": "艾伯维",
+     "code": "ABBV",
+     "market": "美股",
+     "yahoo": "ABBV",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 4496.0,
+      "approx": true
+     },
+     "mcap_base_price": 254.49,
+     "ath_floor": 0
+    },
+    {
+     "name": "美国运通",
+     "code": "AXP",
+     "market": "美股",
+     "yahoo": "AXP",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2425.0,
+      "approx": true
+     },
+     "mcap_base_price": 355.35,
+     "ath_floor": 0
+    },
+    {
+     "name": "史赛克",
+     "code": "SYK",
+     "market": "美股",
+     "yahoo": "SYK",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1226.0,
+      "approx": true
+     },
+     "mcap_base_price": 319.87,
+     "ath_floor": 0
     }
    ],
    "groups": [
@@ -6691,6 +6761,16 @@
      "codes": [
       "605499",
       "09980"
+     ]
+    },
+    {
+     "name": "美股现金流（防御与质量）",
+     "codes": [
+      "SPGI",
+      "MCD",
+      "ABBV",
+      "AXP",
+      "SYK"
      ]
     }
    ]
