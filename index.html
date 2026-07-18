@@ -1923,7 +1923,8 @@ function renderDash(quotes){
       const W={d:[16,"今日"],w1:[18,"近1周"],m1:[7,"近1月"],m3:[8,"近3月"],m6:[9,"近半年"],ytd:[10,"年初至今"],y1:[11,"近1年"]};
       const wk = W[window.PERF_W] ? window.PERF_W : "d";
       const [ri,wl] = W[wk];
-      const list = flatRows().filter(x=>typeof x.r[ri]==="number");
+      const list = flatRows().filter(x=>typeof x.r[ri]==="number"
+        && !/波动率/.test(String(x.r[0])+String(x.r[12])));   /* 波动率指数不是票，霸榜很怪（2026-07-18 主人定，多市场榜同规矩） */
       list.sort((a,b)=> v==="gain" ? b.r[ri]-a.r[ri] : a.r[ri]-b.r[ri]);
       const top=list.slice(0,30);
       title = `${v==="gain"?"📈":"📉"} ${wl}${v==="gain"?"涨幅":"跌幅"}榜 Top30`;
