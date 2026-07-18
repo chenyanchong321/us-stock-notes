@@ -305,7 +305,12 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 }
 /* 手机端市场规模弹层：改固定定位居中面板，杜绝溢出屏幕（2026-07-13 主人反馈修复） */
 @media(max-width:860px){#scalemenu{position:fixed;left:12px;right:12px;top:calc(var(--header-h) + 56px);max-height:65vh;overflow:auto}}
-.refresh-note{font-size:12px;color:var(--text2);margin-left:auto}
+.refresh-note{font-size:12px;color:var(--text2);margin-left:auto;white-space:nowrap}
+/* ②数据说明进浮层（2026-07-18 主人定：说明性文字不占黄金位置）：一行"更新时间+ⓘ"替代原五行大段 */
+#datainfo-btn{color:var(--text2);text-decoration:none;border:1px solid var(--border);border-radius:8px;padding:1px 8px;margin-left:8px;cursor:pointer}
+#datainfo-btn:hover{color:var(--accent);border-color:var(--accent)}
+#datatip{position:fixed;z-index:320;display:none;max-width:340px;background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;font-size:12.5px;line-height:1.9;color:var(--text);box-shadow:0 8px 24px rgba(0,0,0,.35)}
+#datatip b{color:var(--accent)}
 /* 市场规模弹层 */
 #scalecard{position:relative}
 #scalemenu{position:absolute;top:calc(100% + 6px);left:0;z-index:175;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;min-width:250px;max-width:calc(100vw - 32px);box-shadow:0 6px 18px rgba(0,0,0,.5)}
@@ -404,8 +409,17 @@ tr.buy .buyline.hit{color:var(--up)!important;font-weight:600}
 .ev-past{opacity:.45}
 .ev-est{font-size:11px;color:var(--text2)}
 #ev-toggle-past{background:none;border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:6px 16px;font-size:12px;cursor:pointer;margin-top:18px}
-#evweek{font-size:12.5px;color:var(--gold);cursor:pointer;white-space:nowrap;padding:4px 0}
-#evweek:hover{text-decoration:underline}
+/* ③最新内容条（2026-07-18 主人定，替代本周大事黄条）：引导阅读——最新研报/笔记一眼可见。
+   紫色系=区别于观察区绿/事件金的第三种语义色；叫「最新」不叫「今日」（可能是近几天的，省字防穿帮） */
+#freshbar{width:100%;background:rgba(150,110,255,.09);border:1px solid rgba(150,110,255,.38);border-radius:8px;padding:8px 14px;font-size:13px;color:var(--text);line-height:1.9}
+#freshbar .fresh-h{font-weight:600;color:#a68bff;margin-right:10px}
+#freshbar a{color:#b9a4ff;text-decoration:none}
+#freshbar a:hover{text-decoration:underline}
+#freshbar .fd{font-size:11.5px;color:var(--text2);margin-left:4px;white-space:nowrap}
+#freshbar .fsep{color:var(--text2);margin:0 10px}
+html[data-theme="light"] #freshbar{background:rgba(110,70,220,.07);border-color:rgba(110,70,220,.35)}
+html[data-theme="light"] #freshbar .fresh-h{color:#6b46c1}
+html[data-theme="light"] #freshbar a{color:#6b46c1}
 tr.ev-flash td{animation:evflash 2.4s ease-out}
 @keyframes evflash{0%{background:rgba(212,170,80,.28)}100%{background:transparent}}
 /* 手机端 */
@@ -742,17 +756,7 @@ body.resizing{user-select:none;cursor:col-resize}
     <div class="tab active" data-view="dash">📊 数据面板</div>
     <div class="tab" data-view="reports">📑 投研报告</div>
     <div class="tab" data-view="notes">📚 学习笔记</div>
-    <div class="tab" id="tab-more">☰ 更多
-      <div id="moremenu" class="hidden">
-        <button data-view="universe">🌌 股票宇宙</button>
-        <button data-view="imap">🗺 产业地图</button>
-        <button data-view="events">📅 大事件</button>
-        <button data-view="dict">📖 术语词典</button>
-        <button data-view="history">📜 金融史</button>
-        <button data-view="lev">⚖️ 存储杠杆率</button>
-      </div>
-    </div>
-  </div>
+  </div><!-- ④「更多」退役（2026-07-18 主人定）：次级栏目全部并入学习笔记页知识库切换条 -->
   <div id="searchwrap">
     <input id="search" type="search" enterkeyhint="search" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="🔍 搜索名称 / 代码，如 NVDA、紫金…">
     <span id="search-clear" title="清空">✕</span>
@@ -804,18 +808,18 @@ body.resizing{user-select:none;cursor:col-resize}
       <div class="stat vc" data-view="gain"><div class="k">📈 涨幅榜 Top30</div><div class="v" id="st-gain">今日</div></div>
       <div class="stat vc" data-view="loss"><div class="k">📉 跌幅榜 Top30</div><div class="v" id="st-loss">今日</div></div>
       <div class="stat vc" data-view="multimkt"><div class="k">🌐 多市场榜</div><div class="v" id="st-mm">今日</div></div>
-      <div class="stat vc" data-view="dd"><div class="k">回撤榜（&gt;30%）</div><div class="v" id="st-deep">–</div></div>
-      <div class="stat vc" data-view="hi"><div class="k">🚀 回撤榜（&lt;30%）</div><div class="v" id="st-hi">–</div></div>
-      <div class="stat vc" data-view="mcap"><div class="k">💰 市值排行榜</div><div class="v" id="st-mcap">全表</div></div>
-      <div class="stat vc" data-view="turn"><div class="k">🔥 成交榜</div><div class="v" id="st-turn">–</div></div>
-      <div class="stat vc" id="morecard"><div class="k">📦 其他</div><div class="v" id="st-more">▾ 4 个</div></div>
+      <div class="stat vc" id="morecard"><div class="k">📦 其他</div><div class="v" id="st-more">▾ 8 个</div></div>
+      <div class="stat vc xtra hidden" data-view="dd"><div class="k">回撤榜（&gt;30%）</div><div class="v" id="st-deep">–</div></div>
+      <div class="stat vc xtra hidden" data-view="hi"><div class="k">🚀 回撤榜（&lt;30%）</div><div class="v" id="st-hi">–</div></div>
+      <div class="stat vc xtra hidden" data-view="mcap"><div class="k">💰 市值排行榜</div><div class="v" id="st-mcap">全表</div></div>
+      <div class="stat vc xtra hidden" data-view="turn"><div class="k">🔥 成交榜</div><div class="v" id="st-turn">–</div></div>
       <div class="stat vc xtra hidden" data-view="alpha"><div class="k">超额榜</div><div class="v">Top30</div></div>
       <div class="stat vc xtra hidden" data-view="ladder"><div class="k">🪜 回撤阶梯</div><div class="v">全表</div></div>
       <div class="stat vc xtra hidden" data-view="heat"><div class="k">板块热力</div><div class="v" id="st-heat">21</div></div>
       <div class="stat vc xtra hidden" id="scalecard"><div class="k">🌍 市场规模</div><div class="v">总市值</div>
         <div id="scalemenu" class="hidden"></div>
       </div>
-      <div class="refresh-note">盘中现价30秒刷新（A股·美股实时 · 港股延时15分钟 · 日股约15-20分钟 · 韩股约20-25分钟 · 台股仅每日数据）· 美股盘前盘后约1分钟 · 加密实时 · 其余指标数分钟刷新 · 市值为估算口径 · 成交列口径与量比说明见成交格悬停浮窗</div>
+      <div class="refresh-note" id="refresh-note"><span id="updmini"></span><a id="datainfo-btn" href="javascript:;">ⓘ 数据说明</a></div>
     </div>
     <div id="topbar">
       <div id="mbottom" class="mobile-only">
@@ -825,7 +829,7 @@ body.resizing{user-select:none;cursor:col-resize}
       </div>
       <div id="msheet"><div class="msk"></div><div class="pan"><h3 id="ms-title"></h3><div class="grid" id="ms-grid"></div></div></div>
       <div id="opps" class="hidden"></div>
-      <div id="evweek" class="hidden"></div>
+      <div id="freshbar" class="hidden"></div>
     </div>
     <div id="mktbar-all"></div>
     <div id="flatview" class="hidden"></div>
@@ -837,6 +841,7 @@ body.resizing{user-select:none;cursor:col-resize}
 <!-- ================= 视图：大事件 ================= -->
 <div id="view-events" class="hidden">
   <div class="ev-main">
+    <div class="kbar" data-kbar="events"></div>
     <div class="ev-head">
       <h2 style="font-size:18px">📅 大事件日历 <span id="ev-n" style="font-size:12px;color:var(--text2);font-weight:400"></span></h2>
       <p style="font-size:12.5px;color:var(--text2);margin-top:4px">财报日自动抓取（估算日期标"约"）· 宏观为美联储/劳工统计局官方日程 · 点关联标的直达行情</p>
@@ -865,13 +870,14 @@ body.resizing{user-select:none;cursor:col-resize}
 <!-- ================= 视图：产业地图 ================= -->
 <div id="view-universe" class="hidden">
   <div class="uni-main">
+    <div class="kbar" data-kbar="universe"></div>
     <div id="uni-head"></div>
     <div id="uni-body"></div>
   </div>
 </div>
 <div id="view-imap" class="hidden">
   <div class="imap-main">
-    <div class="kbar"><button data-view="notes">📚 学习笔记</button><button data-view="dict">📖 术语词典</button><button data-view="history">📜 金融史</button><button data-view="imap" class="on">🗺 产业地图</button></div>
+    <div class="kbar" data-kbar="imap"></div>
     <div style="margin-bottom:6px"><h2 style="font-size:18px;display:inline">🗺 产业地图</h2> <span style="font-size:12px;color:var(--text2)">一个板块一张底图：规模 · 阵营 · 上下游 · 全量标的</span></div>
     <div class="imap-pills" id="imap-secs"></div>
     <div id="imap-body"></div>
@@ -895,7 +901,7 @@ body.resizing{user-select:none;cursor:col-resize}
     <div id="note-nav"></div>
   </nav>
   <div class="main">
-    <div class="kbar"><button data-view="notes" class="on">📚 学习笔记</button><button data-view="dict">📖 术语词典</button><button data-view="history">📜 金融史</button><button data-view="imap">🗺 产业地图</button></div>
+    <div class="kbar" data-kbar="notes"></div>
     <div class="notes-intro">
       <h2>写给投资者的 AI 底层知识</h2>
       <p>这里的每一篇笔记，都是我和 AI 一起把一个知识点掰开揉碎的过程记录——大量示意图，用费曼学习法讲到"小白也能懂"。看懂产业的底层逻辑，再去看行情数据，判断才有根。文章为网页版，电脑和手机都能舒适阅读，每篇文内可下载 PDF 存档。</p>
@@ -921,7 +927,7 @@ body.resizing{user-select:none;cursor:col-resize}
 
 <div id="view-dict" class="hidden">
   <div class="dict-main">
-    <div class="kbar"><button data-view="notes">📚 学习笔记</button><button data-view="dict" class="on">📖 术语词典</button><button data-view="history">📜 金融史</button><button data-view="imap">🗺 产业地图</button></div>
+    <div class="kbar" data-kbar="dict"></div>
     <div class="dict-head">
       <h2 style="font-size:18px">📖 术语词典 <span id="dict-n" style="font-size:12px;color:var(--text2);font-weight:400"></span></h2>
       <p style="font-size:12.5px;color:var(--text2);margin-top:4px">AI 投资黑话速查 · 每条都用大白话和类比讲透 · 与学习笔记同一套解释体系</p>
@@ -934,6 +940,7 @@ body.resizing{user-select:none;cursor:col-resize}
 </div>
 
 <div id="view-lev" class="hidden" style="max-width:860px;margin:0 auto;padding:18px 14px 60px">
+  <div class="kbar" data-kbar="lev"></div>
   <h2 style="font-size:18px;margin:6px 0 2px">⚖️ 存储杠杆率</h2>
   <div style="font-size:12px;color:var(--text2)" id="lev-upd">数据加载中…</div>
 
@@ -958,7 +965,7 @@ body.resizing{user-select:none;cursor:col-resize}
 
 <div id="view-history" class="hidden">
   <div class="hist-main">
-    <div class="kbar"><button data-view="notes">📚 学习笔记</button><button data-view="dict">📖 术语词典</button><button data-view="history" class="on">📜 金融史</button><button data-view="imap">🗺 产业地图</button></div>
+    <div class="kbar" data-kbar="history"></div>
     <div class="dict-head">
       <h2 style="font-size:18px">📜 金融史 · 危机编年 <span id="hist-n" style="font-size:12px;color:var(--text2);font-weight:400"></span></h2>
       <p style="font-size:12.5px;color:var(--text2);margin-top:4px">从股票诞生到最近一次熊市 · 每次危机当时都像世界末日，拉长看全是长河里的坑 · 与「大事件」互为镜像：那边看未来，这边读过去</p>
@@ -2045,7 +2052,7 @@ function renderDash(quotes){
     }
     if(v==="multimkt") window.MM_W="d";   /* 周期每次点进重置「今日」；角标由 buildMultiMkt 统一维护（指标记忆） */
     window.updateMbottom && window.updateMbottom();
-    const inXtra = ["alpha","ladder","heat"].includes(v);
+    const inXtra = ["dd","hi","mcap","turn","alpha","ladder","heat"].includes(v);   /* ①收纳（2026-07-18 主人定）：常驻只留5卡 */
     if(inXtra && window.ensureXtra) window.ensureXtra();
     const mc0 = document.getElementById("morecard");
     if(mc0) mc0.classList.toggle("on", inXtra);
@@ -2053,6 +2060,10 @@ function renderDash(quotes){
     window.setMktCardOn && window.setMktCardOn(v==="all");
     document.getElementById("sections").classList.toggle("hidden", v!=="all");
     document.getElementById("mktbar-all").classList.toggle("hidden", v!=="all");
+    /* ⑤固定模块只在全景显示（2026-07-18 主人定）：切榜单直见正文，手机端不用先划过一屏固定条 */
+    ["opps","freshbar","refresh-note"].forEach(id=>{
+      const el=document.getElementById(id); if(el) el.style.display = v==="all" ? "" : "none";
+    });
     document.querySelector(".sidebar").style.opacity = v==="all" ? "" : ".45";
     if(v!=="all"){
       const inp=document.getElementById("search");
@@ -2111,7 +2122,8 @@ function renderDash(quotes){
     if(m0){ applyFilter(); window.buildOpps && window.buildOpps(); }
     window.setMktCardOn(true);
   })();
-  /* 「其他」抽屉（2026-07-13 主人定）：高频视图置顶，低频四卡（超额/阶梯/热力/规模）收纳。
+  /* 「其他」抽屉（2026-07-13 主人定；2026-07-18 二次收纳：常驻只留5卡=全景/重点/涨/跌/多市场，
+     回撤两榜/市值/成交也入抽屉共8卡——手机端视图卡从4行收到2行）。
      点击展开/收起；进入抽屉内视图时自动展开并高亮入口卡，避免"人在榜里入口藏着"。 */
   (function(){
     const mc=document.getElementById("morecard"), sv=document.getElementById("st-more");
@@ -2119,7 +2131,7 @@ function renderDash(quotes){
     function setX(open){
       window.XOPEN = open;
       document.querySelectorAll(".stat.xtra").forEach(c=>c.classList.toggle("hidden", !open));
-      sv.textContent = open ? "▴ 收起" : "▾ 4 个";
+      sv.textContent = open ? "▴ 收起" : "▾ 8 个";
     }
     window.ensureXtra = ()=>{ if(!window.XOPEN) setX(true); };
     mc.addEventListener("click", ()=>setX(!window.XOPEN));
@@ -2389,6 +2401,7 @@ function renderNotes(cfg){
   /* 时间线视图 */
   const flat = cfg.cats.flatMap(c=>c.items.map(n=>({...n, cat:c.cat})));
   flat.sort((a,b)=>(b.ts||b.date).localeCompare(a.ts||a.date));   /* 按发布时刻倒序（ts 精确到分） */
+  window.NOTES_FLAT = flat;   /* ③最新内容条取最新一篇用 */
   let tl="", lastM="";
   flat.forEach(n=>{
     const m=n.date.slice(0,7);
@@ -2463,7 +2476,30 @@ function renderNotes(cfg){
   }
   addEventListener("scroll", ()=>{ if(!ntTick) ntTick=setTimeout(ntHighlight,120); }, {passive:true});
   ntHighlight();
+  window.updateFresh && updateFresh();
 }
+
+/* ③最新内容条（2026-07-18）：最新研报（含点评）+最新笔记各一条，标题+日期，当天发的标🆕。
+   数据两源异步到货（REPORTS 走 API、笔记走 notes.json），谁到都调一次，条子逐步补全。 */
+window.updateFresh = function(){
+  const el=document.getElementById("freshbar"); if(!el) return;
+  const d=new Date(), pad=n=>String(n).padStart(2,"0");
+  const today=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  const parts=[];
+  if(window.REPORTS && REPORTS.length){
+    const r=REPORTS[0];
+    const lab=(typeof repCatOf==="function" && repCatOf(r)==="财报点评") ? "📄" : "📑";
+    parts.push(`${lab} <a href="javascript:;" class="fresh-rep" data-rid="${r.id}">${r.title}</a><span class="fd">${String(r.date||"").slice(5)}${String(r.date)===today?" 🆕":""}</span>`);
+  }
+  if(window.NOTES_FLAT && NOTES_FLAT.length){
+    const n=NOTES_FLAT[0];
+    parts.push(`📚 <a href="${n.page}">${n.t}</a><span class="fd">${String(n.date||"").slice(5)}${String(n.date)===today?" 🆕":""}</span>`);
+  }
+  if(!parts.length){ el.classList.add("hidden"); return; }
+  el.innerHTML = `<span class="fresh-h">✨ 最新</span>` + parts.join(`<span class="fsep">·</span>`);
+  if(!window.CURVIEW || window.CURVIEW==="all") el.classList.remove("hidden");   /* ⑤固定模块只在全景 */
+  el.querySelectorAll(".fresh-rep").forEach(a=>a.addEventListener("click",()=>window.goReport&&goReport(a.dataset.rid)));
+};
 
 /* ===== 悬浮表头（任意宽度吸顶，横滚同步） ===== */
 (function(){
@@ -2774,6 +2810,8 @@ function renderNotes(cfg){
     if(el.__h === html) return;   /* 内容没变就不碰 DOM */
     el.__h = html;
     el.innerHTML = html;
+    const mini=document.getElementById("updmini");   /* 手机端侧栏隐藏，更新时间在视图条尾行补位（②） */
+    if(mini) mini.textContent = `数据更新 ${String(updBase).replace(" 北京时间","")}${updNote}`;
   }
   window.setUpdBase = function(s){ updBase = s; paintUpd(); };
   function markRealtime(note){
@@ -4287,6 +4325,31 @@ document.addEventListener("click", e=>{
   }, {passive:false, capture:true});
 })();
 
+/* ===== ②数据说明浮层（2026-07-18）：ⓘ点开（双端）+ 桌面slogan悬停即弹 ===== */
+(function(){
+  const HTML = `<b>数据更新频率</b><br>盘中现价30秒刷新：A股·美股实时 · 港股延时15分钟 · 日股约15-20分钟 · 韩股约20-25分钟 · 台股仅每日数据<br>美股盘前盘后约1分钟 · 加密实时 · 其余指标数分钟刷新<br><b>口径</b><br>市值为估算口径 · 成交列口径与量比说明见成交格悬停浮窗`;
+  let tip=null;
+  const ensure=()=>{ if(!tip){ tip=document.createElement("div"); tip.id="datatip"; tip.innerHTML=HTML; document.body.appendChild(tip); } return tip; };
+  const show=(x,y)=>{ const t=ensure(); t.style.display="block";
+    const w=t.offsetWidth,h=t.offsetHeight;
+    t.style.left=Math.max(8,Math.min(x,innerWidth-w-8))+"px";
+    t.style.top=Math.max(8,Math.min(y,innerHeight-h-8))+"px"; };
+  const hide=()=>{ if(tip) tip.style.display="none"; };
+  document.addEventListener("click", e=>{
+    const b=e.target.closest && e.target.closest("#datainfo-btn");
+    if(b){ e.stopPropagation(); const r=b.getBoundingClientRect();
+      (tip&&tip.style.display==="block") ? hide() : show(r.left-120, r.bottom+8); return; }
+    if(tip && tip.style.display==="block" && !(e.target.closest&&e.target.closest("#datatip"))) hide();
+  });
+  if(matchMedia("(hover:hover) and (pointer:fine)").matches){   /* 桌面：slogan 悬停即弹 */
+    const sl=document.querySelector("#header .slogan");
+    if(sl){
+      sl.style.cursor="default";
+      sl.addEventListener("mouseenter", ()=>{ const r=sl.getBoundingClientRect(); show(r.right-340, r.bottom+10); });
+      sl.addEventListener("mouseleave", ()=>setTimeout(()=>{ if(!(tip&&tip.matches(":hover"))) hide(); },150));
+    }
+  }
+})();
 /* ===== 深浅色切换（2026-07-17）：只管明暗，绿涨红跌不动；默认深色；选择存 localStorage ===== */
 (function(){
   const b = document.getElementById("themebtn");
@@ -4408,6 +4471,7 @@ document.addEventListener("click", e=>{
     try{ renderHistory(histCfg, spxHist); }catch(e){ console.warn("history:", e); }
     try{ renderLev(levData); }catch(e){ console.warn("lev:", e); }
     try{ renderReports(); }catch(e){ console.warn("reports:", e); }
+    try{ window.updateFresh && updateFresh(); }catch(e){}   /* ③REPORTS 到货后补最新条 */
       try{ IMAPCFG = imapCfg; renderImap(); }catch(e){ console.warn("imap:", e); }
     /* 地图跟面板保持同步（2026-07-17 主人时差疑问引出）：切进来重渲染 + 停留时每60秒自刷 */
     setInterval(()=>{
@@ -4481,7 +4545,7 @@ document.addEventListener("click", e=>{
       tg.textContent = (on?"▸":"▾")+` 回看已过去的事件（${past.length}）`;
     });
     body.querySelectorAll(".ev-code").forEach(el=>el.addEventListener("click",()=>jumpToCode(el.dataset.jump)));
-    /* 数据面板顶部：本周大事入口 */
+    /* 本周大事黄条已退役（2026-07-18 主人定：位置让给③最新内容条，大事件页保留、入口在知识库切换条） */
     const ew = document.getElementById("evweek");
     if(ew && week.length){
       ew.textContent = `📅 本周大事 ${week.length} 件：` + week.slice(0,3).map(e=>e.t).join(" · ") + (week.length>3?" …":"") + " →";
@@ -4525,11 +4589,17 @@ document.addEventListener("click", e=>{
   /* 视图切换（记住上次页签，并同步 URL 防止刷新跳走）。
      2026-07-13 改版：顶部只留 数据面板/学习笔记/更多（大事件·词典·金融史收进「更多」下拉，
      桌面手机统一，为未来加栏目留门）。所有切页签一律走 switchTab()。 */
-  const MORE_VIEWS = ["events","dict","history","lev","imap","universe"];
+  /* ④「更多」退役（2026-07-18 主人定）：次级栏目=知识库切换条七胶囊，顶部只留三页签。
+     KB_VIEWS 下的任何页都算「学习笔记」页签高亮范围；新增栏目在 KB 数组加一项即全站生效。 */
+  const KB = [["notes","📚 学习笔记"],["dict","📖 术语词典"],["history","📜 金融史"],["imap","🗺 产业地图"],
+              ["universe","🌌 股票宇宙"],["events","📅 大事件"],["lev","⚖️ 杠杆率"]];
+  const KB_VIEWS = KB.map(x=>x[0]);
+  document.querySelectorAll(".kbar[data-kbar]").forEach(k=>{
+    k.innerHTML = KB.map(([v,l])=>`<button data-view="${v}"${v===k.dataset.kbar?' class="on"':''}>${l}</button>`).join("");
+  });
   window.switchTab = function(v){
-    document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active", t.dataset.view===v || (v==="repread" && t.dataset.view==="reports")));
-    const tm = document.getElementById("tab-more");
-    if(tm) tm.classList.toggle("active", MORE_VIEWS.includes(v));
+    document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",
+      t.dataset.view===v || (v==="repread" && t.dataset.view==="reports") || (KB_VIEWS.includes(v) && v!=="notes" && t.dataset.view==="notes")));
     ["dash","events","notes","dict","history","lev","reports","repread","imap","universe"].forEach(x=>{
       const el = document.getElementById("view-"+x);
       if(el) el.classList.toggle("hidden", v!==x);
@@ -4568,20 +4638,7 @@ document.addEventListener("click", e=>{
       if(tab.dataset.view==="notes" && window.setNotesView) setNotesView("cat");   /* 笔记页同规矩：每次进入重置分类视图 */
       switchTab(tab.dataset.view);
     }));
-  (function(){
-    const t=document.getElementById("tab-more"), m=document.getElementById("moremenu");
-    if(!t||!m) return;
-    t.addEventListener("click",e=>{ e.stopPropagation(); m.classList.toggle("hidden"); });
-    m.querySelectorAll("button").forEach(b=>b.addEventListener("click",e=>{
-      e.stopPropagation(); m.classList.add("hidden");
-      if(b.dataset.repcat!==undefined){   /* 财报点评直达=投研报告页预筛该分类（2026-07-18） */
-        window.REP_CAT = b.dataset.repcat;
-        try{ renderReports(document.getElementById("rep-search")?.value||""); }catch(x){}
-      }
-      switchTab(b.dataset.view);
-    }));
-    document.addEventListener("click",()=>m.classList.add("hidden"));
-  })();
+  /* moremenu 已随「更多」退役（④）；财报点评分类直达逻辑在投研报告页内分类胶囊 */
 
   /* Logo 点击回主页：数据面板 + 市场全景（重置市场筛选）+ 清空搜索 */
   document.querySelector("#header .logo").addEventListener("click", ()=>{
