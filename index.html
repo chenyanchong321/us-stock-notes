@@ -777,7 +777,7 @@ body.resizing{user-select:none;cursor:col-resize}
     <span class="aclose">✕</span>
     <div class="atabs"><div class="atab on" data-t="login">登 录</div><div class="atab" data-t="reg">注 册</div></div>
     <div id="apane-login">
-      <div class="ad">会员登录后可查看观察位与卖点。</div>
+      <div class="ad">会员登录后可查看投研报告、财报点评、观察位与卖点。</div>
       <input id="al-user" placeholder="用户名" autocomplete="username">
       <input id="al-pw" type="password" placeholder="密码" autocomplete="current-password">
       <button class="abtn" id="al-go">登 录</button>
@@ -2497,7 +2497,7 @@ window.updateFresh = function(){
   /* 书名号包每篇标题（主人定：《》天然自分界，一眼两篇；不标🆕——本就按最新更新，标了是废话） */
   if(typeof REPORTS!=="undefined" && REPORTS.length){   /* REPORTS 是脚本级 let 不在 window 上——DATA 同款坑，守卫必须 typeof */
     const items=REPORTS.slice(0,2).map(r=>`<a href="javascript:;" class="fresh-rep" data-rid="${r.id}">《${r.title}》</a>`).join(" ");
-    rows.push(`<div class="fresh-row"><span class="ftag">📑 研报</span><span class="fitems">${items}</span></div>`);
+    rows.push(`<div class="fresh-row"><span class="ftag">📑 研报${window.MEMBER?"":"🔒"}</span><span class="fitems">${items}</span></div>`);   /* 游客标签带🔒设预期（点标题会弹登录） */
   }
   if(window.NOTES_FLAT && NOTES_FLAT.length){
     const items=NOTES_FLAT.slice(0,2).map(n=>`<a class="fresh-note" href="${n.page}">《${n.t}》</a>`).join(" ");
