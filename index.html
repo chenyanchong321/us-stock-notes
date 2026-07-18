@@ -199,14 +199,16 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 .mmk-pc{flex:0 0 auto;font-variant-numeric:tabular-nums;font-weight:600}
 .mmk-empty{padding:14px 10px;color:var(--text2);font-size:12px;text-align:center}
 @media(max-width:860px){
-  /* 手机四列每列仅~85px：排名+涨跌%就吃光单行宽，名称必被挤死（省略号截成一个字/折行成一字一行竖排，两副面孔同一病根）。
-     正解=格内双行：第一行 排名+涨跌%，第二行 名称独占整行（~80px 放6-7字，绝大多数名称一行放下，长名折两行不截断）。 */
+  /* 手机端排版终版（2026-07-18 主人定）：去序号（排序即序号，30行内是噪音）+ 流式排版——
+     名字在前、涨跌%直接跟在名字后，放得下一行搞定（网易 +0.9%），放不下自动折行（四字名+%约100px>列宽80px，
+     %整体掉到第二行）。所有元素统一左起，起点唯一，消灭"序号左/％右/名字左"三起点的参差感。
+     曾走过的弯路：双行 flex（序号+%一行、名字一行）——三元素三起点，主人抓包参差。 */
   .mmk-grid{gap:5px}
-  .mmk-cell{padding:6px 5px;gap:3px;font-size:12px;flex-wrap:wrap;row-gap:2px}
-  .mmk-nm{flex:1 1 100%;order:3;font-size:11.5px}
-  .mmk-pc{margin-left:auto}
+  .mmk-cell{display:block;padding:6px 5px;font-size:12px;line-height:1.4}
+  .mmk-rk{display:none}
+  .mmk-nm{display:inline;font-size:11.5px}
+  .mmk-pc{display:inline;white-space:nowrap;margin-left:5px}   /* nowrap=%作为整体折行，绝不从中间断开 */
   .mmk-colh{padding:8px 6px;font-size:12px}
-  .mmk-rk{width:14px;text-align:left}
   .mmk-src{margin-right:2px;padding:0 2px}
 }
 /* 市场筛选下拉 */
