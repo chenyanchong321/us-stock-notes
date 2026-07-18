@@ -418,7 +418,9 @@ tr.buy .buyline.hit{color:var(--up)!important;font-weight:600}
 #freshbar .ftag{flex:0 0 auto;color:var(--text2);font-size:11.5px;border:1px solid var(--border);border-radius:4px;padding:0 7px;line-height:1.7;white-space:nowrap}
 #freshbar .fitems{flex:1;min-width:0}
 #freshbar a{color:#b9a4ff;text-decoration:none}
+#freshbar a.fresh-note{color:#7fc8f5}   /* 笔记=青蓝、研报=紫，两行内容一眼区分（主人定） */
 #freshbar a:hover{text-decoration:underline}
+html[data-theme="light"] #freshbar a.fresh-note{color:#2f6fd6}
 #freshbar .fsep{color:var(--text2);margin:0 10px}
 html[data-theme="light"] #freshbar{background:rgba(110,70,220,.07);border-color:rgba(110,70,220,.35)}
 html[data-theme="light"] #freshbar .fresh-h{color:#6b46c1}
@@ -754,7 +756,7 @@ body.resizing{user-select:none;cursor:col-resize}
 <body>
 
 <header id="header">
-  <div class="logo">📓 烟囱<span>的美股学习笔记</span></div>
+  <div class="logo">📓 烟囱的<span>美股学习笔记</span></div>
   <div class="tabs">
     <div class="tab active" data-view="dash">📊 数据面板</div>
     <div class="tab" data-view="reports">📑 投研报告</div>
@@ -1623,8 +1625,9 @@ function renderDash(quotes){
   /* 榜内市场快捷切换条：所有榜单视图共用（主人指定，2026-07-12），与「市场·全景」
      同一全局开关（data-mkt → setMkt）。按钮数字 = 该市场标的数（与全景菜单同口径）。 */
   function mktBarHTML(){
-    /* 顺序=主人定的权重序（美股最前，手机端不用滑就能点到）；双行=名称·数量·状态点 / 交易时段 */
-    const MK=["","美股","A股","港股","日股","韩股","台股","加密"];
+    /* 顺序=主人定的权重序（美股最前，手机端不用滑就能点到）；双行=名称·数量·状态点 / 交易时段。
+       日韩台合并一颗（2026-07-18 主人定：三市数据少，合并后手机端两行收工） */
+    const MK=["","美股","A股","港股","日韩台","加密"];
     const cnt={}; MK.forEach(m=>cnt[m]=new Set());
     DATA.forEach(s=>s.rows.forEach(r=>{
       if(r[3]==="获取失败") return;
@@ -2085,7 +2088,7 @@ function renderDash(quotes){
   window.setDashView = setView;
   (function(){
     const card=document.getElementById("mktcard"), cur=document.getElementById("mkt-cur");
-    const MKTS=["全部","A股","港股","美股","日股","韩股","台股","加密"];
+    const MKTS=["全部","美股","A股","港股","日韩台","加密"];
     function countOf(m){
       const seen=new Set();
       DATA.forEach(s=>s.rows.forEach(r=>{
@@ -2146,7 +2149,7 @@ function renderDash(quotes){
     const dock=document.createElement("div");
     dock.id="mktfloat";
     document.body.appendChild(dock);
-    const MK=["","美股","A股","港股","日股","韩股","台股","加密"];
+    const MK=["","美股","A股","港股","日韩台","加密"];
     window.refreshMktFloat=function(){
       const c={}; MK.forEach(m=>c[m]=new Set());
       DATA.forEach(s=>s.rows.forEach(r=>{
@@ -2226,7 +2229,7 @@ function renderDash(quotes){
     };
     sheet.querySelector(".msk").addEventListener("click",close);
     mbMkt.addEventListener("click",()=>{
-      const MK=["","美股","A股","港股","日股","韩股","台股","加密"];
+      const MK=["","美股","A股","港股","日韩台","加密"];
       const c={}; MK.forEach(m=>c[m]=new Set());
       DATA.forEach(s=>s.rows.forEach(r=>{
         if(r[3]==="获取失败") return;
@@ -2349,6 +2352,7 @@ function renderDash(quotes){
 window.CURMKT = "";
 const MKT_RULE = {"A股":m=>m.startsWith("A股"),"港股":m=>m.startsWith("港股"),"美股":m=>m.startsWith("美股"),
                   "日股":m=>m[0]==="日","韩股":m=>m.startsWith("韩"),"台股":m=>m.startsWith("台股"),
+                  "日韩台":m=>/^(日|韩|台)/.test(m),   /* 2026-07-18 主人定：三小市场合并一颗胶囊，切换条收进两行 */
                   "加密":m=>m.startsWith("加密")};
 function mktOk(m){
   if(!window.CURMKT) return true;
@@ -2490,13 +2494,13 @@ window.updateFresh = function(){
   const d=new Date(), pad=n=>String(n).padStart(2,"0");
   const today=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
   const rows=[];
-  /* 书名号包每篇标题（主人定：《》天然自分界，一眼两篇；去点号分隔） */
+  /* 书名号包每篇标题（主人定：《》天然自分界，一眼两篇；不标🆕——本就按最新更新，标了是废话） */
   if(typeof REPORTS!=="undefined" && REPORTS.length){   /* REPORTS 是脚本级 let 不在 window 上——DATA 同款坑，守卫必须 typeof */
-    const items=REPORTS.slice(0,2).map(r=>`<a href="javascript:;" class="fresh-rep" data-rid="${r.id}">《${r.title}》${String(r.date)===today?"🆕":""}</a>`).join(" ");
+    const items=REPORTS.slice(0,2).map(r=>`<a href="javascript:;" class="fresh-rep" data-rid="${r.id}">《${r.title}》</a>`).join(" ");
     rows.push(`<div class="fresh-row"><span class="ftag">📑 研报</span><span class="fitems">${items}</span></div>`);
   }
   if(window.NOTES_FLAT && NOTES_FLAT.length){
-    const items=NOTES_FLAT.slice(0,2).map(n=>`<a href="${n.page}">《${n.t}》${String(n.date)===today?"🆕":""}</a>`).join(" ");
+    const items=NOTES_FLAT.slice(0,2).map(n=>`<a class="fresh-note" href="${n.page}">《${n.t}》</a>`).join(" ");
     rows.push(`<div class="fresh-row"><span class="ftag">📚 笔记</span><span class="fitems">${items}</span></div>`);
   }
   if(!rows.length){ el.classList.add("hidden"); return; }
@@ -3094,6 +3098,10 @@ function renderDict(g){
 
 /* ===== 市场开盘状态（北京时间；美股自动判夏令时） ===== */
 function mktStatus(m){
+  if(m==="日韩台"){   /* 合并胶囊（2026-07-18）：任一开市即绿点；时段取三市并集 8:00-14:30 */
+    const any=["日股","韩股","台股"].some(x=>{ const s=mktStatus(x); return s&&s.o; });
+    return {o:any, h:"8:00-14:30"};
+  }
   const now=new Date();
   const bj=new Date(now.getTime()+(480+now.getTimezoneOffset())*60000);
   const dow=bj.getDay(), mins=bj.getHours()*60+bj.getMinutes();
