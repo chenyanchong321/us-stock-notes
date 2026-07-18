@@ -581,12 +581,29 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 /* 笔记页与研报页格式对齐（2026-07-18 主人定）：内容窄列+研报卡同款单列大卡。
    坑：居中是无侧栏页面（研报页）的方案——有侧栏时"剩余空间居中"会在目录与正文间撕出大空白带（主人抓包割裂感），
    正解=内容列紧跟侧栏左起，只限宽不居中。 */
-#view-notes .main>*{max-width:1100px}
-/* 宽屏权衡（2026-07-18 主人抓包"右边空很多"）：固定侧栏布局在宽屏必有剩余空间，
-   解法=内容区放宽+卡片自适应网格（窄=单列大卡，宽=自动两列铺满），卡片样式不变、统一性不破。
-   min(480px,100%) 防手机端网格溢出（标准技巧）。 */
-.ngrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(480px,100%),1fr));gap:12px}
+/* 方案A（2026-07-18 试行，整功能单commit·revert即回宽屏两列版）：
+   笔记页与研报/词典统一——内容居中820px单列，目录不再顶死屏幕左缘，
+   改为浮贴内容列左外侧的挂件（文章页 toc.js 同款语言：滚动高亮当前分类）；
+   放不下目录的窄屏收成左下角📂悬浮钮弹分类单。 */
+#view-notes .sidebar{display:none}
+#view-notes .main{margin-left:0}
+#view-notes .main>*{max-width:820px;margin-left:auto;margin-right:auto}
+.ngrid{display:grid;grid-template-columns:1fr;gap:12px}
 .ngrid .ncard{margin-bottom:0}
+#ntoc{position:fixed;top:calc(var(--header-h) + 32px);left:max(10px,calc(50% - 636px));width:210px;max-height:72vh;overflow:auto;font-size:13px;display:none;z-index:120}
+#ntoc.show{display:block}
+#ntoc .ntoc-h{font-size:11px;color:var(--text2);padding:0 10px 6px}
+#ntoc a{display:block;padding:6px 10px;color:var(--text2);text-decoration:none;border-left:2px solid transparent;border-radius:0 8px 8px 0;line-height:1.5}
+#ntoc a:hover{color:var(--text)}
+#ntoc a.active{color:var(--accent);border-left-color:var(--accent);background:rgba(74,140,240,.08)}
+#ntoc a .cnt{float:right;color:var(--text2);font-size:11px}
+@media(max-width:1279px){ #ntoc.show{display:none} }   /* 目录放不下（<1280）→ 改走📂悬浮钮 */
+#ntocfab{position:fixed;left:14px;bottom:calc(20px + env(safe-area-inset-bottom));z-index:230;width:44px;height:44px;border-radius:50%;background:var(--panel2);border:1px solid var(--border);color:var(--text);font-size:17px;display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+@media(max-width:1279px){ #ntocfab.show{display:flex} }
+#ntocpop{position:fixed;left:14px;bottom:calc(74px + env(safe-area-inset-bottom));z-index:231;background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:8px;display:none;max-width:82vw;max-height:58vh;overflow:auto;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+#ntocpop.open{display:block}
+#ntocpop a{display:block;padding:9px 13px;color:var(--text);text-decoration:none;font-size:14px;border-radius:8px;white-space:nowrap}
+#ntocpop a .cnt{color:var(--text2);font-size:11px;margin-left:8px}
 /* 知识库切换条（2026-07-18 主人定）：学习笔记/术语词典/金融史/产业地图同属知识类内容，四页顶部互切；
    股票宇宙/大事件/杠杆率是行情工具不进此条。「更多」菜单入口保留（收纳铁律不动）。 */
 .kbar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
@@ -897,6 +914,10 @@ body.resizing{user-select:none;cursor:col-resize}
     <div id="note-timeline" class="hidden"></div>
   </div>
 </div>
+<!-- 方案A浮动目录挂件（fixed，仅笔记页显示；宽屏贴内容左外侧，窄屏收📂钮） -->
+<div id="ntoc"><div class="ntoc-h">分类目录</div><div id="ntoc-links"></div></div>
+<button id="ntocfab" title="分类目录">📂</button>
+<div id="ntocpop"></div>
 
 <div id="view-dict" class="hidden">
   <div class="dict-main">
@@ -2409,6 +2430,23 @@ function renderNotes(cfg){
     inp.addEventListener("input",()=>{ noteFilter(inp.value); if(clr) clr.style.display=inp.value?"block":"none"; });
     if(clr) clr.addEventListener("click",()=>{ inp.value=""; clr.style.display="none"; noteFilter(""); inp.focus(); });
   }
+
+  /* 方案A浮动目录：宽屏#ntoc贴内容左外侧+滚动高亮；窄屏📂钮弹分类单。显隐由 switchTab 里 syncNtoc 管 */
+  const links = cfg.cats.map((c,i)=>`<a href="#cat${i}" data-sec="cat${i}">${c.cat}<span class="cnt">${c.items.length}</span></a>`).join("");
+  const nt=document.getElementById("ntoc-links"), np=document.getElementById("ntocpop"), nf=document.getElementById("ntocfab");
+  if(nt) nt.innerHTML=links;
+  if(np) np.innerHTML=links;
+  if(nf) nf.addEventListener("click", e=>{ e.stopPropagation(); np.classList.toggle("open"); });
+  if(np) np.addEventListener("click", ()=>np.classList.remove("open"));   /* 选完即收 */
+  document.addEventListener("click", e=>{ if(np && !e.target.closest("#ntocfab,#ntocpop")) np.classList.remove("open"); });
+  window.syncNtoc = function(){
+    const vis = !document.getElementById("view-notes").classList.contains("hidden");
+    const ntc=document.getElementById("ntoc");
+    if(ntc) ntc.classList.toggle("show", vis);
+    if(nf) nf.classList.toggle("show", vis);
+    if(np && !vis) np.classList.remove("open");
+  };
+  window.syncNtoc();
 }
 
 /* ===== 悬浮表头（任意宽度吸顶，横滚同步） ===== */
@@ -4482,7 +4520,8 @@ document.addEventListener("click", e=>{
     });
     document.getElementById("searchwrap").style.display = v==="dash" ? "" : "none";
     const rz = document.getElementById("resizer");
-    if(rz) rz.style.display = (v==="dash"||v==="notes") ? "" : "none";   /* 侧栏拖拽条只在有侧栏的视图出现 */
+    if(rz) rz.style.display = v==="dash" ? "" : "none";   /* 侧栏拖拽条只在有侧栏的视图出现（方案A后笔记页无侧栏） */
+    if(window.syncNtoc) syncNtoc();   /* 笔记页浮动目录/📂钮显隐 */
     if(v==="imap" && typeof renderImap==="function"){ try{ renderImap(); }catch(e){} }   /* 切进地图即重渲染，行情与面板同步 */
     if(v==="universe" && typeof renderUniverse==="function"){ try{ renderUniverse(); }catch(e){} }   /* 宇宙同款：切入即刷 */
     const mb=document.getElementById("mbottom");
@@ -4567,7 +4606,7 @@ document.addEventListener("click", e=>{
   const obs = new IntersectionObserver(es=>{
     es.forEach(e=>{
       if(e.isIntersecting){
-        document.querySelectorAll(".sidebar a").forEach(l=>l.classList.toggle("active",l.dataset.sec===e.target.id));
+        document.querySelectorAll(".sidebar a, #ntoc-links a").forEach(l=>l.classList.toggle("active",l.dataset.sec===e.target.id));
       }
     });
   },{rootMargin:"-15% 0px -70% 0px"});
