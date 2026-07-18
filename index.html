@@ -194,7 +194,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 .mmk-cell:last-child{border-bottom:0}
 .mmk-cell:hover{background:rgba(74,140,240,.07)}
 .mmk-rk{flex:0 0 auto;width:18px;color:var(--text2);font-size:11px;text-align:right}
-.mmk-nm{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mmk-nm{flex:1 1 auto;min-width:0;word-break:break-word;line-height:1.25}   /* 铁律：名称折行不截断（2026-07-18 主人抓包：手机四列下省略号把名称截成一个字） */
 .mmk-src{display:inline-block;font-size:10px;color:var(--text2);border:1px solid var(--border);border-radius:3px;padding:0 3px;margin-right:4px}
 .mmk-pc{flex:0 0 auto;font-variant-numeric:tabular-nums;font-weight:600}
 .mmk-empty{padding:14px 10px;color:var(--text2);font-size:12px;text-align:center}
@@ -1660,9 +1660,10 @@ function renderDash(quotes){
         const co = d>0?"var(--up)":d<0?"var(--down)":"var(--text2)";
         const pct = Number.isFinite(d) ? (d>0?"+":"")+d.toFixed(2)+"%" : "–";
         const src = b.mix ? `<span class="mmk-src">${String(r[2]).indexOf("日")===0?"日":"韩"}</span>` : "";
+        const nm = String(r[0]).replace(/（.*?）/g,"");   /* 去括号注（HOYA等），窄列少折一行；全名在 title 与标的卡 */
         return `<div class="mmk-cell" data-code="${r[1]}" title="${r[0]}">
           <span class="mmk-rk">${i+1}</span>
-          <span class="mmk-nm">${src}${r[0]}</span>
+          <span class="mmk-nm">${src}${nm}</span>
           <span class="mmk-pc" style="color:${co}">${pct}</span></div>`;
       }).join("") || `<div class="mmk-empty">暂无数据</div>`;
       return `<div class="mmk-col"><div class="mmk-colh">${b.lab}<span class="mmk-cn">${b.rows.length} 只</span></div>${cells}</div>`;
