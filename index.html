@@ -954,11 +954,14 @@ let SELL = {};         /* 卖点（会员可见），动作规则，显示在现
 let TGT = {};          /* 目标价（会员可见），估值锚，显示在重点清单列（2026-07-15 主人定稿） */
 let BUYCODES = new Set();  /* 设了点位的代码清单（公开）：画★、清单票名、锁 */
 let REPORTS = [], REPBY = {}, RCODES = new Set();  /* 报告目录（公开橱窗）：徽标、浮窗行、集合页；正文走 /api/report 验token */
-/* 报告分两类（2026-07-18 主人定）：深度研报（默认，cat 缺省）与财报点评（cat:"财报点评"，季度节奏短平快）。
+/* 报告分两类（2026-07-18 主人定）：深度研报与财报点评（季度节奏短平快）。
+   分类判定=id 前缀约定：财报点评 id 一律 fin- 开头（服务端 /api/reports 白名单会剥掉自定义字段，
+   cat 字段传不下来——实测踩坑；靠 id 前缀零服务端改动）。挂点评的 SOP：id 必须 fin- 开头。
    徽标按类显示：有研报显示「研报」，只有财报点评显示「点评」。 */
+function repCatOf(x){ return /^fin-/.test(String(x.id||"")) ? "财报点评" : "研报"; }
 function repBadge(code){
   if(!RCODES.has(code)) return "";
-  const lab = (REPBY[code]||[]).some(x=>(x.cat||"研报")!=="财报点评") ? "研报" : "点评";
+  const lab = (REPBY[code]||[]).some(x=>repCatOf(x)!=="财报点评") ? "研报" : "点评";
   return `<span class="repb" data-code="${code}">${lab}</span>`;
 }
 window.MEMBER = false; window.AUSER = "";
@@ -3666,7 +3669,7 @@ function renderReports(kw){
   const box = document.getElementById("rep-cards");
   if(!box) return;
   /* 分类胶囊（2026-07-18）：全部/深度研报/财报点评，带篇数；REP_CAT 为当前筛选（""=全部） */
-  const catOf = x => x.cat || "研报";
+  const catOf = repCatOf;   /* 分类判定统一走 id 前缀约定（fin-=财报点评），勿再读 x.cat */
   const cats = document.getElementById("rep-cats");
   if(cats){
     const n1 = REPORTS.filter(x=>catOf(x)==="研报").length, n2 = REPORTS.filter(x=>catOf(x)==="财报点评").length;
