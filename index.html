@@ -423,6 +423,7 @@ tr.buy .buyline.hit{color:var(--up)!important;font-weight:600}
 #freshbar a:hover{text-decoration:underline}
 #freshbar .fsep{color:var(--text2);margin:0 10px}
 html[data-theme="light"] #freshbar{background:rgba(110,70,220,.07);border-color:rgba(110,70,220,.35)}
+@media(max-width:860px){#freshbar{display:none !important}}   /* 手机隐藏（主人终定：桌面显示引导阅读，手机省首屏） */
 html[data-theme="light"] #freshbar .fresh-h{color:#6b46c1}
 html[data-theme="light"] #freshbar a{color:#6b46c1}
 tr.ev-flash td{animation:evflash 2.4s ease-out}
@@ -2491,9 +2492,7 @@ function renderNotes(cfg){
    数据两源异步到货（REPORTS 走 API、笔记走 notes.json），谁到都调一次，条子逐步补全。 */
 window.updateFresh = function(){
   const el=document.getElementById("freshbar"); if(!el) return;
-  /* 2026-07-18 主人定：最新条暂时下架（手机首屏太挤，读文章走顶部页签）。
-     恢复=删掉下面这行；将来可考虑瘦身版回归（每行只放1篇）。功能代码全部保留。 */
-  if(!window.FRESH_ON){ el.classList.add("hidden"); return; }
+  /* 2026-07-18 主人终定：桌面显示、手机隐藏（媒体查询兜底）——手机首屏寸土寸金，桌面空间富余留着引导阅读 */
   const d=new Date(), pad=n=>String(n).padStart(2,"0");
   const today=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
   const rows=[];
