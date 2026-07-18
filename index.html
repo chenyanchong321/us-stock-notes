@@ -417,10 +417,10 @@ tr.buy .buyline.hit{color:var(--up)!important;font-weight:600}
 #freshbar .fresh-row{display:flex;gap:10px;align-items:baseline}
 #freshbar .ftag{flex:0 0 auto;color:var(--text2);font-size:11.5px;border:1px solid var(--border);border-radius:4px;padding:0 7px;line-height:1.7;white-space:nowrap}
 #freshbar .fitems{flex:1;min-width:0}
+/* 定稿（2026-07-18）：研报笔记统一浅紫——一个框=一个语义=一个色（观察区同构），
+   分类交给行标签+🔒，每个视觉元素只说一件事。双色字方案试过被否：两个饱和色在紫框里打架。 */
 #freshbar a{color:#b9a4ff;text-decoration:none}
-#freshbar a.fresh-note{color:#7fc8f5}   /* 笔记=青蓝、研报=紫，两行内容一眼区分（主人定） */
 #freshbar a:hover{text-decoration:underline}
-html[data-theme="light"] #freshbar a.fresh-note{color:#2f6fd6}
 #freshbar .fsep{color:var(--text2);margin:0 10px}
 html[data-theme="light"] #freshbar{background:rgba(110,70,220,.07);border-color:rgba(110,70,220,.35)}
 html[data-theme="light"] #freshbar .fresh-h{color:#6b46c1}
