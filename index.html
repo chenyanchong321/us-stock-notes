@@ -581,7 +581,12 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 /* 笔记页与研报页格式对齐（2026-07-18 主人定）：内容窄列+研报卡同款单列大卡。
    坑：居中是无侧栏页面（研报页）的方案——有侧栏时"剩余空间居中"会在目录与正文间撕出大空白带（主人抓包割裂感），
    正解=内容列紧跟侧栏左起，只限宽不居中。 */
-#view-notes .main>*{max-width:820px}
+#view-notes .main>*{max-width:1100px}
+/* 宽屏权衡（2026-07-18 主人抓包"右边空很多"）：固定侧栏布局在宽屏必有剩余空间，
+   解法=内容区放宽+卡片自适应网格（窄=单列大卡，宽=自动两列铺满），卡片样式不变、统一性不破。
+   min(480px,100%) 防手机端网格溢出（标准技巧）。 */
+.ngrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(480px,100%),1fr));gap:12px}
+.ngrid .ncard{margin-bottom:0}
 /* 知识库切换条（2026-07-18 主人定）：学习笔记/术语词典/金融史/产业地图同属知识类内容，四页顶部互切；
    股票宇宙/大事件/杠杆率是行情工具不进此条。「更多」菜单入口保留（收纳铁律不动）。 */
 .kbar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
@@ -2349,13 +2354,13 @@ function renderNotes(cfg){
     catEl.insertAdjacentHTML("beforeend",`
       <div class="note-cat" id="${id}">
         <h3>${c.cat}<span class="n">${c.items.length} 篇</span></h3>
-        ${c.items.map(n=>`
+        <div class="ngrid">${c.items.map(n=>`
           <a class="ncard" href="${n.page}">
             <div class="rep-tags">${n.tags.map(t=>`<span class="rep-code">${t}</span>`).join("")}<span class="rep-meta">${n.date}</span></div>
             <div class="rep-title">${n.t}</div>
             <div class="rep-d">${n.d}</div>
             <div class="rep-act">▸ 阅读全文（免费 · 文内可下载PDF）</div>
-          </a>`).join("")}
+          </a>`).join("")}</div>
       </div>`);
   });
   document.getElementById("note-total").textContent = noteCount;
