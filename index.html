@@ -187,8 +187,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 .mmk-dir{background:var(--panel2);border:1px solid var(--border);color:var(--text2);border-radius:99px;padding:5px 16px;font-size:13px;cursor:pointer}
 .mmk-dir.on{color:var(--accent);border-color:var(--accent);background:rgba(74,140,240,.10)}
 .mmk-grid{display:flex;gap:10px;align-items:flex-start}
-.mmk-col{flex:1 1 0;min-width:0;background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden}
-.mmk-colh{font-weight:700;font-size:13.5px;padding:9px 10px;background:var(--panel2);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:6px}
+.mmk-col{flex:1 1 0;min-width:0;background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:clip}   /* clip不建滚动容器，表头sticky才活（overflow:hidden会杀死吸顶，html同款先例） */
+.mmk-colh{font-weight:700;font-size:13.5px;padding:9px 10px;background:var(--panel2);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:6px;
+  position:sticky;top:calc(var(--anchor-sec, calc(var(--header-h) + 76px)) - 14px);z-index:5}   /* 市场表头吸顶（2026-07-18 主人定：滚动时得知道哪列是哪个市场），偏移复用锚点变量双端自适应 */
 .mmk-cn{font-size:11px;color:var(--text2);font-weight:400;flex:0 0 auto}
 /* 桌面格=两列（2026-07-18 主人终版）：名字左、数值右对齐成列——数字右缘对齐才有表格的竖扫感。
    两行方案试过被否：桌面列宽够，不必继承手机的空间妥协；手机端保持流式（媒体查询内覆盖）。 */
