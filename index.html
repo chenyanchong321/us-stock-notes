@@ -196,7 +196,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 .mmk-cell:last-child{border-bottom:0}
 .mmk-cell:hover{background:rgba(74,140,240,.07)}
 .mmk-rk{flex:0 0 auto;width:18px;color:var(--text2);font-size:11px;text-align:right}
-.mmk-nm{flex:1 1 auto;min-width:0;word-break:break-word;line-height:1.25}   /* 铁律：名称折行不截断（2026-07-18 主人抓包：手机四列下省略号把名称截成一个字） */
+.mmk-nm{flex:1 1 0;min-width:0;word-break:break-word;line-height:1.25}   /* 铁律：名称折行不截断；flex-basis必须0——auto时长英文名按完整宽度参与换行判断，整个掉到序号下一行，序号孤行（2026-07-18 美股列实测） */
 .mmk-src{display:inline-block;font-size:10px;color:var(--text2);border:1px solid var(--border);border-radius:3px;padding:0 3px;margin-right:4px}
 .mmk-pc{flex:0 0 100%;padding-left:24px;font-variant-numeric:tabular-nums;font-weight:600}   /* 24px=序号18+间隙6，与名字左缘对齐 */
 .mmk-empty{padding:14px 10px;color:var(--text2);font-size:12px;text-align:center}
