@@ -310,7 +310,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 /* ②数据说明进浮层（2026-07-18 主人定：说明性文字不占黄金位置）：一行"更新时间+ⓘ"替代原五行大段 */
 #datainfo-btn,.datainfo-btn,.fvinfo{color:var(--text2);text-decoration:none;border:1px solid var(--border);border-radius:8px;padding:1px 8px;margin-left:8px;cursor:pointer;font-size:12px;font-weight:400;white-space:nowrap;vertical-align:3px}
 #datainfo-btn:hover,.datainfo-btn:hover,.fvinfo:hover{color:var(--accent);border-color:var(--accent)}
-.datainfo-btn{font-size:11px;padding:0 6px;margin-left:4px}
+/* 侧栏窄（~200px），带框按钮会被挤成独立一大行（主人抓丑）——侧栏版=行尾极小纯文字，无框无底 */
+#update-time .datainfo-btn{border:none;padding:0;margin-left:2px;font-size:inherit;vertical-align:0;color:var(--text2);text-decoration:underline dotted;text-underline-offset:3px}
+#update-time .datainfo-btn:hover{color:var(--accent)}
 /* 桌面端隐藏视图条数据行（2026-07-18 主人定：侧栏已有更新时间+ⓘ、slogan悬停有说明，三处重复）；手机端保留（无处可放） */
 @media(min-width:861px){#refresh-note{display:none}}
 #datatip{position:fixed;z-index:320;display:none;max-width:340px;background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;font-size:12.5px;line-height:1.9;color:var(--text);box-shadow:0 8px 24px rgba(0,0,0,.35)}
@@ -2821,7 +2823,7 @@ window.updateFresh = function(){
   function paintUpd(){
     const el = document.getElementById("update-time");
     if(!el) return;
-    const html = `数据更新：${updBase} · 实时 <span class="rt">${updRt}</span>${updNote} <a class="datainfo-btn" href="javascript:;">ⓘ 说明</a>`;
+    const html = `数据更新：${updBase} · 实时 <span class="rt">${updRt}</span>${updNote} · <a class="datainfo-btn" href="javascript:;">说明</a>`;
     if(el.__h === html) return;   /* 内容没变就不碰 DOM */
     el.__h = html;
     el.innerHTML = html;
