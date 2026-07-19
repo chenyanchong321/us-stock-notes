@@ -7230,6 +7230,34 @@
      },
      "mcap_base_price": 6.57,
      "ath_floor": 0
+    },
+    {
+     "name": "Recursion",
+     "code": "RXRX",
+     "market": "美股",
+     "yahoo": "RXRX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 19.6,
+      "approx": true
+     },
+     "mcap_base_price": 4.6,
+     "ath_floor": 0
+    },
+    {
+     "name": "Tempus AI",
+     "code": "TEM",
+     "market": "美股",
+     "yahoo": "TEM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 105.0,
+      "approx": true
+     },
+     "mcap_base_price": 62.0,
+     "ath_floor": 0
     }
    ]
   }
