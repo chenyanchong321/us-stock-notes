@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kimi K3 与算力产业学习笔记：从两份产业文档到中美 AI 全景 · 烟囱的美股学习笔记</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<style>
+:root{--bg:#ffffff;--panel:#f6f8fa;--panel2:#eef1f4;--border:#e2e5e9;--text:#1f2328;--text2:#6b7280;--accent:#2563eb;--gold:#b8860b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:16px;line-height:1.85}
+#bar{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);z-index:10}
+#bar .in{max-width:760px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px}
+#bar a{color:var(--text2);text-decoration:none;font-size:14px}
+#bar a:hover{color:var(--accent)}
+#bar .site{margin-left:auto;font-size:13px;color:var(--text2)}
+#bar .site b{color:var(--accent);font-weight:600}
+main{max-width:760px;margin:0 auto;padding:28px 20px 90px}
+.head h1{font-size:26px;line-height:1.4;margin-bottom:12px}
+.meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.meta .date{font-size:13px;color:var(--text2)}
+.meta .tag{font-size:12px;color:var(--accent);background:rgba(74,140,240,.12);border-radius:4px;padding:2px 8px}
+.meta .pdf{font-size:13px;color:var(--text2);text-decoration:none;border:1px solid var(--border);border-radius:6px;padding:3px 10px}
+.meta .pdf:hover{color:var(--text);border-color:var(--text2)}
+.head{border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:26px}
+article h1{font-size:22px;margin:38px 0 14px;line-height:1.4}
+article h2{font-size:20px;margin:34px 0 12px;padding-left:10px;border-left:3px solid var(--accent);line-height:1.4}
+article h3{font-size:17px;margin:26px 0 10px}
+article p{margin:0 0 16px}
+article ul,article ol{margin:0 0 16px 1.4em}
+article li{margin-bottom:6px}
+article img,article svg{max-width:100%;height:auto;border-radius:10px;display:block;margin:18px auto;background:#fff;border:1px solid var(--border)}
+article blockquote{border-left:3px solid var(--gold);background:var(--panel);border-radius:0 8px 8px 0;padding:12px 16px;margin:0 0 16px;color:var(--text2)}
+article table{border-collapse:collapse;width:100%;margin:0 0 18px;font-size:14px;word-break:break-word}
+article th,article td{border:1px solid var(--border);padding:8px 12px;text-align:left}
+article th{background:var(--panel);color:var(--text2)}
+article tr:nth-child(even) td{background:rgba(246,248,250,.7)}
+article code{background:var(--panel2);border-radius:4px;padding:1px 6px;font-size:14px}
+article pre{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:14px;overflow-x:auto;margin:0 0 16px}
+article pre code{background:none;padding:0}
+article a{color:var(--accent)}
+article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+.disclaim{margin-top:50px;padding:14px 18px;background:var(--panel);border:1px solid var(--border);border-radius:10px;font-size:13px;color:var(--text2)}
+</style>
+</head>
+<body>
+<div id="bar"><div class="in">
+  <a href="../index.html?view=notes">← 返回笔记库</a>
+  <span class="site">📓 <b>烟囱</b>的美股学习笔记</span>
+</div></div>
+<main>
+  <div class="head">
+    <h1>Kimi K3 与算力产业学习笔记：从两份产业文档到中美 AI 全景</h1>
+    <div class="meta"><span class="date">2026-07-19</span><span class="tag">Kimi K3</span><span class="tag">算力产业</span><span class="tag">KDA</span><span class="tag">中美AI</span><a class="pdf" href="../notes/K3与算力产业学习笔记.pdf" download>⬇ 下载 PDF</a></div>
+  </div>
+  <article>
+<blockquote><p>从 Kimi K3 的两份产业文档出发，逐段问答拆解：模型架构（MoE/KDA/超节点）、算力经济学（租赁条款/ROI 口径/两个池子）、公司案例（Kimi/字节/Anthropic）与中美大模型竞争全景。整理自 2026-07-19 的连续对话。</p></blockquote>
+<h2>第一章 模型架构工具箱——MoE、KV 缓存、KDA 与超节点</h2>
+<blockquote>
+<p>你当时的问题：MoE 是 Mixture of 啥？"896 激活 16"什么意思？KV 缓存为什么能砍 75%，砍了会有什么弊端，Claude 和 OpenAI 为什么不砍？"Scale-up 域的容量和带宽要求极高""需要部署在 64 卡以上的超节点"没读懂。"算力通缩"是不是产能过剩？</p>
+</blockquote>
+<p><strong>MoE 与"896 激活 16"：一家养了 896 个专科医生的医院。</strong>MoE = Mixture of Experts（混合专家模型）。K3 总参数 2.8T，内部像一家大医院养了 896 个专科医生（专家网络），每个病人（token）进来只叫 16 个最对口的会诊——这就是"896 激活 16"，每次真正干活的参数只占约 2%，故称"稀疏"。省的是计算量（只有 16 个医生动脑），省不掉的是驻院成本——896 个医生全得住院随叫随到：2.8T 参数用 MXFP4（4 比特极限压缩）存储仍要约 1.5TB 显存，而最强单卡 B300 只有 288GB，光装模型就要几十张卡。</p>
+<p><strong>KV 缓存：开卷考试的笔记。</strong>模型生成文字是开卷考试：每写一个新词要回看前文所有词。为免重算，把前文每个词的关键信息（Key/Value）存下来，这本"笔记"就是 KV Cache（Key-Value Cache，键值缓存）。问题是笔记随上下文线性变长——100 万 token 就有 100 万条，且每生成一个字都要把整本笔记从显存读一遍。长上下文时模型九成时间在"翻笔记"而非"思考"，瓶颈是显存带宽。</p>
+<p><strong>KDA：会自己擦的白板。</strong>KDA（Kimi Delta Attention）是 K3 的非主流架构赌注。学界早想用"线性注意力"替代笔记：只维护一块固定大小的白板，新信息来了往上写——但白板越写越糊（新旧信息互相干扰），所以坐了多年冷板凳。KDA 补了两刀：Delta（差量）法则——写新内容前先把同位置旧内容擦掉再写，记忆变成覆盖更新；精细遗忘门——白板分成小格，每格有自己的橡皮擦力度，模型自己学"这格信息留多久"。再配上混合比例：每 4 层注意力里 3 层用白板（KDA）、1 层保留完整笔记兜底精确检索——KV 缓存因此砍掉约 75%，1M 上下文吞吐提升 6.3 倍（两个数字是同一个改动的两面：每字要读的笔记只剩 1/4，省出的显存又能装更大批次）。</p>
+<p><strong>代价（天下没有免费午餐）</strong>：一是精确回忆变弱——摘要有损，"大海捞针"类任务退化，留 1/4 完整层只是兜底不是无损；二是缓存复用变难——传统 Paged KV 笔记分页可部分复用（不同对话共享相同开头），KDA 摘要卡是一路更新的整体快照，差一个字就完全不同，只能精确续写、一人存一份，存储成本高，所以平台只保留 10 分钟。</p>
+<p><strong>闭源为什么"不砍"</strong>：其一你不知道他们砍没砍（闭源不发论文，混合注意力类技术内部可能早有）；其二约束不同——中国实验室被管制卡显存，砍缓存是生存刚需，算力富裕的公司与其冒质量风险改架构不如多买卡（稀缺逼创新，富裕容忍冗余）；其三改注意力机制等于换地基，须从头预训练全套验证，对靠可靠性收高毛利的公司不划算。</p>
+<p><strong>Scale-up vs Scale-out：同桌开会 vs 视频连线。</strong>连接 GPU 有两种方式：Scale-up（纵向扩展）把几十张卡用 NVLink 级高速专线焊成"一张大桌子"，面对面喊话，带宽是普通网络几十倍，但桌子做不了无限大；Scale-out（横向扩展）是桌子之间拉网线开视频会，人数无限但慢一个数量级。"Scale-up 域"就是同一张桌子的成员范围。K3 用 WideEP（宽专家并行）把 896 个医生摊在几十张卡上，每个 token 都要跨卡喊医生，必须发生在同一张桌子上——所以要 64 卡以上的"超节点"（英伟达 NVL72 为 72 卡一桌，华为 CloudMatrix 为 384 卡一桌）。国产芯片单卡打不过，就把桌子做大——"以多补弱"，用系统能力换芯片能力；K3 这种"必须一大桌人伺候"的模型恰是国产超节点的对口客户，这就是"国产超节点红利"。</p>
+<p><strong>算力通缩的正解</strong>：不是已发生的产能过剩，而是一种担忧/叙事——怕模型效率提升让单位智能所需算力缩水、卡卖不动（DeepSeek 时刻英伟达单日跌 17% 即此叙事发作）。"无所谓算力通缩"意为 K3 亲手证伪了它：效率提升省下的算力，立刻被 2.8T 参数、64 卡起步的更大野心吃掉——省 = 多用（杰文斯悖论）。</p>
+<p><strong>记忆卡：MoE 是 896 个医生只叫 16 个会诊的稀疏医院；KDA 是会自己擦的白板，换来 75% 缓存削减与 6.3 倍吞吐，代价是摘要有损、快照不能共享；超节点是把几十张卡焊成的一张大桌子，国产芯片靠拼大桌子以多补弱。</strong></p>
+<h2>第二章 财务与商业概念工具箱——毛利率的两把尺子、微笑曲线与开源菜谱</h2>
+<blockquote>
+<p>你当时的问题：1P API 是什么？成本利润率 545% 怎么会超过 100%？微笑曲线我一直了解得不透彻，展示展示？开源的 Kimi 为什么还能收费？我 128G 内存的 Mac 能装吗？大公司自部署都不用给 Kimi 交钱、不需要授权吗？</p>
+</blockquote>
+<p><strong>1P API 与渠道。</strong>1P = First-Party（第一方），指 Anthropic 自己直接卖的 API（Application Programming Interface，应用程序接口），钱全进自己口袋；对应 3P（第三方渠道，如 AWS Bedrock、Google Vertex），云厂商抽成后毛利变薄。SemiAnalysis 报道 Anthropic 1P API 毛利率约 75–80%（2026 年中）。</p>
+<p><strong>成本利润率 vs 毛利率：煎饼摊的两把尺子。</strong>DeepSeek 2025 年 3 月披露推理系统"理论成本利润率 545%"：成本 100 元、收入 645 元、利润 545 元。成本利润率 = 利润 ÷ 成本 = 545%（分母是小小的成本，暴利生意可轻松破百、上不封顶）；毛利率 = 利润 ÷ 收入 = 545/645 ≈ 85%（利润永远是收入的一部分，天生超不过 100%）。同一个煎饼摊，两把尺子：投 1 块赚 5 块 4，等价于每收 1 块里 8 毛 5 是赚的。换算式：成本利润率 545% ⇔ 收入是成本的 6.45 倍 ⇔ 毛利率 84.5%；Anthropic 毛利 75% ⇔ 收入是成本 4 倍 ⇔ 成本利润率 300%。口径不统一就没法比较。另注意 545% 是理论值——假设每个 token 都按标价收到钱，实际因免费流量与折扣远低于此。</p>
+<p><strong>微笑曲线：利润长在壁垒上。</strong>1992 年宏碁施振荣提出：把产业链各环节的利润率画出来，两端高（上游研发专利、下游品牌服务）、中间低（制造组装），像微笑的嘴角。经典例证是 iPhone 账单：苹果凭设计品牌拿走过半利润，上游台积电高通吃丰厚毛利，中间组装的富士康每台只赚个位数美元。原理一个词：可替代性——中间"谁都能干"拼价格，两端"只有我能干"（专利垄断、品牌粘性）有定价权。必须记住反例：台积电位置在"中间制造"却是全链利润王，因为它把制造做到全球无可替代——决定利润的从来不是位置，而是该环节壁垒的高度，微笑只是壁垒分布的常见形状（日本产业界还提出过中间高的"武藏曲线"反驳版）。映射到 AI：上游芯片（英伟达/HBM/EDA）笑，下游应用（用户入口）笑，中间的开源模型层与纯推理代工哭。</p>
+<div class="fig"><svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans CJK SC,PingFang SC,sans-serif" style="width:100%;height:auto"><title>微笑曲线</title><desc>产业链两端(研发与品牌)附加值高,中间(制造组装)附加值低,形似微笑的嘴角</desc>
+<text x="30" y="52" font-size="13" fill="#666">附加值 / 利润率</text>
+<line x1="60" y1="60" x2="60" y2="330" stroke="#888780" stroke-width="1.2"/>
+<line x1="60" y1="330" x2="660" y2="330" stroke="#888780" stroke-width="1.2"/>
+<text x="620" y="348" font-size="13" fill="#666">产业链环节</text>
+<path d="M110 110 C 230 150 260 280 350 280 C 440 280 470 150 590 110" fill="none" stroke="#BA7517" stroke-width="3"/>
+<circle cx="110" cy="110" r="6" fill="#639922"/><circle cx="590" cy="110" r="6" fill="#639922"/>
+<circle cx="350" cy="280" r="6" fill="#E24B4A"/>
+<rect x="70" y="130" width="150" height="52" rx="4" fill="#EAF3DE" stroke="#97C459"/>
+<text x="145" y="152" font-size="15" font-weight="600" fill="#2F5A0F" text-anchor="middle">上游:研发与核心件</text>
+<text x="145" y="171" font-size="12.5" fill="#3B6D11" text-anchor="middle">专利·芯片·操作系统</text>
+<rect x="275" y="215" width="150" height="52" rx="4" fill="#FCEBEB" stroke="#F09595"/>
+<text x="350" y="237" font-size="15" font-weight="600" fill="#791F1F" text-anchor="middle">中游:制造与组装</text>
+<text x="350" y="256" font-size="12.5" fill="#A32D2D" text-anchor="middle">代工·拼成本·可替代</text>
+<rect x="480" y="130" width="150" height="52" rx="4" fill="#EAF3DE" stroke="#97C459"/>
+<text x="555" y="152" font-size="15" font-weight="600" fill="#2F5A0F" text-anchor="middle">下游:品牌与服务</text>
+<text x="555" y="171" font-size="12.5" fill="#3B6D11" text-anchor="middle">用户关系·渠道·生态</text>
+<g font-size="12.5" fill="#666">
+<text x="145" y="360" text-anchor="middle">手机业:高通·台积电</text>
+<text x="350" y="360" text-anchor="middle">手机业:富士康组装</text>
+<text x="555" y="360" text-anchor="middle">手机业:苹果品牌</text>
+<text x="145" y="380" text-anchor="middle">AI:英伟达·HBM·EDA</text>
+<text x="350" y="380" text-anchor="middle">AI:开源模型·推理代工</text>
+<text x="555" y="380" text-anchor="middle">AI:应用·用户入口</text>
+</g>
+</svg></div>
+
+<p><strong>开源 = 公开菜谱，不 = 免费吃饭。</strong>Kimi 开源指权重文件免费公开下载（菜谱免费），但 API 收 $3/$15 收的是"代工做饭"钱：替你养超节点、付电费、雇运维。个人电脑装不下——K3 光权重约 1.5TB，128GB 的 Mac 只有需求的 1/12（不过 128GB Mac 跑 30B–70B 级开源模型绰绰有余）；K3 的开源是开给拥有超节点的机构看的。<strong>许可证即授权</strong>：部署不需要找 Kimi 签合同，遵守许可证条款即自动生效——K2 用改良版 MIT（月活超 1 亿或月收入超 2000 万美元须显著标注 Kimi 字样），Llama 则规定月活超 7 亿须单独谈授权，K3 条款以 7/27 权重开放时为准。<strong>收入全归部署者，利润另说</strong>：人人都拿同一份菜谱，没有独家性，价格必被卷到贴近成本——赚钱只能靠厨房比别人省、稳、近。Kimi 白送菜谱图的是事实标准、心智与流量（安卓免费，谷歌照样是赢家）。</p>
+<p><strong>记忆卡：545% 和 85% 是同一门生意的两把尺子（分母一个是成本一个是收入）；微笑曲线画的其实是壁垒的分布，台积电证明位置不是宿命；开源开的是菜谱不是饭，许可证即授权，但人人同谱，利润只归厨房开得最好的人。</strong></p>
+<h2>第三章 推理 Infra 的厨房运营学——从池化到利润再分配</h2>
+<blockquote>
+<p>你当时的问题：算力调度池化、PD + vLLM、Mooncake 分离式推理、分布式 KV Cache 池、多级缓存和缓存降级都是什么？Infra 指什么？"CSP 和国产算力将享受顶级开源模型的利润再分配机遇"没太懂。缓存只保留 10 分钟，对用户什么利弊？对 Kimi 好处是什么？</p>
+</blockquote>
+<p>Infra = Infrastructure（基础设施），此处特指跑推理服务的软硬件底座。超节点是大厨房，这一章全是"厨房运营学"：</p>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>大白话</th>
+<th>厨房类比</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>算力调度池化</td>
+<td>零散的卡汇成共享池，谁有活谁用，不让卡闲着</td>
+<td>共享厨房，灶台永不空烧</td>
+</tr>
+<tr>
+<td>PD 分离</td>
+<td>推理分两段：Prefill（读题）吃算力，Decode（写答案）吃显存带宽，拆到两组卡各干各的</td>
+<td>备菜间和炒菜灶分开</td>
+</tr>
+<tr>
+<td>vLLM</td>
+<td>最流行的开源推理引擎；"PD + vLLM"即在该引擎上实现 PD 分离</td>
+<td>厨房管理系统软件</td>
+</tr>
+<tr>
+<td>Mooncake 分离式推理</td>
+<td>Kimi 自研并开源的推理架构：PD 分离 + 以 KV 缓存为中心的分布式缓存池</td>
+<td>Kimi 公开了自家厨房动线图纸</td>
+</tr>
+<tr>
+<td>分布式 KV Cache 池</td>
+<td>"笔记"集中放进全集群共享仓库，老客户来了任何灶台都能调取，不用重读全文</td>
+<td>中央食材库统一冷藏半成品</td>
+</tr>
+<tr>
+<td>多级缓存与缓存降级</td>
+<td>笔记按热度分层：最热放 HBM，温的放内存，冷的放 SSD，过气自动下放</td>
+<td>手边调料架 → 后厨货架 → 地下冷库</td>
+</tr>
+</tbody>
+</table>
+<p>这些"抠门技术"直接等于毛利率：推理成本 = 卡的租金 ÷ 榨出的 token 数，上面每一项都在放大分母。同样一批卡，Infra 功夫到家能多榨两三倍 token——K3 定价 $3/$15 还能保住约 50% 毛利，靠的就是这套功夫；功夫差一档的厂商跑同一个模型可能直接亏本。</p>
+<p><strong>缓存 10 分钟的利弊账。</strong>API 多轮对话每轮都要重发全部历史，厂商把已"读过题"的部分缓存，命中通常只收约一折且首字更快。只留 10 分钟意味着：你离开一刻钟回来，笔记已被扔掉，几万字历史按全价重读，这轮输入费翻约十倍。对连续快跑的 Agent 无碍，对人类真实节奏（开会、隔天续聊）很伤。这不是利弊权衡而是架构代价的暴露：KDA 快照"谁也不能共享、一人存一份"，长期保留的存储账算不过来——省显存的红利归 Kimi 的成本表，缓存失效的账单寄给用户的发票（按 token 计费世界里的激励错位，全行业通病，K3 的架构放大了它）。</p>
+<p><strong>利润再分配的完整逻辑</strong>：闭源时代利润集中在配方持有者（Anthropic 拿 75% 毛利，代工推理的 Oracle 只有 14–16%）。顶级菜谱免费公开后，配方环节利润被压缩，但钱不消失，流向把饭做得又便宜又稳的人——有大厨房（超节点）+ 好动线（这套 Infra）的 CSP（Cloud Service Provider，云服务提供商）与国产算力厂商。AI 产业链的利润池从"卖配方的"往"开厨房的"搬家。</p>
+<p><strong>记忆卡：池化不空灶、PD 分离各司其职、缓存池不重复备菜——Infra 功夫全变成毛利；菜谱一开源，利润就从卖配方的手里流进厨房开得最好的人口袋，这就是利润再分配。</strong></p>
+<h2>第四章 两份文档的解读与可信度评估</h2>
+<blockquote>
+<p>你当时的问题：为我分析这两个 PDF，解读解读，点评点评。</p>
+</blockquote>
+<p><strong>第一份《Kimi K3 对产业的积极意义》（DJN/Colin）：质量较高的多头框架。</strong>核心论证链：K3 = 2.8T 超大稀疏 MoE → 权重吃掉 1.5TB+ 显存 → 必须 64 卡超节点推理 → 无所谓算力通缩，利好 CSP 与国产超节点。两点加分：其一不回避缺点（实测 62 TPS 低于同档中位数 72、缓存仅留 10 分钟、Agent 框架不适配级联调度），利空自曝提升可信度；其二提出了全文最值钱的判断——开源崛起后模型分发权向 CSP 转移，Anthropic 的 ARR（Annual Recurring Revenue，年度经常性收入）不再是跟踪行业景气的唯一指标，估值锚在迁移。需打折处：结尾"我们有充足的信心保持乐观"暴露立场先行；"接近 Fable 5 水平"基于挑选出的最佳演示案例（48 小时芯片设计、2 小时科研编程），演示不等于平均水平。</p>
+<p><strong>第二份《产业专家交流》：信息密度高但需大幅折价。</strong>给出一手价格数据（八卡机月租 50 万+、B300 长协 28 万/月年内涨 3 倍、期货 550 万到付款 1000 万、违约罚则 30–40% 加 10% 预付），若属实说明高端算力租赁处于极度卖方市场。但专家会纪要是可信度最低的信息品类之一：数字精确得可疑（"Kimi 账上近 400 亿现金""ROI &gt; 10"无口径无来源）、"从 Meta 谷歌同行了解下来"超出正常信息半径、B300 灰色链条中人有渲染紧缺抬价的动机。使用原则：方向可参考，绝对值当情绪温度计，不拿任何具体数字做测算。</p>
+<p><strong>交叉结论</strong>：两份文档指向同一命题——K3 越强、算力需求越涨（杰文斯叙事），方向成立；但纪要里疯狂的租赁条款既可读作"需求好"，也可读作典型的周期顶部特征（2021 年的集装箱运价、矿卡价格都长这样）。真正健康的信号是超节点大规模落地、推理成本持续下降、红利向应用传导；租金暴涨恰说明供给瓶颈在透支下游 ROI。</p>
+<p><strong>记忆卡：第一份的框架可以收藏（CSP 承上启下 + 估值锚迁移），第二份的数据只能当温度计——它告诉你市场很热，但别拿里面任何数字做投资测算。</strong></p>
+<h2>第五章 定价与成本经济学——每美元智能、任务总成本与 K3 的四个短板</h2>
+<blockquote>
+<p>你当时的问题：Dylan Patel 说"定价差异是利润率差异而非效率差异"，是不是像大家生产纸巾成本一样、利润全看卖价？训练成本为什么难量化？DeepSeek 和 K3 到底有没有效率优势，国内是不是亏本卖？K3 的"极致性能"指什么、对 Kimi 好处是什么？K3 消耗 token 特别快，完成同一任务算下来反而更贵，用户为什么还要用它？</p>
+</blockquote>
+<p><strong>用毛利率倒算真实成本。</strong>Dylan 的推理是反推题：价格 ×（1 − 毛利率）= 成本。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Opus 4.8</th>
+<th>Kimi K3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>标价（每百万 token 输入/输出）</td>
+<td>$5 / $25</td>
+<td>$3 / $15</td>
+</tr>
+<tr>
+<td>假设毛利率</td>
+<td>75%</td>
+<td>50%</td>
+</tr>
+<tr>
+<td>倒算真实成本</td>
+<td>$1.25 / $6.25</td>
+<td>$1.5 / $7.5</td>
+</tr>
+</tbody>
+</table>
+<p>标价差 40%，倒算的生产成本几乎一样——便宜不是造得省，而是主动少赚。你的纸巾厂类比成立，加两个限定：成本相近是推理侧粗略倒算（受硬件、批处理、利用率影响），且只覆盖推理。</p>
+<p><strong>训练成本难量化：边界画在哪没有标准答案。</strong>四层原因：最终一跑 vs 全部试错（DeepSeek V3 著名的 558 万美元只是最终预训练的租赁等价成本，不含失败实验、消融、数据清洗、后训练）；自有卡按折旧还是市场租金算，差数倍；人力与数据从不计入；闭源根本不公布。任何训练成本数字误差以"倍"计。</p>
+<p><strong>效率优势与"亏本卖"的正解。</strong>中国实验室有真实的工程效率创新（MLA、FP8、极稀疏 MoE、KDA），相对公开基线领先；但闭源内部可能早有类似技术，"中国训练更省"无法证实，能证实的是研究算力更少、每块 GPU 被压榨得更狠。亏本与否分两层：单看推理生意国内不亏（50% 毛利照样赚）；看公司整体全行业几乎都亏——推理毛利盖不住训练研发（OpenAI 2026 年 Q1 收入 57 亿美元烧掉 37 亿、全年预亏约 140 亿，来源：Fortune/Yahoo）。准确说法：大家推理成本相近，Anthropic 敢定高价且客户愿付（能力与品牌溢价），毛利厚规模大先摸到盈亏平衡；国内低价换份额。定价权本身就是护城河的体现。</p>
+<p><strong>K3 四短板一根线串起。</strong>其一默认 max 思考强度 token 消耗大、指令模糊时"过度主动"（帮你看文件顺手把文件改了——烧钱且越权）；其二 2.8T 级权重部署门槛极高，实测输出 62 TPS 低于同档中位 72（但 TTFT 1.99s 占优：第一个字来得快，之后每个字蹦得慢）；其三缓存仅留 10 分钟（见第三章）；其四 Agent 框架须完整回传历史思考——换模型接力时"内心独白只有自己看得懂"，挡死了级联调度（简单步骤派便宜小模型、难步骤请大模型的省钱标配），Swarm Max 蜂群模式（几十个子智能体并行数小时）的调度稳定性只有厂商演示、无第三方复现。全是"为极致性能付出的通用性代价"：极致性能 = 超长上下文 + 单卡吞吐 + 长程 Agent，红利进 Kimi 的成本表，话痨与缓存失效的账单寄给用户。</p>
+<p><strong>任务总成本才是真尺子，但证据未定。</strong>该看的不是每百万 token 单价，而是做完一件事的总价。用户端"烧 token 快"的抱怨是真实信号；但 Artificial Analysis 的口径恰是"每个智能任务的成本"——K3 约 $0.9/任务与 GPT-5.6 Sol 打平，低于 Opus 4.8（约 $2）与 Fable 5（约 $3–4）。榜单工况与真实工况可能有差距，结论悬而未决。且思考强度是可调开关、缓存时长是工程问题大概率会修——别用暂时的毛病下永久的结论。<strong>K3 的长期饭票</strong>也不在"比 GPT 便宜"：中国用户的菜单上本来就没有 GPT/Claude（见第七章两个池子），海外用户图的是闭源给不了的私有部署与自主权——别拿油耗否定一辆能自己改装的车。</p>
+<p><strong>记忆卡：推理成本大家半斤八两，差别在敢不敢卖贵；训练这本账谁都算不清；K3 的四个短板全是极致性能的通用性代价——按 token 计费的世界里，永远算"做完一件事的总价"，而不是单价。</strong></p>
+<h2>第六章 算力产业链实况——B300、租赁条款与灰色渠道</h2>
+<blockquote>
+<p>你当时的问题：B300 和 H200 是什么？"月租超过 50 万/台八卡服务器"什么意思？Kimi 找 AWS 租算力，数据会不会被亚马逊盗取？国内外租赁有什么区别？"五年闭口长协 28 万/月""违约罚则 30–40%""对有交付能力的公司另有 10% 预付"是什么意思？中国能搞到卡的租赁公司都有哪些？</p>
+</blockquote>
+<p><strong>两代 AI 发动机。</strong>都是英伟达数据中心 GPU（不是游戏显卡）：H200 是 Hopper（2022 代）旗舰的"大油箱改款"（显存 141GB）；B300 是 Blackwell（2024 代）的加强版 Blackwell Ultra（显存 288GB），当前最强量产旗舰。显存关键因为模型和"笔记"都得装进去。两款按美国出口管制都不能合法卖入中国大陆——纪要里的二手渠道、期货加价、租金暴涨全是管制造成的灰色溢价。</p>
+<p><strong>租金账。</strong>AI 服务器标准形态是一机箱 8 张 GPU（八卡机），万卡集群约合 1250 台八卡机。50 万/月 ÷ 8 卡 ÷ 720 小时 ≈ 87 元/卡/小时（约 12 美元），是海外行情（H200 约 2–4 美元/时）的约三倍——"中国客户可触达渠道"的稀缺溢价。</p>
+<p><strong>合同术语逐条翻译</strong>（租房类比）：五年闭口长协 = 五年死约且价格锁死（"闭口"对应可调价的"开口"，工程合同术语）；28 万/月一台八卡机 × 60 个月 = 1680 万，而设备下游售价约 1300 万（期货原价 550 万）——房东光收租五年就赚回整台设备还有余，这就是 A 股公司抢做这门生意的原因；违约罚则 30–40% = 租客中途毁约赔合同总额三四成；"对有交付能力的公司另有 10% 预付" = 反过来读——市场上"PPT 房东"太多，租客愿意先付定金给真能交货的公司排队锁货。租客给房东塞定金，是卖方市场热到极致的标志。</p>
+<p><strong>数据安全与国内外区别。</strong>云厂商是银行保险库：物理上摸得到你的箱子，但整个商业模式建立在绝不开箱之上，加上加密、隔离、客户自持密钥，"AWS 偷 Kimi 模型"不是现实风险。真正的区别在四条：管辖权（美国 CLOUD Act = Clarifying Lawful Overseas Use of Data Act，政府可依法调取）、政策风险（随时可能被禁止中国公司用美国云训练，训练到一半断供）、合规（训练数据出境须过中国监管）、芯片（去海外租就是为了合法用上顶级卡）。另一个结构性软肋：阿里既是 Kimi 大股东和算力房东，又是直接竞争对手（Qwen）——算力紧张时房东先保自家孩子，供应商集中 + 利益冲突比数据安全风险大得多。</p>
+<p><strong>A 股算力租赁版图（截至 2026 年 6 月，证券时报等）</strong>：70 多家公司跨 15 个行业入局，分四层——真龙头（英伟达授权 + 重资产 + 稳定大客户订单）：利通电子、润泽科技、协创数据；专业算力/云出身：并行科技、青云科技、优刻得、首都在线；IDC 底座转型（手握电力指标与机柜——电才是最终瓶颈）：数据港、光环新网、奥飞数据、云赛智联；跨界闯入者（养猪的做味精的都来了，业绩冷暖两重天）：鸿博股份、中贝通信、莲花控股、华铁应急等。<strong>关键提醒</strong>：B300 属管制品，没有公司会在公告里承认持有，"能搞到 B300 的不超过 6 家"永远无法从公开信息验证；辨真假只看三个硬指标——资产负债表上的设备（固定资产/在建工程暴增）、现金流量表的购买支出、真实确认的租赁收入。公告签约金额是最廉价的信号：签约 ≠ 交付 ≠ 收钱。这门生意本质是高价囤卡吃租金差，供给一旦放量（特供版或国产芯片）、租金跳水，囤卡最猛杠杆最高的摔得最重，且股价先于租金见顶。</p>
+<p><strong>记忆卡：B300/H200 是两代 AI 发动机，管制给它们贴上三倍中国溢价；闭口长协是五年死价租约，房东五年净赚一台设备；租客塞定金说明缺货是真的——但历史上每次"租客求房东"的市场，离租金见顶都不远了。</strong></p>
+<h2>第七章 算力需求之辩——份额、增量、两个池子与 ROI 口径魔术</h2>
+<blockquote>
+<p>你当时的问题：K3 的算力需求是行业整体增加，还是抢了 Anthropic 的份额？中国用户"用不上"Anthropic 是真的吗，Anthropic 的 ARR 构成里中国很少吗？"下游厂商 ROI &gt; 10"的下游是谁、数据准不准？大厂资本开支会不会降？半导体最近下跌是不是纯找借口？K3 竞争激烈是不是利好 CSP 和应用？</p>
+</blockquote>
+<p><strong>份额与增量同时发生，增量主导。</strong>"该怎么用还是怎么用"的假设在 Agent 时代不成立：聊天时代一个用户一天烧几万 token，Agent 时代一句"做个炉石传说"自主跑 2–3 小时、烧掉成百上千倍——这些需求在 K3 之前不是被谁服务着，而是根本不存在（太贵或能力不够）。便宜且够强的模型唤醒沉睡需求，是净增量（修高速的逻辑：路一便宜，原来不开车的人全上路）。纪要自带证据：199 元套餐 10–12 小时烧完、周末高峰用不了——排队本身就是需求大于供给的铁证。</p>
+<p><strong>两个池子：出口管制把全球算力切成两半。</strong>这不是比喻而是财务事实。Anthropic 一直不对中国大陆提供服务（订阅和 API 都在禁令内），2025 年 9 月升级为中资控股超 50% 的全球子公司一律禁用；2026 年 7 月指控阿里用约 2.5 万个假账号进行 2800 万次对话的"蒸馏攻击"，阿里同步内部禁用 Claude（CNBC）——被压制的需求大到大厂开马甲偷用，但马甲变不成正规采购。Anthropic ARR 2026 年 5 月官宣破 470 亿美元、7 月第三方估计约 690 亿（年化口径，非每月），75–85% 来自 API，客户主体是美西方企业，中国正规贡献约等于零。中国企业"不敢用"的三道锁：中国备案监管（面向公众的服务必须用备案模型）、数据出境合规、断供风险；OpenAI 完全同理。所以国内企业的现实菜单就是 DeepSeek、Qwen、Kimi、智谱、豆包——K3 在国内引爆的推理需求对国产算力几乎是纯增量，没有从 Anthropic 集群搬走一瓦电；真正的替代只发生在海外价格敏感开发者身上，影响 Anthropic 的利润率，不影响全球 GPU 总需求（token 换人服务，卡照样转）。受益梯队：云厂（阿里云、字节火山引擎、腾讯云、百度智能云）确定性最高，二线云（金山云等）弹性大盈利弱，国产芯片（华为昇腾、寒武纪、海光、摩尔线程 + 中芯国际）受益于替代逻辑但要过良率生态两道坎。</p>
+<p><strong>训练端是军备竞赛，只做加法。</strong>K3 越成功，所有人越要更早更大地训下一代（纪要：6T 模型要 3–4 个万卡集群）——对手花钱逼你花更多钱。宏观印证：五大云厂 2026 年资本开支预计约 6000 亿美元（2024 年约 2560 亿），token 消耗有机构预测到 2030 年再涨 24 倍（CreditSights/Futurum）。</p>
+<p><strong>ROI 口径魔术。</strong>"下游厂商"指产业链下游=租算力干活的模型与应用公司。三个数字的真相：ROI&gt;10（纯推理）= API 收入 ÷ GPU 租金，扣掉了免费流量、研发工资、闲置；"算训练后 ROI&gt;3"命门在模型寿命假设（旗舰 6–12 个月就过时，摊销期砍半 ROI 砍半）；"云厂商 ROI&gt;2、每个环节都赚钱"被 Oracle 当场证伪——内部文件显示其租英伟达卡给 OpenAI 的毛利仅 14–16%（CNBC/DCD）。与"OpenAI 巨亏"的调和：卖 token 的单位经济学为正，公司报表巨亏是因为把毛利连本带息砸进下一代训练与基建——亏损是扩张的选择（面包店每个面包赚钱，老板同时在建十家新店）。并且注意专家的屁股：论证终点是"算力再涨价 1–2 倍也便宜"，这是算力卖方最想让买方相信的话术。资本开支不会降的结论成立，但理由是付费推理单位经济学为正 + 军备竞赛谁停谁出局，不是"每个环节都赚钱"的童话。</p>
+<p><strong>2026 年 7 月半导体下跌的解读。</strong>SMH 当月跌超 17%，导火索有两个：K3 发布引发的"算力通缩"恐慌（DeepSeek 时刻重演，历史剧本显示大概率错杀——上次暴跌后资本开支不降反升股价新高）；以及 Meta 宣布成立 Meta Compute 外卖富余算力——这是性质不同的供给侧信号（连买卡最凶的巨头都有余粮外卖，"缺疯了"叙事出现第一道裂缝，正是"供给管道变粗、租金见顶"剧本的美国版预告片）。高估值定价完美，任何瑕疵都是下跌的充分理由——短期是投票机，长期是称重机；"完全不合理、纯找借口"说过头了。验证点：巨头财报资本开支指引是否下修、Meta Compute 定价是倾销还是高价。</p>
+<p><strong>受益排序（模型竞争加剧的完整图景）</strong>：应用（纯受益，原材料降价）＞ 上游芯片（军费加码）≈ 会运营的 CSP（利润搬家接收方）＞ 不会运营的 CSP（伪受益，Oracle 为证）＞ 模型层（出血方，75% 毛利被开源从底部侵蚀、被同行正面对轰）——微笑曲线两头笑、中间哭；一切的前提是资本市场继续愿意付军费。</p>
+<p><strong>记忆卡：K3 对 Anthropic 是抢份额，对算力行业是修高速；两个池子是财务事实（ARR 690 亿美元里中国约等于零、马甲 2.5 万个）；ROI&gt;10 是口径魔术，Oracle 的 14% 和 OpenAI 的巨亏才是全账本；模型打架，两边看戏的都赢。</strong></p>
+<h2>第八章 公司案例——Kimi 的十年主线、字节的赛马困境与 Anthropic 的护城河</h2>
+<blockquote>
+<p>你当时的问题：K3 出来之前怎么感觉 Kimi 没什么存在感，为什么是这个团队？字节的赛马文化和充足算力，为什么做不出 DeepSeek/Kimi 这样的产品？Claude 靠 To B 和 Agent 数据飞轮遥遥领先的说法对吗？Anthropic 的后训练先发优势是不是永远拉不开差距？CSP"承上启下"的判断你认可吗？</p>
+</blockquote>
+<p><strong>Kimi：突兀感来自观察位置。</strong>时间线：2023.10 上线主打 20 万字长文本 → 2024 上半年全民爆火（第一次高光，A 股炒概念）→ 2024 下半年投流烧钱被诟病、仲裁风波 → 2025.1 被 DeepSeek 时刻盖住 → 战略急转弯（砍投流、转开源、回归模型）→ 2025.7 K2 开源（1T 参数）海外轰动 → 2025.11 K2 Thinking（约 460 万美元训练成本比肩闭源旗舰）→ 2026 年 K2.5/K2.6/K2.7 Code 一季一发 → 2026.7.16 K3。K3 是连续第六级台阶，前五级搭在开发者舞台（HuggingFace/GitHub），大众媒体只报破圈时刻不报爬楼梯。<strong>为什么是他们</strong>：创始人杨植麟（1992 年生，清华 → CMU 博士）是 Transformer-XL 和 XLNet 的共同作者——Transformer-XL 解决的正是超长序列问题，从 20 万字长文本到 KDA 的 1M 窗口是同一条研究主线走了十年，敢押非主流架构因为那是他最熟的领域；技术型创始人是人才磁铁，研究品味（敢把旗舰押在 KDA 上）是算力买不来的资产；阿里持股 30%+、数百亿现金弹药；DeepSeek 蹚出了开源逆袭路线图。所谓跨越式创新，永远是外部视角的突变 + 内部视角的连续——判断一家公司是不是昙花一现，看喷发前有没有那条安静的积累曲线。</p>
+<p><strong>字节：赛马选得出最快的马，选不出第一辆汽车。</strong>先纠偏：字节 Seed 团队不弱（2026 年 Seed 2.0/2.1 旗舰、豆包是分发之王），"不行"的印象一半来自旗舰闭源、不上开源榜单。但没有"DeepSeek 时刻"有三个组织学原因：赛马逻辑的适用边界——赛马前提是反馈快、可量化、试错便宜（推荐算法 A/B 一天出结果），而预训练旗舰是周期一年、中途无中间指标、单次几亿美元的一次性大爆炸项目，赛马只会摊薄算力人才，且非主流架构前期跑分一定难看，任何按季度考核的机制都会淘汰 KDA 这种赌注——它能活下来只因杨植麟是创始人兼首席研究员一人拍板（DeepSeek 梁文锋同理），激进的研究赌注需要"研究独裁者"，大厂决策机制天然生产稳妥的平均值；目标函数不同——字节模型团队的真实 KPI 是伺候几亿日活（成本延迟安全够用），考核什么就得到什么；富裕容忍冗余——算力充足可以暴力堆卡快速跟随，fast-follow 对它是理性策略（让创业公司去承担架构试错，验证了再用规模碾压）。公道话：微笑曲线两个笑的位置（豆包应用 + 火山引擎云）字节都占，做不出"时刻"对它的商业结局未必重要。</p>
+<p><strong>Anthropic 飞轮的修正版。</strong>"压对方向（To B + 编程）"是对的，但"用户数据直接反哺训练"机制不准——Anthropic 默认不用企业 API 数据训练。真飞轮有两个：收入飞轮（编程 API 是最肥现金流，钱变算力）；评测与环境飞轮（大规模真实使用让它知道模型在哪摔跤，从而构造更好的 RL 训练环境与内部评测）。推论：编程恰是"可验证任务"（代码跑不跑得通机器自动判分），不依赖私有数据也能大量生成训练信号——这是开源模型在编程上追得最快的原因；真正难追的是不可验证任务（品味、长程判断）。</p>
+<p><strong>RL 后训练与新护城河。</strong>预训练养出书呆子（读完图书馆但不会干活），SFT（Supervised Fine-Tuning，监督微调）是老师傅示范（徒弟超不过老师傅），RL（Reinforcement Learning，强化学习）后训练是把模型扔进"模拟工厂"（任务环境：能真跑代码的沙盒、能点击的模拟浏览器，装着数万个"修好这个 bug、测试通过才算赢"的任务）自己试错、按结果奖惩，可以超越人类示范（AlphaGo 逻辑）。环境的死穴：太简单学不到真本事，有漏洞模型学会作弊（reward hacking，比如删掉测试用例让测试"通过"）。评测体系 = 绝不公开的私有考卷（公开榜单会被刷题污染）。这是最深的商业机密：抄不走（不在论文里）、买不到、砸钱速成不了（需要真实使用数据告诉你该造什么练功房）。</p>
+<p><strong>但先发优势会漏气，四条通道</strong>：成品即泄密（输出行为可被蒸馏——阿里 2.5 万个马甲就是活案例）；人才跳槽（环境库带不走，方法论和品味装在脑子里——Meta 成建制挖走 OpenAI 的赵晟佳们）；可验证任务的练功房人人能重建（GitHub 是公共的，这正是 K3 前端代码榜第一的原因）；方法论被论文开源（DeepSeek R1 公开推理 RL 配方，全行业水位整体抬高）。历史投过反对票：2022 年 OpenAI 靠 RLHF 独步天下，两年内全行业学会。后训练的领先是"时间差租金"——永远领先六个月，但永远只有六个月；Anthropic 的解法是往下游占位置（Claude Code 卡住程序员工作流），让泄漏速度赶不上迭代速度。护城河不是挖一次就完工的沟，是每天都要重新挖深的沟。</p>
+<p><strong>对"CSP 承上启下"的评审结论</strong>：方向认可六七成——分发权转移、数据主权驱动、ARR 降级为"指标之一"都成立；但"占据上风"言之过早（前沿仍在闭源手里，企业关键业务为最强付溢价），分发权不等于利润（Oracle 为证），且闭源在垂直整合反击（OpenAI 的 Stargate 本质是自建 CSP，分发权之争最终打的是谁拥有用户关系）；结尾"我们有充足的信心保持乐观"说明是带仓位的观点。验证指标：CSP 财报 AI 收入披露口径、开源模型的生产级推理份额、GPU 租赁真实毛利率。</p>
+<p><strong>记忆卡：K3 是十年长文本主线的第六级台阶；字节输在赛马机制天然淘汰前期难看的赌注；Anthropic 的新护城河是 RL 练功房与私有考卷，但先发者赚的是永远六个月的时间差租金——靠飞轮转速续租，而不是一劳永逸的地契。</strong></p>
+<h2>第九章 全景：中美大模型竞争史与壁垒的迁移</h2>
+<blockquote>
+<p>你当时的问题：回看中国大模型发展史应该如何客观评价？2022–2026 年中美各多少分，预测 2027–2029？为什么追赶发生在中国而不是日本、印度、英国、俄罗斯？华人在美国 AI 实验室到底多到什么程度？现在中美差距的壁垒在训练还是推理？</p>
+</blockquote>
+<p><strong>逐年评分（能力感受分，非线性——后段每一分都比前段难十倍）</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>年份</th>
+<th>美国</th>
+<th>中国</th>
+<th>差距感受</th>
+<th>定标事件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2022 末</td>
+<td>60</td>
+<td>8</td>
+<td>代差约 2 年</td>
+<td>ChatGPT 问世；中国无对标产品但非零基础</td>
+</tr>
+<tr>
+<td>2023</td>
+<td>75</td>
+<td>30</td>
+<td>约 18 个月</td>
+<td>GPT-4 vs 百模大战</td>
+</tr>
+<tr>
+<td>2024</td>
+<td>85</td>
+<td>60</td>
+<td>约 8 个月</td>
+<td>o1/Claude 3.5 vs 年底 DeepSeek V3</td>
+</tr>
+<tr>
+<td>2025</td>
+<td>92</td>
+<td>82</td>
+<td>3–6 个月</td>
+<td>GPT-5/Claude 4 vs R1 时刻 + K2 开源</td>
+</tr>
+<tr>
+<td>2026</td>
+<td>96</td>
+<td>91</td>
+<td>一个身位</td>
+<td>Fable 5/GPT-5.6 vs K3 榜三</td>
+</tr>
+<tr>
+<td>2027–29e</td>
+<td>97→99</td>
+<td>94→98</td>
+<td>贴身缠斗</td>
+<td>开源层面反复互超，绝对前沿仍在美国</td>
+</tr>
+</tbody>
+</table>
+<div class="fig"><svg viewBox="0 0 700 430" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans CJK SC,PingFang SC,sans-serif" style="width:100%;height:auto"><title>中美大模型前沿能力差距 2022-2029</title><desc>折线图:美国从60分升至99分,中国从8分升至98分,差距由52分收窄到约1-2分,2026年后为预测虚线</desc>
+<rect x="400" y="60" width="260" height="320" fill="#F1EFE8" opacity="0.6" rx="4"/>
+<text x="530" y="78" font-size="13" fill="#666" text-anchor="middle">预测区间</text>
+<g stroke="#B4B2A9" stroke-width="0.6" opacity="0.6">
+<line x1="60" y1="380" x2="660" y2="380"/><line x1="60" y1="316" x2="660" y2="316"/><line x1="60" y1="252" x2="660" y2="252"/><line x1="60" y1="188" x2="660" y2="188"/><line x1="60" y1="124" x2="660" y2="124"/><line x1="60" y1="60" x2="660" y2="60"/>
+</g>
+<text x="52" y="384" font-size="12.5" fill="#666" text-anchor="end">0</text>
+<text x="52" y="256" font-size="12.5" fill="#666" text-anchor="end">40</text>
+<text x="52" y="128" font-size="12.5" fill="#666" text-anchor="end">80</text>
+<text x="52" y="64" font-size="12.5" fill="#666" text-anchor="end">100</text>
+<g font-size="12.5" fill="#666"><text x="80" y="402" text-anchor="middle">2022</text><text x="160" y="402" text-anchor="middle">2023</text><text x="240" y="402" text-anchor="middle">2024</text><text x="320" y="402" text-anchor="middle">2025</text><text x="400" y="402" text-anchor="middle">2026</text><text x="480" y="402" text-anchor="middle">2027e</text><text x="560" y="402" text-anchor="middle">2028e</text><text x="640" y="402" text-anchor="middle">2029e</text></g>
+<line x1="80" y1="188" x2="80" y2="354" stroke="#999" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="92" y="276" font-size="13" fill="#555">差 52 分</text>
+<line x1="400" y1="73" x2="400" y2="89" stroke="#999" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="410" y="98" font-size="13" fill="#555">差 5 分</text>
+<path d="M80 188 L160 140 L240 108 L320 86 L400 73" fill="none" stroke="#378ADD" stroke-width="2.5"/>
+<path d="M400 73 L480 68 L560 65 L640 63" fill="none" stroke="#378ADD" stroke-width="2.5" stroke-dasharray="6 5"/>
+<path d="M80 354 L160 284 L240 188 L320 118 L400 89" fill="none" stroke="#E24B4A" stroke-width="2.5"/>
+<path d="M400 89 L480 78 L560 71 L640 66" fill="none" stroke="#E24B4A" stroke-width="2.5" stroke-dasharray="6 5"/>
+<g fill="#378ADD"><circle cx="80" cy="188" r="4"/><circle cx="160" cy="140" r="4"/><circle cx="240" cy="108" r="4"/><circle cx="320" cy="86" r="4"/><circle cx="400" cy="73" r="4"/></g>
+<g fill="#E24B4A"><circle cx="80" cy="354" r="4"/><circle cx="160" cy="284" r="4"/><circle cx="240" cy="188" r="4"/><circle cx="320" cy="118" r="4"/><circle cx="400" cy="89" r="4"/></g>
+<text x="72" y="180" font-size="13" fill="#134A80">ChatGPT 60</text>
+<text x="168" y="136" font-size="13" fill="#134A80">GPT-4 75</text>
+<text x="330" y="80" font-size="13" fill="#134A80">92</text>
+<text x="404" y="62" font-size="13" fill="#134A80">96</text>
+<text x="72" y="348" font-size="13" fill="#791F1F" text-anchor="end">8</text>
+<text x="168" y="290" font-size="13" fill="#791F1F">百模大战 30</text>
+<text x="248" y="196" font-size="13" fill="#791F1F">DeepSeek V3 60</text>
+<text x="328" y="126" font-size="13" fill="#791F1F">R1 / K2 开源 82</text>
+<text x="404" y="106" font-size="13" fill="#791F1F">K3 91</text>
+<rect x="90" y="76" width="14" height="4" fill="#378ADD" rx="2"/><text x="110" y="83" font-size="13" fill="#185FA5">美国前沿</text>
+<rect x="190" y="76" width="14" height="4" fill="#E24B4A" rx="2"/><text x="210" y="83" font-size="13" fill="#A32D2D">中国前沿</text>
+</svg></div>
+
+<p><strong>客观评价：成就是真的，配三个冷静。</strong>从代差追到一个身位、且在买不到最好芯片的前提下完成，全球仅此一例。但：最后一公里最贵——从 91 到 96 需要的不是追赶（有路标）而是原创（没路标），原创吃的正是中国最缺的研究算力；追赶仍站在美国生态上——K3 用 B300/H200（灰色渠道）训练，硬件自主层面差距远没有模型层好看；"接近"与"引领"是两个物种——交卷时间差三个月和出题权不是一回事，所有考卷（Transformer、RLHF、推理范式）都还是美国出的题。</p>
+<p><strong>为什么是中国：四张牌必须同时在手。</strong>人才存量（全球顶尖 AI 研究员近半产自中国，几十年教育投资的复利）；完整互联网工程生态（大厂、场景、数据、工程师军团）；超大单一市场 + 资本，且美国服务被隔离在外形成真空保护带；稀缺逼出的效率创新 + 开源奇袭路线。对照：日本缺超大互联网平台与人才密度，英国有 DeepMind 但被谷歌收编、人才被硅谷虹吸，印度前沿研究与资本两头薄，俄罗斯制裁加人才外流——四缺一都不行，这不是奇迹，是几十年积累恰好凑齐一桌牌。</p>
+<p><strong>华人人才的硬数据（MacroPolo 全球 AI 人才追踪）。</strong>在美国机构的顶尖 AI 研究员（前 20%）中，中国本科出身占 38%、美国本土 37%——华人与东道主并列最大来源，合计四分之三；全球顶尖 AI 研究员 47% 本科毕业于中国（2019 年为 29%），美国雇佣全球约 57–59% 的精英——中国生产人才，美国消费人才。分布形状：研究一线极强（OpenAI 首席研究官 Mark Chen、被 Meta 挖走的赵晟佳、xAI 创始团队十二人中约五席华人），决策顶层缺席（Altman/Amodei/Hassabis/马斯克，无华人统帅）；印度裔正相反（研究一线不如华人密集，CEO 层极强）。"硅谷回流"的准确版本是三层：留存率上升（更多人不出国或直接回国，DeepSeek 团队几乎全本土博士为极致证明）、少量高调回流（签证收紧 + 国内机会变好在加速）、知识回流（38% 的在美华人构成校友网络，方法论持续回传）。中国的底气不在回流而在产量：47% 的产量，漏到本土的零头就够打追赶战。</p>
+<p><strong>壁垒的迁移（本笔记的收官判断）。</strong>预训练壁垒在下降（配方公开化、数据见顶），推理服务在商品化（Infra 技巧全行业扩散、毛利被卷）。真正的护城河剩三样：RL 后训练的任务环境与评测体系（最深的商业机密）；研究算力（试错次数 = 原创能力，美国对中国真正的卡位）；分发与工作流的嵌入位置（Claude Code 们占住程序员的手）。使用数据反哺的主要是后训练（RL、评测），基本不反哺预训练，也不是推理本身——推理只是收钱和观察的窗口。追赶的故事接近尾声，出题权的战争刚刚开始。</p>
+<p><strong>记忆卡：四年从代差追到一个身位，靠的是全球唯一凑齐的四张牌；华人是美国实验室里 38% 的兵团但不是统帅部；最后一公里拼原创，原创拼研究算力和 RL 练功房——追赶看模型榜单，出题权看谁先定义下一个范式。</strong></p>
+<h2>附录 一句话记忆卡合集</h2>
+<table>
+<thead>
+<tr>
+<th>主题</th>
+<th>一句话记忆卡</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>两份文档</td>
+<td>第一份的框架可收藏，第二份的数据只当温度计——别拿专家会的数字做测算</td>
+</tr>
+<tr>
+<td>定价与效率</td>
+<td>推理成本半斤八两，差别在敢不敢卖贵；定价权本身就是护城河</td>
+</tr>
+<tr>
+<td>545% vs 85%</td>
+<td>成本利润率分母是成本可上千，毛利率分母是收入超不过 100%——同一个煎饼摊的两把尺子</td>
+</tr>
+<tr>
+<td>KV 缓存与 KDA</td>
+<td>四本笔记三本换成会自己擦的白板：翻得快了，但摘要有损、只能精确续写</td>
+</tr>
+<tr>
+<td>B300/H200</td>
+<td>两代 AI 发动机，管制贴上三倍中国溢价；租 AWS 不怕被偷、怕被断</td>
+</tr>
+<tr>
+<td>份额 vs 增量</td>
+<td>K3 对 Anthropic 是抢份额，对算力行业是修高速——路一便宜，不开车的人全上路</td>
+</tr>
+<tr>
+<td>租赁条款</td>
+<td>闭口长协是五年死价租约；租客塞定金说明真缺货，但"租客求房东"的市场离见顶不远</td>
+</tr>
+<tr>
+<td>ROI 口径</td>
+<td>ROI&gt;10 是把最肥一段单拎出来的口径魔术；Oracle 的 14% 和 OpenAI 的巨亏才是全账本</td>
+</tr>
+<tr>
+<td>CAD/EDA/反编译</td>
+<td>三者都是"错一步就全废"的专业硬活，用来证明 K3 能干真工程而不只是聊天</td>
+</tr>
+<tr>
+<td>MoE 与超节点</td>
+<td>896 个医生只叫 16 个会诊；医生全得住院，逼出"一张大桌子"，国产芯片以多补弱</td>
+</tr>
+<tr>
+<td>算力通缩</td>
+<td>不是产能过剩，是效率恐慌叙事——省下来的算力立刻被更大的野心吃掉</td>
+</tr>
+<tr>
+<td>开源商业模式</td>
+<td>开的是菜谱不是饭：1.5TB 的厨房个人装不起；许可证即授权；白送菜谱赚标准和流量</td>
+</tr>
+<tr>
+<td>厨房运营学</td>
+<td>池化不空灶、PD 分离各司其职、缓存池不重复备菜——Infra 功夫全变成毛利</td>
+</tr>
+<tr>
+<td>利润再分配</td>
+<td>菜谱一开源，利润从卖配方的手里流进厨房开得最好的人口袋</td>
+</tr>
+<tr>
+<td>K3 四短板</td>
+<td>爱思考所以烧钱、块头大所以难部署、快照不能共享所以缓存只留 10 分钟、独白只有自己懂所以接不了力</td>
+</tr>
+<tr>
+<td>极致性能的代价</td>
+<td>红利进 Kimi 的成本表，账单寄到用户的发票上——永远算任务总价，不算 token 单价</td>
+</tr>
+<tr>
+<td>模型竞争</td>
+<td>模型打架两边看戏的都赢：应用买到便宜 token，CSP 接住利润，铲子商收军费</td>
+</tr>
+<tr>
+<td>两个池子</td>
+<td>ARR 690 亿美元里中国约等于零；三道锁把中国企业焊死在国产池子里，水位涨受益国产云与芯片</td>
+</tr>
+<tr>
+<td>算力租赁股</td>
+<td>真龙头看三样：英伟达授权、报表里的设备、落地的租金收入——公告签约金额最不值钱</td>
+</tr>
+<tr>
+<td>半导体下跌</td>
+<td>K3 恐慌是 DeepSeek 时刻重演大概率错杀；Meta 外卖富余算力才是真消息</td>
+</tr>
+<tr>
+<td>Kimi 发展史</td>
+<td>K3 是十年长文本主线的第六级台阶——爆发只是积累换了个舞台亮相</td>
+</tr>
+<tr>
+<td>KDA 与字节</td>
+<td>赛马选得出最快的马，选不出第一辆汽车——激进赌注需要"研究独裁者"</td>
+</tr>
+<tr>
+<td>中美竞争</td>
+<td>四年从代差到一个身位，靠人才存量、工程生态、隔离市场、稀缺创新四张牌</td>
+</tr>
+<tr>
+<td>微笑曲线</td>
+<td>利润长在壁垒上，位置不是宿命——台积电把嘴角踩在自己脚下</td>
+</tr>
+<tr>
+<td>华人人才</td>
+<td>美国实验室 38% 的华人是兵团不是统帅；中国的底气在 47% 的产量</td>
+</tr>
+<tr>
+<td>RL 后训练</td>
+<td>预训练养书呆子，SFT 教模仿，RL 扔进模拟工厂试错——练功房和私有考卷是新护城河</td>
+</tr>
+<tr>
+<td>先发优势</td>
+<td>后训练领先会从四个口子漏气，先发者赚的是永远六个月的时间差租金</td>
+</tr>
+</tbody>
+</table>
+<p><em>免责声明：本笔记为个人学习整理，信息时点为 2026 年 7 月 19 日；文中涉及的公司、股票、行业数据部分来自媒体报道与第三方估算（SemiAnalysis、CNBC、Fortune、证券时报、MacroPolo 等），未经独立审计；专家会纪要类信息可信度有限，均不构成投资建议。</em></p>
+  </article>
+  <div class="disclaim">本文为个人学习笔记，由对话探讨整理而成，仅作知识分享，不构成任何投资建议。</div>
+</main>
+<script defer src="toc.js?v=7"></script>
+</body>
+</html>
