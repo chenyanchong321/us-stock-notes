@@ -41,14 +41,15 @@ async def tts(text, out, voice):
 def main():
     slug = sys.argv[1]
     voice = sys.argv[2] if len(sys.argv) > 2 else "zh-CN-YunxiNeural"
+    outslug = sys.argv[3] if len(sys.argv) > 3 else slug   # 可选：输出变体名（音色A/B对比用）
     page = gh(f"contents/articles/{slug}.html", raw=True).decode()
     text = extract(page)
     print("正文字数:", len(text))
-    out = f"/root/{slug}.mp3"
+    out = f"/root/{outslug}.mp3"
     asyncio.run(tts(text, out, voice))
     data = open(out, "rb").read()
     print("MP3大小:", len(data)//1024, "KB")
-    path = f"contents/notes/audio/{slug}.mp3"
+    path = f"contents/notes/audio/{outslug}.mp3"
     sha = None
     try:
         sha = json.loads(gh(path)).get("sha")
