@@ -1,7 +1,7 @@
 {
   "_说明": "市场规模卡片的锚点配置。流水线据此自动生成 data/marketscale.json。",
   "_口径": "股市＝官方总市值锚点 × 各自大盘指数相对锚点日的涨跌（锚点每周由 update_anchors.py 自动校准：港股HKMA/日本JPX/A股沪深交易所/韩国KRX 官方数据；美股绝对锚人工+AI月检）。金银＝现货价 × 地上存量（黄金216,265吨/WGC，白银1,751,000吨/CPM）。比特币＝CoinGecko 实时市值。",
-  "anchor_date": "2026-07-10",
+  "anchor_date": "2026-07-16",
   "stocks": [
     {
       "key": "美股",
@@ -15,9 +15,9 @@
       "key": "A股",
       "flag": "🇨🇳",
       "index": "000300.SS",
-      "cap_usd_t": 16.36,
-      "index_anchor": 4780.7900390625,
-      "anchor_date": "2026-07-10",
+      "cap_usd_t": 16.24,
+      "index_anchor": 4698.43994140625,
+      "anchor_date": "2026-07-16",
       "anchor_source": "ECS哨站(沪深交易所官方)"
     },
     {
