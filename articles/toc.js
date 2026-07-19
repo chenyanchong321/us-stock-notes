@@ -150,3 +150,46 @@
   if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 })();
+
+/* ===== 🎧 文章音频（2026-07-19 主人需求：耳朵型学习）=====
+   有 notes/audio/<slug>.mp3 就在标题下方渲染播放器（HEAD探测，无音频零影响）。
+   预生成MP3方案（Edge TTS 云希）：原生<audio>=手机锁屏可续播；倍速存 localStorage("audRate")。 */
+(function(){
+  var m = location.pathname.match(/articles\/([^\/]+)\.html/);
+  if(!m) return;
+  var src = "../notes/audio/" + m[1] + ".mp3";
+  function inject(){
+    var h1 = document.querySelector("article h1") || document.querySelector("h1");
+    if(!h1) return;
+    var box = document.createElement("div");
+    box.id = "audiobar";
+    box.style.cssText = "margin:14px 0 18px;padding:10px 14px;border:1px solid #ddd;border-radius:12px;background:#fafafa";
+    box.innerHTML = '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">'
+      + '<span style="font-size:13px;white-space:nowrap">🎧 收听本文</span>'
+      + '<audio controls preload="none" src="' + src + '" style="flex:1;min-width:200px;height:36px"></audio>'
+      + '<span id="audspd"></span></div>'
+      + '<div style="font-size:11px;color:#999;margin-top:5px">AI 朗读（Edge TTS）· 表格与图示请看原文 · 锁屏可继续播放</div>';
+    h1.insertAdjacentElement("afterend", box);
+    var au = box.querySelector("audio");
+    var rates = [1, 1.25, 1.5, 2];
+    var cur = 1; try{ cur = parseFloat(localStorage.getItem("audRate")) || 1; }catch(e){}
+    var sp = box.querySelector("#audspd");
+    sp.innerHTML = rates.map(function(r){
+      return '<button data-r="' + r + '" style="border:1px solid #ccc;background:' + (r===cur?"#333":"#fff") + ';color:' + (r===cur?"#fff":"#555") + ';border-radius:8px;padding:2px 8px;font-size:11px;cursor:pointer;margin-left:4px">' + r + 'x</button>';
+    }).join("");
+    au.playbackRate = cur;
+    au.addEventListener("play", function(){ au.playbackRate = cur; });
+    sp.addEventListener("click", function(e){
+      var b = e.target.closest("button"); if(!b) return;
+      cur = parseFloat(b.dataset.r);
+      au.playbackRate = cur;
+      try{ localStorage.setItem("audRate", cur); }catch(x){}
+      sp.querySelectorAll("button").forEach(function(x){
+        var on = parseFloat(x.dataset.r)===cur;
+        x.style.background = on ? "#333" : "#fff";
+        x.style.color = on ? "#fff" : "#555";
+      });
+    });
+  }
+  fetch(src, {method:"HEAD"}).then(function(r){ if(r.ok) inject(); }).catch(function(){});
+})();
