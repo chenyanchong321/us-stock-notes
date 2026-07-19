@@ -102,6 +102,7 @@ article .rr-box{background:var(--panel);border:1px solid var(--border);border-le
   /* 正文：验票取货 */
   var tk = localStorage.getItem("atk");
   if(!tk){ lock("🔒 本报告为会员专属"); return; }
+  loadAudio();   /* 音频与正文并行下载（2026-07-19 主人反馈：串行时"加载中"要挂几秒；并行后读标题的功夫就绪，基本无感） */
   fetch(API+"/report-html?id="+encodeURIComponent(id), {headers:{Authorization:"Bearer "+tk}})
     .then(function(r){
       if(r.status===401||r.status===403){ localStorage.removeItem("atk"); lock("🔒 登录已过期"); throw 0; }
@@ -112,7 +113,6 @@ article .rr-box{background:var(--panel);border:1px solid var(--border);border-le
       body.innerHTML = d.html || '<div class="rr-load">正文整理中，可先下载原版 PDF 阅读</div>';
       /* 目录：与学习笔记同一份脚本，正文注入后再挂载（DOMContentLoaded 已过，toc.js 会立即初始化） */
       var s=document.createElement("script"); s.src="articles/toc.js?v=7"; document.body.appendChild(s);
-      loadAudio();
     })
     .catch(function(e){ if(e===0) return; body.innerHTML='<div class="rr-load">正文加载失败，可尝试下载原版 PDF</div>'; });
 
