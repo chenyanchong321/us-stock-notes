@@ -105,6 +105,7 @@ article .rr-box{background:var(--panel);border:1px solid var(--border);border-le
   /* 优先级铁律（2026-07-19 主人定）：正文永远第一，音频不得与它抢带宽——并行预取实测把正文拖慢到3-5秒（音频3-8MB
      大文件挤占小正文），本末倒置。终版=骨架屏立即插（零带宽），音频下载等正文渲染完才启动，"文章秒开+音频加载中"。 */
   audioSkeleton();
+  loadAudio();   /* 签票请求只有几百字节，不构成带宽竞争；票到即激活播放器，与正文并行无冲突 */
   fetch(API+"/report-html?id="+encodeURIComponent(id), {headers:{Authorization:"Bearer "+tk}})
     .then(function(r){
       if(r.status===401||r.status===403){ localStorage.removeItem("atk"); lock("🔒 登录已过期"); throw 0; }
@@ -115,7 +116,6 @@ article .rr-box{background:var(--panel);border:1px solid var(--border);border-le
       body.innerHTML = d.html || '<div class="rr-load">正文整理中，可先下载原版 PDF 阅读</div>';
       /* 目录：与学习笔记同一份脚本，正文注入后再挂载（DOMContentLoaded 已过，toc.js 会立即初始化） */
       var s=document.createElement("script"); s.src="articles/toc.js?v=7"; document.body.appendChild(s);
-      loadAudio();   /* 正文已渲染，音频此刻才开始下载（独享不了带宽也不抢正文的） */
     })
     .catch(function(e){ if(e===0) return; body.innerHTML='<div class="rr-load">正文加载失败，可尝试下载原版 PDF</div>'; });
 
@@ -138,18 +138,22 @@ article .rr-box{background:var(--panel);border:1px solid var(--border);border-le
     head.insertAdjacentElement("afterend", box);
     audioBox = box;
   }
+  /* 即点即播（2026-07-19 三版终稿）：签名票据直链流式——POST换6小时单篇播放票（几百字节，不抢正文带宽），
+     媒体栈拿票直连 /report-audio-stream 边下边播+Range拖拽，体验与笔记直链无差；会员token永不进URL。 */
   function loadAudio(){
     var box = audioBox;
     if(!box) return;
-    fetch(API+"/report-audio?id="+encodeURIComponent(id), {headers:{Authorization:"Bearer "+tk}})
-      .then(function(r){ if(!r.ok) throw 0; return r.blob(); })
-      .then(function(bl){
-        var src = URL.createObjectURL(bl);
+    fetch(API+"/audio-ticket", {method:"POST", headers:{Authorization:"Bearer "+tk, "Content-Type":"application/json"}, body:JSON.stringify({id:id})})
+      .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+      .then(function(d){
+        if(!d.ok) throw 0;
+        var src = API+"/report-audio-stream?id="+encodeURIComponent(id)+"&t="+encodeURIComponent(d.t);
         var play0 = box.querySelector("#audplay"), seek0 = box.querySelector("#audseek");
         play0.disabled = false; play0.style.background = "#333"; play0.textContent = "▶"; play0.style.fontSize = "15px";
         seek0.disabled = false;
         box.querySelector("#audtime").textContent = "--:-- / --:--";
         var au = new Audio(src);
+        au.preload = "metadata";
         var play = box.querySelector("#audplay"), seek = box.querySelector("#audseek"), time = box.querySelector("#audtime");
         var rates = [0.8, 1, 1.25, 1.5, 2];
         var cur = 1; try{ cur = parseFloat(localStorage.getItem("audRate")) || 1; }catch(e){}
