@@ -121,7 +121,8 @@ article .rr-box{background:var(--panel);border:1px solid var(--border);border-le
 
   /* 🎧 研报音频（2026-07-19 二期）：骨架屏即时渲染（先下载后渲染有1-3秒空窗，用户以为没音频——主人抓包），
      播放器立刻出现（加载中态），blob到位即激活；404才撤掉。blob=本地播放天然可拖可锁屏续播，服务端无需Range。 */
-  var audioBox = null;
+  var audioBox;   /* 禁写 =null 初始化：本声明在 audioSkeleton() 调用点之后，声明提升但赋值按序执行，
+                     =null 会把骨架已存入的 box 冲掉→loadAudio 静默早退、骨架永远转圈（2026-07-19 实录排障40分钟） */
   function audioSkeleton(){
     var box = document.createElement("div");
     box.id = "audiobar";
