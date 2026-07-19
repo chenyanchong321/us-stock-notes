@@ -102,7 +102,9 @@ article .rr-box{background:var(--panel);border:1px solid var(--border);border-le
   /* 正文：验票取货 */
   var tk = localStorage.getItem("atk");
   if(!tk){ lock("🔒 本报告为会员专属"); return; }
-  loadAudio();   /* 音频与正文并行下载（2026-07-19 主人反馈：串行时"加载中"要挂几秒；并行后读标题的功夫就绪，基本无感） */
+  /* 优先级铁律（2026-07-19 主人定）：正文永远第一，音频不得与它抢带宽——并行预取实测把正文拖慢到3-5秒（音频3-8MB
+     大文件挤占小正文），本末倒置。终版=骨架屏立即插（零带宽），音频下载等正文渲染完才启动，"文章秒开+音频加载中"。 */
+  audioSkeleton();
   fetch(API+"/report-html?id="+encodeURIComponent(id), {headers:{Authorization:"Bearer "+tk}})
     .then(function(r){
       if(r.status===401||r.status===403){ localStorage.removeItem("atk"); lock("🔒 登录已过期"); throw 0; }
@@ -113,12 +115,14 @@ article .rr-box{background:var(--panel);border:1px solid var(--border);border-le
       body.innerHTML = d.html || '<div class="rr-load">正文整理中，可先下载原版 PDF 阅读</div>';
       /* 目录：与学习笔记同一份脚本，正文注入后再挂载（DOMContentLoaded 已过，toc.js 会立即初始化） */
       var s=document.createElement("script"); s.src="articles/toc.js?v=7"; document.body.appendChild(s);
+      loadAudio();   /* 正文已渲染，音频此刻才开始下载（独享不了带宽也不抢正文的） */
     })
     .catch(function(e){ if(e===0) return; body.innerHTML='<div class="rr-load">正文加载失败，可尝试下载原版 PDF</div>'; });
 
   /* 🎧 研报音频（2026-07-19 二期）：骨架屏即时渲染（先下载后渲染有1-3秒空窗，用户以为没音频——主人抓包），
      播放器立刻出现（加载中态），blob到位即激活；404才撤掉。blob=本地播放天然可拖可锁屏续播，服务端无需Range。 */
-  function loadAudio(){
+  var audioBox = null;
+  function audioSkeleton(){
     var box = document.createElement("div");
     box.id = "audiobar";
     box.style.cssText = "margin:14px 0 18px;padding:12px 14px;border:1px solid #ddd;border-radius:12px;background:#fafafa";
@@ -131,6 +135,11 @@ article .rr-box{background:var(--panel);border:1px solid var(--border);border-le
       + '<span style="font-size:11px;color:#999;margin-left:auto">AI朗读 · 表格图示请看正文 · 锁屏可续播</span></div>';
     var head = document.getElementById("head");
     head.insertAdjacentElement("afterend", box);
+    audioBox = box;
+  }
+  function loadAudio(){
+    var box = audioBox;
+    if(!box) return;
     fetch(API+"/report-audio?id="+encodeURIComponent(id), {headers:{Authorization:"Bearer "+tk}})
       .then(function(r){ if(!r.ok) throw 0; return r.blob(); })
       .then(function(bl){
