@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kimi K3 与算力产业学习笔记·下篇：债市验账、存储之辩与万亿估值 · 烟囱的美股学习笔记</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<style>
+:root{--bg:#ffffff;--panel:#f6f8fa;--panel2:#eef1f4;--border:#e2e5e9;--text:#1f2328;--text2:#6b7280;--accent:#2563eb;--gold:#b8860b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:16px;line-height:1.85}
+#bar{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);z-index:10}
+#bar .in{max-width:760px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px}
+#bar a{color:var(--text2);text-decoration:none;font-size:14px}
+#bar a:hover{color:var(--accent)}
+#bar .site{margin-left:auto;font-size:13px;color:var(--text2)}
+#bar .site b{color:var(--accent);font-weight:600}
+main{max-width:760px;margin:0 auto;padding:28px 20px 90px}
+.head h1{font-size:26px;line-height:1.4;margin-bottom:12px}
+.meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.meta .date{font-size:13px;color:var(--text2)}
+.meta .tag{font-size:12px;color:var(--accent);background:rgba(74,140,240,.12);border-radius:4px;padding:2px 8px}
+.meta .pdf{font-size:13px;color:var(--text2);text-decoration:none;border:1px solid var(--border);border-radius:6px;padding:3px 10px}
+.meta .pdf:hover{color:var(--text);border-color:var(--text2)}
+.head{border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:26px}
+article h1{font-size:22px;margin:38px 0 14px;line-height:1.4}
+article h2{font-size:20px;margin:34px 0 12px;padding-left:10px;border-left:3px solid var(--accent);line-height:1.4}
+article h3{font-size:17px;margin:26px 0 10px}
+article p{margin:0 0 16px}
+article ul,article ol{margin:0 0 16px 1.4em}
+article li{margin-bottom:6px}
+article img,article svg{max-width:100%;height:auto;border-radius:10px;display:block;margin:18px auto;background:#fff;border:1px solid var(--border)}
+article blockquote{border-left:3px solid var(--gold);background:var(--panel);border-radius:0 8px 8px 0;padding:12px 16px;margin:0 0 16px;color:var(--text2)}
+article table{border-collapse:collapse;width:100%;margin:0 0 18px;font-size:14px;word-break:break-word}
+article th,article td{border:1px solid var(--border);padding:8px 12px;text-align:left}
+article th{background:var(--panel);color:var(--text2)}
+article tr:nth-child(even) td{background:rgba(246,248,250,.7)}
+article code{background:var(--panel2);border-radius:4px;padding:1px 6px;font-size:14px}
+article pre{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:14px;overflow-x:auto;margin:0 0 16px}
+article pre code{background:none;padding:0}
+article a{color:var(--accent)}
+article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+.disclaim{margin-top:50px;padding:14px 18px;background:var(--panel);border:1px solid var(--border);border-radius:10px;font-size:13px;color:var(--text2)}
+</style>
+</head>
+<body>
+<div id="bar"><div class="in">
+  <a href="../index.html?view=notes">← 返回笔记库</a>
+  <span class="site">📓 <b>烟囱</b>的美股学习笔记</span>
+</div></div>
+<main>
+  <div class="head">
+    <h1>Kimi K3 与算力产业学习笔记·下篇：债市验账、存储之辩与万亿估值</h1>
+    <div class="meta"><span class="date">2026-07-19</span><span class="tag">AI与债</span><span class="tag">KDA</span><span class="tag">存储</span><span class="tag">万亿估值</span><a class="pdf" href="../notes/K3与算力产业学习笔记_下篇.pdf" download>⬇ 下载 PDF</a></div>
+  </div>
+  <article>
+<blockquote><p>本篇是《<a href="k3-compute-industry.html">Kimi K3 与算力产业学习笔记</a>》的下篇：上篇拆 K3 本身，下篇追踪它激起的第二层涟漪——信用市场开始给 AI 军费验账、KDA 利不利空存储的完整辨析、万亿估值 IPO 跑道上的叙事拆台，以及给四类信源分级打折的元技能。整理自 2026-07-19 的连续对话。</p></blockquote>
+<h2>第一章 AI 与债——信用市场是军备竞赛的出纳</h2>
+<blockquote>
+<p>你当时的问题：推文说"AI 大模型没有护城河、没有高收益、没有垄断，所以信用市场吓坏了"——什么叫信用市场？他们的观点你认可吗？感觉像营销号，只说没有护城河，然后呢？"没有高收益"不对吧，Anthropic 不是有 75% 毛利吗？</p>
+</blockquote>
+<p><strong>信用市场是什么：全场最胆小的那群人。</strong>信用市场就是债券和贷款市场。它和股市性格完全不同：股东买的是梦想（亏十年也愿意陪），债主只问一件事——到期你还不还得起本息。他不分享你的上涨，却承担你的破产，所以债主是金融市场里最胆小、最先跑的人。</p>
+<p><strong>为什么"没有护城河"会吓到债主——传导链。</strong>这轮 AI 军备竞赛的钱越来越不是自有现金，而是借的：2026 年至今科技巨头 AI 相关投资级债券发行 1820 亿美元，同比暴涨 13 倍，占全美公司债发行约 15%；全年 AI 相关债务预计 5700 亿美元；另有约 8000 亿美元藏在更不透明的私募信贷和表外结构里（Benzinga/Forbes，2026-07）。这些债的还款来源是"未来 AI 现金流"。K3 用几个月追平闭源第一梯队，债主的推理是：如果模型能力六个月就被追平，支撑还债的高毛利现金流还靠得住吗？未来现金流打折 → 借钱要更高利息。市场已在动真格：亚马逊 250 亿美元发债被迫在长端多给 18–21 个基点、认购倍数从 3.2 倍掉到 2.5 倍；Oracle、微软、谷歌、亚马逊的 CDS（Credit Default Swap，信用违约互换，给债券买的"违约保险"）升到近七年最高（Fortune/Motley Fool）。上篇说过"军备竞赛的前提是资本市场愿意付军费"——信用市场就是军费的出纳，出纳开始给借条涨价了。</p>
+<p><strong>逐条评那两条推文。</strong>"没有高收益"最粗糙：毛利层面明确错误（Anthropic 1P API 毛利 75–80%，逼近整体盈利）；他想说的是净利层面（OpenAI 年亏约 140 亿）——但那是扩张性亏损，不是没有收益能力。混淆毛利与净利，与专家会的 ROI 口径魔术是同一手法，只是方向相反。"没有护城河"半对：单点模型能力确实只有六个月时间差租金（K3 为证）；但护城河是搬家（练功房、研究算力、分发位置、定价权）不是消失——被追着打还能收住 75% 毛利不掉大客户，本身就是护城河的证据。"没有垄断"对但无新意。整体上：推文体三连否定 + 因果跳跃（信用利差走阔是发债洪峰、利率环境、K3 冲击多因素叠加）是营销号手法，但"债务撑起的 capex 建立在护城河假设上"是全行情最真实的一道裂缝。</p>
+<p><strong>"然后呢"——三个含义。</strong>其一，信用利差从此是 AI 行情的新领先指标：盯大厂发债认购倍数、Oracle/CoreWeave 的 CDS、8000 亿私募信贷暗池，它们比英伟达股价更早说真话。其二，两个剧本的分岔口：信用继续收紧 → 融资成本上升 → capex 被迫放缓（出纳罢工的熊剧本）；Agent 变现跑通、合同现金流坐实 → 利差收窄、军备竞赛继续。其三，这解释了大厂拼命签企业长约——用合同现金流说服出纳继续拨款。</p>
+<p><strong>记忆卡：信用市场是 AI 军备竞赛的出纳，债主只问还不还得起——K3 证明模型六个月被追平，出纳就给借条涨价（亚马逊多付 21 个基点、CDS 七年新高）；股市听故事，债市在验账。</strong></p>
+<h2>第二章 KDA 存储之辩——省油发动机装在增量还是存量上</h2>
+<blockquote>
+<p>你当时的问题：SemiAnalysis 说 KDA 提高注意力效率但需要更多 GPU/HBM/DRAM/网络——系统点评，利空存储吗？KDA 省的 KV 缓存不就是要存下来的数据吗，省了缓存不就是对存储需求减少了吗？既然 K3 的 KDA 偏多存储，那三巨头未来采用不也一样偏多、没有本质区别吗？</p>
+</blockquote>
+<p><strong>先把物理作用说死：同样一个任务，KDA 对存储的需求就是变小了。</strong>KV 缓存是要占存储芯片（主要 HBM，溢出放 DRAM/SSD）的数据，KDA 让它只剩 1/4——省了就是省了，这一步没有"但是"。容易绕晕是因为两个问题被混在一起：工程师问"跑一个任务占多少存储"（KDA：确定变小）；投资者问"全世界总共买多少存储芯片"（总采购 = 单任务占用 × 任务总量，第一个数砍成 1/4，第二个数会因为变便宜而膨胀，总数看谁跑得快）。</p>
+<p><strong>数字例子钉死它。</strong>一台服务器 HBM 划 400GB 放 KV：传统注意力下 1M 上下文每对话占 4GB → 同时伺候 100 人；KDA 下每人 1GB → 能伺候 400 人。如果全世界永远只有 100 个用户，存储需求真变小；现实是原来 4GB/人 成本高定价贵才只有 100 人用得起，降价后想用的变成 500 人 → 反而要加买 HBM。杰文斯悖论最朴素的形态：降价之后来的客人比省下的座位多。</p>
+<p><strong>SemiAnalysis 文章的论证与盲区。</strong>它的反驳与上篇推演同构：KDA 省的和 K3 吃的不是同一笔账——省的是"笔记"（KV），吃的是"宿舍"（2.8T 权重要 1.5TB HBM）加"走廊"（WideEP 专家交换带宽，恰好匹配 NVL72 那种 18 倍带宽铜背板）；KV 还要大量卸载到 CPU DDR5 和 NVMe（多级缓存），DRAM/SSD 反而是大胃王。全文最值钱的是反方 GDP 的三句话：64 卡扩展域未必是英伟达（华为昇腾 950 SuperPod 正好 64 卡、可扩 1024 NPU——国产超节点红利的呼应）；"不承认 KDA 省了大量空间就太虚伪了"（敲打滥用杰文斯当挡箭牌的多头）；真正的变量是 OpenAI/Anthropic/Google 是否采用线性注意力。也要注意文章的时机身份：发布于半导体单月跌 17%、恐慌最浓的时刻，是叙事反击战的一发炮弹，且只回应了需求端恐慌（K3），没回应供给端信号（Meta Compute）。</p>
+<p><strong>三层结论</strong>：HBM 中性偏多（大头是权重不是 KV；省出的被 1M 上下文和更大并发吃回；三家垄断产能锁定）；常规 DRAM 偏多（KV 卸载层 + Mooncake 类分布式缓存池是 DRAM/SSD 大户）；NAND/SSD 中性偏多（多级缓存最底层 + 检查点）。</p>
+<p><strong>三巨头采用为什么性质就变了——增量 vs 存量与时间差。</strong>K3 是"带着新需求进场的省油新车"：车省油，但路上多了一批新车，加油站生意更好（新效率与新需求同日进场）。三巨头承载全球推理大盘存量，切换那天起，同样的工作负载只要 1/4 的 KV 内存——先做一笔一夜生效的巨大减法；杰文斯回填需要几个季度甚至几年，中间的空窗期就是存储增速下修期。股价定价的是增速和斜率：哪怕三年后坑被填平，下调指引的那两个季度照样挨打（DeepSeek 时刻英伟达单日 -17%、九个月后才证明错杀）。两个精度防止把开关想得太可怕：线性注意力只动 KV 不动权重（参数竞赛 2.8T→6T 那半边免疫）；架构要从预训练焊进去，切换是一代一代渐进的。历史锚：存储六十年就是"单位需求不断被技术砍掉、总销量不断创新高"的历史——压缩、去重、更高效编码谁都没杀死过存储行业。</p>
+<p><strong>记忆卡：KDA 让"每个人吃得更少"是确定的；食堂总采购取决于"降价后来了多少新食客"——K3 是开张即客满的新食堂，三巨头改造是老食堂先空一阵等新客；跟踪开关=三巨头技术报告里的混合线性注意力痕迹 + 长上下文 API 定价是否断崖下调。</strong></p>
+<h2>第三章 万亿估值的地基——IPO 跑道上的叙事拆台</h2>
+<blockquote>
+<p>你当时的问题：分析《Kimi 真正打击的，不是 OpenAI，而是"万亿估值的想象力"》这篇。</p>
+</blockquote>
+<p><strong>先核实它最关键的事实：IPO 时点，属实且更微妙。</strong>Anthropic 已于 2026 年 6 月 1 日秘密递交上市申请、目标 10 月纳斯达克挂牌，最新一轮估值 9650 亿美元；OpenAI 一周后跟进递表，目标估值约 1 万亿、募资近 600 亿，可能推迟到 2027（TechCrunch/Barchart）。K3 在 7 月 16 日发布——正砸在 Anthropic 通往 10 月挂牌的路演跑道中间。这不是一般的竞品发布，是在定价窗口期拆估值故事的台。</p>
+<p><strong>它说对了什么（四条全部与上篇推演对上）</strong>：打击的是稀缺性叙事而非当期收入（Anthropic 年化 690 亿美元收入是真的，K3 动的是"只有少数公司能造最强模型"这个地基——估值锚迁移）；"模型公司还是平台公司"的重定价框架（= ARR 从唯一指标降级）；利润分配结论"赚最多的未必是参数最多的，而是拥有客户、数据、工作流和分发入口的公司"（= 微笑曲线 + 利润再分配）；文风诚实（主动纠错传言、承认"打骨折"夸张）。</p>
+<p><strong>两个盲点</strong>。盲点一："九成能力够用"的数学在 Agent 时代不成立——高价值 Agent 任务是几十步动作的连乘：单步 90% 可靠的模型跑 20 步任务成功率 0.9^20 ≈ 12%，单步 98% 的是 67%。最后那"一成"在长程任务上不是锦上添花，是成败线——而钱最多的市场（编程、企业 Agent）全是长程任务。"足够好即商品化"只吞得掉低端市场。盲点二："开源长期保持九成"是被补贴的假设不是自然法则——每发开源旗舰背后是几十亿训练账单且不直接回本，靠阿里股权、幻方自有资金输血；资本环境收紧、补贴人退场，追赶节奏会慢下来。把当下的追赶速度外推成永久状态，是周期顶部的直线思维。</p>
+<p><strong>替文章回答它自己的问题："万亿估值应该建立在什么之上？"</strong>三样正在被市场实时验证的东西：分发与工作流位置（ChatGPT 9 亿周活、Claude Code 占住的手）；迭代速度（RL 练功房 + 研究算力，让六个月时间差租金能一直续租）；前沿溢价持续变现的证据（75% 毛利在竞争下守不守得住）。而华尔街已经用另一个市场先行投票——第一章的债市：CDS 七年新高、认购倍数腰斩。股市在听故事的最后一章，债市已经开始验账。10 月 Anthropic 挂牌，是这道题的第一次公开阅卷。</p>
+<p><strong>记忆卡：K3 砸的不是对手的收入，是万亿估值的叙事地基，而且正砸在 IPO 路演跑道上；文章的两个裂缝——九成能力在 Agent 连乘数学下只值一两成，"开源永远追着打"本身是个被补贴的假设。</strong></p>
+<h2>第四章 行情节奏与信源分级——散户日历的正确用法</h2>
+<blockquote>
+<p>你当时的问题：分析《AI 大模型扎堆更新》这篇（偏锋日更）。</p>
+</blockquote>
+<p><strong>这类内容的正确用法：拿走日历和机制，扔掉结论和情绪。</strong></p>
+<p><strong>值得拿走的三样</strong>。一是下半年节奏地图：7–8 月财报验证期（存储/台积电/英伟达/云厂轮流交卷；日历：谷歌/特斯拉 7/22、微软/Meta 7/29、苹果/亚马逊 7/30、英伟达 8/26）→ 9–10 月交易重点切向"2027 供需"（HBM4 格局：三星追赶、海力士扩产、美光份额）→ 四季度看 2027 盈利预期能否继续上修，决定行情能否跨年。他列的四指标（资本开支增速、AI 投入变现、存储定价是否计入过于完美的供应、芯片利润率可持续性）与本笔记的验证清单几乎重合。二是海力士 ADR 套利机制：ADR（American Depositary Receipt，美国存托凭证）是韩股在美股的替身，此前转换受限导致美股替身长期溢价；7/29 通道打通后可买韩股本尊、转换成 ADR 在美股卖，吃掉价差——对美股 ADR 是杀溢价压力，对韩股本尊是增量买盘（额度 22.5%、现占比 2.5% 等数字无法独立核实）。三是韩国杠杆视角本身有价值——注意口径区分：信用融资余额比例（存量借钱炒股）与杠杆 ETF/ETN 成交占比（交易拥挤度，即数据面板「存储杠杆率」页的口径）是两个不同的杠杆。</p>
+<p><strong>要打折甚至打叉的</strong>。最大技术错误在强平算术："1.5 倍杠杆要跌 66.67% 才强平"把强平线画在权益归零处——现实中券商有维持担保比例（韩国通常 140% 左右），跌到权益剩三四成就开始强平，真实爆仓线比 -66.7% 早得多（约 -50% 附近甚至更早）。用错误的安全垫安慰自己"还远"，是杠杆市场最危险的错觉。"好坏财报都跌"是拥挤持仓 + 定价完美时期的现象描述，不是规律——仓位出清后反应函数会反过来。"护城河不深"三句话带过，方向不算错、指导仓位太糙。"Qwen3.8/DeepSeek V4 下周发布"是传闻级信息。世界杯押注 + 赌桌鸡汤 + 社群招募 = 娱乐化信息源的典型配置：日更的商业模式决定了结论密度远高于论证密度。</p>
+<p><strong>今天四份材料的信息生态位（本章真正的收获）</strong>：DJN/Colin 是卖方框架（打折方式：立场先行）；专家纪要是渠道温度计（打折方式：数字全存疑）；超级 Hugo 是独立论文（打折方式：假设外推过度）；偏锋是散户日历（打折方式：结论粗糙 + 带货）。四类信源交叉着读、各自打各自的折，比迷信任何一类都强。</p>
+<p><strong>记忆卡：散户日更当日历用，不当军师用——拿走三段节奏、ADR 机制、财报日历，扔掉错误的强平算术和"好坏都跌"的伪规律；给每类信源打对折扣，是比任何单条结论都值钱的元技能。</strong></p>
+<h2>附录 一句话记忆卡合集（下篇）</h2>
+<table>
+<thead>
+<tr>
+<th>主题</th>
+<th>一句话记忆卡</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>信用市场</td>
+<td>AI 军备竞赛的出纳：债主只问还不还得起，CDS 七年新高 + 认购倍数腰斩 = 出纳开始给借条涨价</td>
+</tr>
+<tr>
+<td>毛利 vs 净利</td>
+<td>"没有高收益"混淆两本账——75% 毛利是真的，巨亏是扩张的选择；空头和多头用的是同一套口径魔术</td>
+</tr>
+<tr>
+<td>跟踪信用</td>
+<td>盯三个数：大厂发债认购倍数、Oracle/CoreWeave 的 CDS、8000 亿私募信贷暗池</td>
+</tr>
+<tr>
+<td>KDA 与存储</td>
+<td>每个人吃得更少是确定的，食堂总采购看降价后来了多少新食客</td>
+</tr>
+<tr>
+<td>增量 vs 存量</td>
+<td>省油发动机装在新车上是利多加油站，装在存量车队上是先饿几个季度的斜率杀</td>
+</tr>
+<tr>
+<td>存储六十年</td>
+<td>单位需求不断被技术砍掉、总销量不断创新高——压缩和去重从没杀死过存储行业</td>
+</tr>
+<tr>
+<td>远期开关</td>
+<td>三巨头是否采用线性注意力：看技术报告痕迹 + 长上下文 API 定价是否断崖下调</td>
+</tr>
+<tr>
+<td>万亿估值</td>
+<td>K3 砸的是稀缺性叙事的地基，正砸在 IPO 路演跑道上；10 月挂牌是第一次公开阅卷</td>
+</tr>
+<tr>
+<td>九成够用的裂缝</td>
+<td>Agent 任务是连乘：单步 90% 跑 20 步只剩 12%——最后一成是成败线不是锦上添花</td>
+</tr>
+<tr>
+<td>开源的前提</td>
+<td>"开源永远追着打"是被补贴的假设：补贴人退场，追赶就减速</td>
+</tr>
+<tr>
+<td>强平算术</td>
+<td>强平线不在权益归零处——维持担保比例让爆仓比 -66.7% 早得多，错误的安全垫最危险</td>
+</tr>
+<tr>
+<td>信源分级</td>
+<td>卖方看框架、专家会当温度计、独立论文查假设、散户日更抄日历——各打各的折</td>
+</tr>
+</tbody>
+</table>
+<p><em>免责声明：本笔记为个人学习整理，信息时点为 2026 年 7 月 19 日；文中数据部分来自媒体报道与第三方估算（Fortune、Forbes、Benzinga、TechCrunch、CNBC 等），未经独立审计，均不构成投资建议。上篇《Kimi K3 与算力产业学习笔记》见网站学习笔记栏目。</em></p>
+<hr/><p>📎 上篇：<a href="k3-compute-industry.html">《Kimi K3 与算力产业学习笔记：从两份产业文档到中美 AI 全景》</a></p>
+  </article>
+  <div class="disclaim">本文为个人学习笔记，由对话探讨整理而成，仅作知识分享，不构成任何投资建议。</div>
+</main>
+<script defer src="toc.js?v=7"></script>
+</body>
+</html>
