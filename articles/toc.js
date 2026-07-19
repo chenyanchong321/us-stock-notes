@@ -151,44 +151,68 @@
   else init();
 })();
 
-/* ===== 🎧 文章音频（2026-07-19 主人需求：耳朵型学习）=====
-   有 notes/audio/<slug>.mp3 就在标题下方渲染播放器（HEAD探测，无音频零影响）。
-   预生成MP3方案（Edge TTS 云希）：原生<audio>=手机锁屏可续播；倍速存 localStorage("audRate")。 */
+/* ===== 🎧 文章音频 v2（2026-07-19）=====
+   自绘播放器（iOS 原生 audio 控件窄容器会缩成只剩播放键、进度条被藏——主人真机抓包，自绘保证可拖）。
+   倍速 0.8/1/1.25/1.5/2（0.8=听众点播）；<audio>本体隐藏保留=锁屏后台续播。 */
 (function(){
   var m = location.pathname.match(/articles\/([^\/]+)\.html/);
   if(!m) return;
   var src = "../notes/audio/" + m[1] + ".mp3";
+  function fmt(t){ if(!isFinite(t)) return "--:--"; var mn=Math.floor(t/60), sc=Math.floor(t%60); return mn+":"+(sc<10?"0":"")+sc; }
   function inject(){
     var h1 = document.querySelector("article h1") || document.querySelector("h1");
     if(!h1) return;
     var box = document.createElement("div");
     box.id = "audiobar";
-    box.style.cssText = "margin:14px 0 18px;padding:10px 14px;border:1px solid #ddd;border-radius:12px;background:#fafafa";
-    box.innerHTML = '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">'
-      + '<span style="font-size:13px;white-space:nowrap">🎧 收听本文</span>'
-      + '<audio controls preload="none" src="' + src + '" style="flex:1;min-width:200px;height:36px"></audio>'
-      + '<span id="audspd"></span></div>'
-      + '<div style="font-size:11px;color:#999;margin-top:5px">AI 朗读（Edge TTS）· 表格与图示请看原文 · 锁屏可继续播放</div>';
+    box.style.cssText = "margin:14px 0 18px;padding:12px 14px;border:1px solid #ddd;border-radius:12px;background:#fafafa";
+    box.innerHTML = '<div style="display:flex;align-items:center;gap:10px">'
+      + '<button id="audplay" style="flex:0 0 auto;width:40px;height:40px;border-radius:50%;border:none;background:#333;color:#fff;font-size:15px;cursor:pointer">\u25B6</button>'
+      + '<input id="audseek" type="range" min="0" max="1000" value="0" style="flex:1;min-width:0;accent-color:#333;height:26px">'
+      + '<span id="audtime" style="flex:0 0 auto;font-size:11.5px;color:#666;font-variant-numeric:tabular-nums">--:-- / --:--</span></div>'
+      + '<div style="display:flex;align-items:center;gap:4px;margin-top:8px;flex-wrap:wrap">'
+      + '<span style="font-size:12px;color:#555;margin-right:4px">\uD83C\uDFA7 \u6536\u542C\u672C\u6587</span><span id="audspd"></span>'
+      + '<span style="font-size:11px;color:#999;margin-left:auto">AI\u6717\u8BFB \u00B7 \u8868\u683C\u56FE\u793A\u8BF7\u770B\u539F\u6587 \u00B7 \u9501\u5C4F\u53EF\u7EED\u64AD</span></div>';
     h1.insertAdjacentElement("afterend", box);
-    var au = box.querySelector("audio");
-    var rates = [1, 1.25, 1.5, 2];
+    var au = new Audio(src);
+    au.preload = "metadata";
+    var play = box.querySelector("#audplay"), seek = box.querySelector("#audseek"), time = box.querySelector("#audtime");
+    var rates = [0.8, 1, 1.25, 1.5, 2];
     var cur = 1; try{ cur = parseFloat(localStorage.getItem("audRate")) || 1; }catch(e){}
+    if(rates.indexOf(cur)<0) cur = 1;
     var sp = box.querySelector("#audspd");
-    sp.innerHTML = rates.map(function(r){
-      return '<button data-r="' + r + '" style="border:1px solid #ccc;background:' + (r===cur?"#333":"#fff") + ';color:' + (r===cur?"#fff":"#555") + ';border-radius:8px;padding:2px 8px;font-size:11px;cursor:pointer;margin-left:4px">' + r + 'x</button>';
-    }).join("");
+    function paintSpd(){
+      sp.innerHTML = rates.map(function(r){
+        return '<button data-r="'+r+'" style="border:1px solid #ccc;background:'+(r===cur?"#333":"#fff")+';color:'+(r===cur?"#fff":"#555")+';border-radius:8px;padding:2px 8px;font-size:11px;cursor:pointer;margin-left:4px">'+r+'x</button>';
+      }).join("");
+    }
+    paintSpd();
     au.playbackRate = cur;
-    au.addEventListener("play", function(){ au.playbackRate = cur; });
     sp.addEventListener("click", function(e){
       var b = e.target.closest("button"); if(!b) return;
-      cur = parseFloat(b.dataset.r);
-      au.playbackRate = cur;
+      cur = parseFloat(b.dataset.r); au.playbackRate = cur;
       try{ localStorage.setItem("audRate", cur); }catch(x){}
-      sp.querySelectorAll("button").forEach(function(x){
-        var on = parseFloat(x.dataset.r)===cur;
-        x.style.background = on ? "#333" : "#fff";
-        x.style.color = on ? "#fff" : "#555";
-      });
+      paintSpd();
+    });
+    play.addEventListener("click", function(){
+      if(au.paused){ au.play(); } else { au.pause(); }
+    });
+    au.addEventListener("play", function(){ play.textContent = "\u2759\u2759"; play.style.fontSize="11px"; au.playbackRate = cur; });
+    au.addEventListener("pause", function(){ play.textContent = "\u25B6"; play.style.fontSize="15px"; });
+    au.addEventListener("ended", function(){ play.textContent = "\u25B6"; });
+    function paintTime(){ time.textContent = fmt(au.currentTime) + " / " + fmt(au.duration); }
+    au.addEventListener("loadedmetadata", paintTime);
+    var dragging = false;
+    au.addEventListener("timeupdate", function(){
+      if(!dragging && isFinite(au.duration)) seek.value = Math.round(au.currentTime / au.duration * 1000);
+      paintTime();
+    });
+    seek.addEventListener("input", function(){
+      dragging = true;
+      if(isFinite(au.duration)){ time.textContent = fmt(seek.value/1000*au.duration) + " / " + fmt(au.duration); }
+    });
+    seek.addEventListener("change", function(){
+      if(isFinite(au.duration)) au.currentTime = seek.value/1000*au.duration;
+      dragging = false;
     });
   }
   fetch(src, {method:"HEAD"}).then(function(r){ if(r.ok) inject(); }).catch(function(){});
