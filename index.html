@@ -2435,6 +2435,8 @@ function renderNotes(cfg){
   });
   document.getElementById("note-timeline").innerHTML = tl;
   const vtc=document.getElementById("vt-cat"), vtt=document.getElementById("vt-tl");
+  vtc.textContent = `🗂 分类视图 ${noteCount}`;   /* 篇数上胶囊（2026-07-19 主人定：原侧栏"共N篇"随方案A退役，补回此处，与研报页胶囊带数对齐） */
+  vtt.textContent = `🕒 时间线 ${noteCount}`;
   function setNotesView(v){
     vtc.classList.toggle("on",v==="cat"); vtt.classList.toggle("on",v==="tl");
     document.getElementById("note-cats").classList.toggle("hidden",v!=="cat");
