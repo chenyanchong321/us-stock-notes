@@ -3,7 +3,7 @@
 # 用法: python3 gen_note_audio.py <slug> [voice]
 #   拉取 articles/<slug>.html → 提取正文纯文本 → edge-tts 生成MP3 → PUT回 notes/audio/<slug>.mp3
 # 依赖: pip3 install edge-tts ；token 读 /root/.gh_token（Contents RW）
-import sys, json, base64, re, html as H, asyncio, urllib.request
+import sys, os, json, base64, re, html as H, asyncio, subprocess, urllib.request
 
 REPO = "chenyanchong321/us-stock-notes"
 TOKEN = open("/root/.gh_token").read().strip()
@@ -47,6 +47,12 @@ def main():
     print("正文字数:", len(text))
     out = f"/root/{outslug}.mp3"
     asyncio.run(tts(text, out, voice))
+    # ffmpeg 重封装补时长头（edge-tts 流式MP3无 Xing header → 浏览器不知总长 → 进度条禁拖）
+    try:
+        subprocess.run(["ffmpeg","-y","-loglevel","error","-i",out,"-c","copy",out+".fix.mp3"], check=True)
+        os.replace(out+".fix.mp3", out)
+    except Exception as e:
+        print("ffmpeg补头跳过:", e)
     data = open(out, "rb").read()
     print("MP3大小:", len(data)//1024, "KB")
     path = f"contents/notes/audio/{outslug}.mp3"
@@ -58,7 +64,7 @@ def main():
     body = {"message": f"audio: {slug}", "content": base64.b64encode(data).decode()}
     if sha: body["sha"] = sha
     gh(path, method="PUT", body=body)
-    print("已上传 notes/audio/%s.mp3" % slug)
+    print("已上传 notes/audio/%s.mp3" % outslug)
 
 if __name__ == "__main__":
     main()
