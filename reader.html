@@ -111,30 +111,34 @@ article .rr-box{background:var(--panel);border:1px solid var(--border);border-le
     .then(function(d){
       body.innerHTML = d.html || '<div class="rr-load">正文整理中，可先下载原版 PDF 阅读</div>';
       /* 目录：与学习笔记同一份脚本，正文注入后再挂载（DOMContentLoaded 已过，toc.js 会立即初始化） */
-      var s=document.createElement("script"); s.src="articles/toc.js?v=6"; document.body.appendChild(s);
+      var s=document.createElement("script"); s.src="articles/toc.js?v=7"; document.body.appendChild(s);
       loadAudio();
     })
     .catch(function(e){ if(e===0) return; body.innerHTML='<div class="rr-load">正文加载失败，可尝试下载原版 PDF</div>'; });
 
-  /* 🎧 研报音频（2026-07-19 二期）：验票取MP3→blob挂自绘播放器（同笔记页语言：可拖进度条+0.8~2x倍速）。
-     blob=整段下载后本地播放，天然支持拖拽与锁屏续播，服务端无需Range。无音频(404)静默跳过。 */
+  /* 🎧 研报音频（2026-07-19 二期）：骨架屏即时渲染（先下载后渲染有1-3秒空窗，用户以为没音频——主人抓包），
+     播放器立刻出现（加载中态），blob到位即激活；404才撤掉。blob=本地播放天然可拖可锁屏续播，服务端无需Range。 */
   function loadAudio(){
+    var box = document.createElement("div");
+    box.id = "audiobar";
+    box.style.cssText = "margin:14px 0 18px;padding:12px 14px;border:1px solid #ddd;border-radius:12px;background:#fafafa";
+    box.innerHTML = '<div style="display:flex;align-items:center;gap:10px">'
+      + '<button id="audplay" disabled style="flex:0 0 auto;width:40px;height:40px;border-radius:50%;border:none;background:#999;color:#fff;font-size:13px;cursor:pointer">⏳</button>'
+      + '<input id="audseek" type="range" min="0" max="1000" value="0" disabled style="flex:1;min-width:0;accent-color:#333;height:26px">'
+      + '<span id="audtime" style="flex:0 0 auto;font-size:11.5px;color:#666;font-variant-numeric:tabular-nums">加载中…</span></div>'
+      + '<div style="display:flex;align-items:center;gap:4px;margin-top:8px;flex-wrap:wrap">'
+      + '<span style="font-size:12px;color:#555;margin-right:4px">🎧 收听本报告（会员）</span><span id="audspd"></span>'
+      + '<span style="font-size:11px;color:#999;margin-left:auto">AI朗读 · 表格图示请看正文 · 锁屏可续播</span></div>';
+    var head = document.getElementById("head");
+    head.insertAdjacentElement("afterend", box);
     fetch(API+"/report-audio?id="+encodeURIComponent(id), {headers:{Authorization:"Bearer "+tk}})
       .then(function(r){ if(!r.ok) throw 0; return r.blob(); })
       .then(function(bl){
         var src = URL.createObjectURL(bl);
-        var box = document.createElement("div");
-        box.id = "audiobar";
-        box.style.cssText = "margin:14px 0 18px;padding:12px 14px;border:1px solid #ddd;border-radius:12px;background:#fafafa";
-        box.innerHTML = '<div style="display:flex;align-items:center;gap:10px">'
-          + '<button id="audplay" style="flex:0 0 auto;width:40px;height:40px;border-radius:50%;border:none;background:#333;color:#fff;font-size:15px;cursor:pointer">▶</button>'
-          + '<input id="audseek" type="range" min="0" max="1000" value="0" style="flex:1;min-width:0;accent-color:#333;height:26px">'
-          + '<span id="audtime" style="flex:0 0 auto;font-size:11.5px;color:#666;font-variant-numeric:tabular-nums">--:-- / --:--</span></div>'
-          + '<div style="display:flex;align-items:center;gap:4px;margin-top:8px;flex-wrap:wrap">'
-          + '<span style="font-size:12px;color:#555;margin-right:4px">🎧 收听本报告（会员）</span><span id="audspd"></span>'
-          + '<span style="font-size:11px;color:#999;margin-left:auto">AI朗读 · 表格图示请看正文 · 锁屏可续播</span></div>';
-        var head = document.getElementById("head");
-        head.insertAdjacentElement("afterend", box);
+        var play0 = box.querySelector("#audplay"), seek0 = box.querySelector("#audseek");
+        play0.disabled = false; play0.style.background = "#333"; play0.textContent = "▶"; play0.style.fontSize = "15px";
+        seek0.disabled = false;
+        box.querySelector("#audtime").textContent = "--:-- / --:--";
         var au = new Audio(src);
         var play = box.querySelector("#audplay"), seek = box.querySelector("#audseek"), time = box.querySelector("#audtime");
         var rates = [0.8, 1, 1.25, 1.5, 2];
@@ -167,7 +171,7 @@ article .rr-box{background:var(--panel);border:1px solid var(--border);border-le
         seek.addEventListener("input", function(){ dragging=true; if(isFinite(au.duration)) time.textContent=fmt(seek.value/1000*au.duration)+" / "+fmt(au.duration); });
         seek.addEventListener("change", function(){ if(isFinite(au.duration)) au.currentTime=seek.value/1000*au.duration; dragging=false; });
       })
-      .catch(function(){});
+      .catch(function(){ box.remove(); });   /* 无音频/取失败：悄悄撤掉骨架 */
   }
 })();
 </script>
