@@ -555,6 +555,24 @@
      "img": "articles/media/robots-energy/media/9d0580ecfde4a20d908001ddca50e3685c54bc17.png"
     }
    ]
+  },
+  {
+   "cat": "💊 医药与创新药",
+   "items": [
+    {
+     "t": "AI制药与创新药出海学习笔记：五家龙头对比、License-out与专利悬崖",
+     "date": "2026-07-19",
+     "ts": "2026-07-19 14:25",
+     "tags": [
+      "AI制药",
+      "创新药出海",
+      "License-out",
+      "专利悬崖"
+     ],
+     "d": "从「英矽/晶泰 vs 薛定谔」的估值错配出发：AI制药卖铲子vs挖金子、全球五家龙头人设对比、市值/研发费用与生意质地两把尺子、创新药出海License-out的三段付款结构（三生-辉瑞/恒瑞-GSK案例）、专利悬崖的「印钞机到期」机制，以及涉港缓和与「只能买beta」的市场解读。",
+     "page": "articles/ai-drug-innovation.html"
+    }
+   ]
   }
  ]
 }

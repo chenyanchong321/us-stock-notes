@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI制药与创新药出海学习笔记 · 烟囱的美股学习笔记</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<style>
+:root{--bg:#ffffff;--panel:#f6f8fa;--panel2:#eef1f4;--border:#e2e5e9;--text:#1f2328;--text2:#6b7280;--accent:#2563eb;--gold:#b8860b}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:16px;line-height:1.85}
+#bar{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);z-index:10}
+#bar .in{max-width:760px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px}
+#bar a{color:var(--text2);text-decoration:none;font-size:14px}
+#bar a:hover{color:var(--accent)}
+#bar .site{margin-left:auto;font-size:13px;color:var(--text2)}
+#bar .site b{color:var(--accent);font-weight:600}
+main{max-width:760px;margin:0 auto;padding:28px 20px 90px}
+.head h1{font-size:26px;line-height:1.4;margin-bottom:12px}
+.meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.meta .date{font-size:13px;color:var(--text2)}
+.meta .tag{font-size:12px;color:var(--accent);background:rgba(74,140,240,.12);border-radius:4px;padding:2px 8px}
+.meta .pdf{font-size:13px;color:var(--text2);text-decoration:none;border:1px solid var(--border);border-radius:6px;padding:3px 10px}
+.meta .pdf:hover{color:var(--text);border-color:var(--text2)}
+.head{border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:26px}
+article h1{font-size:22px;margin:38px 0 14px;line-height:1.4}
+article h2{font-size:20px;margin:34px 0 12px;padding-left:10px;border-left:3px solid var(--accent);line-height:1.4}
+article h3{font-size:17px;margin:26px 0 10px}
+article p{margin:0 0 16px}
+article ul,article ol{margin:0 0 16px 1.4em}
+article li{margin-bottom:6px}
+article img,article svg{max-width:100%;height:auto;border-radius:10px;display:block;margin:18px auto;background:#fff;border:1px solid var(--border)}
+article blockquote{border-left:3px solid var(--gold);background:var(--panel);border-radius:0 8px 8px 0;padding:12px 16px;margin:0 0 16px;color:var(--text2)}
+article table{border-collapse:collapse;width:100%;table-layout:auto;margin:0 0 18px;font-size:14px;word-break:break-word}
+article th,article td{border:1px solid var(--border);padding:8px 12px;text-align:left;white-space:normal}
+article th{background:var(--panel);color:var(--text2)}
+article tr:nth-child(even) td{background:rgba(246,248,250,.7)}
+article code{background:var(--panel2);border-radius:4px;padding:1px 6px;font-size:14px}
+article a{color:var(--accent)}
+article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+.disclaim{margin-top:50px;padding:14px 18px;background:var(--panel);border:1px solid var(--border);border-radius:10px;font-size:13px;color:var(--text2)}
+</style>
+</head>
+<body>
+<div id="bar"><div class="in">
+  <a href="../index.html?view=notes">← 返回笔记库</a>
+  <span class="site">📓 <b>烟囱</b>的美股学习笔记</span>
+</div></div>
+<main>
+  <div class="head">
+    <h1>AI制药与创新药出海学习笔记</h1>
+    <div class="meta"><span class="date">2026-07-19</span><span class="tag">AI制药</span><span class="tag">创新药出海</span><span class="tag">License-out</span><span class="tag">专利悬崖</span><a class="pdf" href="../notes/AI制药与创新药出海学习笔记.pdf" download>⬇ 下载 PDF</a></div>
+  </div>
+  <article>
+<p><strong>从五家AI制药龙头对比，到创新药出海与专利悬崖的底层逻辑</strong></p>
+<p>整理于 2026 年 7 月 · 数据为 2025 全年财报口径与 2026 年 7 月核实时点混用，横向比较时请留意口径差异。</p>
+<blockquote>
+<p>阅读提示：本笔记把一次围绕「AI 制药五家公司对比」的讨论，顺着追问一路延伸到「创新药出海（License-out）」和「专利悬崖」的底层机制，重铸成一份可独立阅读的小书。组织顺序不按聊天先后，而按认知阶梯：先建工具箱，再看公司，再谈估值，最后打通「为什么这条赛道今年火」的产业逻辑。全文仅供学习与讨论，不构成任何投资建议。</p>
+</blockquote>
+<h2>第一章　工具箱：AI 制药到底在做什么</h2>
+<blockquote>
+<p>你当时的问题：先科普一下这几个公司；这条 AI 制药赛道到底是干嘛的？</p>
+</blockquote>
+<p>先给一句话定义这条赛道：传统药厂研发新药靠「海量试错」——合成成千上万个分子，一个个做实验，10 年 10 亿美元打水漂是常态；AI 制药（AIDD，AI-aided Drug Discovery，人工智能辅助药物发现）就是先用计算机把大部分不靠谱的分子「预筛」掉，只把最有希望的少数几个拿去做真实验，等于给制药这门「面粉厂」装了一台高精度筛面机。</p>
+<p>这条赛道的公司，本质分两种商业模式，记住这个区分，后面全懂：一种是「卖铲子」——做软件、做平台、接研发服务，收服务费，旱涝保收但天花板低；另一种是「挖金子」——自己下场做药，赌中一个能赚几十亿，赌不中血亏。每一家公司的差别，说到底就是它站在「卖铲子」和「挖金子」之间的哪个位置。</p>
+<p><strong>记忆卡：卖铲子（做软件/平台，收服务费，旱涝保收但天花板低）vs 挖金子（自己下场做药，赌中一个赚几十亿，赌不中血亏）——AI 制药公司的所有差别，本质就是各自站在这两端的哪个位置。</strong></p>
+<h2>第二章　全球五家 AI 制药龙头横向对比</h2>
+<blockquote>
+<p>你当时的问题：把这几家（薛定谔、英矽智能、晶泰控股、Recursion、BenevolentAI、Tempus AI）都科普介绍一下。</p>
+</blockquote>
+<p>这条赛道里常被拿来对比的五家（外加一家已退市的），可以先用一张「人设表」建立轮廓：</p>
+<table>
+<thead>
+<tr>
+<th>公司</th>
+<th>人设</th>
+<th>上市/代码</th>
+<th>现在市值</th>
+<th>看家本领</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>薛定谔 Schrödinger（SDGR）</td>
+<td>学院派老法师·祖师爷</td>
+<td>美股纳斯达克</td>
+<td>约 12.6 亿美元</td>
+<td>物理计算起家（按分子物理规律真算，公司名取自「薛定谔方程」），软件是全球前 20 大药厂的标配工具</td>
+<td>卖铲子为主，自己也小赌几个药</td>
+</tr>
+<tr>
+<td>英矽智能 Insilico（03696）</td>
+<td>端到端狂人</td>
+<td>港股</td>
+<td>约 230 亿港元（≈30 亿美元）</td>
+<td>端到端 Pharma.AI 平台：找靶点→设计分子→自己推临床，一条龙</td>
+<td>卖铲子＋重度挖金子；2026 年 6 月底约 81% 限售股解禁，股价从高点近乎腰斩，7 月与武田制药签合作</td>
+</tr>
+<tr>
+<td>晶泰控股 XtalPi（02228）</td>
+<td>干湿一体工程队</td>
+<td>港股</td>
+<td>约 30–40 亿美元区间</td>
+<td>AI 算法＋自动化机器人实验室（AI4S），既算又真做实验，客户含辉瑞</td>
+<td>五家里营收规模最大，唯一全年盈利；但含大量研发服务外包收入</td>
+</tr>
+<tr>
+<td>Recursion（RXRX）</td>
+<td>照片流水线狂魔</td>
+<td>美股纳斯达克</td>
+<td>约 20 亿美元</td>
+<td>机器人显微镜给细胞拍海量照片，AI 从图像里「看」出药效；工业化湿实验室</td>
+<td>2024 年吞并英国明星 Exscientia，与英伟达/罗氏/拜耳合作</td>
+</tr>
+<tr>
+<td>BenevolentAI（BAI）</td>
+<td>悲情先驱</td>
+<td>原欧股，已退市</td>
+<td>—</td>
+<td>生物大模型知识图谱，从文献里挖靶点</td>
+<td>2025 年 3 月私有化退市，被大股东 Osaka Holdings 吸收，散户已买不到</td>
+</tr>
+<tr>
+<td>Tempus AI（TEM）</td>
+<td>精准医疗军火商</td>
+<td>美股纳斯达克</td>
+<td>约 105 亿美元</td>
+<td>严格说不做药，而是给医院做基因检测＋攒海量多模态病历数据卖给药厂</td>
+<td>五家里商业化最扎实，2026 营收指引约 16 亿美元、增速快，与默克/阿斯利康合作</td>
+</tr>
+</tbody>
+</table>
+<p>两个关键点要单独记住。</p>
+<p>其一，BenevolentAI 是这条赛道的活教材。它曾是欧洲 AI 制药顶流，但管线接连失利、烧钱撑不住上市成本，最后干脆私有化退市——赛道叙事再热，管线兑现不了照样出局。作者把它列进对比，其实是个警示锚。</p>
+<p>其二，Tempus 是「混进 AI 制药名单的另一个物种」。前面四家（英矽/晶泰/SDGR/RXRX）本质都在「用 AI 找药」，Tempus 是「用 AI 卖医疗数据和诊断」，创始人是 Groupon 的 Eric Lefkofsky。它营收规模最大、离钱最近，但严格讲是精准医疗/数据公司，跟「AI 制药」是邻居不是同行。</p>
+<p><strong>记忆卡：五家里，SDGR 是卖铲子的祖师爷、晶泰是唯一盈利的工程队、英矽是重度自研的赌徒、RXRX 是拍照找药的另一条路、Tempus 是离钱最近但不做药的邻居；BAI 已退市，是赛道的反面教材。</strong></p>
+<h2>第三章　两把估值尺子：市值/研发费用 与 生意质地框架</h2>
+<blockquote>
+<p>你当时的问题：作者用「市值/研发费用」看估值，这个指标什么意思？还有那张加了毛利率、盈利、现金流的对比表，你怎么看？</p>
+</blockquote>
+<p><strong>第一把尺子——市值/研发费用（P/R&amp;D）。</strong> 这是作者自搭的一把「信仰尺」：市场为这家公司每投入 1 块钱研发，愿意付多少倍市值，倍数越高，说明市场对它「AI 能烧出未来」的想象定价越贵。按这把尺子，英矽 51.5 倍、晶泰 63.8 倍是「信仰最厚」，SDGR 4.93 倍、RXRX 3.34 倍是「最不被信仰」——正好把「两个港股后辈比美股龙头贵一个数量级」用数字砸实。提醒：这指标是粗略横向标尺，研发费用高低本身不等于研发好坏，各家会计口径也不同，看个量级即可。</p>
+<p><strong>第二把尺子——生意质地。</strong> 加了毛利率、盈利、收入结构、现金流、资产轻重之后，能真正看出「生意好不好」。如果按「现金流稳定+盈利+轻资产+复购」排质地，大致是 SDGR ＞ 晶泰 ＞ 英矽 ≈ RXRX ＞ BAI；但市值排序几乎是倒过来的（英矽/晶泰 ＞ SDGR ＞ RXRX）。这个错配就是整篇讨论的起点：最会赚钱、现金流最稳的 SDGR，市值反而垫在两个港股后辈下面。</p>
+<p>但别急着站作者一边。港股给英矽/晶泰的溢价，买的是三样东西：一是「中国 AI 制药」这个稀缺叙事（内地和港股的钱买不到 SDGR，本地稀缺自带溢价）；二是更早期、增速预期更高；三是赌一两个管线或 BD 大单兑现。反过来 SDGR 便宜也有便宜的理由——软件订阅增速慢、自研管线十年没跑出大品种，市场对它「审美疲劳」。便宜是因为闷，贵是因为有赌性，这未必是「一对一错」，更像服务两拨风险偏好不同的钱。</p>
+<p><strong>这张表里有个坑，别被毛利率骗了。</strong> 英矽 81.5% 的毛利率看着最漂亮，但它的收入主要是 BD 首付和里程碑——这种一次性、几乎无成本的钱，毛利率天然虚高，且不可持续（今年签了大单就好看，明年没签就塌）。晶泰 69.6% 毛利里含真实的实验交付成本，反而更「实」。RXRX 5% 是会计口径造成的极端值。所以在这个赛道，高毛利率不等于生意好，要看毛利的「来源硬不硬」——是每年都来的订阅，还是靠天吃饭的里程碑。</p>
+<p><strong>记忆卡：市值/研发费用 = 市场给这家公司的「信仰溢价」厚度，倍数越高越是在为故事付钱；而生意质地要看毛利来源硬不硬——BD 首付撑起来的高毛利不可持续，订阅复购撑起来的才是真稳。</strong></p>
+<h2>第四章　创新药出海：License-out 的三段付款结构</h2>
+<blockquote>
+<p>你当时的问题：老听人说中国药企对外授权（License-out）给海外大药厂，有具体案例和现状吗？</p>
+</blockquote>
+<p>先给一句话定义：License-out（对外授权），就是中国药企把自己研发的药，在临床早期就「卖青苗」给海外大药厂——不是卖成品，而是卖「未来在海外开发和销售这个药的权利」。中国药企拿钱、拿分成，海外药厂拿药、负责后面砸钱做临床和卖。</p>
+<p>这笔钱怎么给？记住这个三段结构，特别重要。首付款（Upfront）＝签约当场就打过来的现金，不管药以后成不成，这是「落袋为安」的真金白银；里程碑款（Milestone）＝以后每闯过一关（临床成功、获批上市、销售达标）再给一笔，属于「画的饼，兑现要等」；销售分成（Royalty）＝药真卖出去了，按销售额抽成。一笔「60 亿美元大单」，绝大部分是后面那些没兑现的里程碑，真正当场到手的首付往往只占 5%–20%。这就是为什么看这个行业，老手盯的是「首付款」——那才是硬的。</p>
+<p>现状与案例（2025 数据，已核实）：2025 年中国创新药 BD 出海全年总金额约 1356 亿美元，是 2024 年的 2.6 倍，交易数破 157 笔，首付款合计超 70 亿美元，全维度刷新历史纪录。标志性大单有两笔。三生制药 × 辉瑞：一款 PD-1/VEGF 双抗，总额 60.5 亿美元，首付 12.5 亿美元（创中国纪录），辉瑞还顺手认购三生 1 亿美元股票。恒瑞医药 × GSK：组合授权，总额高达 125 亿美元，首付 5 亿美元。再往前，2023 年百利天恒 × BMS 的 8 亿美元首付曾是纪录，两年就被三生的 12.5 亿刷新了 56%——「首付纪录不断被打破」本身就是行业升温的温度计。</p>
+<p>但要泼两盆冷水。第一，「总额」是虚的：125 亿里能立刻到手的就 5 亿，剩下 120 亿是「药全部成功」才拿得到的理论上限，临床十有八九会死在半路，所以这行「高毛利、大单频出」的热闹含金量要打折——这正好接上第三章英矽毛利率虚高的坑。第二，这是「卖青苗」，赚的是快钱不是终局：把最好的管线早早卖给海外，等于把未来在全球自己卖药的大蛋糕让出去了；这波行情的性质是「中国 biotech 阶段性价值兑现」，能不能走到「自己在海外卖药」，还得看后续。</p>
+<p><strong>记忆卡：License-out 一笔大单 = 首付款（当场落袋的硬钱）＋里程碑（闯关才给的画饼）＋销售分成；总额再大，含金量看首付，首付占比通常只有 5%–20%。</strong></p>
+<h2>第五章　专利悬崖：一台到期就关机的印钞机</h2>
+<blockquote>
+<p>你当时的问题：海外大药厂是因为「专利悬崖」才疯狂买药吗？可专利到期，药还是它自己的，怎么会「药物储备青黄不接」？这中间的必然逻辑在哪？</p>
+</blockquote>
+<p>先纠正一个藏在直觉里的误区：专利到期损失的不是「生产这个药的能力」，而是「独家定价权」，也就是垄断。药还是你的药，你照样能生产；变的是别人也能生产了。</p>
+<p>用一个类比贯穿：一个重磅药 = 一台印钞机，但这台印钞机有法定使用年限（专利期，通常上市后十几年）。专利期内，全世界只有你能造，别人造就违法，你说了算、可以卖天价——默克的「药王」K 药（Keytruda）一年印约 300 亿美元现金，就是这么印的。这不是「供不应求」，是「法律禁止别人供应」，你是唯一卖家。专利一到期，这道墙塌了，仿制药厂一拥而上，同样成分的药卖到你的零头（因为他们没花研发的钱）。结果不是你不能造了，而是你造的药突然卖不出天价、利润瞬间蒸发八九成——印钞机到期那天，自动变成一台普通打印机。</p>
+<p>关键一步来了，也是「必然联系」所在：这台印钞机的到期日是写死的、不能续期的。你没法给 K 药的专利「续费」让它继续垄断。所以到期那天（K 药、BMS 的 O 药核心专利都在 2028 年前后到期），账上凭空出现一个两百多亿的营收大窟窿。谁来填？只能靠一台「新的、还在专利期内的印钞机」接棒。这就是「管线（药物储备）」的真正含义——管线不是指现有的老药，而是指手里「还没上市、但未来能变成下一台印钞机」的新药。所以「管线青黄不接」翻译成大白话就是：旧印钞机 2028 就要停机，可我手里没有一台快做好的新印钞机接班。</p>
+<p>那为什么是「疯狂买」而不是「自己研发」？因为自研一款新重磅药要十年、九成九还会失败，时间上根本来不及救 2028；而中国 biotech 手里正好有一批已跑出人体数据、离成功更近、又便宜的现成管线。所以巨头宁愿现在掏大钱直接买一台「半成品印钞机」回来赶工。全球有近 200 个药面临专利悬崖，潜在损失超 3000 亿美元——这就是买方需求突然变饥渴的根子，也是第四章中国出海爆单的另一半原因（海外「等米下锅」的需求，正好对上中国「刚出锅」的供给）。</p>
+<p>补一个消费者视角：专利到期后，同一款药对消费者的价格通常也会暴跌，化学药常跌到原研的 5%–20%，生物药（对应的仿制叫「生物类似药」biosimilar）门槛高、降得温和些，通常先降三到五成。所以专利悬崖是一枚硬币的两面——对原厂是「营收断崖日」，对消费者是「降价红包日」。专利制度就是这么设计的：先给十几年垄断高价让你回收研发成本、有钱去研发下一个药（激励创新的胡萝卜），期限一到就强制放开、让全社会用上便宜药（回馈公众的到期兑现）。</p>
+<p><strong>记忆卡：专利是一台「到期自动关机、且不能续费」的印钞机；巨头怕的不是老药造不了，而是老机器 2028 要停、手里却没造好新机器接班——所以只能满世界抢购别人快造好的印钞机。同一天，是原厂的营收断崖，也是消费者的降价红包。</strong></p>
+<h2>第六章　市场解读：涉港缓和、恒生科技与「只能买 beta」</h2>
+<blockquote>
+<p>你当时的问题：美国不再延续涉港紧急状态是什么意思？为什么有人说恒生科技最悲观时候过去了、阿里腾讯创新药下周就反弹？这逻辑对吗？</p>
+</blockquote>
+<p><strong>事件本身。</strong> 美国把 2020 年针对香港的一道「制裁总开关」（第 13936 号《香港正常化》行政令）关掉了：这道令 2026 年 7 月 14 日到期，特朗普政府选择不再续签，让它自动失效。中方商务部「表示赞赏」，并定性为中美马德里经贸磋商达成共识后、美方兑现承诺的一步。两个别误读的点：一是紧急状态取消不等于香港特殊经贸地位恢复（美方特意补充，那些具体特殊待遇没自动恢复）；二是对夏宝龙、李家超等 39 名中港官员的个人制裁仍然有效。所以象征意义（紧张降温）大于实质意义（没拿回待遇、制裁照旧）。</p>
+<p><strong>「恒生科技最悲观时候过去了」这个推理，方向成立但要打折。</strong> 恒生科技（腾讯、阿里、美团这些）确实是外资和地缘情绪最敏感的板块，之前被压得低，很大一块是「中美关系恶化」的折价，现在最坏的政治预期开始松动，「最悲观的时点」大概率已过。但「悲观情绪的顶过去了」不等于「股价只涨不跌」，情绪的底和价格的底不是一回事，中间还能反复。</p>
+<p><strong>「所以下周就反弹」这一步是跳跃，不成立。</strong> 从「中长期情绪改善」跳到「下周就涨」，是把方向判断硬塞进时间点判断。有意思的是，那位群友自己后来也否掉了急躁结论，说「只能买 beta」——翻译成大白话：这波就算反弹，也是「水涨船高」的板块普涨（beta，跟随大盘/板块的收益），不是哪家公司特别好，所以买创新药 ETF 吃整体就行，别指望精准抓个股赚超额收益（alpha）。群里说的「创新药」大概率就指创新药 ETF/板块整体。</p>
+<p><strong>那段「周五海外媒体喊史上最严厉限制、周末全是好消息、然后川普宣布社交平台收费」在说什么？</strong> 这是老手对「反身性」的观察，翻译过来：利空传闻往往在周五盘后/周末放出（施压筹码、舆论战），紧接着又冒出缓和的好消息对冲，到周一利空反而落地成利好——别被吓人的标题骗着割肉。至于「社交平台付费看帖」，若属实，算盘无非是直接变现（愿付高价的多是想吃「早几分钟看到总统喊话」这点信息差的机构）＋信息不对称本身就是权力＋制造存在感。落到市场判断上，它恰恰印证了「消息又乱又反复、真假难辨，普通人更不该按单条头条追涨杀跌」。</p>
+<p><strong>记忆卡：地缘消息又乱又反复，别按单条头条做交易；这轮创新药/恒生科技的机会本质是「情绪修复＋降息预期」的板块贝塔，方向可以看好，但抓不准时点、也选不出个股，所以老实买 ETF 吃整体，别赌「下周就涨」。</strong></p>
+<h2>附录　一句话记忆卡合集</h2>
+<table>
+<thead>
+<tr>
+<th>主题</th>
+<th>一句话</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AI 制药两种模式</td>
+<td>卖铲子（软件/平台，旱涝保收天花板低）vs 挖金子（自研做药，赌中赚大赌不中血亏），差别只在站哪端</td>
+</tr>
+<tr>
+<td>五家人设</td>
+<td>SDGR 卖铲子祖师爷、晶泰唯一盈利工程队、英矽重度自研赌徒、RXRX 拍照找药、Tempus 离钱最近但不做药；BAI 已退市是反面教材</td>
+</tr>
+<tr>
+<td>市值/研发费用</td>
+<td>市场给的「信仰溢价」厚度，倍数越高越是在为故事付钱，故事兑现不了就是泡沫</td>
+</tr>
+<tr>
+<td>毛利率陷阱</td>
+<td>高毛利不等于生意好，要看来源硬不硬——BD 首付撑的虚高不可持续，订阅复购撑的才真稳</td>
+</tr>
+<tr>
+<td>License-out 结构</td>
+<td>首付款（硬钱）＋里程碑（画饼）＋销售分成；总额看着大，含金量看首付，首付常只占 5%–20%</td>
+</tr>
+<tr>
+<td>专利悬崖</td>
+<td>专利是到期自动关机、不能续费的印钞机；巨头怕的是老机器 2028 停、手里没新机器接班，只能抢购别人快造好的</td>
+</tr>
+<tr>
+<td>硬币两面</td>
+<td>专利到期同一天，是原厂的营收断崖，也是消费者的降价红包（药价常跌到原研的 5%–20%）</td>
+</tr>
+<tr>
+<td>出海爆单的根</td>
+<td>海外专利悬崖「等米下锅」（需求）＋中国管线便宜好用「刚出锅」（供给），供需两头对上，License-out 就火了</td>
+</tr>
+<tr>
+<td>涉港令取消</td>
+<td>中美缓和的信号弹，象征意义大于实质（香港没拿回特殊待遇、对官员制裁照旧）</td>
+</tr>
+<tr>
+<td>买 beta</td>
+<td>这轮机会是板块贝塔（情绪修复＋降息预期），看得准方向抓不准时点、选不出个股，买 ETF 吃整体别赌下周</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>本文为个人学习笔记，由对话探讨整理而成，仅作知识分享，不构成任何投资建议。文中市值、营收、交易数据为 2025 全年财报口径与 2026 年 7 月核实时点混用，横向比较请留意口径差异；投资有风险，决策需自行判断。</em></p>
+  </article>
+  <div class="disclaim">本文为个人学习笔记，由对话探讨整理而成，仅作知识分享，不构成任何投资建议。</div>
+</main>
+<script defer src="toc.js?v=4"></script>
+</body>
+</html>
