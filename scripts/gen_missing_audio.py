@@ -43,8 +43,8 @@ def main():
             text = extract(open(f"articles/{s}.html").read())
             out = f"notes/audio/{s}.mp3"
             asyncio.run(tts(text, out))
-            subprocess.run(["ffmpeg","-y","-loglevel","error","-i",out,"-c","copy",out+".fix"], check=True)
-            os.replace(out+".fix", out)
+            subprocess.run(["ffmpeg","-y","-loglevel","error","-i",out,"-c","copy",out+".fix.mp3"], check=True)
+            os.replace(out+".fix.mp3", out)
             print(f"✓ {s} ({len(text)}字, {os.path.getsize(out)//1024}KB)")
         except Exception as e:
             print(f"✗ {s}: {e}")
