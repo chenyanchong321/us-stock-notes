@@ -7185,6 +7185,53 @@
      "mcap_base_price": 135.27
     }
    ]
+  },
+  {
+   "name": "23 AI 制药（AIDD 计算驱动药物发现）",
+   "items": [
+    {
+     "name": "薛定谔",
+     "code": "SDGR",
+     "market": "美股",
+     "yahoo": "SDGR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 12.6,
+      "approx": true
+     },
+     "mcap_base_price": 17.3,
+     "ath_floor": 0
+    },
+    {
+     "name": "英矽智能",
+     "code": "03696",
+     "market": "港股",
+     "yahoo": "3696.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 286.0,
+      "approx": true
+     },
+     "mcap_base_price": 51.2,
+     "ath_floor": 0
+    },
+    {
+     "name": "晶泰控股",
+     "code": "02228",
+     "market": "港股",
+     "yahoo": "2228.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 230.0,
+      "approx": true
+     },
+     "mcap_base_price": 6.57,
+     "ath_floor": 0
+    }
+   ]
   }
  ]
 }
