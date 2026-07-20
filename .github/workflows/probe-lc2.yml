@@ -1,0 +1,28 @@
+name: probe-lc2
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: probe sources
+        run: |
+          set +e
+          UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124 Safari/537.36'
+          echo "=== A 东财 push2his 再试（带Referer）==="
+          curl -s -m 20 -A "$UA" -H 'Referer: https://quote.eastmoney.com/' -w "\nHTTP:%{http_code}\n" "https://push2his.eastmoney.com/api/qt/stock/kline/get?secid=225.lcm&klt=101&fqt=0&fields1=f1&fields2=f51,f53&beg=20260701&end=20500101" | head -c 300
+          echo; echo "=== B 新浪期货日K ==="
+          curl -s -m 20 -A "$UA" -H 'Referer: https://finance.sina.com.cn/' -w "\nHTTP:%{http_code}\n" "https://stock2.finance.sina.com.cn/futures/api/jsonp.php/x/InnerFuturesNewService.getDailyKLine?symbol=LC0" | head -c 300
+          echo; echo "=== C 新浪实时 ==="
+          curl -s -m 20 -A "$UA" -H 'Referer: https://finance.sina.com.cn/' -w "\nHTTP:%{http_code}\n" "https://hq.sinajs.cn/list=nf_LC0" | head -c 300
+          echo; echo "=== D 东财 datacenter 期货 ==="
+          curl -s -m 20 -A "$UA" -w "\nHTTP:%{http_code}\n" "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_FUTU_DAILYQUOTE&columns=ALL&pageSize=5&filter=(SECURITY_CODE=%22lcm%22)" | head -c 300
+          echo
+          { echo probe2; } > probe2.txt
+      - name: save
+        run: |
+          curl -s -m 20 -A "Mozilla/5.0" -H 'Referer: https://finance.sina.com.cn/' "https://stock2.finance.sina.com.cn/futures/api/jsonp.php/x/InnerFuturesNewService.getDailyKLine?symbol=LC0" | head -c 400 > probe2.txt
+          git config user.name probe-bot; git config user.email p@b
+          git add probe2.txt; git commit -m "probe2" || echo nochange; git push
