@@ -78,6 +78,31 @@ def fetch_series_tencent(tx_code):
             pairs.append((t, c))
     return pairs or None
 
+EM_KLINE = ("https://push2his.eastmoney.com/api/qt/stock/kline/get?secid={secid}"
+            "&klt=101&fqt=0&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57"
+            "&beg=0&end=20500101&lmt=1000000")
+
+def fetch_series_em(secid):
+    """东财日K。返回 [(unix_ts, close)]，失败抛异常/返回 None（不静默降级）。
+
+    用途：国内商品期货（Yahoo 与腾讯都不覆盖），如广期所碳酸锂主连 secid=225.lcm。
+    2026-07-20 探针实测 GitHub 海外 runner 直连 push2his HTTP 200、数据完整
+    （同域的 push2 快照接口在海外会 302，故只用日K，收盘价即现价）。
+    klines 每行 = 日期,开,收,高,低,量,额；价格已是实际值（碳酸锂元/吨，decimal=0）。"""
+    req = urllib.request.Request(EM_KLINE.format(secid=secid), headers=UA)
+    with urllib.request.urlopen(req, timeout=25) as r:
+        j = json.load(r)
+    d = j.get("data") or {}
+    pairs = []
+    for row in d.get("klines") or []:
+        f = row.split(",")
+        t = int(datetime.datetime.strptime(f[0], "%Y-%m-%d")
+                .replace(tzinfo=datetime.timezone.utc).timestamp())
+        c = float(f[2])
+        if c > 0:
+            pairs.append((t, c))
+    return pairs or None
+
 def fetch_history(sym, hist=None):
     """近5年日线（算涨跌幅） + 全历史月线（算历史高点），规避 Yahoo 对老股票
     range=max 时悄悄降级粒度/截断近期数据的问题。
@@ -100,6 +125,18 @@ def fetch_history(sym, hist=None):
 
     老牌宽基齐全，这 6 个新指数一律只给 1 根。**是 Yahoo 的覆盖缺口，不是我们的 bug**，
     故为这 6 个显式声明历史取自腾讯日K（腾讯对 A股/港股 有完整日线；美日韩台则没有，别乱用）。"""
+    if hist and hist.startswith("em:"):
+        secid = hist[3:]
+        try:
+            daily = fetch_series_em(secid)
+        except Exception as e:
+            print(f"  !! {sym} 声明的历史源 {hist} 失败: {e}", file=sys.stderr)
+            return None
+        if not daily:
+            print(f"  !! {sym} 声明的历史源 {hist} 返回空", file=sys.stderr)
+            return None
+        print(f"  ~~ {sym} 历史取自 {hist}（{len(daily)} 根日K）")
+        return daily, max(c for _, c in daily)
     if hist and hist.startswith("tx:"):
         tx_code = hist[3:]
         try:
@@ -328,7 +365,9 @@ def main():
     ts_1y = int((now - datetime.timedelta(days=365)).timestamp())
     ts_ytd = int(datetime.datetime(now.year, 1, 1, tzinfo=datetime.timezone.utc).timestamp())  # 基准=上年最后一个收盘
 
-    all_syms = [it["yahoo"] for sec in watch["sections"] for it in sec["items"]]
+    # em: 源的标的（国内商品期货）没有 Yahoo 代码，别拿去问 Yahoo 的 v7 quote
+    all_syms = [it["yahoo"] for sec in watch["sections"] for it in sec["items"]
+                if not str(it.get("hist") or "").startswith("em:")]
     pe_map, earn_map, ext_map, fpe_map, mcap_map, so_map = fetch_pe_map(all_syms)
 
     cache = {}
