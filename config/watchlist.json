@@ -4886,6 +4886,16 @@
    "name": "15 能源、电力与资源现金流",
    "items": [
     {
+     "name": "WTI 原油",
+     "code": "CLUSD",
+     "market": "外汇 / 商品",
+     "yahoo": "CL=F",
+     "currency": "$",
+     "mcap_base": null,
+     "mcap_base_price": 65.0,
+     "ath_floor": 0
+    },
+    {
      "name": "Constellation Energy",
      "code": "CEG",
      "market": "美股",
@@ -5345,6 +5355,12 @@
     }
    ],
    "groups": [
+    {
+     "name": "能源价格锚",
+     "codes": [
+      "CLUSD"
+     ]
+    },
     {
      "name": "电力与核能设备（美·日）",
      "codes": [
@@ -7392,6 +7408,16 @@
      "ath_floor": 34.17
     },
     {
+     "name": "COMEX 铜",
+     "code": "HGUSD",
+     "market": "外汇 / 商品",
+     "yahoo": "HG=F",
+     "currency": "$",
+     "mcap_base": null,
+     "mcap_base_price": 5.0,
+     "ath_floor": 0
+    },
+    {
      "name": "紫金矿业",
      "code": "601899",
      "market": "A股",
@@ -7495,6 +7521,7 @@
     {
      "name": "铜金双击（紫金）",
      "codes": [
+      "HGUSD",
       "601899",
       "02899"
      ]
