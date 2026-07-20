@@ -699,6 +699,10 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 .notes-intro{background:linear-gradient(135deg,rgba(74,140,240,.12),rgba(232,182,76,.08));border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:26px}
 .notes-intro h2{font-size:18px;margin-bottom:6px}
 .notes-intro p{font-size:13px;color:var(--text2);line-height:1.7}
+/* 卡片上的分类标签（拉平后保留"这篇属于哪个书架"，点击即筛选） */
+.ncard .ncat{font-size:11.5px;color:var(--accent);background:rgba(74,140,240,.13);border:1px solid rgba(74,140,240,.3);border-radius:4px;padding:1px 7px;cursor:pointer}
+.ncard .ncat:hover{background:rgba(74,140,240,.25)}
+.ncard .ncat.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 .note-cat{margin-bottom:32px;scroll-margin-top:calc(var(--header-h) + 16px)}
 .note-cat h3{font-size:16px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .note-cat h3 .n{font-size:12px;color:var(--text2);font-weight:400}
@@ -925,8 +929,8 @@ body.resizing{user-select:none;cursor:col-resize}
       <span id="note-clear">✕</span>
     </div>
     <div class="view-toggle">
-      <button id="vt-cat">🗂 分类视图</button>
-      <button id="vt-tl">🕒 时间线</button>
+      <button id="vt-cat">📄 详细</button>
+      <button id="vt-tl">🕒 精简</button>
     </div>
     <div id="note-noresult" style="display:none;color:var(--text2);font-size:13px;padding:20px 0;text-align:center">没有匹配的笔记</div>
     <div id="note-cats"></div>
@@ -2442,37 +2446,35 @@ function applyFilter(){
 
 function renderNotes(cfg){
   const catEl = document.getElementById("note-cats");
-  const noteNav = document.getElementById("note-nav");
+  /* noteNav（旧侧栏目录）随方案A已退役，目录改由 #ntoc 筛选器承载 */
   let noteCount = 0;
-  cfg.cats.forEach((c,i)=>{
-    const id = "cat"+i;
-    noteCount += c.items.length;
-    noteNav.insertAdjacentHTML("beforeend",
-      `<a href="#${id}" data-sec="${id}">${c.cat}<span class="cnt">${c.items.length}</span></a>`);
-    /* 卡片=研报卡同款单列大卡（2026-07-18 格式对齐）：标题/日期标签/简介/阅读行，与投研报告页统一视觉语言 */
-    catEl.insertAdjacentHTML("beforeend",`
-      <div class="note-cat" id="${id}">
-        <h3>${c.cat}<span class="n">${c.items.length} 篇</span></h3>
-        <div class="ngrid">${c.items.map(n=>`
-          <a class="ncard" href="${n.page}">
-            <div class="rep-tags">${n.tags.map(t=>`<span class="rep-code">${t}</span>`).join("")}<span class="rep-meta">${n.date}</span></div>
-            <div class="rep-title">${n.t}</div>
-            <div class="rep-d">${n.d}</div>
-            <div class="rep-act">▸ 阅读全文（免费 · 文内可下载PDF）</div>
-          </a>`).join("")}</div>
-      </div>`);
-  });
+  cfg.cats.forEach(c=>{ noteCount += c.items.length; });
   document.getElementById("note-total").textContent = noteCount;
 
-  /* 时间线视图 */
+  /* 排序·筛选·呈现三权分立（2026-07-19 主人定，与研报页统一）：
+     排序永远=最新在前（两个视图一致，点进来第一眼就是今天发的）；
+     筛选=分类目录（点分类只看该分类，再点取消）；呈现=详细卡片流 / 精简标题流。
+     旧模型把三件事混在"分类视图"里，导致最新内容被埋在第一个分类下面。 */
   const flat = cfg.cats.flatMap(c=>c.items.map(n=>({...n, cat:c.cat})));
   flat.sort((a,b)=>(b.ts||b.date).localeCompare(a.ts||a.date));   /* 按发布时刻倒序（ts 精确到分） */
   window.NOTES_FLAT = flat;   /* ③最新内容条取最新一篇用 */
+  const catIdx = {}; cfg.cats.forEach((c,i)=>catIdx[c.cat]=i);
+  /* 详细视图=时间倒序的单列大卡；卡片自带分类标签（拉平后不能丢"这篇属于哪个书架"），点标签即筛选 */
+  catEl.innerHTML = flat.map(n=>`
+    <a class="ncard" href="${n.page}" data-cat="${n.cat}">
+      <div class="rep-tags"><span class="ncat" data-fcat="${n.cat}">${n.cat}</span>${n.tags.map(t=>`<span class="rep-code">${t}</span>`).join("")}<span class="rep-meta">${n.date}</span></div>
+      <div class="rep-title">${n.t}</div>
+      <div class="rep-d">${n.d}</div>
+      <div class="rep-act">▸ 阅读全文（免费 · 文内可下载PDF）</div>
+    </a>`).join("");
+  catEl.querySelectorAll("[data-fcat]").forEach(el=>el.addEventListener("click",e=>{
+    e.preventDefault(); e.stopPropagation(); window.setNoteCat(el.dataset.fcat);
+  }));
   let tl="", lastM="";
   flat.forEach(n=>{
     const m=n.date.slice(0,7);
     if(m!==lastM){ tl+=`<div class="tl-month">${m.replace("-","年")}月</div>`; lastM=m; }
-    tl+=`<a class="tl-item" href="${n.page}">
+    tl+=`<a class="tl-item" href="${n.page}" data-cat="${n.cat}">
       <span class="tl-date">${n.date.slice(5)}</span>
       <span class="tl-t">${n.t}</span>
       <span class="tl-cat">${[...n.cat].slice(1).join("").trim()}</span>
@@ -2480,32 +2482,33 @@ function renderNotes(cfg){
   });
   document.getElementById("note-timeline").innerHTML = tl;
   const vtc=document.getElementById("vt-cat"), vtt=document.getElementById("vt-tl");
-  vtc.textContent = `🗂 分类视图 ${noteCount}`;   /* 篇数上胶囊（2026-07-19 主人定：原侧栏"共N篇"随方案A退役，补回此处，与研报页胶囊带数对齐） */
-  vtt.textContent = `🕒 时间线 ${noteCount}`;
+  vtc.textContent = `📄 详细 ${noteCount}`;   /* 篇数上胶囊（与研报页胶囊带数对齐）；两视图只差呈现密度，不差排序 */
+  vtt.textContent = `🕒 精简 ${noteCount}`;
   function setNotesView(v){
     vtc.classList.toggle("on",v==="cat"); vtt.classList.toggle("on",v==="tl");
     document.getElementById("note-cats").classList.toggle("hidden",v!=="cat");
     document.getElementById("note-timeline").classList.toggle("hidden",v!=="tl");
   }
-  window.setNotesView = setNotesView;   /* 暴露给页签点击：每次进入重置分类视图（2026-07-18 主人定，同涨跌幅榜/研报页规矩） */
+  window.setNotesView = setNotesView;   /* 暴露给页签点击：每次进入重置（2026-07-18 主人定，同涨跌幅榜/研报页规矩）——重置=详细视图+全部分类 */
   vtc.addEventListener("click",()=>setNotesView("cat"));
   vtt.addEventListener("click",()=>setNotesView("tl"));
-  setNotesView("cat");   /* 默认分类视图；时间线=手动切换，不再 localStorage 记忆 */
+  setNotesView("cat");   /* 默认详细视图；精简=手动切换，不再 localStorage 记忆 */
 
   /* 笔记搜索（2026-07-18 格式对齐）：标题/标签/简介/分类全字段、空格分词取与，同时作用于分类与时间线视图 */
   const inp=document.getElementById("note-search"), clr=document.getElementById("note-clear");
   function noteFilter(q){
     const ws=(q||"").trim().toLowerCase().split(/\s+/).filter(Boolean);
     const match=el=>{ const t=el.textContent.toLowerCase(); return ws.every(w=>t.includes(w)); };
+    /* 搜索与分类筛选叠加：两个条件都要满足才显示（NOTE_CAT=""表示全部） */
+    const fc = window.NOTE_CAT || "";
+    const ok = el => (!ws.length||match(el)) && (!fc || el.dataset.cat===fc);
     let any=false;
-    document.querySelectorAll("#note-cats .ncard").forEach(c=>{ const m=!ws.length||match(c); c.style.display=m?"":"none"; if(m)any=true; });
-    document.querySelectorAll("#note-cats .note-cat").forEach(cat=>{
-      const vis=[...cat.querySelectorAll(".ncard")].some(c=>c.style.display!=="none");
-      cat.style.display=vis?"":"none"; });
-    document.querySelectorAll("#note-timeline .tl-item").forEach(c=>{ c.style.display=(!ws.length||match(c))?"":"none"; });
-    document.querySelectorAll("#note-timeline .tl-month").forEach(m=>{ m.style.display=ws.length?"none":""; });   /* 搜索时月份标题失义，整体隐藏 */
+    document.querySelectorAll("#note-cats .ncard").forEach(c=>{ const m=ok(c); c.style.display=m?"":"none"; if(m)any=true; });
+    document.querySelectorAll("#note-timeline .tl-item").forEach(c=>{ c.style.display=ok(c)?"":"none"; });
+    /* 月份标题：搜索或筛选时失义（本月可能一条都不剩），整体隐藏 */
+    document.querySelectorAll("#note-timeline .tl-month").forEach(m=>{ m.style.display=(ws.length||fc)?"none":""; });
     const em=document.getElementById("note-noresult");
-    if(em) em.style.display=(ws.length&&!any)?"":"none";
+    if(em) em.style.display=((ws.length||fc)&&!any)?"":"none";
   }
   if(inp){
     inp.addEventListener("input",()=>{ noteFilter(inp.value); if(clr) clr.style.display=inp.value?"block":"none"; });
@@ -2513,10 +2516,25 @@ function renderNotes(cfg){
   }
 
   /* 方案A浮动目录：宽屏#ntoc贴内容左外侧+滚动高亮；窄屏📂钮弹分类单。显隐由 switchTab 里 syncNtoc 管 */
-  const links = cfg.cats.map((c,i)=>`<a href="#cat${i}" data-sec="cat${i}">${c.cat}<span class="cnt">${c.items.length}</span></a>`).join("");
+  /* 目录=筛选器（不再是锚点跳转）：点分类只看该分类、再点取消，"全部"回到全量。选中态高亮 */
+  const links = `<a href="javascript:;" data-fc="">全部<span class="cnt">${noteCount}</span></a>`
+    + cfg.cats.map(c=>`<a href="javascript:;" data-fc="${c.cat}">${c.cat}<span class="cnt">${c.items.length}</span></a>`).join("");
   const nt=document.getElementById("ntoc-links"), np=document.getElementById("ntocpop"), nf=document.getElementById("ntocfab");
   if(nt) nt.innerHTML=links;
   if(np) np.innerHTML=links;
+  /* 分类筛选主控：唯一出口，卡片标签/侧栏目录/窄屏弹层都调它 */
+  window.setNoteCat = function(cat){
+    window.NOTE_CAT = (window.NOTE_CAT===cat) ? "" : (cat||"");   /* 再点同一个=取消 */
+    document.querySelectorAll("#ntoc-links a[data-fc],#ntocpop a[data-fc]").forEach(a=>
+      a.classList.toggle("active", a.dataset.fc===(window.NOTE_CAT||"")));
+    document.querySelectorAll("#note-cats .ncard .ncat").forEach(el=>
+      el.classList.toggle("on", !!window.NOTE_CAT && el.dataset.fcat===window.NOTE_CAT));
+    noteFilter(inp ? inp.value : "");
+    const box=document.getElementById("view-notes");
+    if(box) window.scrollTo({top:0});   /* 换范围回到顶部，瞬时（长文平滑滚动的老教训） */
+  };
+  [nt,np].forEach(box=>{ if(box) box.querySelectorAll("a[data-fc]").forEach(a=>
+    a.addEventListener("click",e=>{ e.preventDefault(); window.setNoteCat(a.dataset.fc); })); });
   if(nf) nf.addEventListener("click", e=>{ e.stopPropagation(); np.classList.toggle("open"); });
   if(np) np.addEventListener("click", ()=>np.classList.remove("open"));   /* 选完即收 */
   document.addEventListener("click", e=>{ if(np && !e.target.closest("#ntocfab,#ntocpop")) np.classList.remove("open"); });
@@ -2528,22 +2546,9 @@ function renderNotes(cfg){
     if(np && !vis) np.classList.remove("open");
   };
   window.syncNtoc();
-  /* 滚动高亮当前分类。两个坑：①全局 IntersectionObserver 在脚本解析时注册，.note-cat 当时还没渲染，
-     观察落空（老侧栏高亮从未生效）；②IO 回调挂渲染帧，窗口遮挡/后台时不触发（同 rAF 闸门铁坑）。
-     正解=铁律同款：scroll + setTimeout 节流，自己算当前分类。 */
-  let ntTick=null;
-  function ntHighlight(){
-    ntTick=null;
-    if(document.getElementById("view-notes").classList.contains("hidden")) return;
-    const anchor = (window.innerHeight*0.28);
-    let cur=null;
-    document.querySelectorAll(".note-cat").forEach(s=>{
-      if(s.getBoundingClientRect().top <= anchor) cur=s.id;
-    });
-    document.querySelectorAll("#ntoc-links a").forEach(l=>l.classList.toggle("active", l.dataset.sec===cur));
-  }
-  addEventListener("scroll", ()=>{ if(!ntTick) ntTick=setTimeout(ntHighlight,120); }, {passive:true});
-  ntHighlight();
+  /* 滚动高亮已随"目录改筛选器"退役（2026-07-19）：拉平后无 .note-cat 分组可高亮，
+     且它每次滚动都会清掉 active，会与筛选选中态打架——删除是唯一正解，勿复活。 */
+  window.setNoteCat(window.NOTE_CAT||"");   /* 初始化选中态（默认全部） */
   window.updateFresh && updateFresh();
 }
 
@@ -3965,7 +3970,9 @@ function renderReports(kw){
   }
   if(!REPORTS.length){ box.innerHTML = '<div class="rep-empty">研报整理中，敬请期待</div>'; return; }
   const nameOf = code=>{ for(const s of DATA){ for(const r of s.rows){ if(r[1]===code) return r[0]; } } return ""; };
-  let list = REPORTS;
+  /* 显式日期倒序（2026-07-19）：原先依赖 reports.json 的数组顺序，哪天顺序乱了页面就乱；
+     与笔记页"排序永远最新在前"统一。 */
+  let list = REPORTS.slice().sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
   if(window.REP_CAT){
     list = list.filter(x=>catOf(x)===window.REP_CAT);
     if(!list.length){ box.innerHTML = `<div class="rep-empty">${window.REP_CAT==="财报点评"?"财报点评":"深度研报"}整理中，敬请期待</div>`; return; }
@@ -4755,7 +4762,7 @@ document.addEventListener("click", e=>{
   document.addEventListener("click", e=>{
     const b = e.target.closest ? e.target.closest(".kbar button[data-view]") : null;
     if(!b) return;
-    if(b.dataset.view==="notes" && window.setNotesView) setNotesView("cat");   /* 进笔记页同规矩重置分类 */
+    if(b.dataset.view==="notes" && window.setNotesView){ setNotesView("cat"); window.NOTE_CAT=""; window.setNoteCat&&setNoteCat(""); }   /* 进笔记页重置：详细视图+全部分类 */
     switchTab(b.dataset.view);
   });
   document.querySelectorAll(".tab[data-view]").forEach(tab=>
@@ -4764,7 +4771,7 @@ document.addEventListener("click", e=>{
         window.REP_CAT="";
         try{ renderReports(document.getElementById("rep-search")?.value||""); }catch(x){}
       }
-      if(tab.dataset.view==="notes" && window.setNotesView) setNotesView("cat");   /* 笔记页同规矩：每次进入重置分类视图 */
+      if(tab.dataset.view==="notes" && window.setNotesView){ setNotesView("cat"); window.NOTE_CAT=""; window.setNoteCat&&setNoteCat(""); }   /* 笔记页重置：详细视图+全部分类 */
       switchTab(tab.dataset.view);
     }));
   /* moremenu 已随「更多」退役（④）；财报点评分类直达逻辑在投研报告页内分类胶囊 */
@@ -4808,11 +4815,13 @@ document.addEventListener("click", e=>{
   const obs = new IntersectionObserver(es=>{
     es.forEach(e=>{
       if(e.isIntersecting){
-        document.querySelectorAll(".sidebar a, #ntoc-links a").forEach(l=>l.classList.toggle("active",l.dataset.sec===e.target.id));
+        /* 2026-07-19：#ntoc-links 已改为分类筛选器（active=选中的分类，不是滚动位置）——
+           必须从这里摘掉，否则数据面板滚动时会把笔记页的筛选高亮一起擦掉（两套 active 打架）。 */
+        document.querySelectorAll(".sidebar a").forEach(l=>l.classList.toggle("active",l.dataset.sec===e.target.id));
       }
     });
   },{rootMargin:"-15% 0px -70% 0px"});
-  document.querySelectorAll(".section,.note-cat").forEach(s=>obs.observe(s));
+  document.querySelectorAll(".section").forEach(s=>obs.observe(s));   /* .note-cat 分组已退役 */
 })();
 </script>
 <script>
