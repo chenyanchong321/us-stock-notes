@@ -172,6 +172,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 .stat{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:8px 16px}
 .stat .k{font-size:11px;color:var(--text2)}
 .stat .v{font-size:16px;font-weight:600;margin-top:2px}
+.stat .v .hitb{font-size:12px;font-weight:600;color:var(--up);margin-left:5px}
 .stat.vc{cursor:pointer;transition:.15s}
 .stat.vc:hover{border-color:var(--accent)}
 .stat.vc.on{border-color:var(--accent);background:rgba(74,140,240,.10)}
@@ -1635,7 +1636,22 @@ function renderDash(quotes){
   window.updateBadges = function(){
     const rows = flatRows().map(x=>x.r);
     const put=(id,v)=>{ const e=document.getElementById(id); if(e) e.textContent=v; };
-    put("st-focus", BUYCODES.size ? String(new Set(rows.filter(r=>BUYCODES.has(r[1])).map(r=>r[1])).size) : "–");
+    const putH=(id,v)=>{ const e=document.getElementById(id); if(e) e.innerHTML=v; };
+    /* 重点清单角标 = 观察位标的数 · 🎯触达数（2026-07-18 主人定：横幅只留全景，触达"有几只"提到卡片一眼可见）
+       触达口径与重点清单视图内完全一致（buyTh + pxOf + 2% 容差），会员可见真数字，游客不显示触达数 */
+    if(BUYCODES.size){
+      const uniq = [...new Set(rows.filter(r=>BUYCODES.has(r[1])).map(r=>r[1]))];
+      let hit = 0;
+      if(window.MEMBER){
+        const seen=new Set();
+        rows.forEach(r=>{
+          const c=r[1]; if(!BUYCODES.has(c)||seen.has(c)) return; seen.add(c);
+          const th=buyTh(c), px=pxOf(r);
+          if(th&&px&&(1-th/px)*100<=2) hit++;
+        });
+      }
+      putH("st-focus", uniq.length + (hit ? ` <span class="hitb">🎯${hit}</span>` : ""));
+    }else put("st-focus","–");
     put("st-deep", String(rows.filter(r=>typeof r[6]==="number"&&r[6]<=-30).length));
     put("st-hi",   String(rows.filter(r=>typeof r[6]==="number"&&r[6]>-30).length));
     put("st-mcap", `${window.CURMKT||"全市场"} ${rows.filter(r=>mcapVal(r)>0 && !/ETF|指数|商品|外汇/.test(String(r[2]))).length}`);
