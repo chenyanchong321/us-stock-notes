@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-20 19:30 北京时间",
+ "updated": "2026-07-20 19:45 北京时间",
  "earnings": [
   {
    "d": "2026-07-21",
@@ -29,12 +29,6 @@
    "d": "2026-07-23",
    "code": "TXN",
    "name": "德州仪器",
-   "est": false
-  },
-  {
-   "d": "2026-07-23",
-   "code": "NOK",
-   "name": "诺基亚",
    "est": false
   },
   {
@@ -93,12 +87,6 @@
   },
   {
    "d": "2026-07-28",
-   "code": "GLW",
-   "name": "康宁",
-   "est": false
-  },
-  {
-   "d": "2026-07-28",
    "code": "APLD",
    "name": "Applied Digital",
    "est": false
@@ -147,18 +135,6 @@
   },
   {
    "d": "2026-07-29",
-   "code": "STX",
-   "name": "希捷科技",
-   "est": false
-  },
-  {
-   "d": "2026-07-29",
-   "code": "APH",
-   "name": "安费诺",
-   "est": false
-  },
-  {
-   "d": "2026-07-29",
    "code": "VRT",
    "name": "Vertiv Holdings",
    "est": false
@@ -167,12 +143,6 @@
    "d": "2026-07-29",
    "code": "KLAC",
    "name": "科磊",
-   "est": false
-  },
-  {
-   "d": "2026-07-29",
-   "code": "TER",
-   "name": "泰瑞达",
    "est": false
   },
   {
@@ -429,12 +399,6 @@
   },
   {
    "d": "2026-08-05",
-   "code": "AMD",
-   "name": "AMD",
-   "est": false
-  },
-  {
-   "d": "2026-08-05",
    "code": "ANET",
    "name": "Arista Networks",
    "est": false
@@ -491,12 +455,6 @@
    "d": "2026-08-06",
    "code": "SNDK",
    "name": "闪迪",
-   "est": false
-  },
-  {
-   "d": "2026-08-06",
-   "code": "WDC",
-   "name": "西部数据",
    "est": false
   },
   {
