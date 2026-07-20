@@ -1,10 +1,28 @@
 {
- "updated": "2026-07-20 19:15 北京时间",
+ "updated": "2026-07-20 19:30 北京时间",
  "earnings": [
   {
    "d": "2026-07-21",
    "code": "VICR",
    "name": "Vicor",
+   "est": false
+  },
+  {
+   "d": "2026-07-22",
+   "code": "GEV",
+   "name": "GE Vernova",
+   "est": false
+  },
+  {
+   "d": "2026-07-23",
+   "code": "GOOGL",
+   "name": "谷歌（Alphabet）",
+   "est": false
+  },
+  {
+   "d": "2026-07-23",
+   "code": "TSLA",
+   "name": "特斯拉",
    "est": false
   },
   {
@@ -15,8 +33,20 @@
   },
   {
    "d": "2026-07-23",
-   "code": "STM",
-   "name": "意法半导体",
+   "code": "NOK",
+   "name": "诺基亚",
+   "est": false
+  },
+  {
+   "d": "2026-07-23",
+   "code": "IBM",
+   "name": "IBM",
+   "est": false
+  },
+  {
+   "d": "2026-07-23",
+   "code": "NOW",
+   "name": "ServiceNow",
    "est": false
   },
   {
@@ -44,6 +74,12 @@
    "est": false
   },
   {
+   "d": "2026-07-24",
+   "code": "AXP",
+   "name": "美国运通",
+   "est": false
+  },
+  {
    "d": "2026-07-27",
    "code": "011070",
    "name": "LG Innotek",
@@ -53,6 +89,12 @@
    "d": "2026-07-28",
    "code": "000660.KS",
    "name": "SK海力士",
+   "est": false
+  },
+  {
+   "d": "2026-07-28",
+   "code": "GLW",
+   "name": "康宁",
    "est": false
   },
   {
@@ -71,6 +113,18 @@
    "d": "2026-07-28",
    "code": "NVTS",
    "name": "纳微半导体",
+   "est": false
+  },
+  {
+   "d": "2026-07-28",
+   "code": "ECL",
+   "name": "艺康集团（Ecolab）",
+   "est": false
+  },
+  {
+   "d": "2026-07-28",
+   "code": "SPGI",
+   "name": "标普全球",
    "est": false
   },
   {
@@ -95,6 +149,12 @@
    "d": "2026-07-29",
    "code": "STX",
    "name": "希捷科技",
+   "est": false
+  },
+  {
+   "d": "2026-07-29",
+   "code": "APH",
+   "name": "安费诺",
    "est": false
   },
   {
@@ -134,6 +194,36 @@
    "est": false
   },
   {
+   "d": "2026-07-29",
+   "code": "2383",
+   "name": "台光电子",
+   "est": false
+  },
+  {
+   "d": "2026-07-29",
+   "code": "BE",
+   "name": "Bloom Energy",
+   "est": false
+  },
+  {
+   "d": "2026-07-29",
+   "code": "GNRC",
+   "name": "Generac",
+   "est": false
+  },
+  {
+   "d": "2026-07-30",
+   "code": "MSFT",
+   "name": "微软",
+   "est": false
+  },
+  {
+   "d": "2026-07-30",
+   "code": "META",
+   "name": "Meta Platforms",
+   "est": false
+  },
+  {
    "d": "2026-07-30",
    "code": "ARM",
    "name": "Arm Holdings",
@@ -170,6 +260,36 @@
    "est": false
   },
   {
+   "d": "2026-07-30",
+   "code": "FTNT",
+   "name": "飞塔信息（Fortinet）",
+   "est": false
+  },
+  {
+   "d": "2026-07-30",
+   "code": "AEM",
+   "name": "伊格尔矿业（Agnico Eagle）",
+   "est": false
+  },
+  {
+   "d": "2026-07-30",
+   "code": "HOOD",
+   "name": "Robinhood",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "AAPL",
+   "name": "苹果",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "AMZN",
+   "name": "亚马逊",
+   "est": false
+  },
+  {
    "d": "2026-07-31",
    "code": "285A",
    "name": "铠侠",
@@ -179,6 +299,12 @@
    "d": "2026-07-31",
    "code": "AXTI",
    "name": "AXT Inc",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "5802",
+   "name": "住友电气",
    "est": false
   },
   {
@@ -207,14 +333,50 @@
   },
   {
    "d": "2026-07-31",
-   "code": "ETN",
-   "name": "伊顿",
+   "code": "6981",
+   "name": "村田制作所",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "6762",
+   "name": "TDK",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "NVT",
+   "name": "nVent Electric",
    "est": false
   },
   {
    "d": "2026-07-31",
    "code": "6268",
    "name": "纳博特斯克",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "ABBV",
+   "name": "艾伯维",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "SYK",
+   "name": "史赛克",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "MSTR",
+   "name": "Strategy",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "TEM",
+   "name": "Tempus AI",
    "est": false
   },
   {
@@ -248,6 +410,42 @@
    "est": false
   },
   {
+   "d": "2026-08-04",
+   "code": "7011",
+   "name": "三菱重工",
+   "est": false
+  },
+  {
+   "d": "2026-08-04",
+   "code": "WMB",
+   "name": "Williams Companies",
+   "est": false
+  },
+  {
+   "d": "2026-08-04",
+   "code": "PLTR",
+   "name": "Palantir",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
+   "code": "AMD",
+   "name": "AMD",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
+   "code": "ANET",
+   "name": "Arista Networks",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
+   "code": "ALAB",
+   "name": "Astera Labs",
+   "est": false
+  },
+  {
    "d": "2026-08-05",
    "code": "3110",
    "name": "日东纺织",
@@ -263,6 +461,12 @@
    "d": "2026-08-05",
    "code": "6963",
    "name": "罗姆半导体",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
+   "code": "6976",
+   "name": "太阳诱电",
    "est": false
   },
   {
@@ -297,6 +501,24 @@
   },
   {
    "d": "2026-08-06",
+   "code": "5801",
+   "name": "古河电工",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
+   "code": "VIAV",
+   "name": "Viavi Solutions",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
+   "code": "HIMX",
+   "name": "奇景光电",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
    "code": "NVMI",
    "name": "Nova",
    "est": false
@@ -327,6 +549,30 @@
   },
   {
    "d": "2026-08-06",
+   "code": "CEG",
+   "name": "Constellation Energy",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
+   "code": "TLN",
+   "name": "Talen Energy",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
+   "code": "DDOG",
+   "name": "Datadog",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
+   "code": "APP",
+   "name": "Applovin",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
    "code": "KVYO",
    "name": "Klaviyo",
    "est": false
@@ -335,6 +581,12 @@
    "d": "2026-08-06",
    "code": "SYM",
    "name": "Symbotic",
+   "est": false
+  },
+  {
+   "d": "2026-08-07",
+   "code": "AAOI",
+   "name": "Applied Optoelectronics",
    "est": false
   },
   {
@@ -357,9 +609,51 @@
   },
   {
    "d": "2026-08-07",
+   "code": "VST",
+   "name": "Vistra Energy",
+   "est": false
+  },
+  {
+   "d": "2026-08-07",
+   "code": "NET",
+   "name": "Cloudflare",
+   "est": false
+  },
+  {
+   "d": "2026-08-07",
+   "code": "TWLO",
+   "name": "Twilio",
+   "est": false
+  },
+  {
+   "d": "2026-08-07",
+   "code": "TEAM",
+   "name": "Atlassian",
+   "est": false
+  },
+  {
+   "d": "2026-08-07",
+   "code": "FROG",
+   "name": "JFrog",
+   "est": false
+  },
+  {
+   "d": "2026-08-07",
    "code": "6324",
    "name": "哈默纳科机电",
    "est": false
+  },
+  {
+   "d": "2026-08-12",
+   "code": "LITE",
+   "name": "Lumentum",
+   "est": false
+  },
+  {
+   "d": "2026-08-12",
+   "code": "POET",
+   "name": "POET Technologies",
+   "est": true
   },
   {
    "d": "2026-08-12",
@@ -374,9 +668,21 @@
    "est": false
   },
   {
+   "d": "2026-08-27",
+   "code": "NVDA",
+   "name": "英伟达",
+   "est": false
+  },
+  {
    "d": "2026-09-04",
    "code": "DELL",
    "name": "戴尔科技",
+   "est": false
+  },
+  {
+   "d": "2026-09-11",
+   "code": "ADBE",
+   "name": "Adobe",
    "est": false
   },
   {
