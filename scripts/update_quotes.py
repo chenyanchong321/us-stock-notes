@@ -82,26 +82,38 @@ EM_KLINE = ("https://push2his.eastmoney.com/api/qt/stock/kline/get?secid={secid}
             "&klt=101&fqt=0&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57"
             "&beg=0&end=20500101&lmt=1000000")
 
-def fetch_series_em(secid):
+def fetch_series_em(secid, retries=3):
     """东财日K。返回 [(unix_ts, close)]，失败抛异常/返回 None（不静默降级）。
 
     用途：国内商品期货（Yahoo 与腾讯都不覆盖），如广期所碳酸锂主连 secid=225.lcm。
     2026-07-20 探针实测 GitHub 海外 runner 直连 push2his HTTP 200、数据完整
     （同域的 push2 快照接口在海外会 302，故只用日K，收盘价即现价）。
     klines 每行 = 日期,开,收,高,低,量,额；价格已是实际值（碳酸锂元/吨，decimal=0）。"""
-    req = urllib.request.Request(EM_KLINE.format(secid=secid), headers=UA)
-    with urllib.request.urlopen(req, timeout=25) as r:
-        j = json.load(r)
-    d = j.get("data") or {}
-    pairs = []
-    for row in d.get("klines") or []:
-        f = row.split(",")
-        t = int(datetime.datetime.strptime(f[0], "%Y-%m-%d")
-                .replace(tzinfo=datetime.timezone.utc).timestamp())
-        c = float(f[2])
-        if c > 0:
-            pairs.append((t, c))
-    return pairs or None
+    # 东财偶发 "Remote end closed connection without response"（2026-07-20 上线当天即撞到一次，
+    # 碳酸锂整行掉成「获取失败」）→ 3 次重试 + 退避；带 Referer 更像正常浏览器请求。
+    last = None
+    for i in range(retries):
+        try:
+            req = urllib.request.Request(EM_KLINE.format(secid=secid),
+                                         headers={**UA, "Referer": "https://quote.eastmoney.com/"})
+            with urllib.request.urlopen(req, timeout=25) as r:
+                j = json.load(r)
+            d = j.get("data") or {}
+            pairs = []
+            for row in d.get("klines") or []:
+                f = row.split(",")
+                t = int(datetime.datetime.strptime(f[0], "%Y-%m-%d")
+                        .replace(tzinfo=datetime.timezone.utc).timestamp())
+                c = float(f[2])
+                if c > 0:
+                    pairs.append((t, c))
+            if pairs:
+                return pairs
+            last = ValueError("klines 为空")
+        except Exception as e:
+            last = e
+        time.sleep(2 * (i + 1))
+    raise last
 
 def fetch_history(sym, hist=None):
     """近5年日线（算涨跌幅） + 全历史月线（算历史高点），规避 Yahoo 对老股票
