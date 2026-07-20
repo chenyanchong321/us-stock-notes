@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-20 19:09 北京时间",
+ "updated": "2026-07-20 19:15 北京时间",
  "earnings": [
   {
    "d": "2026-07-21",
@@ -9,8 +9,50 @@
   },
   {
    "d": "2026-07-23",
+   "code": "TXN",
+   "name": "德州仪器",
+   "est": false
+  },
+  {
+   "d": "2026-07-23",
    "code": "STM",
    "name": "意法半导体",
+   "est": false
+  },
+  {
+   "d": "2026-07-24",
+   "code": "INTC",
+   "name": "英特尔",
+   "est": false
+  },
+  {
+   "d": "2026-07-24",
+   "code": "4063",
+   "name": "信越化学",
+   "est": false
+  },
+  {
+   "d": "2026-07-24",
+   "code": "SHECY",
+   "name": "信越化学",
+   "est": false
+  },
+  {
+   "d": "2026-07-24",
+   "code": "03750",
+   "name": "宁德时代",
+   "est": false
+  },
+  {
+   "d": "2026-07-27",
+   "code": "011070",
+   "name": "LG Innotek",
+   "est": false
+  },
+  {
+   "d": "2026-07-28",
+   "code": "000660.KS",
+   "name": "SK海力士",
    "est": false
   },
   {
@@ -21,8 +63,38 @@
   },
   {
    "d": "2026-07-28",
+   "code": "AMKR",
+   "name": "艾马克技术（Amkor）",
+   "est": false
+  },
+  {
+   "d": "2026-07-28",
    "code": "NVTS",
    "name": "纳微半导体",
+   "est": false
+  },
+  {
+   "d": "2026-07-29",
+   "code": "NXPI",
+   "name": "恩智浦",
+   "est": false
+  },
+  {
+   "d": "2026-07-29",
+   "code": "SKHY",
+   "name": "SK海力士(美股ADR)",
+   "est": false
+  },
+  {
+   "d": "2026-07-29",
+   "code": "005930",
+   "name": "三星电子",
+   "est": false
+  },
+  {
+   "d": "2026-07-29",
+   "code": "STX",
+   "name": "希捷科技",
    "est": false
   },
   {
@@ -63,6 +135,18 @@
   },
   {
    "d": "2026-07-30",
+   "code": "ARM",
+   "name": "Arm Holdings",
+   "est": false
+  },
+  {
+   "d": "2026-07-30",
+   "code": "QCOM",
+   "name": "高通",
+   "est": false
+  },
+  {
+   "d": "2026-07-30",
    "code": "EQIX",
    "name": "易昆尼克斯（Equinix）",
    "est": false
@@ -80,9 +164,39 @@
    "est": false
   },
   {
+   "d": "2026-07-30",
+   "code": "ASX",
+   "name": "日月光半导体 ADR",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "285A",
+   "name": "铠侠",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "AXTI",
+   "name": "AXT Inc",
+   "est": false
+  },
+  {
    "d": "2026-07-31",
    "code": "COHU",
    "name": "科休半导体",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "4626",
+   "name": "太阳控股",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "7741",
+   "name": "保谷光学（HOYA）",
    "est": false
   },
   {
@@ -98,6 +212,48 @@
    "est": false
   },
   {
+   "d": "2026-07-31",
+   "code": "6268",
+   "name": "纳博特斯克",
+   "est": false
+  },
+  {
+   "d": "2026-08-03",
+   "code": "4203",
+   "name": "住友电木",
+   "est": false
+  },
+  {
+   "d": "2026-08-04",
+   "code": "ON",
+   "name": "安森美半导体",
+   "est": false
+  },
+  {
+   "d": "2026-08-04",
+   "code": "4062",
+   "name": "揖斐电（IBIDEN）",
+   "est": false
+  },
+  {
+   "d": "2026-08-04",
+   "code": "Q",
+   "name": "Qnity Electronics",
+   "est": false
+  },
+  {
+   "d": "2026-08-04",
+   "code": "ENTG",
+   "name": "英特格（Entegris）",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
+   "code": "3110",
+   "name": "日东纺织",
+   "est": false
+  },
+  {
    "d": "2026-08-05",
    "code": "IFNNY",
    "name": "英飞凌 ADR",
@@ -110,9 +266,75 @@
    "est": false
   },
   {
+   "d": "2026-08-05",
+   "code": "SHOP",
+   "name": "Shopify",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
+   "code": "6481",
+   "name": "THK",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
+   "code": "NOVT",
+   "name": "Novanta",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
+   "code": "SNDK",
+   "name": "闪迪",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
+   "code": "WDC",
+   "name": "西部数据",
+   "est": false
+  },
+  {
    "d": "2026-08-06",
    "code": "NVMI",
    "name": "Nova",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
+   "code": "MKSI",
+   "name": "MKS仪器",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
+   "code": "3436",
+   "name": "胜高（SUMCO）",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
+   "code": "4186",
+   "name": "东京应化",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
+   "code": "5016",
+   "name": "JX金属",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
+   "code": "KVYO",
+   "name": "Klaviyo",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
+   "code": "SYM",
+   "name": "Symbotic",
    "est": false
   },
   {
@@ -131,6 +353,18 @@
    "d": "2026-08-07",
    "code": "5803",
    "name": "藤仓（Fujikura）",
+   "est": false
+  },
+  {
+   "d": "2026-08-07",
+   "code": "6324",
+   "name": "哈默纳科机电",
+   "est": false
+  },
+  {
+   "d": "2026-08-12",
+   "code": "00700",
+   "name": "腾讯控股",
    "est": false
   },
   {
