@@ -118,6 +118,29 @@ def fetch_series_em(secid, retries=3):
         time.sleep(2 * (i + 1))
     raise last
 
+def em_from_sentinel(secid):
+    """ECS 哨站预抓的东财日K（data/lithium.json，杭州服务器国内直连，零障碍）。
+
+    为什么要哨站：GitHub 海外 runner 直连 push2his 时好时坏——2026-07-20 首班成功、随后连续三班
+    被掐断（Remote end closed connection），而同一时刻探针小请求又能通。与其赌运气，不如让国内
+    服务器把数据备好，直连降级为兜底。哨站超过 10 天没更新即视为失效，不拿陈旧数据冒充新鲜。"""
+    p = ROOT / "data/lithium.json"
+    if not p.exists():
+        return None
+    try:
+        rows = (json.loads(p.read_text(encoding="utf-8")).get("series") or {}).get(secid)
+    except Exception as e:
+        print(f"  !! 哨站文件解析失败: {e}", file=sys.stderr)
+        return None
+    if not rows:
+        return None
+    pairs = [(int(datetime.datetime.strptime(d, "%Y-%m-%d")
+               .replace(tzinfo=datetime.timezone.utc).timestamp()), float(c)) for d, c in rows]
+    if time.time() - pairs[-1][0] > 10 * 86400:
+        print(f"  !! 哨站数据过期（最新 {rows[-1][0]}），改走直连", file=sys.stderr)
+        return None
+    return pairs
+
 def fetch_history(sym, hist=None):
     """近5年日线（算涨跌幅） + 全历史月线（算历史高点），规避 Yahoo 对老股票
     range=max 时悄悄降级粒度/截断近期数据的问题。
@@ -142,6 +165,10 @@ def fetch_history(sym, hist=None):
     故为这 6 个显式声明历史取自腾讯日K（腾讯对 A股/港股 有完整日线；美日韩台则没有，别乱用）。"""
     if hist and hist.startswith("em:"):
         secid = hist[3:]
+        daily = em_from_sentinel(secid)      # 主源＝ECS 哨站文件；直连东财只作兜底
+        if daily:
+            print(f"  ~~ {sym} 历史取自哨站 data/lithium.json（{len(daily)} 根日K）")
+            return daily, max(c for _, c in daily)
         try:
             daily = fetch_series_em(secid)
         except Exception as e:
