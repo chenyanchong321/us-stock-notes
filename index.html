@@ -392,7 +392,7 @@ tr.buy .buyline.hit{color:var(--up)!important;font-weight:600}
 /* 手机端不再横滑（2026-07-12 主人定）：胶囊自动换行，所有市场/周期一屏可点，无需滑动 */
 @media(max-width:860px){#perfbar,.mktbar{gap:6px}.perf-pill.mk2{padding:4px 9px}}
 /* 大事件 */
-.ev-main{max-width:860px;margin:0 auto;padding:22px 18px 60px}
+.ev-main{max-width:860px;margin:var(--header-h) auto 0;padding:22px 18px 60px}   /* header偏移（漏了会盖住kbar首行——边界三查第2条，2026-07-20主人抓包） */
 .ev-week{background:rgba(74,140,240,.07);border:1px solid var(--accent);border-radius:12px;padding:14px 16px;margin:16px 0 22px}
 .ev-week h3{font-size:14px;color:var(--accent);margin-bottom:8px}
 .ev-month{margin-top:22px}
@@ -951,7 +951,7 @@ body.resizing{user-select:none;cursor:col-resize}
   </div>
 </div>
 
-<div id="view-lev" class="hidden" style="max-width:860px;margin:0 auto;padding:18px 14px 60px">
+<div id="view-lev" class="hidden" style="max-width:860px;margin:var(--header-h) auto 0;padding:18px 14px 60px">
   <div class="kbar" data-kbar="lev"></div>
   <h2 style="font-size:18px;margin:6px 0 2px">⚖️ 存储杠杆率</h2>
   <div style="font-size:12px;color:var(--text2)" id="lev-upd">数据加载中…</div>
@@ -973,6 +973,32 @@ body.resizing{user-select:none;cursor:col-resize}
   </div>
 
   <div id="lev-cards"></div>
+</div>
+
+<!-- A股融资余额（2026-07-20 上线，与存储杠杆率配对：一个微观板块杠杆、一个全市场杠杆温度计） -->
+<div id="view-margin" class="hidden" style="max-width:860px;margin:var(--header-h) auto 0;padding:18px 14px 60px">
+  <div class="kbar" data-kbar="margin"></div>
+  <h2 style="font-size:18px;margin:6px 0 2px">💳 A股融资余额</h2>
+  <div style="font-size:12px;color:var(--text2)" id="mg-upd">数据加载中…</div>
+
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin:14px 0;font-size:13.5px;line-height:1.9">
+    <b style="color:var(--accent)">这是什么？</b>
+    一句话：<b>全市场借钱炒股的总账单</b>。融资余额 = 全体投资者向券商借钱买股票、尚未归还的总金额。它是 A 股杠杆资金的体温计：余额升 = 有人在加杠杆抢筹；余额降 = 杠杆盘在撤退或被强平。
+    <br><br>
+    <b style="color:var(--accent)">为什么盯它？</b>
+    杠杆资金是双刃剑：上涨时追买放大涨幅，下跌时融资盘被强制平仓、越跌越卖，容易踩踏。2015 年那轮牛熊就是教科书案例——融资余额从约 4 千亿一路飙到 2.27 万亿，随后的去杠杆引发千股跌停。判断「这次下跌是杠杆出清还是逻辑坏了」，先看它降没降、降得急不急。
+    <br><br>
+    <b style="color:var(--accent)">怎么用？</b>
+    ①<b>看占流通市值比，不看绝对值</b>（市场本身会长大）：2% 上下＝常态，接近 3%＝偏热，2015 年顶点超过 4%＝危险区；
+    ②<b>看变化速度</b>：单日缩水数百亿＝急刹车（往往对应恐慌盘集中平仓），缓慢回落＝温和出清；
+    ③配合宽基 ETF（国家队托市工具）一起看——杠杆盘出逃＋ETF 放量申购＝「私人杠杆退、国家资金进」的对冲格局。
+    <br><br>
+    <span style="font-size:12.5px">📚 配套阅读：<a href="articles/cn-deleverage.html" style="color:var(--accent)">《从融资余额到宽基ETF：读懂2026年7月A股这场去杠杆》</a></span>
+    <br>
+    <span style="color:var(--text2);font-size:12px">口径：沪深交易所每个交易日盘后公布的两融数据（T+1，经东方财富数据中心汇总）；融资余额只统计借钱买入部分，不含融券卖出。</span>
+  </div>
+
+  <div id="mg-cards"></div>
 </div>
 
 <div id="view-history" class="hidden">
@@ -3014,6 +3040,69 @@ function renderLev(D){
     </div>`).join("");
 }
 
+/* A股融资余额页（2026-07-20）：data/margin.json 由 update-margin.yml 每交易日北京17:37更新。
+   切入懒加载（switchTab 调 renderMargin），成功一次后不重复拉取。 */
+window.renderMargin = (function(){
+  let done = false;
+  return function(){
+    if(done) return;
+    fetch("data/margin.json?b="+(Date.now()%1e7)).then(r=>{ if(!r.ok) throw 0; return r.json(); }).then(D=>{
+      const S = D.series || [];
+      if(S.length < 12) throw 0;
+      done = true;
+      const L=S[S.length-1], P=S[S.length-2], P10=S[S.length-11];
+      const chg1=L.rzye-P.rzye, chg10=L.rzye-P10.rzye;
+      const vs=S.map(x=>x.rzye), mn=Math.min(...vs), mx=Math.max(...vs);
+      const pctile=Math.round(vs.filter(v=>v<=L.rzye).length/vs.length*100);
+      document.getElementById("mg-upd").textContent =
+        `数据更新：${D.updated} · 交易所 T+1 盘后数据，每个交易日北京 17:37 自动抓取`;
+      const f=v=>v>=10000 ? (v/10000).toFixed(2)+" 万亿" : Math.round(v).toLocaleString()+" 亿";
+      const cf=v=>(v>0?"+":"")+Math.round(v)+" 亿";
+      const cc=v=>v>0?"var(--up)":v<0?"var(--down)":"var(--text2)";   /* 绿涨红跌全站铁律 */
+      const cards = `<div style="display:flex;gap:10px;flex-wrap:wrap;margin:14px 0">` +
+        [["最新融资余额", f(L.rzye), L.d, "var(--gold)"],
+         ["单日变动", cf(chg1), "vs 上一交易日", cc(chg1)],
+         ["近10日变动", cf(chg10), P10.d+" 以来", cc(chg10)],
+         (L.pct!=null ? ["占流通市值比", L.pct.toFixed(2)+"%", "全A流通市值口径", "var(--gold)"] : null),
+         ["近一年分位", pctile+"%", `区间 ${f(mn)} – ${f(mx)}`, "var(--gold)"]]
+        .filter(Boolean).map(c=>`<div style="flex:1 1 150px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 14px">
+          <div style="font-size:12px;color:var(--text2)">${c[0]}</div>
+          <div style="font-size:20px;font-weight:700;color:${c[3]};margin:2px 0;white-space:nowrap">${c[1]}</div>
+          <div style="font-size:11px;color:var(--text2)">${c[2]}</div></div>`).join("") + `</div>`;
+      /* 走势图：近120个交易日折线 */
+      const CH=S.slice(-120), cvs=CH.map(x=>x.rzye), cmn=Math.min(...cvs), cmx=Math.max(...cvs), rg=(cmx-cmn)||1;
+      const W=720, Hh=180;
+      const pts=cvs.map((v,i)=>`${(i/(cvs.length-1)*W).toFixed(1)},${(Hh-12-(v-cmn)/rg*(Hh-34)).toFixed(1)}`).join(" ");
+      const chart = `<div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin:0 0 14px">
+        <div style="font-size:12.5px;color:var(--text2);margin-bottom:4px">融资余额走势 · 近 ${CH.length} 个交易日（${CH[0].d} → ${L.d}）</div>
+        <svg viewBox="0 0 ${W} ${Hh}" style="width:100%;height:auto;display:block">
+          <polyline points="${pts}" fill="none" stroke="var(--accent)" stroke-width="2"/>
+          <text x="4" y="15" fill="var(--text2)" font-size="11">${f(cmx)}</text>
+          <text x="4" y="${Hh-3}" fill="var(--text2)" font-size="11">${f(cmn)}</text>
+        </svg></div>`;
+      /* 近10日明细（名称左对齐/数字右对齐——浮窗表格三列对齐惯例） */
+      let tr="";
+      for(let i=S.length-1; i>=S.length-10; i--){
+        const x=S[i], d1=x.rzye-S[i-1].rzye;
+        tr += `<tr><td style="text-align:left;padding:5px 8px">${x.d}</td>
+          <td style="text-align:right;padding:5px 8px">${Math.round(x.rzye).toLocaleString()} 亿</td>
+          <td style="text-align:right;padding:5px 8px;color:${cc(d1)}">${cf(d1)}</td>
+          <td style="text-align:right;padding:5px 8px">${x.pct!=null?x.pct.toFixed(2)+"%":"–"}</td></tr>`;
+      }
+      const table = `<div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:8px;overflow:hidden">
+        <table style="width:100%;border-collapse:collapse;font-size:12.5px">
+        <tr style="color:var(--text2)"><th style="text-align:left;padding:5px 8px">日期</th>
+        <th style="text-align:right;padding:5px 8px">融资余额</th>
+        <th style="text-align:right;padding:5px 8px">单日变动</th>
+        <th style="text-align:right;padding:5px 8px">占流通市值比</th></tr>${tr}</table></div>`;
+      document.getElementById("mg-cards").innerHTML = cards + chart + table;
+    }).catch(()=>{
+      const u=document.getElementById("mg-upd");
+      if(u) u.textContent = "数据尚未生成（流水线每个交易日 17:37 自动抓取，首次上线请稍候）";
+    });
+  };
+})();
+
 function renderHistory(hcfg, spx){
   const evs = (hcfg && hcfg.events) || [];
   if(!evs.length) return;
@@ -4611,7 +4700,7 @@ document.addEventListener("click", e=>{
   /* ④「更多」退役（2026-07-18 主人定）：次级栏目=知识库切换条七胶囊，顶部只留三页签。
      KB_VIEWS 下的任何页都算「学习笔记」页签高亮范围；新增栏目在 KB 数组加一项即全站生效。 */
   const KB = [["notes","📚 学习笔记"],["dict","📖 术语词典"],["history","📜 金融史"],["imap","🗺 产业地图"],
-              ["universe","🌌 股票宇宙"],["events","📅 大事件"],["lev","⚖️ 杠杆率"]];
+              ["universe","🌌 股票宇宙"],["events","📅 大事件"],["lev","⚖️ 杠杆率"],["margin","💳 融资余额"]];
   const KB_VIEWS = KB.map(x=>x[0]);
   document.querySelectorAll(".kbar[data-kbar]").forEach(k=>{
     k.innerHTML = KB.map(([v,l])=>`<button data-view="${v}"${v===k.dataset.kbar?' class="on"':''}>${l}</button>`).join("");
@@ -4619,7 +4708,7 @@ document.addEventListener("click", e=>{
   window.switchTab = function(v){
     document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",
       t.dataset.view===v || (v==="repread" && t.dataset.view==="reports") || (KB_VIEWS.includes(v) && v!=="notes" && t.dataset.view==="notes")));
-    ["dash","events","notes","dict","history","lev","reports","repread","imap","universe"].forEach(x=>{
+    ["dash","events","notes","dict","history","lev","margin","reports","repread","imap","universe"].forEach(x=>{
       const el = document.getElementById("view-"+x);
       if(el) el.classList.toggle("hidden", v!==x);
     });
@@ -4629,6 +4718,7 @@ document.addEventListener("click", e=>{
     if(window.syncNtoc) syncNtoc();   /* 笔记页浮动目录/📂钮显隐 */
     if(v==="imap" && typeof renderImap==="function"){ try{ renderImap(); }catch(e){} }   /* 切进地图即重渲染，行情与面板同步 */
     if(v==="universe" && typeof renderUniverse==="function"){ try{ renderUniverse(); }catch(e){} }   /* 宇宙同款：切入即刷 */
+    if(v==="margin" && window.renderMargin){ try{ renderMargin(); }catch(e){} }   /* 融资余额：切入懒加载 */
     const mb=document.getElementById("mbottom");
     if(mb) mb.style.display = v==="dash" ? "" : "none";
     document.body.classList.toggle("reading", v==="repread");   /* 阅读态白衣：顶栏与白纸统一 */
@@ -4690,7 +4780,7 @@ document.addEventListener("click", e=>{
   const wantView = new URLSearchParams(location.search).get("view")
                 || (function(){ try{ return localStorage.getItem("homeView"); }catch(e){ return null; } })()   /* 设为默认首页（宇宙页开关，2026-07-18） */
                 || (function(){ try{ return localStorage.getItem("lastView"); }catch(e){ return null; } })();
-  if(["notes","dict","history","events","lev","reports","imap","universe"].includes(wantView)){
+  if(["notes","dict","history","events","lev","margin","reports","imap","universe"].includes(wantView)){
     window.switchTab(wantView);
   }
 
