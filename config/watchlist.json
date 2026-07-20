@@ -7741,7 +7741,8 @@
       "approx": true
      },
      "mcap_base_price": 46.03,
-     "ath_floor": 0
+     "ath_floor": 0,
+     "ath_since": "2007-09-12"
     },
     {
      "name": "Red Cat",
@@ -7755,7 +7756,8 @@
       "approx": true
      },
      "mcap_base_price": 7.76,
-     "ath_floor": 0
+     "ath_floor": 0,
+     "ath_since": "2019-06-01"
     },
     {
      "name": "Ondas",

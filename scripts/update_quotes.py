@@ -434,6 +434,22 @@ def main():
             price = pairs[-1][1]
             cur = it["currency"]
             ath = max(hist_max, it.get("ath_floor") or 0)  # 兜底：配置的历史高点下限
+            # ath_since：借壳/更名/反向拆股的公司，早年价格与今天的生意毫无关系
+            # （KTOS 前身 Wireless Facilities 在 2000 年泡沫顶复权价 $1240、RCAT 前身
+            # TimefireVR 复权价高达 $36 万，直接算出 −96%/−100% 的假回撤）。
+            # 声明起算日后，历史高点只从该日之后取；日线不够长就退到现有数据全段最大值并提示。
+            since = it.get("ath_since")
+            if since:
+                ts0 = int(datetime.datetime.strptime(since, "%Y-%m-%d")
+                          .replace(tzinfo=datetime.timezone.utc).timestamp())
+                vals = [c for t, c in pairs if t >= ts0]
+                if vals:
+                    if pairs[0][0] > ts0:
+                        print(f"  ~~ {sym} ath_since={since} 早于日线起点，历史高点按现有 "
+                              f"{len(pairs)} 根日线的最大值计")
+                    ath = max(vals)
+                else:
+                    print(f"  !! {sym} ath_since={since} 之后无数据，沿用全历史高点", file=sys.stderr)
             dd = pct(price, ath)
 
             def ma_list():
