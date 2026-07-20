@@ -1665,7 +1665,7 @@ function renderDash(quotes){
   function mktBarHTML(){
     /* 顺序=主人定的权重序（美股最前，手机端不用滑就能点到）；双行=名称·数量·状态点 / 交易时段。
        日韩台合并一颗（2026-07-18 主人定：三市数据少，合并后手机端两行收工） */
-    const MK=["","美股","A股","港股","日韩台","加密"];
+    const MK=["","美股","A股","港股","日韩台","商品","加密"];
     const cnt={}; MK.forEach(m=>cnt[m]=new Set());
     DATA.forEach(s=>s.rows.forEach(r=>{
       if(r[3]==="获取失败") return;
@@ -2127,7 +2127,7 @@ function renderDash(quotes){
   window.setDashView = setView;
   (function(){
     const card=document.getElementById("mktcard"), cur=document.getElementById("mkt-cur");
-    const MKTS=["全部","美股","A股","港股","日韩台","加密"];
+    const MKTS=["全部","美股","A股","港股","日韩台","商品","加密"];
     function countOf(m){
       const seen=new Set();
       DATA.forEach(s=>s.rows.forEach(r=>{
@@ -2188,7 +2188,7 @@ function renderDash(quotes){
     const dock=document.createElement("div");
     dock.id="mktfloat";
     document.body.appendChild(dock);
-    const MK=["","美股","A股","港股","日韩台","加密"];
+    const MK=["","美股","A股","港股","日韩台","商品","加密"];
     window.refreshMktFloat=function(){
       const c={}; MK.forEach(m=>c[m]=new Set());
       DATA.forEach(s=>s.rows.forEach(r=>{
@@ -2268,7 +2268,7 @@ function renderDash(quotes){
     };
     sheet.querySelector(".msk").addEventListener("click",close);
     mbMkt.addEventListener("click",()=>{
-      const MK=["","美股","A股","港股","日韩台","加密"];
+      const MK=["","美股","A股","港股","日韩台","商品","加密"];
       const c={}; MK.forEach(m=>c[m]=new Set());
       DATA.forEach(s=>s.rows.forEach(r=>{
         if(r[3]==="获取失败") return;
@@ -2392,7 +2392,10 @@ window.CURMKT = "";
 const MKT_RULE = {"A股":m=>m.startsWith("A股"),"港股":m=>m.startsWith("港股"),"美股":m=>m.startsWith("美股"),
                   "日股":m=>m[0]==="日","韩股":m=>m.startsWith("韩"),"台股":m=>m.startsWith("台股"),
                   "日韩台":m=>/^(日|韩|台)/.test(m),   /* 2026-07-18 主人定：三小市场合并一颗胶囊，切换条收进两行 */
-                  "加密":m=>m.startsWith("加密")};
+                  "加密":m=>m.startsWith("加密"),
+                  /* 2026-07-20 主人定：商品自成一档（黄金/白银/铜/原油/碳酸锂）——股票之外的第二类资产，
+                     此前只能靠搜索找。market 字段形如「外汇 / 商品」 */
+                  "商品":m=>/(外汇|商品)/.test(m)};
 function mktOk(m){
   if(!window.CURMKT) return true;
   const f = MKT_RULE[window.CURMKT];
@@ -3231,6 +3234,7 @@ function mktStatus(m){
     case "日股": return {h:"8:00-10:30 · 11:30-14:00", o: wd&&(inR(480,630)||inR(690,840))};
     case "韩股": return {h:"8:00-14:30", o: wd&&inR(480,870)};
     case "台股": return {h:"9:00-13:30", o: wd&&inR(540,810)};
+    case "商品": return {h:"多品种 · 时段各异"};   /* 伦金近全天、国内期货按各所时段，不给统一开市点 */
     case "加密": return {h:"7×24 小时", o: true};   /* 加密无休市 */
   }
   return null;
