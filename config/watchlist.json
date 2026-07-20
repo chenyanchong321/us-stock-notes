@@ -7420,6 +7420,17 @@
      "ath_floor": 46.98
     },
     {
+     "name": "碳酸锂 主连",
+     "code": "LC0",
+     "market": "外汇 / 商品",
+     "yahoo": "LC.EM",
+     "currency": "¥",
+     "hist": "em:225.lcm",
+     "mcap_base": null,
+     "mcap_base_price": 143900,
+     "ath_floor": 0
+    },
+    {
      "name": "赣锋锂业",
      "code": "002460",
      "market": "A股",
@@ -7491,6 +7502,7 @@
     {
      "name": "锂与钴",
      "codes": [
+      "LC0",
       "002460",
       "01772",
       "603799"
