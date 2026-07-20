@@ -4901,7 +4901,7 @@ document.addEventListener("click", e=>{
   const wantView = new URLSearchParams(location.search).get("view")
                 || (function(){ try{ return localStorage.getItem("homeView"); }catch(e){ return null; } })()   /* 设为默认首页（宇宙页开关，2026-07-18） */
                 || (function(){ try{ return localStorage.getItem("lastView"); }catch(e){ return null; } })();
-  if(["notes","dict","history","events","lev","margin","reports","imap","universe"].includes(wantView)){
+  if(["notes","dict","history","events","lev","margin","reads","reports","imap","universe"].includes(wantView)){
     window.switchTab(wantView);
   }
 
