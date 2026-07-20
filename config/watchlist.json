@@ -7713,8 +7713,64 @@
    ]
   },
   {
-   "name": "22 商业航天",
+   "name": "22 无人机与国防航天",
    "items": [
+    {
+     "name": "AeroVironment",
+     "code": "AVAV",
+     "market": "美股",
+     "yahoo": "AVAV",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 71.7,
+      "approx": true
+     },
+     "mcap_base_price": 142.2,
+     "ath_floor": 0
+    },
+    {
+     "name": "Kratos",
+     "code": "KTOS",
+     "market": "美股",
+     "yahoo": "KTOS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 86.2,
+      "approx": true
+     },
+     "mcap_base_price": 46.03,
+     "ath_floor": 0
+    },
+    {
+     "name": "Red Cat",
+     "code": "RCAT",
+     "market": "美股",
+     "yahoo": "RCAT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 11.8,
+      "approx": true
+     },
+     "mcap_base_price": 7.76,
+     "ath_floor": 0
+    },
+    {
+     "name": "Ondas",
+     "code": "ONDS",
+     "market": "美股",
+     "yahoo": "ONDS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 39.1,
+      "approx": true
+     },
+     "mcap_base_price": 6.87,
+     "ath_floor": 0
+    },
     {
      "name": "SpaceX",
      "code": "SPCX",
@@ -7727,6 +7783,23 @@
       "approx": true
      },
      "mcap_base_price": 135.27
+    }
+   ],
+   "groups": [
+    {
+     "name": "无人机与反无人机",
+     "codes": [
+      "AVAV",
+      "KTOS",
+      "RCAT",
+      "ONDS"
+     ]
+    },
+    {
+     "name": "商业航天",
+     "codes": [
+      "SPCX"
+     ]
     }
    ]
   },
