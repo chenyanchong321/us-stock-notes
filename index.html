@@ -779,6 +779,8 @@ body.resizing{user-select:none;cursor:col-resize}
 .rd-tag{background:var(--panel2);border-radius:4px;padding:1px 7px;cursor:pointer;color:var(--text2)}
 .rd-tag:hover{color:var(--accent)}
 .rd-note{font-size:13.5px;line-height:1.85;color:var(--text2);margin-top:9px}
+.rd-nl{display:block;margin-top:9px;font-size:12.5px;color:var(--accent);text-decoration:none}
+.rd-nl:hover{text-decoration:underline}
 .rd-go{display:inline-block;margin-top:10px;font-size:13px;color:var(--gold);text-decoration:none;font-weight:600}
 .rd-go:hover{text-decoration:underline}
 @media(max-width:860px){.rd-title{font-size:15px}.rd-go{min-height:44px;line-height:44px}}
@@ -3123,6 +3125,7 @@ window.renderReads = (function(){
         + '<a class="rd-title" href="'+esc(x.u)+'" target="_blank" rel="noopener noreferrer">'+esc(x.t)+'</a>'
         + '<div class="rd-meta">'+esc(x.src||"")+(tags?' · ':'')+tags+'</div>'
         + (x.r ? '<div class="rd-note">'+esc(x.r)+'</div>' : '')
+        + (x.nl ? '<a class="rd-nl" href="articles/'+esc(x.nl[0])+'.html">📚 我据此写了：《'+esc(x.nl[1])+'》</a>' : '')
         + '<a class="rd-go" href="'+esc(x.u)+'" target="_blank" rel="noopener noreferrer">阅读原文 →</a>'
         + '</div>';
     });
