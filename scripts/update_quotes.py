@@ -78,9 +78,12 @@ def fetch_series_tencent(tx_code):
             pairs.append((t, c))
     return pairs or None
 
+# 只取「日期,开,收」三段、起点 2023-01-01（广期所碳酸锂 2023-07 上市，覆盖完整）：
+# 全字段+全历史的响应体几十KB，2026-07-20 实测连续三班被东财掐断连接（探针用小请求则次次成功）——
+# 瘦身后连接稳定。要加更早上市的品种时把 beg 往前调即可。
 EM_KLINE = ("https://push2his.eastmoney.com/api/qt/stock/kline/get?secid={secid}"
-            "&klt=101&fqt=0&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57"
-            "&beg=0&end=20500101&lmt=1000000")
+            "&klt=101&fqt=0&fields1=f1,f2,f3&fields2=f51,f52,f53"
+            "&beg=20230101&end=20500101&lmt=10000")
 
 def fetch_series_em(secid, retries=3):
     """东财日K。返回 [(unix_ts, close)]，失败抛异常/返回 None（不静默降级）。
