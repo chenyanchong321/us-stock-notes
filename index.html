@@ -765,6 +765,11 @@ body.resizing{user-select:none;cursor:col-resize}
 }
 
 /* 📖 烟囱荐读 */
+#rd-search{font-size:14px}
+#rd-search::-webkit-search-cancel-button{display:none}
+#rd-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text2);cursor:pointer;font-size:15px;padding:6px 8px;display:none}
+#rd-clear:hover{color:var(--text)}
+@media(max-width:860px){#rd-search{font-size:16px}}
 .rdbar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 6px}
 .rdbar button{background:var(--panel);border:1px solid var(--border);color:var(--text2);border-radius:999px;
   padding:5px 13px;font-size:12.5px;cursor:pointer;transition:.15s}
@@ -1008,6 +1013,11 @@ body.resizing{user-select:none;cursor:col-resize}
   <div style="font-size:12px;color:var(--text2)" id="rd-sub">每天读到的好文章，留个存档，也做份推荐</div>
   <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 15px;margin:13px 0;font-size:13px;line-height:1.85;color:var(--text2)">
     这里只放<b>标题、出处、荐语和原文链接</b>，不转载正文——点标题跳到原文读。荐语是我看完后写的一句话：讲了什么，以及为什么值得你花时间。付费墙内容（如 WSJ、FT）需自行订阅。
+  </div>
+  <div style="position:relative;margin:14px 0 4px">
+    <input id="rd-search" type="search" enterkeyhint="search" autocomplete="off" placeholder="🔍 搜荐读：标题 / 荐语 / 出处 / 标签，如 动量、英伟达、高盛…"
+      style="width:100%;box-sizing:border-box;padding:10px 34px 10px 14px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;color:var(--text);outline:none">
+    <span id="rd-clear" title="清空">✕</span>
   </div>
   <div id="rd-tags" class="rdbar"></div>
   <div id="rd-list"></div>
@@ -3101,7 +3111,7 @@ function renderLev(D){
    铁律：只存标题/出处/荐语/链接，正文绝不转载（版权）。数据 config/reads.json。
    布局＝按日期倒序分组的时间轴 + 主题标签筛选（标签由数据自动聚合，无需维护清单）。 */
 window.renderReads = (function(){
-  let DATA = null, TAG = "";
+  let DATA = null, TAG = "", KW = "";
   const esc = s => String(s==null?"":s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   function dayLabel(d){
     const t = new Date(); const p = x => String(x).padStart(2,"0");
@@ -3113,10 +3123,20 @@ window.renderReads = (function(){
     return d;
   }
   function paint(){
-    const items = (DATA.items||[]).filter(x => !TAG || (x.tags||[]).includes(TAG));
+    const ws = KW.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    const items = (DATA.items||[]).filter(x => {
+      if(TAG && !(x.tags||[]).includes(TAG)) return false;
+      if(!ws.length) return true;
+      const hay = [x.t, x.r, x.src, (x.tags||[]).join(" "), (x.nl||[])[1]].join(" ").toLowerCase();
+      return ws.every(w => hay.includes(w));   /* 空格分词取与，同笔记页/研报页 */
+    });
     items.sort((a,b) => (b.d||"").localeCompare(a.d||""));
     const box = document.getElementById("rd-list");
-    if(!items.length){ box.innerHTML = '<div style="color:var(--text2);padding:20px 0">这个标签下还没有文章。</div>'; return; }
+    if(!items.length){
+      box.innerHTML = '<div style="color:var(--text2);padding:20px 0">'
+        + (KW.trim() ? '没有匹配「'+esc(KW.trim())+'」的荐读。' : '这个标签下还没有文章。') + '</div>';
+      return;
+    }
     let html = "", cur = null;
     items.forEach(x => {
       if(x.d !== cur){ cur = x.d; html += '<div class="rd-day">'+esc(dayLabel(cur))+'</div>'; }
@@ -3155,6 +3175,17 @@ window.renderReads = (function(){
       document.getElementById("rd-sub").textContent =
         "每天读到的好文章，留个存档，也做份推荐 · 共 "+n+" 篇 / "+days+" 天";
       paintTags(); paint();
+      const inp = document.getElementById("rd-search"), clr = document.getElementById("rd-clear");
+      if(inp && !inp.__bound){
+        inp.__bound = true;
+        inp.addEventListener("input", () => {
+          KW = inp.value; clr.style.display = inp.value ? "block" : "none";
+          paint();
+        });
+        clr.addEventListener("click", () => {   /* iOS 不送原生清空钮，自绘（全站铁律） */
+          inp.value = ""; KW = ""; clr.style.display = "none"; paint(); inp.focus();
+        });
+      }
     }).catch(() => {
       document.getElementById("rd-list").innerHTML =
         '<div style="color:var(--text2);padding:20px 0">荐读数据暂时加载不出来，稍后再试。</div>';
