@@ -105,16 +105,6 @@
      "ath_floor": 0
     },
     {
-     "name": "布伦特原油",
-     "code": "BRENT",
-     "market": "商品",
-     "yahoo": "BZ=F",
-     "currency": "$",
-     "mcap_base": null,
-     "mcap_base_price": 1.0,
-     "ath_floor": 0
-    },
-    {
      "name": "上证指数",
      "code": "SHCOMP",
      "market": "A股 指数",
@@ -376,8 +366,7 @@
      "name": "宏观锚（利率·美元·原油）",
      "codes": [
       "US10Y",
-      "DXY",
-      "BRENT"
+      "DXY"
      ]
     },
     {
@@ -4896,6 +4885,16 @@
      "ath_floor": 0
     },
     {
+     "name": "布伦特原油",
+     "code": "BRENT",
+     "market": "外汇 / 商品",
+     "yahoo": "BZ=F",
+     "currency": "$",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "Constellation Energy",
      "code": "CEG",
      "market": "美股",
@@ -5358,7 +5357,8 @@
     {
      "name": "能源价格锚",
      "codes": [
-      "CLUSD"
+      "CLUSD",
+      "BRENT"
      ]
     },
     {
