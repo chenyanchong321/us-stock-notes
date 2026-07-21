@@ -5269,6 +5269,20 @@
      "ath_floor": 0
     },
     {
+     "name": "杰瑞股份",
+     "code": "002353",
+     "market": "A股",
+     "yahoo": "002353.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1290.16,
+      "approx": true
+     },
+     "mcap_base_price": 126.01,
+     "ath_floor": 0
+    },
+    {
      "name": "潍柴动力",
      "code": "000338",
      "market": "A股",
@@ -5471,6 +5485,7 @@
      "codes": [
       "01072",
       "01133",
+      "002353",
       "000338",
       "02338",
       "02722",
