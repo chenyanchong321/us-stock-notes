@@ -764,6 +764,16 @@ body.resizing{user-select:none;cursor:col-resize}
   .main,#footer{margin-left:0;padding-left:16px;padding-right:16px;min-width:0;max-width:100%;box-sizing:border-box}
 }
 
+/* 📅 财报倒计时徽标 */
+.earnb{display:inline-block;margin-left:5px;padding:0 5px;border-radius:4px;font-size:10.5px;line-height:16px;
+  vertical-align:middle;cursor:pointer;white-space:nowrap;font-weight:600}
+.earnb.d7{background:rgba(148,163,184,.16);color:var(--text2);border:1px solid rgba(148,163,184,.3)}
+.earnb.d3{background:rgba(212,160,23,.16);color:#d4a017;border:1px solid rgba(212,160,23,.42)}
+.earnb.d1{background:rgba(220,58,58,.16);color:#e05555;border:1px solid rgba(220,58,58,.45)}
+html[data-theme="light"] .earnb.d7{color:#64748b}
+html[data-theme="light"] .earnb.d3{color:#a17400}
+html[data-theme="light"] .earnb.d1{color:#c0392b}
+
 /* 📖 烟囱荐读 */
 #rd-search{font-size:14px}
 #rd-search::-webkit-search-cancel-button{display:none}
@@ -1115,6 +1125,33 @@ function repCatOf(x){
 }
 /* 双徽标（2026-07-18 主人定稿）：有研报挂「研报」、有点评挂「点评」，两类都有就挂两个，
    各自可点（data-cat 路由到对应类：单篇直达/多篇去集合页该分类）。 */
+/* 📅 财报倒计时徽标（2026-07-21 主人需求：把大事件从「要人主动查」变成「不查也撞得见」）
+   设计原则：只在 T-7 天窗口内出现，平时完全不占位——信号只在能触发行动时才亮，
+   否则常年挂着「距财报87天」会退化成背景噪音（同观察位「触达才变绿」的哲学）。
+   数据＝data/earnings 自动层（流水线顺带抓 earningsTimestamp，零维护）。 */
+let EARN = {};   /* code -> {d:"YYYY-MM-DD", est:bool, days:int} */
+const EARN_WINDOW = 7;
+function buildEarn(evAuto){
+  EARN = {};
+  const list = (evAuto && evAuto.earnings) || [];
+  const t = new Date(); const p = x => String(x).padStart(2,"0");
+  const today = t.getFullYear()+"-"+p(t.getMonth()+1)+"-"+p(t.getDate());
+  const t0 = Date.parse(today+"T00:00:00");
+  for(const e of list){
+    if(!e || !e.code || !e.d) continue;
+    const days = Math.round((Date.parse(e.d+"T00:00:00") - t0) / 864e5);
+    if(!Number.isFinite(days) || days < 0 || days > EARN_WINDOW) continue;   /* 只留窗口内且未过期 */
+    const cur = EARN[e.code];
+    if(!cur || days < cur.days) EARN[e.code] = {d:e.d, est:!!e.est, days};   /* 同股多条取最近 */
+  }
+}
+function earnBadge(code){
+  const e = EARN[code];
+  if(!e) return "";
+  const lab = e.days === 0 ? "今日" : e.days === 1 ? "明日" : e.days + "天";
+  const lv = e.days <= 1 ? "d1" : e.days <= 3 ? "d3" : "d7";   /* 越近颜色越重 */
+  return `<span class="earnb ${lv}" data-code="${code}" title="">📅${lab}${e.est?"*":""}</span>`;
+}
 function repBadge(code){
   const list = REPBY[code]||[];
   if(!list.length) return "";
@@ -1497,7 +1534,7 @@ function usdMcapTip(r){
 }
 function rowHTML(r, grp){
   return `<tr class="${BUYCODES.has(r[1])?"buy":""}" data-grp="${grp||""}" data-code="${r[1]}" data-mkt="${r[2]||""}" data-key="${(r[0]+r[1]).toLowerCase()}">
-    <td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
+    <td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}${earnBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
     <td class="pxc">${priceCell(r)}</td>
     <td>${dayWeekCell(r)}</td>
     <td class="athc">${athCell(r)}</td>
@@ -1828,7 +1865,7 @@ function renderDash(quotes){
     const ath = `<td class="athc">${athCell(r)}</td>`;
     const pers = [18,7,8,9,10,11].filter(i=>i!==skipRi).map(i=>`<td>${fmtPct(r[i])}</td>`).join("");
     return `<tr class="${BUYCODES.has(r[1])?"buy":""}" data-grp="${r[12]||""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
-      <td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
+      <td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}${earnBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
       ${athFirst ? ath : ""}
       <td class="pxc">${priceCell(r, mode)}</td>${extraTd||""}
       <td>${dayWeekCell(r)}</td>
@@ -1989,7 +2026,7 @@ function renderDash(quotes){
           : `<span style="color:${lb>=2?"var(--down)":lb<=0.5?"var(--text2)":"var(--text)"}">${lb.toFixed(2)}</span>`;
         return `<tr class="${BUYCODES.has(r[1])?"buy":""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
           <td style="color:var(--text2)">${i+1}</td>
-          <td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
+          <td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}${earnBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
           <td class="volc">${volCell(r)}${vs==="lb"?"":""}</td>
           <td class="pxc">${priceCell(r)}</td>
           <td>${dayWeekCell(r)}</td>
@@ -2017,7 +2054,7 @@ function renderDash(quotes){
         const r=x.r;
         return `<tr class="${BUYCODES.has(r[1])?"buy":""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
           <td style="color:var(--text2)">${i+1}</td>
-          <td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
+          <td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}${earnBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
           <td class="mcapc">${mcapCell(r)}</td>
           <td class="pxc">${priceCell(r)}</td>
           <td>${dayWeekCell(r)}</td>
@@ -2086,7 +2123,7 @@ function renderDash(quotes){
           const st = s.active?'color:var(--gold);font-weight:700' : s.passed?'color:var(--text2);opacity:.5' : 'color:var(--text)';
           return `<td style="${st}">${s.active?"▸":""}${s.price}</td>`;
         }).join("");
-        return `<tr data-code="${r[1]}"><td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td><td>${r[5]}</td><td>${r[4]}<span style="display:block;font-size:11px">${ddCell(r[6])}</span></td>${cells}<td class="fill"></td></tr>`;
+        return `<tr data-code="${r[1]}"><td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}${earnBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td><td>${r[5]}</td><td>${r[4]}<span style="display:block;font-size:11px">${ddCell(r[6])}</span></td>${cells}<td class="fill"></td></tr>`;
       }).join("");
     }else if(v==="heat"){
       const HW={d:[16,"当日"],w1:[18,"近1周"],m1:[7,"近1月"]};
@@ -4153,6 +4190,15 @@ let PROFILES = {};
         d5Line = `<span style="display:block;margin-top:6px;font-size:12px;color:var(--text2)">📅 近5日 ${seg} %<span style="opacity:.75">（新→旧）</span></span>`;
       }
     }catch(e){}
+    /* 📅 财报临近：浮窗给确切日期与口径（表格只给「还有几天」的信号，详情下钻到这里） */
+    let earnLine = "";
+    const ee = EARN[code];
+    if(ee){
+      const when = ee.days===0 ? "就在今天" : ee.days===1 ? "明天" : "还有 "+ee.days+" 天";
+      earnLine = `<span style="display:block;margin-top:6px;font-size:12px;color:var(--gold)">📅 财报 ${ee.d}（${when}）`
+        + (ee.est ? `<span style="color:var(--text2)">· 日期为估算，以公司公告为准</span>` : "")
+        + `<span style="display:block;color:var(--text2);font-size:11.5px">财报日常是单只股票最大的单日波动源，动手前先想想要不要等它落地</span></span>`;
+    }
     const nf = noteFor(code, grp||"");
     const links = [];
     /* 研报行置顶（金色，会员点击直达/游客弹登录），相关笔记在后 */
@@ -4161,7 +4207,7 @@ let PROFILES = {};
       links.push(`<a class="repa" data-rid="${x.id}" href="javascript:;" style="display:block;color:var(--gold);text-decoration:none">${ico}：${x.title} →</a>`);
     }
     if(nf) links.push(`<a href="articles/${nf[0]}.html" style="display:block;color:var(--accent);text-decoration:none">📖 相关笔记：${nf[1]} →</a>`);
-    return txt + alphaLine + d5Line + (links.length ? `<span style="display:block;margin-top:7px;font-size:12px;border-top:1px solid var(--border);padding-top:6px">${links.join("")}</span>` : "");
+    return txt + alphaLine + earnLine + d5Line + (links.length ? `<span style="display:block;margin-top:7px;font-size:12px;border-top:1px solid var(--border);padding-top:6px">${links.join("")}</span>` : "");
   }
   let pinned = false, pinnedEl = null;   /* pinnedEl＝当前钉住的触发格子，用于「再点一次关闭」 */
   function place(x, y){
@@ -5268,6 +5314,7 @@ document.addEventListener("click", e=>{
     fetch("config/profiles.json"+bust).then(r=>r.ok?r.json():{}).then(p=>{ PROFILES = p || {}; }).catch(()=>{});
     renderDash(quotes);
     renderNotes(notesCfg);
+    try{ buildEarn(evAuto); }catch(e){ console.warn("earn:", e); }   /* 财报倒计时映射，须在 renderDash 重绘前就绪 */
     try{ renderEvents(evCfg, evAuto); }catch(e){ console.warn("events:", e); }
     try{ renderHistory(histCfg, spxHist); }catch(e){ console.warn("history:", e); }
     try{ renderLev(levData); }catch(e){ console.warn("lev:", e); }
