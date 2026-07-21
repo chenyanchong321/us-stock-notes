@@ -5203,34 +5203,6 @@
      "ath_floor": 49.4
     },
     {
-     "name": "潍柴动力",
-     "code": "000338",
-     "market": "A股",
-     "yahoo": "000338.SZ",
-     "currency": "¥",
-     "mcap_base": {
-      "prefix": "¥",
-      "yi": 2262,
-      "approx": true
-     },
-     "mcap_base_price": 26.0,
-     "ath_floor": 0
-    },
-    {
-     "name": "潍柴动力",
-     "code": "02338",
-     "market": "港股",
-     "yahoo": "2338.HK",
-     "currency": "HK$",
-     "mcap_base": {
-      "prefix": "HK$",
-      "yi": 3089,
-      "approx": true
-     },
-     "mcap_base_price": 35.5,
-     "ath_floor": 0
-    },
-    {
      "name": "特变电工",
      "code": "600089",
      "market": "A股",
@@ -5266,6 +5238,76 @@
      "currency": "¥",
      "mcap_base": null,
      "mcap_base_price": 1.04,
+     "ath_floor": 0
+    },
+    {
+     "name": "东方电气",
+     "code": "01072",
+     "market": "港股",
+     "yahoo": "1072.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 773.98,
+      "approx": true
+     },
+     "mcap_base_price": 22.38,
+     "ath_floor": 0
+    },
+    {
+     "name": "哈尔滨电气",
+     "code": "01133",
+     "market": "港股",
+     "yahoo": "1133.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 359.59,
+      "approx": true
+     },
+     "mcap_base_price": 16.08,
+     "ath_floor": 0
+    },
+    {
+     "name": "潍柴动力",
+     "code": "000338",
+     "market": "A股",
+     "yahoo": "000338.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2262,
+      "approx": true
+     },
+     "mcap_base_price": 26.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "潍柴动力",
+     "code": "02338",
+     "market": "港股",
+     "yahoo": "2338.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 3089,
+      "approx": true
+     },
+     "mcap_base_price": 35.5,
+     "ath_floor": 0
+    },
+    {
+     "name": "重庆机电",
+     "code": "02722",
+     "market": "港股",
+     "yahoo": "2722.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 70.01,
+      "approx": true
+     },
+     "mcap_base_price": 1.9,
      "ath_floor": 0
     },
     {
@@ -5391,11 +5433,19 @@
       "00836",
       "00883",
       "03668",
-      "000338",
-      "02338",
       "600089",
       "601179",
       "159611"
+     ]
+    },
+    {
+     "name": "燃气轮机与发电设备",
+     "codes": [
+      "01072",
+      "01133",
+      "000338",
+      "02338",
+      "02722"
      ]
     },
     {
