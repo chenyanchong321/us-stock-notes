@@ -5312,9 +5312,9 @@ document.addEventListener("click", e=>{
     window.updateAuthBtn && window.updateAuthBtn();
     if(glossary){ window.GLOSSARY = glossary; renderDict(glossary); }
     fetch("config/profiles.json"+bust).then(r=>r.ok?r.json():{}).then(p=>{ PROFILES = p || {}; }).catch(()=>{});
+    try{ buildEarn(evAuto); }catch(e){ console.warn("earn:", e); }   /* 财报倒计时映射，须在 renderDash 重绘前就绪 */
     renderDash(quotes);
     renderNotes(notesCfg);
-    try{ buildEarn(evAuto); }catch(e){ console.warn("earn:", e); }   /* 财报倒计时映射，须在 renderDash 重绘前就绪 */
     try{ renderEvents(evCfg, evAuto); }catch(e){ console.warn("events:", e); }
     try{ renderHistory(histCfg, spxHist); }catch(e){ console.warn("history:", e); }
     try{ renderLev(levData); }catch(e){ console.warn("lev:", e); }
