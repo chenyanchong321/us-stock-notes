@@ -1,0 +1,34 @@
+# AI 资金底图·capex 数据（2026-07-21）：SEC XBRL 季度资本开支，写 data/aicapex.json
+# 财报是季度节奏，每周跑一次足够（财报季自然会被抓到）；改脚本 push 即跑，方便验证。
+name: 更新AI资本开支
+on:
+  schedule:
+    - cron: "13 10 * * 1"     # 每周一 UTC 10:13（北京 18:13），:13 错峰防跳班
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["scripts/update_aicapex.py"]
+concurrency:
+  group: update-aicapex
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: 抓取
+        run: python scripts/update_aicapex.py
+      - name: 提交
+        run: |
+          git config user.name "aicapex-bot"
+          git config user.email "aicapex-bot@users.noreply.github.com"
+          git add data/aicapex.json
+          if git diff --cached --quiet; then echo "无变化"; exit 0; fi
+          git commit -m "data: AI资本开支更新"
+          git pull --rebase origin main
+          git push origin main
