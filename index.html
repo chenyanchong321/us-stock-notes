@@ -763,6 +763,32 @@ body.resizing{user-select:none;cursor:col-resize}
   .sidebar{display:none}
   .main,#footer{margin-left:0;padding-left:16px;padding-right:16px;min-width:0;max-width:100%;box-sizing:border-box}
 }
+
+/* 📖 烟囱荐读 */
+#rd-search{font-size:14px}
+#rd-search::-webkit-search-cancel-button{display:none}
+#rd-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text2);cursor:pointer;font-size:15px;padding:6px 8px;display:none}
+#rd-clear:hover{color:var(--text)}
+@media(max-width:860px){#rd-search{font-size:16px}}
+.rdbar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 6px}
+.rdbar button{background:var(--panel);border:1px solid var(--border);color:var(--text2);border-radius:999px;
+  padding:5px 13px;font-size:12.5px;cursor:pointer;transition:.15s}
+.rdbar button:hover{color:var(--text);border-color:var(--text2)}
+.rdbar button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.rd-day{font-size:12.5px;color:var(--text2);letter-spacing:.5px;margin:22px 0 10px;padding-bottom:6px;
+  border-bottom:1px solid var(--border)}
+.rd-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px}
+.rd-title{display:block;font-size:15.5px;font-weight:600;color:var(--text);text-decoration:none;line-height:1.55}
+.rd-title:hover{color:var(--accent)}
+.rd-meta{font-size:12px;color:var(--text2);margin-top:6px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.rd-tag{background:var(--panel2);border-radius:4px;padding:1px 7px;cursor:pointer;color:var(--text2)}
+.rd-tag:hover{color:var(--accent)}
+.rd-note{font-size:13.5px;line-height:1.85;color:var(--text2);margin-top:9px}
+.rd-nl{display:block;margin-top:9px;font-size:12.5px;color:var(--accent);text-decoration:none}
+.rd-nl:hover{text-decoration:underline}
+.rd-go{display:inline-block;margin-top:10px;font-size:13px;color:var(--gold);text-decoration:none;font-weight:600}
+.rd-go:hover{text-decoration:underline}
+@media(max-width:860px){.rd-title{font-size:15px}.rd-go{min-height:44px;line-height:44px}}
 </style>
 </head>
 <body>
@@ -981,6 +1007,21 @@ body.resizing{user-select:none;cursor:col-resize}
 </div>
 
 <!-- A股融资余额（2026-07-20 上线，与存储杠杆率配对：一个微观板块杠杆、一个全市场杠杆温度计） -->
+<div id="view-reads" class="hidden" style="max-width:860px;margin:var(--header-h) auto 0;padding:18px 14px 60px">
+  <div class="kbar" data-kbar="reads"></div>
+  <h2 style="font-size:18px;margin:6px 0 2px">📖 烟囱荐读</h2>
+  <div style="font-size:12px;color:var(--text2)" id="rd-sub">每天读到的好文章，留个存档，也做份推荐</div>
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 15px;margin:13px 0;font-size:13px;line-height:1.85;color:var(--text2)">
+    这里只放<b>标题、出处、荐语和原文链接</b>，不转载正文——点标题跳到原文读。荐语是我看完后写的一句话：讲了什么，以及为什么值得你花时间。付费墙内容（如 WSJ、FT）需自行订阅。
+  </div>
+  <div style="position:relative;margin:14px 0 4px">
+    <input id="rd-search" type="search" enterkeyhint="search" autocomplete="off" placeholder="🔍 搜荐读：标题 / 荐语 / 出处 / 标签，如 动量、英伟达、高盛…"
+      style="width:100%;box-sizing:border-box;padding:10px 34px 10px 14px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;color:var(--text);outline:none">
+    <span id="rd-clear" title="清空">✕</span>
+  </div>
+  <div id="rd-tags" class="rdbar"></div>
+  <div id="rd-list"></div>
+</div>
 <div id="view-margin" class="hidden" style="max-width:860px;margin:var(--header-h) auto 0;padding:18px 14px 60px">
   <div class="kbar" data-kbar="margin"></div>
   <h2 style="font-size:18px;margin:6px 0 2px">💳 A股融资余额</h2>
@@ -3093,6 +3134,91 @@ function renderLev(D){
 
 /* A股融资余额页（2026-07-20）：data/margin.json 由 update-margin.yml 每交易日北京17:37更新。
    切入懒加载（switchTab 调 renderMargin），成功一次后不重复拉取。 */
+/* 📖 烟囱荐读（2026-07-21 主人需求）：每日读到的好文的链接收藏＋荐语。
+   铁律：只存标题/出处/荐语/链接，正文绝不转载（版权）。数据 config/reads.json。
+   布局＝按日期倒序分组的时间轴 + 主题标签筛选（标签由数据自动聚合，无需维护清单）。 */
+window.renderReads = (function(){
+  let DATA = null, TAG = "", KW = "";
+  const esc = s => String(s==null?"":s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  function dayLabel(d){
+    const t = new Date(); const p = x => String(x).padStart(2,"0");
+    const today = t.getFullYear()+"-"+p(t.getMonth()+1)+"-"+p(t.getDate());
+    const y = new Date(t.getTime()-864e5);
+    const yest = y.getFullYear()+"-"+p(y.getMonth()+1)+"-"+p(y.getDate());
+    if(d===today) return d+" · 今天";
+    if(d===yest) return d+" · 昨天";
+    return d;
+  }
+  function paint(){
+    const ws = KW.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    const items = (DATA.items||[]).filter(x => {
+      if(TAG && !(x.tags||[]).includes(TAG)) return false;
+      if(!ws.length) return true;
+      const hay = [x.t, x.r, x.src, (x.tags||[]).join(" "), (x.nl||[])[1]].join(" ").toLowerCase();
+      return ws.every(w => hay.includes(w));   /* 空格分词取与，同笔记页/研报页 */
+    });
+    items.sort((a,b) => (b.d||"").localeCompare(a.d||""));
+    const box = document.getElementById("rd-list");
+    if(!items.length){
+      box.innerHTML = '<div style="color:var(--text2);padding:20px 0">'
+        + (KW.trim() ? '没有匹配「'+esc(KW.trim())+'」的荐读。' : '这个标签下还没有文章。') + '</div>';
+      return;
+    }
+    let html = "", cur = null;
+    items.forEach(x => {
+      if(x.d !== cur){ cur = x.d; html += '<div class="rd-day">'+esc(dayLabel(cur))+'</div>'; }
+      const tags = (x.tags||[]).map(t => '<span class="rd-tag" data-tag="'+esc(t)+'">'+esc(t)+'</span>').join("");
+      html += '<div class="rd-card">'
+        + '<a class="rd-title" href="'+esc(x.u)+'" target="_blank" rel="noopener noreferrer">'+esc(x.t)+'</a>'
+        + '<div class="rd-meta">'+esc(x.src||"")+(tags?' · ':'')+tags+'</div>'
+        + (x.r ? '<div class="rd-note">'+esc(x.r)+'</div>' : '')
+        + (x.nl ? '<a class="rd-nl" href="articles/'+esc(x.nl[0])+'.html">📚 我据此写了：《'+esc(x.nl[1])+'》</a>' : '')
+        + '<a class="rd-go" href="'+esc(x.u)+'" target="_blank" rel="noopener noreferrer">阅读原文 →</a>'
+        + '</div>';
+    });
+    box.innerHTML = html;
+  }
+  function paintTags(){
+    const cnt = {};
+    (DATA.items||[]).forEach(x => (x.tags||[]).forEach(t => cnt[t] = (cnt[t]||0)+1));
+    const ts = Object.keys(cnt).sort((a,b) => cnt[b]-cnt[a] || a.localeCompare(b));
+    document.getElementById("rd-tags").innerHTML =
+      '<button data-tag=""'+(TAG?"":' class="on"')+'>全部 '+(DATA.items||[]).length+'</button>'
+      + ts.map(t => '<button data-tag="'+esc(t)+'"'+(TAG===t?' class="on"':'')+'>'+esc(t)+' '+cnt[t]+'</button>').join("");
+  }
+  document.addEventListener("click", e => {
+    const b = e.target.closest("#rd-tags button, .rd-tag");
+    if(!b || !DATA) return;
+    TAG = b.dataset.tag || "";
+    paintTags(); paint();
+    if(b.classList.contains("rd-tag")) window.scrollTo({top:0});
+  });
+  let done = false;
+  return function(){
+    if(done) return;
+    fetch("config/reads.json?b="+(Date.now()%1e7)).then(r => { if(!r.ok) throw 0; return r.json(); }).then(D => {
+      DATA = D; done = true;
+      const n = (D.items||[]).length, days = new Set((D.items||[]).map(x=>x.d)).size;
+      document.getElementById("rd-sub").textContent =
+        "每天读到的好文章，留个存档，也做份推荐 · 共 "+n+" 篇 / "+days+" 天";
+      paintTags(); paint();
+      const inp = document.getElementById("rd-search"), clr = document.getElementById("rd-clear");
+      if(inp && !inp.__bound){
+        inp.__bound = true;
+        inp.addEventListener("input", () => {
+          KW = inp.value; clr.style.display = inp.value ? "block" : "none";
+          paint();
+        });
+        clr.addEventListener("click", () => {   /* iOS 不送原生清空钮，自绘（全站铁律） */
+          inp.value = ""; KW = ""; clr.style.display = "none"; paint(); inp.focus();
+        });
+      }
+    }).catch(() => {
+      document.getElementById("rd-list").innerHTML =
+        '<div style="color:var(--text2);padding:20px 0">荐读数据暂时加载不出来，稍后再试。</div>';
+    });
+  };
+})();
 window.renderMargin = (function(){
   let done = false;
   return function(){
@@ -3626,7 +3752,8 @@ let PROFILES = {};
     "HIMX":["himx-cpo","HIMX 与 CPO 光互连"],"06809":["montage-interconnect","澜起科技与 AI 互联"],
     "285A":["kioxia-feynman","铠侠存储费曼笔记"],"KXIAY":["kioxia-feynman","铠侠存储费曼笔记"],
     "4063":["shinetsu","信越化学深度解读"],"SHECY":["shinetsu","信越化学深度解读"],
-    "NVDA":["nvidia-ai-panorama","英伟达与 AI 时代全景"]
+    "NVDA":["nvidia-ai-panorama","英伟达与 AI 时代全景"],
+    "AVAV":["avav-drop-analysis","AVAV 跌幅归因与后市判断"]
   };
   const NOTE_GRP = {
     "光芯片与激光器":["physical-walls-supplement","物理墙·补充篇（激光器十二家竞对）"],
@@ -4941,7 +5068,7 @@ document.addEventListener("click", e=>{
   /* ④「更多」退役（2026-07-18 主人定）：次级栏目=知识库切换条七胶囊，顶部只留三页签。
      KB_VIEWS 下的任何页都算「学习笔记」页签高亮范围；新增栏目在 KB 数组加一项即全站生效。 */
   const KB = [["notes","📚 学习笔记"],["dict","📖 术语词典"],["history","📜 金融史"],["imap","🗺 产业地图"],
-              ["universe","🌌 股票宇宙"],["events","📅 大事件"],["lev","⚖️ 杠杆率"],["margin","💳 融资余额"],
+              ["universe","🌌 股票宇宙"],["events","📅 大事件"],["lev","⚖️ 杠杆率"],["margin","💳 融资余额"],["reads","📖 烟囱荐读"],
               ["aicapex","💰 AI资金"]];
   const KB_VIEWS = KB.map(x=>x[0]);
   document.querySelectorAll(".kbar[data-kbar]").forEach(k=>{
@@ -4950,7 +5077,7 @@ document.addEventListener("click", e=>{
   window.switchTab = function(v){
     document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",
       t.dataset.view===v || (v==="repread" && t.dataset.view==="reports") || (KB_VIEWS.includes(v) && v!=="notes" && t.dataset.view==="notes")));
-    ["dash","events","notes","dict","history","lev","margin","aicapex","reports","repread","imap","universe"].forEach(x=>{
+    ["dash","events","notes","dict","history","lev","margin","reads","aicapex","reports","repread","imap","universe"].forEach(x=>{
       const el = document.getElementById("view-"+x);
       if(el) el.classList.toggle("hidden", v!==x);
     });
@@ -4962,6 +5089,7 @@ document.addEventListener("click", e=>{
     if(v==="universe" && typeof renderUniverse==="function"){ try{ renderUniverse(); }catch(e){} }   /* 宇宙同款：切入即刷 */
     if(v==="margin" && window.renderMargin){ try{ renderMargin(); }catch(e){} }   /* 融资余额：切入懒加载 */
     if(v==="aicapex" && window.renderAicapex){ try{ renderAicapex(); }catch(e){} } /* AI资金底图：切入懒加载 */
+    if(v==="reads" && window.renderReads){ try{ renderReads(); }catch(e){} }   /* 烟囱荐读：切入懒加载 */
     const mb=document.getElementById("mbottom");
     if(mb) mb.style.display = v==="dash" ? "" : "none";
     document.body.classList.toggle("reading", v==="repread");   /* 阅读态白衣：顶栏与白纸统一 */
@@ -5023,7 +5151,7 @@ document.addEventListener("click", e=>{
   const wantView = new URLSearchParams(location.search).get("view")
                 || (function(){ try{ return localStorage.getItem("homeView"); }catch(e){ return null; } })()   /* 设为默认首页（宇宙页开关，2026-07-18） */
                 || (function(){ try{ return localStorage.getItem("lastView"); }catch(e){ return null; } })();
-  if(["notes","dict","history","events","lev","margin","aicapex","reports","imap","universe"].includes(wantView)){
+  if(["notes","dict","history","events","lev","margin","reads","aicapex","reports","imap","universe"].includes(wantView)){
     window.switchTab(wantView);
   }
 
