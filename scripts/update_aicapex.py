@@ -35,6 +35,9 @@ COMPANIES = [
 import re
 CAPEX_RE = re.compile(r"^(Payments|Purchase)[A-Za-z]*(PropertyPlantAndEquipment|ProductiveAssets|PropertyAndEquipment)")
 LEASE_RE = re.compile(r"FinanceLease.*(ObtainedInExchange|RightOfUseAsset)|RightOfUseAssetObtainedInExchangeForFinanceLease")
+# 经营现金流：用于算「自有现金流覆盖率」= 经营现金流 ÷ capex。
+# 这是①层最该盯的泡沫早期预警指标——覆盖率跌破 1 意味着巨头已经在靠借钱建数据中心。
+OCF_RE = re.compile(r"^NetCashProvidedByUsedInOperatingActivities")
 # 排除退款/处置/出售类科目（它们是现金流入，混进来会把 capex 算小）
 EXCLUDE_RE = re.compile(r"Proceeds|Disposal|Sale|Refund|Receivable|Held", re.I)
 
@@ -120,13 +123,17 @@ for tic, name, cik, mkt in COMPANIES:
     time.sleep(0.3)                                      # SEC 限速 10 req/s，留足余量
     capex, ctag = series_for(facts, CAPEX_RE)
     lease, ltag = series_for(facts, LEASE_RE)
+    ocf, otag = series_for(facts, OCF_RE)
     if not capex:
         diag.append(f"{tic}: capex 抓取失败（所有 tag 均无数据）")
         continue
     companies[tic] = {"name": name, "cik": cik, "mkt": mkt, "tag": ctag,
-                      "capex": capex, "lease": lease}
+                      "capex": capex, "lease": lease, "ocf": ocf}
     last = list(capex.items())[-1]
-    diag.append(f"{tic}: {len(capex)}季 最新 {last[0]}={last[1]}亿美元 tag={ctag} 租赁{len(lease)}季")
+    lo = list(ocf.items())[-1] if ocf else None
+    diag.append(f"{tic}: {len(capex)}季 最新 {last[0]}={last[1]}亿美元 tag={ctag} "
+                f"租赁{len(lease)}季 经营现金流{len(ocf)}季"
+                + (f" 最新{lo[0]}={lo[1]}亿" if lo else " ❌无"))
     print(diag[-1])
 
 # 防呆（坏数据比旧数据危害大，同 IAU 事故教训）：
