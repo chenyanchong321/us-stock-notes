@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-21 12:37 北京时间",
+ "updated": "2026-07-21 13:07 北京时间",
  "earnings": [
   {
    "d": "2026-07-21",
@@ -521,6 +521,12 @@
    "d": "2026-08-05",
    "code": "NOVT",
    "name": "Novanta",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
+   "code": "SPCX",
+   "name": "SpaceX",
    "est": false
   },
   {
