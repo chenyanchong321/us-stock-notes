@@ -1052,24 +1052,8 @@ body.resizing{user-select:none;cursor:col-resize}
      铁律：每个数字必须挂数据成熟度徽标，硬数据与研究判断绝不混为一谈。 -->
 <div id="view-aicapex" class="hidden" style="max-width:960px;margin:var(--header-h) auto 0;padding:18px 14px 60px">
   <div class="kbar" data-kbar="aicapex"></div>
-  <h2 style="font-size:18px;margin:6px 0 2px">💰 AI 资金底图</h2>
+  <h2 style="font-size:18px;margin:6px 0 2px">💰 AI 资金底图 <a class="fvinfo" href="javascript:;" style="font-size:12.5px;font-weight:400;color:var(--accent);vertical-align:2px">ⓘ 说明</a></h2>
   <div style="font-size:12px;color:var(--text2)" id="ac-upd">数据加载中…</div>
-
-  <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin:14px 0;font-size:13.5px;line-height:1.9">
-    <b style="color:var(--accent)">这是什么？</b>
-    一张<b>钱的地图</b>。这一轮 AI 浪潮的本质是一场史上最大规模的资本开支竞赛，而所有故事的源头只有两个问题：<b>钱从哪来，钱去哪了</b>。本页把这条资金链完整拆成五段，从云厂商掏钱、到供应链分账、到最终变成算力与收入。
-    <br><br>
-    <b style="color:var(--accent)">怎么用？</b>
-    ①<b>看增速拐点，不看绝对值</b>——资本开支是慢变量，季度环比的减速比总额更早预警；
-    ②<b>盯自有现金流覆盖率</b>——当巨头开始靠发债和表外 SPV 而不是经营现金流来建数据中心，风险性质就变了；
-    ③<b>最后看第⑤段的回本倍数</b>——累计投入除以 AI 年化收入，这一个数就是整轮周期的判决书。
-    <br><br>
-    <b style="color:var(--accent)">数据成熟度（本页最重要的约定）</b>
-    本页数据来源质量差异极大，因此每个数字都挂徽标，绝不混为一谈：
-    <br><span id="ac-legend"></span>
-    <br>
-    <span style="color:var(--text2);font-size:12px">资本开支口径：现金流量表「购置不动产、厂房及设备支付的现金」，不含融资租赁与并购；微软、甲骨文、英伟达财年与日历年不同，一律按报告期结束日归入自然季度，跨公司才可比。融资租赁单列——微软与 Meta 大量使用，只看 capex 会低估其真实投入。</span>
-  </div>
 
   <div id="ac-body"></div>
 </div>
@@ -3603,7 +3587,15 @@ window.renderAicapex = (function(){
       + `<div style="margin-top:10px;padding-top:9px;border-top:1px solid var(--border);font-size:12.5px;line-height:1.8;color:var(--text2)"><b style="color:var(--accent)">信号：</b>${NV.signal}</div>`);
   }
 
+  /* 说明浮层内容（原常驻说明卡搬进 ⓘ，2026-07-21 主人定：手机上默认展开太占地方，
+     且切段后回顶看到的全是说明，会误以为「点了没反应」）。复用全站 .fvinfo → #datatip 机制。 */
+  const TIP = `<b>这是什么</b><br>一张钱的地图。这轮 AI 浪潮的本质是史上最大规模的资本开支竞赛，所有故事的源头只有两个问题：钱从哪来，钱去哪了。本页把这条资金链拆成五段。
+    <br><br><b>怎么用</b><br>①看增速拐点不看绝对值——季度环比减速比总额更早预警；②盯自有现金流覆盖率——当巨头靠发债和表外 SPV 建数据中心，风险性质就变了；③看第⑤段的回本倍数——累计投入除以 AI 年化收入，这是整轮周期的判决书。
+    <br><br><b>数据成熟度</b><br>⚙️ 财报直出 = SEC 财报，每周自动刷新<br>📋 财报人工 = 人工抄自季报或电话会<br>🔬 研究口径 = 机构研究判断，非抓取<br>📰 媒体报道 = 未经证实
+    <br><br><b>资本开支口径</b><br>现金流量表「购置不动产、厂房及设备支付的现金」，不含融资租赁与并购；各家财年不同，一律按报告期结束日归入自然季度。融资租赁单列——微软与 Meta 大量使用，只看 capex 会低估其真实投入。`;
+
   function build(){
+    window.FV_TIP = TIP;     /* 每次重建都设，防被别的榜单覆盖 */
     const K = calc();
     const R = {all:secAll, s1:sec1, s2:sec2, s2cn:sec2cn, s3:sec3, s4:sec4, s5:sec5, sx:secX}[CUR] || secAll;
     document.getElementById("ac-body").innerHTML = navBar() + R(K)
@@ -3617,8 +3609,11 @@ window.renderAicapex = (function(){
     const s = e.target.closest("[data-sec]");
     if(s && root.contains(s)){
       CUR = s.dataset.sec; build();
-      /* 切段回到页面顶部：目录式切换不该让人停在半截（同切视图回顶的规矩） */
-      const y = root.getBoundingClientRect().top + window.scrollY - 70;
+      /* 切段后把「导航条」对齐到顶栏下方——而不是滚到 root 顶部。
+         教训（2026-07-21 主人报「点了没反应」）：滚到 root 顶部会把新内容顶出屏幕，
+         用户看到的还是页头，误以为没切换。锚点要对准“变化发生的地方”。 */
+      const nav = document.getElementById("ac-nav");
+      const y = (nav||root).getBoundingClientRect().top + window.scrollY - 66;
       window.scrollTo({top: Math.max(0,y)});
       return;
     }
@@ -3629,9 +3624,6 @@ window.renderAicapex = (function(){
   return function(){
     CUR = "all";                      /* 每次点进重置为总览 */
     if(done){ build(); return; }
-    document.getElementById("ac-legend").innerHTML =
-      Object.entries(GRADE).map(([k,v])=>`<span style="display:inline-block;margin:4px 10px 0 0;font-size:12px;color:var(--text2);white-space:nowrap"><span style="color:${v[2]}">${v[0]} ${v[1]}</span> = ${
-        {auto:"SEC 财报直出，每周自动刷新",report:"人工抄自季报或电话会",research:"机构研究口径，属判断非抓取",media:"媒体报道，未经证实"}[k]}</span>`).join("");
     Promise.all([
       fetch("data/aicapex.json?b="+(Date.now()%1e7)).then(r=>r.ok?r.json():null),
       fetch("config/aicapex.json?b="+(Date.now()%1e7)).then(r=>r.ok?r.json():null)
