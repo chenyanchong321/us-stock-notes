@@ -3421,7 +3421,7 @@ window.renderAicapex = (function(){
     }).filter(Boolean);
     if(rows.length < 4) return "";
     const last = rows[rows.length-1], first = rows[0];
-    const W=920, H=210, padL=40, padR=10, padT=14, padB=28;
+    const W=920, H=210, padL=40, padR=26, padT=14, padB=28;   /* padR 留够：末尾年份标签 text-anchor=middle 会向右溢出 */
     const mx = Math.max(3, Math.ceil(Math.max(...rows.map(r=>r.r))));
     const X = i => padL + i/(rows.length-1)*(W-padL-padR);
     const Y = v => padT + (1 - v/mx)*(H-padT-padB);
