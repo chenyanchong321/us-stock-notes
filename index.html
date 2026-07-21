@@ -763,32 +763,6 @@ body.resizing{user-select:none;cursor:col-resize}
   .sidebar{display:none}
   .main,#footer{margin-left:0;padding-left:16px;padding-right:16px;min-width:0;max-width:100%;box-sizing:border-box}
 }
-
-/* 📖 烟囱荐读 */
-#rd-search{font-size:14px}
-#rd-search::-webkit-search-cancel-button{display:none}
-#rd-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text2);cursor:pointer;font-size:15px;padding:6px 8px;display:none}
-#rd-clear:hover{color:var(--text)}
-@media(max-width:860px){#rd-search{font-size:16px}}
-.rdbar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 6px}
-.rdbar button{background:var(--panel);border:1px solid var(--border);color:var(--text2);border-radius:999px;
-  padding:5px 13px;font-size:12.5px;cursor:pointer;transition:.15s}
-.rdbar button:hover{color:var(--text);border-color:var(--text2)}
-.rdbar button.on{background:var(--accent);border-color:var(--accent);color:#fff}
-.rd-day{font-size:12.5px;color:var(--text2);letter-spacing:.5px;margin:22px 0 10px;padding-bottom:6px;
-  border-bottom:1px solid var(--border)}
-.rd-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px}
-.rd-title{display:block;font-size:15.5px;font-weight:600;color:var(--text);text-decoration:none;line-height:1.55}
-.rd-title:hover{color:var(--accent)}
-.rd-meta{font-size:12px;color:var(--text2);margin-top:6px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.rd-tag{background:var(--panel2);border-radius:4px;padding:1px 7px;cursor:pointer;color:var(--text2)}
-.rd-tag:hover{color:var(--accent)}
-.rd-note{font-size:13.5px;line-height:1.85;color:var(--text2);margin-top:9px}
-.rd-nl{display:block;margin-top:9px;font-size:12.5px;color:var(--accent);text-decoration:none}
-.rd-nl:hover{text-decoration:underline}
-.rd-go{display:inline-block;margin-top:10px;font-size:13px;color:var(--gold);text-decoration:none;font-weight:600}
-.rd-go:hover{text-decoration:underline}
-@media(max-width:860px){.rd-title{font-size:15px}.rd-go{min-height:44px;line-height:44px}}
 </style>
 </head>
 <body>
@@ -1007,21 +981,6 @@ body.resizing{user-select:none;cursor:col-resize}
 </div>
 
 <!-- A股融资余额（2026-07-20 上线，与存储杠杆率配对：一个微观板块杠杆、一个全市场杠杆温度计） -->
-<div id="view-reads" class="hidden" style="max-width:860px;margin:var(--header-h) auto 0;padding:18px 14px 60px">
-  <div class="kbar" data-kbar="reads"></div>
-  <h2 style="font-size:18px;margin:6px 0 2px">📖 烟囱荐读</h2>
-  <div style="font-size:12px;color:var(--text2)" id="rd-sub">每天读到的好文章，留个存档，也做份推荐</div>
-  <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 15px;margin:13px 0;font-size:13px;line-height:1.85;color:var(--text2)">
-    这里只放<b>标题、出处、荐语和原文链接</b>，不转载正文——点标题跳到原文读。荐语是我看完后写的一句话：讲了什么，以及为什么值得你花时间。付费墙内容（如 WSJ、FT）需自行订阅。
-  </div>
-  <div style="position:relative;margin:14px 0 4px">
-    <input id="rd-search" type="search" enterkeyhint="search" autocomplete="off" placeholder="🔍 搜荐读：标题 / 荐语 / 出处 / 标签，如 动量、英伟达、高盛…"
-      style="width:100%;box-sizing:border-box;padding:10px 34px 10px 14px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;color:var(--text);outline:none">
-    <span id="rd-clear" title="清空">✕</span>
-  </div>
-  <div id="rd-tags" class="rdbar"></div>
-  <div id="rd-list"></div>
-</div>
 <div id="view-margin" class="hidden" style="max-width:860px;margin:var(--header-h) auto 0;padding:18px 14px 60px">
   <div class="kbar" data-kbar="margin"></div>
   <h2 style="font-size:18px;margin:6px 0 2px">💳 A股融资余额</h2>
@@ -1045,6 +1004,33 @@ body.resizing{user-select:none;cursor:col-resize}
   </div>
 
   <div id="mg-cards"></div>
+</div>
+
+<!-- 💰 AI 资金底图（2026-07-21 上线）：一条完整资金链——钱从哪来→谁在花→花给谁→变成什么→谁买单。
+     自动层 data/aicapex.json（SEC XBRL 每周）；人工层 config/aicapex.json（指引/研究口径/媒体报道）。
+     铁律：每个数字必须挂数据成熟度徽标，硬数据与研究判断绝不混为一谈。 -->
+<div id="view-aicapex" class="hidden" style="max-width:960px;margin:var(--header-h) auto 0;padding:18px 14px 60px">
+  <div class="kbar" data-kbar="aicapex"></div>
+  <h2 style="font-size:18px;margin:6px 0 2px">💰 AI 资金底图</h2>
+  <div style="font-size:12px;color:var(--text2)" id="ac-upd">数据加载中…</div>
+
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin:14px 0;font-size:13.5px;line-height:1.9">
+    <b style="color:var(--accent)">这是什么？</b>
+    一张<b>钱的地图</b>。这一轮 AI 浪潮的本质是一场史上最大规模的资本开支竞赛，而所有故事的源头只有两个问题：<b>钱从哪来，钱去哪了</b>。本页把这条资金链完整拆成五段，从云厂商掏钱、到供应链分账、到最终变成算力与收入。
+    <br><br>
+    <b style="color:var(--accent)">怎么用？</b>
+    ①<b>看增速拐点，不看绝对值</b>——资本开支是慢变量，季度环比的减速比总额更早预警；
+    ②<b>盯自有现金流覆盖率</b>——当巨头开始靠发债和表外 SPV 而不是经营现金流来建数据中心，风险性质就变了；
+    ③<b>最后看第⑤段的回本倍数</b>——累计投入除以 AI 年化收入，这一个数就是整轮周期的判决书。
+    <br><br>
+    <b style="color:var(--accent)">数据成熟度（本页最重要的约定）</b>
+    本页数据来源质量差异极大，因此每个数字都挂徽标，绝不混为一谈：
+    <br><span id="ac-legend"></span>
+    <br>
+    <span style="color:var(--text2);font-size:12px">资本开支口径：现金流量表「购置不动产、厂房及设备支付的现金」，不含融资租赁与并购；微软、甲骨文、英伟达财年与日历年不同，一律按报告期结束日归入自然季度，跨公司才可比。融资租赁单列——微软与 Meta 大量使用，只看 capex 会低估其真实投入。</span>
+  </div>
+
+  <div id="ac-body"></div>
 </div>
 
 <div id="view-history" class="hidden">
@@ -3107,91 +3093,6 @@ function renderLev(D){
 
 /* A股融资余额页（2026-07-20）：data/margin.json 由 update-margin.yml 每交易日北京17:37更新。
    切入懒加载（switchTab 调 renderMargin），成功一次后不重复拉取。 */
-/* 📖 烟囱荐读（2026-07-21 主人需求）：每日读到的好文的链接收藏＋荐语。
-   铁律：只存标题/出处/荐语/链接，正文绝不转载（版权）。数据 config/reads.json。
-   布局＝按日期倒序分组的时间轴 + 主题标签筛选（标签由数据自动聚合，无需维护清单）。 */
-window.renderReads = (function(){
-  let DATA = null, TAG = "", KW = "";
-  const esc = s => String(s==null?"":s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-  function dayLabel(d){
-    const t = new Date(); const p = x => String(x).padStart(2,"0");
-    const today = t.getFullYear()+"-"+p(t.getMonth()+1)+"-"+p(t.getDate());
-    const y = new Date(t.getTime()-864e5);
-    const yest = y.getFullYear()+"-"+p(y.getMonth()+1)+"-"+p(y.getDate());
-    if(d===today) return d+" · 今天";
-    if(d===yest) return d+" · 昨天";
-    return d;
-  }
-  function paint(){
-    const ws = KW.trim().toLowerCase().split(/\s+/).filter(Boolean);
-    const items = (DATA.items||[]).filter(x => {
-      if(TAG && !(x.tags||[]).includes(TAG)) return false;
-      if(!ws.length) return true;
-      const hay = [x.t, x.r, x.src, (x.tags||[]).join(" "), (x.nl||[])[1]].join(" ").toLowerCase();
-      return ws.every(w => hay.includes(w));   /* 空格分词取与，同笔记页/研报页 */
-    });
-    items.sort((a,b) => (b.d||"").localeCompare(a.d||""));
-    const box = document.getElementById("rd-list");
-    if(!items.length){
-      box.innerHTML = '<div style="color:var(--text2);padding:20px 0">'
-        + (KW.trim() ? '没有匹配「'+esc(KW.trim())+'」的荐读。' : '这个标签下还没有文章。') + '</div>';
-      return;
-    }
-    let html = "", cur = null;
-    items.forEach(x => {
-      if(x.d !== cur){ cur = x.d; html += '<div class="rd-day">'+esc(dayLabel(cur))+'</div>'; }
-      const tags = (x.tags||[]).map(t => '<span class="rd-tag" data-tag="'+esc(t)+'">'+esc(t)+'</span>').join("");
-      html += '<div class="rd-card">'
-        + '<a class="rd-title" href="'+esc(x.u)+'" target="_blank" rel="noopener noreferrer">'+esc(x.t)+'</a>'
-        + '<div class="rd-meta">'+esc(x.src||"")+(tags?' · ':'')+tags+'</div>'
-        + (x.r ? '<div class="rd-note">'+esc(x.r)+'</div>' : '')
-        + (x.nl ? '<a class="rd-nl" href="articles/'+esc(x.nl[0])+'.html">📚 我据此写了：《'+esc(x.nl[1])+'》</a>' : '')
-        + '<a class="rd-go" href="'+esc(x.u)+'" target="_blank" rel="noopener noreferrer">阅读原文 →</a>'
-        + '</div>';
-    });
-    box.innerHTML = html;
-  }
-  function paintTags(){
-    const cnt = {};
-    (DATA.items||[]).forEach(x => (x.tags||[]).forEach(t => cnt[t] = (cnt[t]||0)+1));
-    const ts = Object.keys(cnt).sort((a,b) => cnt[b]-cnt[a] || a.localeCompare(b));
-    document.getElementById("rd-tags").innerHTML =
-      '<button data-tag=""'+(TAG?"":' class="on"')+'>全部 '+(DATA.items||[]).length+'</button>'
-      + ts.map(t => '<button data-tag="'+esc(t)+'"'+(TAG===t?' class="on"':'')+'>'+esc(t)+' '+cnt[t]+'</button>').join("");
-  }
-  document.addEventListener("click", e => {
-    const b = e.target.closest("#rd-tags button, .rd-tag");
-    if(!b || !DATA) return;
-    TAG = b.dataset.tag || "";
-    paintTags(); paint();
-    if(b.classList.contains("rd-tag")) window.scrollTo({top:0});
-  });
-  let done = false;
-  return function(){
-    if(done) return;
-    fetch("config/reads.json?b="+(Date.now()%1e7)).then(r => { if(!r.ok) throw 0; return r.json(); }).then(D => {
-      DATA = D; done = true;
-      const n = (D.items||[]).length, days = new Set((D.items||[]).map(x=>x.d)).size;
-      document.getElementById("rd-sub").textContent =
-        "每天读到的好文章，留个存档，也做份推荐 · 共 "+n+" 篇 / "+days+" 天";
-      paintTags(); paint();
-      const inp = document.getElementById("rd-search"), clr = document.getElementById("rd-clear");
-      if(inp && !inp.__bound){
-        inp.__bound = true;
-        inp.addEventListener("input", () => {
-          KW = inp.value; clr.style.display = inp.value ? "block" : "none";
-          paint();
-        });
-        clr.addEventListener("click", () => {   /* iOS 不送原生清空钮，自绘（全站铁律） */
-          inp.value = ""; KW = ""; clr.style.display = "none"; paint(); inp.focus();
-        });
-      }
-    }).catch(() => {
-      document.getElementById("rd-list").innerHTML =
-        '<div style="color:var(--text2);padding:20px 0">荐读数据暂时加载不出来，稍后再试。</div>';
-    });
-  };
-})();
 window.renderMargin = (function(){
   let done = false;
   return function(){
@@ -3249,6 +3150,193 @@ window.renderMargin = (function(){
     }).catch(()=>{
       const u=document.getElementById("mg-upd");
       if(u) u.textContent = "数据尚未生成（流水线每个交易日 17:37 自动抓取，首次上线请稍候）";
+    });
+  };
+})();
+
+/* 💰 AI 资金底图（2026-07-21）：两份数据——data/aicapex.json（SEC XBRL 自动层，每周一刷新）
+   + config/aicapex.json（人工层：指引/研究口径/媒体报道）。切入懒加载，成功一次不重拉。
+   设计铁律：每个数字挂 grade 徽标；硬数据（⚙️）与研究判断（🔬）、媒体报道（📰）在视觉上必须分得开。 */
+window.renderAicapex = (function(){
+  let done = false, withLease = false, DATA = null, CFG = null;
+  const GRADE = {
+    auto:     ["⚙️", "财报直出", "var(--up)"],
+    report:   ["📋", "财报人工", "var(--accent)"],
+    research: ["🔬", "研究口径", "var(--gold)"],
+    media:    ["📰", "媒体报道", "var(--text2)"]
+  };
+  const CO = [["GOOGL","Alphabet","#5b9bd5"],["MSFT","微软","#a78bfa"],
+              ["AMZN","亚马逊","#38bdf8"],["META","Meta","#fb923c"]];
+  const g = (k, extra) => { const x = GRADE[k]; if(!x) return "";
+    return `<span title="${x[1]}${extra?" · "+extra.replace(/"/g,""):""}" style="display:inline-block;font-size:10.5px;padding:1px 5px;border-radius:4px;border:1px solid var(--border);color:${x[2]};margin-left:5px;vertical-align:middle;white-space:nowrap">${x[0]} ${x[1]}</span>`; };
+  const card = (inner, mt) => `<div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin:${mt||14}px 0">${inner}</div>`;
+  const h3 = (t, sub) => `<div style="font-size:15px;font-weight:700;margin:0 0 2px">${t}</div>` +
+                         (sub?`<div style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.7">${sub}</div>`:"");
+  const yi = v => v>=10000 ? (v/10000).toFixed(2)+" 万亿" : (v>=1000 ? Math.round(v).toLocaleString() : v.toFixed(0)) + " 亿";
+  const qsOf = C => { const s=new Set(); CO.forEach(([t])=>Object.keys(C[t]&&C[t].capex||{}).forEach(q=>s.add(q)));
+                      return [...s].sort().filter(q=>q>="2023Q1"); };
+  const val = (C,t,q) => (C[t]&&C[t].capex[q]||0) + (withLease ? (C[t]&&C[t].lease[q]||0) : 0);
+
+  /* ② 堆叠柱状图：四家逐季，横轴季度。宽度自适应，文字永不横滚（表格铁律的图表版） */
+  function chart(C){
+    const qs = qsOf(C).filter(q=>{ return CO.some(([t])=>val(C,t,q)>0); });
+    const W=920, H=260, padL=46, padR=8, padT=14, padB=30;
+    const tot = qs.map(q=>CO.reduce((s,[t])=>s+val(C,t,q),0));
+    const mx = Math.max(...tot)*1.08 || 1;
+    const bw = (W-padL-padR)/qs.length;
+    const Y = v => padT + (1-v/mx)*(H-padT-padB);
+    let bars="", labs="";
+    qs.forEach((q,i)=>{
+      let acc=0;
+      CO.forEach(([t,,c])=>{ const v=val(C,t,q); if(!v) return;
+        const y0=Y(acc+v), y1=Y(acc);
+        bars += `<rect x="${(padL+i*bw+bw*0.13).toFixed(1)}" y="${y0.toFixed(1)}" width="${(bw*0.74).toFixed(1)}" height="${Math.max(0,y1-y0).toFixed(1)}" fill="${c}" opacity=".9"/>`;
+        acc+=v; });
+      if(q.endsWith("Q1")) labs += `<text x="${(padL+i*bw+bw/2).toFixed(1)}" y="${H-10}" font-size="10.5" fill="var(--text2)" text-anchor="middle">${q.slice(0,4)}</text>`;
+    });
+    let grid="";
+    [500,1000,1500].forEach(v=>{ if(v<mx) grid += `<line x1="${padL}" y1="${Y(v).toFixed(1)}" x2="${W-padR}" y2="${Y(v).toFixed(1)}" stroke="var(--border)" stroke-width="1" opacity=".45"/><text x="${padL-6}" y="${(Y(v)+3).toFixed(1)}" font-size="10" fill="var(--text2)" text-anchor="end">${v}</text>`; });
+    const legend = CO.map(([t,n,c])=>`<span style="margin-right:12px;white-space:nowrap"><i style="display:inline-block;width:9px;height:9px;background:${c};border-radius:2px;margin-right:4px"></i>${n}</span>`).join("");
+    const lastQ = qs[qs.length-1], lastTot = tot[tot.length-1];
+    return `<div style="font-size:12px;color:var(--text2);margin:2px 0 6px">${legend}</div>
+      <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">${grid}${bars}${labs}
+        <text x="${padL-6}" y="${(padT+8)}" font-size="10" fill="var(--text2)" text-anchor="end">亿$</text></svg>
+      <div style="font-size:12px;color:var(--text2);margin-top:4px">最新完整季度 <b style="color:var(--gold)">${lastQ}</b> 四家合计 <b style="color:var(--gold)">${yi(lastTot)}美元</b>${withLease?"（含融资租赁）":"（纯 capex，不含融资租赁）"}</div>`;
+  }
+
+  function build(){
+    const C = DATA.companies, F = CFG;
+    const qs = qsOf(C);
+    const yearTot = y => CO.reduce((s,[t])=>s+[1,2,3,4].reduce((a,i)=>a+(C[t].capex[y+"Q"+i]||0),0),0);
+    /* 累计投入从 2023Q1 起算（这一轮 AI 军备竞赛的起点），不含更早的常规基建 */
+    const cumCapex = CO.reduce((s,[t])=>s+Object.entries(C[t].capex)
+      .filter(([q])=>q>="2023Q1").reduce((a,[,v])=>a+v,0), 0);
+    const arr = (F.layer5_demand.companies||[]).reduce((s,x)=>s+(x.arr||0),0);
+    const payback = arr ? (cumCapex/arr) : null;
+
+    /* 顶部三个大读数 */
+    const hd = F.headline||{};
+    const big = [
+      ["2026 年计划开支", yi(hd.capex2026.v)+"美元", `同比 +${hd.capex2026.yoy}%（2025 约 ${yi(hd.capex2026.base2025)}）`, "var(--gold)", g("media", hd.capex2026.src)],
+      ["累计投入 ÷ AI 年化收入", payback ? payback.toFixed(1)+" 倍" : "–",
+       `2023 年至今累计 ${yi(cumCapex)} ÷ 两家模型公司 ${yi(arr)}`, "var(--down)", g("research")],
+      ["最新季度四家合计", yi(CO.reduce((s,[t])=>s+(C[t].capex[qs[qs.length-1]]||0),0))+"美元", qs[qs.length-1]+" · SEC 财报直出", "var(--up)", g("auto")]
+    ].map(c=>`<div style="flex:1 1 210px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 14px">
+        <div style="font-size:12px;color:var(--text2)">${c[0]}${c[4]}</div>
+        <div style="font-size:22px;font-weight:700;color:${c[3]};margin:3px 0;white-space:nowrap">${c[1]}</div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.6">${c[2]}</div></div>`).join("");
+    let html = `<div style="display:flex;gap:10px;flex-wrap:wrap;margin:14px 0">${big}</div>
+      <div style="font-size:12px;color:var(--text2);margin:-4px 0 10px;line-height:1.7">⚠️ 回本倍数为<b>极保守口径</b>：分母只含 OpenAI 与 Anthropic 的公开 run-rate，不含四大云厂自身的 AI 收入，也不含企业软件涨价等间接变现。<b>此数看趋势不看绝对值</b>——它逐季变小说明变现在追上投入，变大则相反。</div>`;
+
+    /* ① 钱从哪来 */
+    const L1 = F.layer1_source;
+    html += card(h3("① 钱从哪来", "资本开支的资金来源。当巨头从「用赚的钱建」转向「借钱建、且把债务挪出表外」，风险性质就变了。")
+      + L1.items.map(x=>`<div style="margin:8px 0;font-size:13px;line-height:1.8"><b style="color:var(--accent)">${x.k}</b>${g(x.grade,x.src)}${x.v?` <b style="color:var(--gold)">${yi(x.v)}${x.unit.replace("亿","")}</b>`:""}<br><span style="color:var(--text2)">${x.d}</span></div>`).join("")
+      + `<div style="margin-top:12px;font-size:13px;font-weight:600">表外 SPV 明细<span style="font-weight:400;color:var(--text2);font-size:12px"> —— 这是本轮周期最容易被忽略的一块</span></div>`
+      + `<table style="width:100%;border-collapse:collapse;font-size:12.5px;table-layout:auto;margin-top:6px">
+          <tr style="color:var(--text2)"><th style="text-align:left;padding:5px 8px">主体</th><th style="text-align:left;padding:5px 8px">项目</th><th style="text-align:right;padding:5px 8px;white-space:nowrap">规模</th><th style="text-align:left;padding:5px 8px">说明</th></tr>`
+      + L1.spv.map(s=>`<tr style="border-top:1px solid var(--border)"><td style="text-align:left;padding:6px 8px;white-space:nowrap">${s.who}</td><td style="text-align:left;padding:6px 8px;word-break:break-word">${s.site}</td><td style="text-align:right;padding:6px 8px;color:var(--gold);white-space:nowrap">${yi(s.v)}$</td><td style="text-align:left;padding:6px 8px;color:var(--text2);word-break:break-word;white-space:normal;line-height:1.7">${s.d}</td></tr>`).join("")
+      + `</table>`);
+
+    /* ② 谁在花 */
+    const L2 = F.layer2_spend;
+    html += card(h3("② 谁在花", L2.insight)
+      + `<div id="ac-leasebar" style="display:flex;gap:8px;margin:0 0 10px">
+          <button data-lease="0" class="${withLease?"":"on"}" style="font-size:12px;padding:5px 12px;border-radius:14px;border:1px solid var(--border);background:${withLease?"transparent":"var(--accent)"};color:${withLease?"var(--text2)":"#fff"};cursor:pointer">纯 capex</button>
+          <button data-lease="1" class="${withLease?"on":""}" style="font-size:12px;padding:5px 12px;border-radius:14px;border:1px solid var(--border);background:${withLease?"var(--accent)":"transparent"};color:${withLease?"#fff":"var(--text2)"};cursor:pointer">含融资租赁</button></div>`
+      + chart(C)
+      + `<div style="margin-top:14px;font-size:13px;font-weight:600">年度合计与增速${g("auto")}</div>`
+      + `<table style="width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px"><tr style="color:var(--text2)"><th style="text-align:left;padding:5px 8px">年份</th><th style="text-align:right;padding:5px 8px">四家合计</th><th style="text-align:right;padding:5px 8px">同比</th></tr>`
+      + [2023,2024,2025].map(y=>{ const v=yearTot(y), p=yearTot(y-1);
+          const yoy = p ? ((v/p-1)*100) : null;
+          return `<tr style="border-top:1px solid var(--border)"><td style="text-align:left;padding:6px 8px">${y}</td><td style="text-align:right;padding:6px 8px;white-space:nowrap">${yi(v)}美元</td><td style="text-align:right;padding:6px 8px;color:var(--up);white-space:nowrap">${yoy!==null?"+"+yoy.toFixed(0)+"%":"–"}</td></tr>`; }).join("")
+      + `</table>`
+      + `<div style="margin-top:14px;font-size:13px;font-weight:600">2026 年指引${g("media")}</div>`
+      + `<div style="font-size:11.5px;color:var(--text2);margin:2px 0 6px;line-height:1.7">⚠️ ${hd.capex2026.warn}</div>`
+      + `<table style="width:100%;border-collapse:collapse;font-size:12.5px"><tr style="color:var(--text2)"><th style="text-align:left;padding:5px 8px">公司</th><th style="text-align:right;padding:5px 8px">2026 指引</th><th style="text-align:left;padding:5px 8px">备注</th></tr>`
+      + L2.guide2026.map(x=>`<tr style="border-top:1px solid var(--border)"><td style="text-align:left;padding:6px 8px;white-space:nowrap">${x.n}</td><td style="text-align:right;padding:6px 8px;color:var(--gold);white-space:nowrap">${x.lo===x.hi?yi(x.lo):yi(x.lo)+"–"+yi(x.hi)}$</td><td style="text-align:left;padding:6px 8px;color:var(--text2);word-break:break-word;white-space:normal;line-height:1.7">${x.warn||x.src||""}</td></tr>`).join("")
+      + `</table>`
+      + `<div style="margin-top:14px;font-size:13px;font-weight:600">中国大厂${g("media")}</div>`
+      + `<div style="font-size:11.5px;color:var(--text2);margin:2px 0 6px">中概季度 capex 需人工从季报抽取（美股 XBRL 那套自动管线覆盖不到），当前为媒体口径，待补。</div>`
+      + L2.cn.map(x=>`<div style="font-size:12.5px;margin:6px 0;line-height:1.8"><b>${x.n}</b><span style="color:var(--text2)">　${x.d}</span>${x.warn?`<br><span style="color:var(--down);font-size:11.5px">⚠️ ${x.warn}</span>`:""}</div>`).join(""));
+
+    /* ③ 花给谁 */
+    const L3 = F.layer3_split;
+    const sum3 = L3.items.reduce((s,x)=>s+x.pct,0);
+    html += card(h3("③ 钱花给谁", `一座 AI 数据中心的成本拆解——「卖铲子的钱被谁赚走了」。${L3.warn}`)
+      + `<div style="display:flex;height:26px;border-radius:6px;overflow:hidden;margin:8px 0 10px">`
+      + L3.items.map((x,i)=>`<div style="width:${x.pct/sum3*100}%;background:${["#5b9bd5","#a78bfa","#38bdf8","#fb923c","#f472b6","#4ade80","#facc15"][i]};opacity:.88"></div>`).join("")
+      + `</div>`
+      + `<table style="width:100%;border-collapse:collapse;font-size:12.5px"><tr style="color:var(--text2)"><th style="text-align:left;padding:5px 8px">环节</th><th style="text-align:right;padding:5px 8px">占比</th><th style="text-align:left;padding:5px 8px">谁赚走</th></tr>`
+      + L3.items.map((x,i)=>`<tr style="border-top:1px solid var(--border)"><td style="text-align:left;padding:6px 8px;white-space:nowrap"><i style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${["#5b9bd5","#a78bfa","#38bdf8","#fb923c","#f472b6","#4ade80","#facc15"][i]};margin-right:6px"></i>${x.k}</td><td style="text-align:right;padding:6px 8px;color:var(--gold);white-space:nowrap">${x.pct}%</td><td style="text-align:left;padding:6px 8px;color:var(--text2);word-break:break-word;white-space:normal;line-height:1.7">${x.who}${x.note?`<br><span style="font-size:11.5px">${x.note}</span>`:""}</td></tr>`).join("")
+      + `</table>`
+      + `<div style="margin-top:12px;font-size:12.5px;line-height:1.8;color:var(--text2);border-top:1px solid var(--border);padding-top:10px"><b style="color:var(--accent)">二次分账</b>${g("research")}<br>${L3.secondary.d}</div>`
+      + `<div style="margin-top:8px;font-size:12.5px;color:var(--text2)"><b style="color:var(--accent)">每 GW 成本</b>${g("research")} <b style="color:var(--gold)">${L3.gwcost.v} ${L3.gwcost.unit}</b>　${L3.gwcost.d}</div>`
+      + `<div style="margin-top:6px;font-size:11.5px;color:var(--text2)">出处：${L3.src}</div>`);
+
+    /* ④ 变成什么 */
+    const L4 = F.layer4_output;
+    html += card(h3("④ 钱变成了什么", "把资本开支换算成物理世界的算力：电力、芯片、Token。本层数据最稀薄，先占位。")
+      + L4.items.map(x=>`<div style="margin:8px 0;font-size:13px;line-height:1.8"><b style="color:var(--accent)">${x.k}</b>${g(x.grade,x.src)}　<b style="color:var(--gold)">${x.v}</b>${x.d?`<br><span style="color:var(--text2)">${x.d}</span>`:""}${x.warn?`<br><span style="color:var(--down);font-size:11.5px">⚠️ ${x.warn}</span>`:""}</div>`).join("")
+      + `<div style="margin-top:10px;font-size:11.5px;color:var(--text2);border-top:1px solid var(--border);padding-top:8px">🚧 ${L4.todo}</div>`);
+
+    /* ⑤ 谁买单 */
+    const L5 = F.layer5_demand;
+    html += card(h3("⑤ 谁来买单", "四大云厂建好数据中心，最终要靠模型公司把算力变成 Token 卖出去。这一层的收入能否追上上一层的投入，是整轮周期的判决书。")
+      + L5.companies.map(x=>`<div style="margin:10px 0;padding:10px 12px;border:1px solid var(--border);border-radius:8px">
+          <div style="font-size:14px;font-weight:700">${x.n}${g(x.grade,x.src)}</div>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;margin:6px 0">
+            <div style="flex:0 0 auto"><div style="font-size:11px;color:var(--text2)">年化收入 ARR</div><div style="font-size:17px;font-weight:700;color:var(--up);white-space:nowrap">${yi(x.arr)}美元</div><div style="font-size:10.5px;color:var(--text2)">${x.arr_asof}</div></div>
+            <div style="flex:0 0 auto"><div style="font-size:11px;color:var(--text2)">估值</div><div style="font-size:17px;font-weight:700;color:var(--gold);white-space:nowrap">${yi(x.val)}美元</div><div style="font-size:10.5px;color:var(--text2)">${x.val_asof}</div></div>
+            <div style="flex:0 0 auto"><div style="font-size:11px;color:var(--text2)">累计融资</div><div style="font-size:17px;font-weight:700;white-space:nowrap">${yi(x.raised)}美元</div><div style="font-size:10.5px;color:var(--text2)">${x.raised_note}</div></div>
+            <div style="flex:0 0 auto"><div style="font-size:11px;color:var(--text2)">收入倍数</div><div style="font-size:17px;font-weight:700;color:var(--down);white-space:nowrap">${(x.val/x.arr).toFixed(0)} 倍</div><div style="font-size:10.5px;color:var(--text2)">估值 ÷ ARR</div></div>
+          </div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.8">${x.arr_note}${x.ipo?`<br><b style="color:var(--accent)">IPO：</b>${x.ipo}`:""}</div></div>`).join("")
+      + `<div style="margin-top:8px;font-size:11.5px;color:var(--down);line-height:1.7">⚠️ ${L5.warn}</div>`);
+
+    /* 细分抽屉：算力大单 + 英伟达投资 */
+    html += card(h3("🔌 算力大单总表", "谁向谁买了多少算力。模型公司的算力承诺是云厂 capex 的需求侧对手盘——两边对不上就是问题。")
+      + `<table style="width:100%;border-collapse:collapse;font-size:12.5px"><tr style="color:var(--text2)"><th style="text-align:left;padding:5px 8px">买方</th><th style="text-align:left;padding:5px 8px">卖方</th><th style="text-align:right;padding:5px 8px">金额</th><th style="text-align:left;padding:5px 8px">容量 / 状态</th></tr>`
+      + (F.deals||[]).map(d=>`<tr style="border-top:1px solid var(--border)">
+          <td style="text-align:left;padding:6px 8px;white-space:nowrap">${d.buyer}</td>
+          <td style="text-align:left;padding:6px 8px;word-break:break-word">${d.seller}</td>
+          <td style="text-align:right;padding:6px 8px;color:var(--gold);white-space:nowrap">${d.v?d.v+" "+(d.unit||"亿美元"):"–"}</td>
+          <td style="text-align:left;padding:6px 8px;color:var(--text2);word-break:break-word;white-space:normal;line-height:1.7">
+            <span style="color:${d.st==="已签"?"var(--up)":"var(--gold)"}">${d.st}</span>${d.cap?" · "+d.cap:""}${d.d?`<br>${d.d}`:""}${d.warn?`<br><span style="color:var(--down)">⚠️ ${d.warn}</span>`:""}</td></tr>`).join("")
+      + `</table>`);
+
+    const NV = F.nvidia_inv;
+    html += card(h3("🟩 "+NV.title, NV.d)
+      + `<div style="font-size:12.5px;margin:4px 0 8px">${NV.period}对外股权投资合计 <b style="color:var(--gold);font-size:16px">${yi(NV.total)}美元</b>${g(NV.grade,NV.src)}</div>`
+      + NV.items.map(x=>`<div style="font-size:12.5px;margin:5px 0"><b>${x.n}</b>　<span style="color:var(--gold)">${yi(x.v)}美元</span>　<span style="color:var(--text2)">${x.when}${x.d?" · "+x.d:""}</span></div>`).join("")
+      + `<div style="margin-top:10px;padding-top:9px;border-top:1px solid var(--border);font-size:12.5px;line-height:1.8;color:var(--text2)"><b style="color:var(--accent)">信号：</b>${NV.signal}</div>`);
+
+    html += `<div style="font-size:11.5px;color:var(--text2);line-height:1.8;margin-top:16px">本页为个人学习整理，不构成投资建议。自动层每周一自动刷新；人工层截至 ${F.asof}，研究口径按季校准。</div>`;
+    document.getElementById("ac-body").innerHTML = html;
+
+    /* 融资租赁切换（事件委托，重建后依然有效） */
+    const lb = document.getElementById("ac-leasebar");
+    if(lb) lb.onclick = e => { const b=e.target.closest("[data-lease]"); if(!b) return;
+      withLease = b.dataset.lease==="1"; build(); };
+  }
+
+  return function(){
+    if(done){ return; }
+    document.getElementById("ac-legend").innerHTML =
+      Object.entries(GRADE).map(([k,v])=>`<span style="display:inline-block;margin:4px 10px 0 0;font-size:12px;color:var(--text2);white-space:nowrap"><span style="color:${v[2]}">${v[0]} ${v[1]}</span> = ${
+        {auto:"SEC 财报直出，每周自动刷新",report:"人工抄自季报或电话会",research:"机构研究口径，属判断非抓取",media:"媒体报道，未经证实"}[k]}</span>`).join("");
+    Promise.all([
+      fetch("data/aicapex.json?b="+(Date.now()%1e7)).then(r=>r.ok?r.json():null),
+      fetch("config/aicapex.json?b="+(Date.now()%1e7)).then(r=>r.ok?r.json():null)
+    ]).then(([d,c])=>{
+      if(!d || !c || !d.companies) throw 0;
+      DATA=d; CFG=c; done=true;
+      document.getElementById("ac-upd").textContent =
+        `自动层更新：${d.updated}（SEC XBRL，每周一）· 人工层截至：${c.asof}`;
+      build();
+    }).catch(()=>{
+      const u=document.getElementById("ac-upd");
+      if(u) u.textContent = "数据尚未生成（流水线每周一自动抓取，首次上线请稍候）";
     });
   };
 })();
@@ -3538,8 +3626,7 @@ let PROFILES = {};
     "HIMX":["himx-cpo","HIMX 与 CPO 光互连"],"06809":["montage-interconnect","澜起科技与 AI 互联"],
     "285A":["kioxia-feynman","铠侠存储费曼笔记"],"KXIAY":["kioxia-feynman","铠侠存储费曼笔记"],
     "4063":["shinetsu","信越化学深度解读"],"SHECY":["shinetsu","信越化学深度解读"],
-    "NVDA":["nvidia-ai-panorama","英伟达与 AI 时代全景"],
-    "AVAV":["avav-drop-analysis","AVAV 跌幅归因与后市判断"]
+    "NVDA":["nvidia-ai-panorama","英伟达与 AI 时代全景"]
   };
   const NOTE_GRP = {
     "光芯片与激光器":["physical-walls-supplement","物理墙·补充篇（激光器十二家竞对）"],
@@ -4854,7 +4941,8 @@ document.addEventListener("click", e=>{
   /* ④「更多」退役（2026-07-18 主人定）：次级栏目=知识库切换条七胶囊，顶部只留三页签。
      KB_VIEWS 下的任何页都算「学习笔记」页签高亮范围；新增栏目在 KB 数组加一项即全站生效。 */
   const KB = [["notes","📚 学习笔记"],["dict","📖 术语词典"],["history","📜 金融史"],["imap","🗺 产业地图"],
-              ["universe","🌌 股票宇宙"],["events","📅 大事件"],["lev","⚖️ 杠杆率"],["margin","💳 融资余额"],["reads","📖 烟囱荐读"]];
+              ["universe","🌌 股票宇宙"],["events","📅 大事件"],["lev","⚖️ 杠杆率"],["margin","💳 融资余额"],
+              ["aicapex","💰 AI资金"]];
   const KB_VIEWS = KB.map(x=>x[0]);
   document.querySelectorAll(".kbar[data-kbar]").forEach(k=>{
     k.innerHTML = KB.map(([v,l])=>`<button data-view="${v}"${v===k.dataset.kbar?' class="on"':''}>${l}</button>`).join("");
@@ -4862,7 +4950,7 @@ document.addEventListener("click", e=>{
   window.switchTab = function(v){
     document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",
       t.dataset.view===v || (v==="repread" && t.dataset.view==="reports") || (KB_VIEWS.includes(v) && v!=="notes" && t.dataset.view==="notes")));
-    ["dash","events","notes","dict","history","lev","margin","reads","reports","repread","imap","universe"].forEach(x=>{
+    ["dash","events","notes","dict","history","lev","margin","aicapex","reports","repread","imap","universe"].forEach(x=>{
       const el = document.getElementById("view-"+x);
       if(el) el.classList.toggle("hidden", v!==x);
     });
@@ -4873,7 +4961,7 @@ document.addEventListener("click", e=>{
     if(v==="imap" && typeof renderImap==="function"){ try{ renderImap(); }catch(e){} }   /* 切进地图即重渲染，行情与面板同步 */
     if(v==="universe" && typeof renderUniverse==="function"){ try{ renderUniverse(); }catch(e){} }   /* 宇宙同款：切入即刷 */
     if(v==="margin" && window.renderMargin){ try{ renderMargin(); }catch(e){} }   /* 融资余额：切入懒加载 */
-    if(v==="reads" && window.renderReads){ try{ renderReads(); }catch(e){} }   /* 烟囱荐读：切入懒加载 */
+    if(v==="aicapex" && window.renderAicapex){ try{ renderAicapex(); }catch(e){} } /* AI资金底图：切入懒加载 */
     const mb=document.getElementById("mbottom");
     if(mb) mb.style.display = v==="dash" ? "" : "none";
     document.body.classList.toggle("reading", v==="repread");   /* 阅读态白衣：顶栏与白纸统一 */
@@ -4935,7 +5023,7 @@ document.addEventListener("click", e=>{
   const wantView = new URLSearchParams(location.search).get("view")
                 || (function(){ try{ return localStorage.getItem("homeView"); }catch(e){ return null; } })()   /* 设为默认首页（宇宙页开关，2026-07-18） */
                 || (function(){ try{ return localStorage.getItem("lastView"); }catch(e){ return null; } })();
-  if(["notes","dict","history","events","lev","margin","reads","reports","imap","universe"].includes(wantView)){
+  if(["notes","dict","history","events","lev","margin","aicapex","reports","imap","universe"].includes(wantView)){
     window.switchTab(wantView);
   }
 
