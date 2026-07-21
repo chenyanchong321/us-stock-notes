@@ -3,6 +3,23 @@
  "items": [
   {
    "d": "2026-07-21",
+   "t": "K3 真正意义：开源也在变得昂贵",
+   "src": "2030FY · 公众号",
+   "u": "https://mp.weixin.qq.com/s/ybK-8fNkoC6fLo0GEYybaw",
+   "tags": [
+    "Kimi K3",
+    "开源模型",
+    "算力",
+    "AI"
+   ],
+   "r": "周末实测数据出来后，最扎实的一篇纠偏。K3 标价（输入3/输出15美元每百万token）看着只有 GPT-5.6 的一半，但 Jefferies 人工测评显示：同一任务 K3 烧掉 1.3 亿输出 token、总成本 2710 美元，GPT-5.6 拉满性能档只用 7000 万 token、成本 2824 美元——单位价格便宜一半，总账单基本打平。作者的落点比「中国开源追上闭源」更值得记：scaling law 还在跑，开源模型都干到几万亿参数了，开源不再等于廉价，智能从来是按成本计价的，与开闭源无关。",
+   "nl": [
+    "nvidia-posttraining",
+    "英伟达换账本：后训练为何突然可以花钱"
+   ]
+  },
+  {
+   "d": "2026-07-21",
    "t": "英伟达：从「一次性训练」的大模型到「后训练改进」的 Agent，算力需求正在变化",
    "src": "华尔街见闻 · 富途",
    "u": "https://news.futunn.com/post/76235899/nvidia-from-one-time-training-large-models-to-post-training",
