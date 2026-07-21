@@ -3486,12 +3486,44 @@ window.renderAicapex = (function(){
     return h;
   }
 
-  /* ===== ④ 变成什么 ===== */
+  /* ===== ④ 变成什么：钱→GW→GPU→Token 的换算链 ===== */
   function sec4(K){
-    const L4 = K.F.layer4_output;
-    return card(h3("④ 钱变成了什么", "把资本开支换算成物理世界的算力：电力、芯片、Token。本层数据最稀薄，先占位。")
-      + L4.items.map(x=>`<div style="margin:8px 0;font-size:13px;line-height:1.8"><b style="color:var(--accent)">${x.k}</b>${g(x.grade,x.src)}　<b style="color:var(--gold)">${x.v}</b>${x.d?`<br><span style="color:var(--text2)">${x.d}</span>`:""}${x.warn?`<br><span style="color:var(--down);font-size:11.5px">⚠️ ${x.warn}</span>`:""}</div>`).join("")
-      + `<div style="margin-top:10px;font-size:11.5px;color:var(--text2);border-top:1px solid var(--border);padding-top:8px">🚧 ${L4.todo}</div>`);
+    const L4 = K.F.layer4_output, R = L4.ruler, X = L4.cross, T = L4.tokens;
+    let h = card(h3("④ 钱变成了什么", "把资本开支换算成物理世界的算力。这一层的难点不是找数据，而是<b>不同口径量的根本不是同一个东西</b>——所以这里先立一把尺子，再用它去校验各家说法。"));
+
+    /* 换算尺 */
+    h += card(h3("📏 "+R.title, R.d + g(R.grade))
+      + `<table style="width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px">`
+      + R.unit.map((x,i)=>`<tr style="border-top:${i?"1px solid var(--border)":"none"}">
+          <td style="text-align:left;padding:7px 8px;word-break:break-word;${i>=2?"padding-left:20px;":""}">${i>=2?'<span style="color:var(--text2)">↳ </span>':""}${x.k}</td>
+          <td style="text-align:right;padding:7px 8px;color:var(--gold);white-space:nowrap;font-weight:600">${x.v}</td>
+          <td style="text-align:left;padding:7px 8px;color:var(--text2);word-break:break-word;white-space:normal;line-height:1.7">${x.d}</td></tr>`).join("")
+      + `</table>`
+      + `<div style="margin-top:11px;padding:10px 12px;background:var(--panel2);border-radius:8px;font-size:12.5px;line-height:1.85">✅ ${R.check}</div>`
+      + `<div style="margin-top:8px;font-size:11.5px;color:var(--down);line-height:1.7">⚠️ ${R.warn}</div>`);
+
+    /* 三条口径互校 */
+    h += card(h3("🔀 "+X.title, X.d + g(X.grade))
+      + X.items.map((x,i)=>`<div style="margin:9px 0;padding:10px 12px;border:1px solid var(--border);border-radius:8px">
+          <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline">
+            <b style="flex:0 0 auto">${x.k}</b>
+            <b style="color:var(--gold);font-size:17px;white-space:nowrap">${x.v}</b></div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.75;margin-top:3px">${x.d}</div></div>`).join("")
+      + `<div style="margin-top:10px;font-size:13px;line-height:1.9">${X.insight}</div>`);
+
+    /* Token */
+    h += card(h3("🔤 "+T.title, T.d)
+      + T.items.map(x=>`<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:8px 0;border-top:1px solid var(--border)">
+          <div style="flex:1 1 200px"><b>${x.n}</b>${g(x.grade)}
+            <div style="font-size:11.5px;color:var(--text2);line-height:1.7">${x.d}</div></div>
+          <div style="text-align:right;white-space:nowrap"><b style="color:var(--gold);font-size:15px">${x.v}</b></div></div>`).join("")
+      + `<div style="margin-top:11px;padding:10px 12px;background:var(--panel2);border-radius:8px;font-size:12.5px;line-height:1.85">🧮 ${T.econ}</div>`
+      + `<div style="margin-top:8px;font-size:11.5px;color:var(--down);line-height:1.7">⚠️ ${T.warn}</div>`);
+
+    /* 原有零散指标保留在最后 */
+    h += card(h3("📌 其他已核实指标", "散点数据，逐步并入上面的换算链。")
+      + L4.items.map(x=>`<div style="margin:8px 0;font-size:13px;line-height:1.8"><b style="color:var(--accent)">${x.k}</b>${g(x.grade,x.src)}　<b style="color:var(--gold)">${x.v}</b>${x.d?`<br><span style="color:var(--text2)">${x.d}</span>`:""}${x.warn?`<br><span style="color:var(--down);font-size:11.5px">⚠️ ${x.warn}</span>`:""}</div>`).join(""));
+    return h;
   }
 
   /* ===== ⑤ 谁来买单 ===== */
