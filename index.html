@@ -3342,14 +3342,18 @@ window.renderAicapex = (function(){
       ["2026 年计划开支", yi(hd.capex2026.v)+"美元", `同比 +${hd.capex2026.yoy}%（2025 约 ${yi(hd.capex2026.base2025)}）`, "var(--gold)", g("media")],
       ["累计投入 ÷ AI 年化收入", K.payback?K.payback.toFixed(1)+" 倍":"–",
        `2023 年至今累计 ${yi(K.cumCapex)} ÷ 两家模型公司 ${yi(K.arr)}`, "var(--down)", g("research")],
-      ["最新季度四家合计", yi(K.lastTot)+"美元", K.lastQ+" · SEC 财报直出", "var(--up)", g("auto")]
+      (function(){ const c=covNow(K); return c.last
+        ? ["自有现金流覆盖率", c.last.r.toFixed(2)+"x",
+           `${c.last.q} · 三年前为 ${c.first.r.toFixed(2)}x${c.broke.length?" · "+c.broke.join("、")+"已跌破1":""}`,
+           c.last.r<1.3?"var(--down)":"var(--gold)", g("auto")]
+        : ["最新季度四家合计", yi(K.lastTot)+"美元", K.lastQ+" · SEC 财报直出", "var(--up)", g("auto")]; })()
     ].map(c=>`<div style="flex:1 1 210px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 14px">
         <div style="font-size:12px;color:var(--text2)">${c[0]}${c[4]}</div>
         <div style="font-size:22px;font-weight:700;color:${c[3]};margin:3px 0;white-space:nowrap">${c[1]}</div>
         <div style="font-size:11px;color:var(--text2);line-height:1.6">${c[2]}</div></div>`).join("");
 
     /* 资金流示意：五格链条，点击直达该段 */
-    const flow = [["s1","钱从哪来","现金流 · 发债 · 表外 SPV","#5b9bd5"],
+    const flow = [["s1","钱从哪来","覆盖率逼近警戒线 · 表外 SPV","#5b9bd5"],
                   ["s2","谁在花","四大云厂 · 中美差 14.6 倍","#a78bfa"],
                   ["s3","钱花给谁","英伟达 · 台积电 · HBM · 电力","#38bdf8"],
                   ["s4","变成什么","GW 电力 · GPU · Token","#fb923c"],
@@ -3362,8 +3366,10 @@ window.renderAicapex = (function(){
     /* 各段摘要卡 */
     const nv = F.layer3_split.reverse;
     const sum = [
-      ["s1", "① 钱从哪来", `表外 SPV 已藏起 <b style="color:var(--gold)">${yi(1200)}美元</b>债务`,
-       "Meta、Oracle、xAI、CoreWeave 用特殊目的实体把数据中心债务移出资产负债表——这些钱在 capex 数字里根本看不见。"],
+      (function(){ const c=covNow(K);
+        return ["s1", "① 钱从哪来",
+          c.last ? `自有现金流覆盖率 <b style="color:${c.last.r<1.3?"var(--down)":"var(--gold)"}">${c.first.r.toFixed(2)}x → ${c.last.r.toFixed(2)}x</b>` : `表外 SPV 已藏起 <b style="color:var(--gold)">${yi(1200)}美元</b>债务`,
+          `赚的钱对建设支出的缓冲三年间几乎耗尽${c.broke.length?`，<b style="color:var(--down)">${c.broke.join("、")}已跌破 1</b>`:""}。另有逾 1,200 亿美元债务通过表外 SPV 移出了资产负债表——这些钱在 capex 数字里根本看不见。`]; })(),
       ["s2", "② 谁在花", `2025 年四家合计 <b style="color:var(--gold)">${yi(K.yearTot(2025))}美元</b>`,
        `逐季单调递增无缺口：2023 ${yi(K.yearTot(2023))} → 2024 ${yi(K.yearTot(2024))} → 2025 ${yi(K.yearTot(2025))}。苹果同期几乎没参与，是绝佳对照组。`],
       ["s2cn", "②之二 中国大厂", `中美 capex 相差 <b style="color:var(--down)">14.6 倍</b>`,
@@ -3385,10 +3391,84 @@ window.renderAicapex = (function(){
       ${chain}${sum}`;
   }
 
+  /* 总览用：最新一季四家合计覆盖率 + 已跌破 1 的公司 */
+  function covNow(K){
+    const C = K.C, qs = qsOf(C).filter(q=>q>="2023Q1");
+    let last=null, first=null;
+    qs.forEach(q=>{
+      const cx = CO.reduce((s,[t])=>s+(C[t].capex[q]||0),0);
+      const oc = CO.reduce((s,[t])=>s+((C[t].ocf||{})[q]||0),0);
+      if(cx>0 && oc>0){ const o={q,r:oc/cx}; if(!first) first=o; last=o; }
+    });
+    const broke = CO.map(([t,n])=>{
+      const qq = Object.keys(C[t].capex).filter(q=>(C[t].ocf||{})[q]>0 && C[t].capex[q]>0).sort();
+      const q = qq[qq.length-1];
+      return q && C[t].ocf[q]/C[t].capex[q] < 1 ? n : null;
+    }).filter(Boolean);
+    return {last, first, broke};
+  }
+
   /* ===== ① 钱从哪来 ===== */
+  /* 自有现金流覆盖率 = 经营现金流 ÷ capex。跌破 1 = 赚的钱已经不够建数据中心，必须靠借。
+     这是本页最该盯的泡沫早期预警指标，数据全自动（同一张现金流量表里的两个科目）。 */
+  function coverage(K){
+    const C = K.C;
+    const qs = qsOf(C).filter(q=>q>="2023Q1");
+    const rows = qs.map(q=>{
+      const cx = CO.reduce((s,[t])=>s+(C[t].capex[q]||0), 0);
+      const oc = CO.reduce((s,[t])=>s+((C[t].ocf||{})[q]||0), 0);
+      return (cx>0 && oc>0) ? {q, cx, oc, r: oc/cx} : null;
+    }).filter(Boolean);
+    if(rows.length < 4) return "";
+    const last = rows[rows.length-1], first = rows[0];
+    const W=920, H=210, padL=40, padR=10, padT=14, padB=28;
+    const mx = Math.max(3, Math.ceil(Math.max(...rows.map(r=>r.r))));
+    const X = i => padL + i/(rows.length-1)*(W-padL-padR);
+    const Y = v => padT + (1 - v/mx)*(H-padT-padB);
+    const line = rows.map((r,i)=>`${i?"L":"M"}${X(i).toFixed(1)},${Y(r.r).toFixed(1)}`).join("");
+    const area = line + `L${X(rows.length-1).toFixed(1)},${Y(0).toFixed(1)}L${X(0).toFixed(1)},${Y(0).toFixed(1)}Z`;
+    let grid="";
+    [1,2,3].forEach(v=>{ if(v<=mx) grid += `<line x1="${padL}" y1="${Y(v).toFixed(1)}" x2="${W-padR}" y2="${Y(v).toFixed(1)}" stroke="${v===1?"var(--down)":"var(--border)"}" stroke-width="${v===1?1.5:1}" opacity="${v===1?.85:.4}" ${v===1?'stroke-dasharray="5,4"':""}/>
+      <text x="${padL-6}" y="${(Y(v)+3).toFixed(1)}" font-size="10" fill="${v===1?"var(--down)":"var(--text2)"}" text-anchor="end">${v}x</text>`; });
+    let labs="";
+    rows.forEach((r,i)=>{ if(r.q.endsWith("Q1")) labs += `<text x="${X(i).toFixed(1)}" y="${H-9}" font-size="10.5" fill="var(--text2)" text-anchor="middle">${r.q.slice(0,4)}</text>`; });
+    const dots = rows.map((r,i)=>`<circle cx="${X(i).toFixed(1)}" cy="${Y(r.r).toFixed(1)}" r="${i===rows.length-1?4:2}" fill="${r.r<1?"var(--down)":"var(--up)"}"/>`).join("");
+    /* 各家最新季度 */
+    const per = CO.map(([t,n])=>{
+      const qq = Object.keys(C[t].capex).filter(q=>(C[t].ocf||{})[q]>0 && C[t].capex[q]>0).sort();
+      const q = qq[qq.length-1];
+      return q ? {n, q, r: C[t].ocf[q]/C[t].capex[q], cx: C[t].capex[q], oc: C[t].ocf[q]} : null;
+    }).filter(Boolean).sort((a,b)=>a.r-b.r);
+    return card(h3("💧 自有现金流覆盖率", "经营现金流 ÷ 资本开支。<b>这是本页最该盯的一个指标</b>——它衡量巨头们「是在用赚的钱建，还是在用借的钱建」。跌破 1 意味着经营现金流已经不够覆盖资本开支，缺口必须靠发债、私募信贷或表外 SPV 补上。" + g("auto"))
+      + `<div style="display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 10px">`
+      + [["当前覆盖率", last.r.toFixed(2)+"x", last.q, last.r<1.3?"var(--down)":"var(--gold)"],
+         ["三年前", first.r.toFixed(2)+"x", first.q, "var(--text2)"],
+         ["已跌破 1 的公司", per.filter(p=>p.r<1).length+" 家", per.filter(p=>p.r<1).map(p=>p.n).join("、")||"暂无", per.some(p=>p.r<1)?"var(--down)":"var(--up)"]]
+        .map(c=>`<div style="flex:1 1 150px;background:var(--panel2);border-radius:8px;padding:10px 12px">
+          <div style="font-size:11.5px;color:var(--text2)">${c[0]}</div>
+          <div style="font-size:20px;font-weight:700;color:${c[3]};white-space:nowrap">${c[1]}</div>
+          <div style="font-size:11px;color:var(--text2)">${c[2]}</div></div>`).join("") + `</div>`
+      + `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">
+          <defs><linearGradient id="acov" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--accent)" stop-opacity=".28"/><stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>
+          ${grid}<path d="${area}" fill="url(#acov)"/><path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2.2"/>${dots}${labs}</svg>`
+      + `<div style="font-size:12px;color:var(--text2);margin:6px 0 12px;line-height:1.75">红色虚线＝警戒线 1.0。四家合计覆盖率从 ${first.q} 的 <b style="color:var(--up)">${first.r.toFixed(2)}x</b> 一路降到 ${last.q} 的 <b style="color:${last.r<1.3?"var(--down)":"var(--gold)"}">${last.r.toFixed(2)}x</b>——<b>三年间赚钱能力对建设支出的缓冲几乎被消耗殆尽</b>。</div>`
+      + `<div style="font-size:13px;font-weight:600;margin-bottom:4px">分公司最新季度（由低到高）</div>`
+      + `<table style="width:100%;border-collapse:collapse;font-size:12.5px"><tr style="color:var(--text2)"><th style="text-align:left;padding:5px 8px">公司</th><th style="text-align:right;padding:5px 8px">覆盖率</th><th style="text-align:right;padding:5px 8px">经营现金流</th><th style="text-align:right;padding:5px 8px">资本开支</th><th style="text-align:left;padding:5px 8px">状态</th></tr>`
+      + per.map(p=>`<tr style="border-top:1px solid var(--border)">
+          <td style="text-align:left;padding:6px 8px;white-space:nowrap">${p.n}<span style="font-size:10.5px;color:var(--text2)"> ${p.q}</span></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:700;color:${p.r<1?"var(--down)":p.r<1.5?"var(--gold)":"var(--up)"};white-space:nowrap">${p.r.toFixed(2)}x</td>
+          <td style="text-align:right;padding:6px 8px;white-space:nowrap">${p.oc.toFixed(0)} 亿$</td>
+          <td style="text-align:right;padding:6px 8px;white-space:nowrap">${p.cx.toFixed(0)} 亿$</td>
+          <td style="text-align:left;padding:6px 8px;word-break:break-word;white-space:normal;line-height:1.7;color:var(--text2)">${
+            p.r<1 ? '<b style="color:var(--down)">已跌破 1</b>——赚的钱不够建，缺口靠融资' : p.r<1.5 ? "缓冲已经很薄" : "仍有余裕"}</td></tr>`).join("")
+      + `</table>`
+      + `<div style="margin-top:10px;font-size:11.5px;color:var(--text2);line-height:1.7">⚠️ 口径提醒：经营现金流与 capex 取自同一张现金流量表，跨公司可比；但 capex 含非 AI 部分（亚马逊的物流仓储尤其重），因此该指标衡量的是<b>整体建设强度对赚钱能力的挤压</b>，不是纯 AI 口径。此外融资租赁不计入 capex，实际压力比图上更大。</div>`);
+  }
+
   function sec1(K){
     const L1 = K.F.layer1_source;
-    return card(h3("① 钱从哪来", "资本开支的资金来源。当巨头从「用赚的钱建」转向「借钱建、且把债务挪出表外」，风险性质就变了。")
+    return coverage(K) + card(h3("① 钱从哪来", "资本开支的资金来源。当巨头从「用赚的钱建」转向「借钱建、且把债务挪出表外」，风险性质就变了。")
       + L1.items.map(x=>`<div style="margin:8px 0;font-size:13px;line-height:1.8"><b style="color:var(--accent)">${x.k}</b>${g(x.grade,x.src)}${x.v?` <b style="color:var(--gold)">${yi(x.v)}${x.unit.replace("亿","")}</b>`:""}<br><span style="color:var(--text2)">${x.d}</span></div>`).join("")
       + `<div style="margin-top:14px;font-size:13px;font-weight:600">表外 SPV 明细<span style="font-weight:400;color:var(--text2);font-size:12px"> —— 本轮周期最容易被忽略的一块</span></div>`
       + `<table style="width:100%;border-collapse:collapse;font-size:12.5px;table-layout:auto;margin-top:6px">
