@@ -3332,7 +3332,7 @@ window.renderAicapex = (function(){
 
   /* 分段目录（2026-07-21 主人需求：不要一路下滑，要像目录一样切换）。
      默认「总览」；切段不记忆（同涨跌幅榜每次点进重置今日的规矩）。 */
-  const SECS = [["all","🏠 总览"],["s1","① 钱从哪来"],["s2","② 谁在花"],["s3","③ 钱花给谁"],
+  const SECS = [["all","🏠 总览"],["s1","① 钱从哪来"],["s2","② 谁在花"],["s2cn","②之二 中国大厂"],["s3","③ 钱花给谁"],
                 ["s4","④ 变成什么"],["s5","⑤ 谁来买单"],["sx","🔌 大单与投资"]];
   let CUR = "all";
   const navBar = () => `<div id="ac-nav" style="display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 4px">` +
@@ -3366,7 +3366,7 @@ window.renderAicapex = (function(){
 
     /* 资金流示意：五格链条，点击直达该段 */
     const flow = [["s1","钱从哪来","现金流 · 发债 · 表外 SPV","#5b9bd5"],
-                  ["s2","谁在花","四大云厂 + 中国大厂","#a78bfa"],
+                  ["s2","谁在花","四大云厂 · 中美差 14.6 倍","#a78bfa"],
                   ["s3","钱花给谁","英伟达 · 台积电 · HBM · 电力","#38bdf8"],
                   ["s4","变成什么","GW 电力 · GPU · Token","#fb923c"],
                   ["s5","谁来买单","OpenAI · Anthropic 的收入","#4ade80"]];
@@ -3382,6 +3382,8 @@ window.renderAicapex = (function(){
        "Meta、Oracle、xAI、CoreWeave 用特殊目的实体把数据中心债务移出资产负债表——这些钱在 capex 数字里根本看不见。"],
       ["s2", "② 谁在花", `2025 年四家合计 <b style="color:var(--gold)">${yi(K.yearTot(2025))}美元</b>`,
        `逐季单调递增无缺口：2023 ${yi(K.yearTot(2023))} → 2024 ${yi(K.yearTot(2024))} → 2025 ${yi(K.yearTot(2025))}。苹果同期几乎没参与，是绝佳对照组。`],
+      ["s2cn", "②之二 中国大厂", `中美 capex 相差 <b style="color:var(--down)">14.6 倍</b>`,
+       "腾讯与阿里加起来一个季度的资本开支，还不到 Meta 一家的一半。理解这个差距，是理解国产替代紧迫性与中概 AI 叙事天花板的前提。"],
       ["s3", "③ 钱花给谁", `英伟达自留毛利 <b style="color:var(--gold)">75%</b>`,
        `GPU 那一档并非英伟达独吞：单季 ${nv.nvda_dc} 亿美元数据中心收入里，台积电约拿走 12.5%、HBM 三家约 9%，其余七成半是英伟达自己的毛利。`],
       ["s4", "④ 变成什么", `全球关键 IT 功率 <b style="color:var(--gold)">49→96 GW</b>`,
@@ -3429,9 +3431,44 @@ window.renderAicapex = (function(){
       + `<table style="width:100%;border-collapse:collapse;font-size:12.5px"><tr style="color:var(--text2)"><th style="text-align:left;padding:5px 8px">公司</th><th style="text-align:right;padding:5px 8px">2026 指引</th><th style="text-align:left;padding:5px 8px">备注</th></tr>`
       + L2.guide2026.map(x=>`<tr style="border-top:1px solid var(--border)"><td style="text-align:left;padding:6px 8px;white-space:nowrap">${x.n}</td><td style="text-align:right;padding:6px 8px;color:var(--gold);white-space:nowrap">${x.lo===x.hi?yi(x.lo):yi(x.lo)+"–"+yi(x.hi)}$</td><td style="text-align:left;padding:6px 8px;color:var(--text2);word-break:break-word;white-space:normal;line-height:1.7">${x.warn||x.src||""}</td></tr>`).join("")
       + `</table>`
-      + `<div style="margin-top:14px;font-size:13px;font-weight:600">中国大厂${g("media")}</div>`
-      + `<div style="font-size:11.5px;color:var(--text2);margin:2px 0 6px">中概季度 capex 需人工从季报抽取（美股 XBRL 自动管线覆盖不到），当前为媒体口径，待补。</div>`
-      + L2.cn.map(x=>`<div style="font-size:12.5px;margin:6px 0;line-height:1.8"><b>${x.n}</b><span style="color:var(--text2)">　${x.d}</span>${x.warn?`<br><span style="color:var(--down);font-size:11.5px">⚠️ ${x.warn}</span>`:""}</div>`).join(""));
+      );
+  }
+
+  /* ②之二：中国大厂（人工层，单独成卡——中美对比是本页最有冲击力的一张图） */
+  function sec2cn(K){
+    const CN = K.F.layer2_spend.cn, CMP = CN.compare;
+    const yuan = v => v>=10000 ? (v/10000).toFixed(2)+" 万亿元" : v.toLocaleString()+" 亿元";
+    let h = card(h3("② 之二 · 中国大厂", CN.note)
+      + CN.items.map(x=>`<div style="margin:10px 0;padding:10px 12px;border:1px solid var(--border);border-radius:8px">
+          <div style="font-size:14px;font-weight:700">${x.n}<span style="font-size:11.5px;color:var(--text2);font-weight:400">　${x.c}</span>${g(x.grade)}</div>
+          ${x.rows.length ? `<table style="width:100%;border-collapse:collapse;font-size:12.5px;margin-top:5px">` +
+            x.rows.map((r,i)=>`<tr style="border-top:${i?"1px solid var(--border)":"none"}">
+              <td style="text-align:left;padding:6px 8px;white-space:nowrap">${r.p}</td>
+              <td style="text-align:right;padding:6px 8px;color:var(--gold);white-space:nowrap;font-weight:600">${yuan(r.v)}${r.est?"<span style='font-size:10.5px;color:var(--text2);font-weight:400'> 推算</span>":""}${r.plan?"<span style='font-size:10.5px;color:var(--text2);font-weight:400'> 计划</span>":""}</td>
+              <td style="text-align:right;padding:6px 8px;color:var(--up);white-space:nowrap">${r.yoy?"+"+r.yoy+"%":""}</td>
+              <td style="text-align:left;padding:6px 8px;color:var(--text2);word-break:break-word;white-space:normal;line-height:1.7">${r.d||""}</td></tr>`).join("") + `</table>`
+            : `<div style="font-size:12px;color:var(--text2);line-height:1.75;margin-top:4px">${x.todo||""}${x.warn?`<span style="color:var(--down)">⚠️ ${x.warn}</span>`:""}</div>`}
+        </div>`).join(""));
+
+    /* 中美对比 */
+    h += card(h3("🇨🇳🇺🇸 "+CMP.title, CMP.d)
+      + CMP.rows.map(r=>{ const mult = (r.us/r.cn);
+        const barUS = 100, barCN = Math.max(2, r.cn/r.us*100);
+        return `<div style="margin:12px 0">
+          <div style="font-size:13px;font-weight:600;margin-bottom:6px">${r.k}　<span style="color:var(--down);font-weight:700">相差 ${mult.toFixed(1)} 倍</span></div>
+          <div style="display:flex;align-items:center;gap:8px;margin:4px 0">
+            <span style="flex:0 0 84px;font-size:11.5px;color:var(--text2)">美股四家</span>
+            <div style="flex:1 1 auto;height:20px;background:linear-gradient(90deg,#5b9bd5,#38bdf8);border-radius:4px;width:${barUS}%"></div>
+            <b style="flex:0 0 auto;color:var(--gold);font-size:13px;white-space:nowrap">${r.us.toLocaleString()} ${r.usd}</b></div>
+          <div style="display:flex;align-items:center;gap:8px;margin:4px 0">
+            <span style="flex:0 0 84px;font-size:11.5px;color:var(--text2)">中国两家</span>
+            <div style="flex:0 0 auto;height:20px;background:linear-gradient(90deg,#fb923c,#f472b6);border-radius:4px;width:${barCN}%;min-width:6px"></div>
+            <b style="flex:0 0 auto;color:var(--gold);font-size:13px;white-space:nowrap">${r.cn.toLocaleString()} ${r.usd}</b></div>
+          <div style="font-size:11.5px;color:var(--text2);line-height:1.7;margin-top:3px">${r.usn}　｜　${r.cnn}</div></div>`; }).join("")
+      + `<div style="margin-top:12px;font-size:13px;line-height:1.9;border-top:1px solid var(--border);padding-top:10px">${CMP.insight}</div>`
+      + `<div style="margin-top:8px;font-size:11.5px;color:var(--down);line-height:1.7">⚠️ ${CMP.warn}</div>`
+      + `<div style="margin-top:6px;font-size:11px;color:var(--text2)">${CN.fxnote}</div>`);
+    return h;
   }
 
   /* ===== ③ 钱花给谁（含二次分账，本页最原创的一块） ===== */
@@ -3568,7 +3605,7 @@ window.renderAicapex = (function(){
 
   function build(){
     const K = calc();
-    const R = {all:secAll, s1:sec1, s2:sec2, s3:sec3, s4:sec4, s5:sec5, sx:secX}[CUR] || secAll;
+    const R = {all:secAll, s1:sec1, s2:sec2, s2cn:sec2cn, s3:sec3, s4:sec4, s5:sec5, sx:secX}[CUR] || secAll;
     document.getElementById("ac-body").innerHTML = navBar() + R(K)
       + `<div style="font-size:11.5px;color:var(--text2);line-height:1.8;margin-top:16px">本页为个人学习整理，不构成投资建议。自动层每周一自动刷新；人工层截至 ${K.F.asof}，研究口径按季校准。</div>`;
   }
