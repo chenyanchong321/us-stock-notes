@@ -3295,13 +3295,19 @@ window.renderAicapex = (function(){
     const mx = Math.max(...tot)*1.08 || 1;
     const bw = (W-padL-padR)/qs.length;
     const Y = v => padT + (1-v/mx)*(H-padT-padB);
-    let bars="", labs="";
+    let bars="", labs="", hits="";
+    HIT.bar = [];
     qs.forEach((q,i)=>{
-      let acc=0;
-      CO.forEach(([t,,c])=>{ const v=val(C,t,q); if(!v) return;
+      let acc=0; const parts=[];
+      CO.forEach(([t,n,c])=>{ const v=val(C,t,q); if(!v) return;
         const y0=Y(acc+v), y1=Y(acc);
         bars += `<rect x="${(padL+i*bw+bw*0.13).toFixed(1)}" y="${y0.toFixed(1)}" width="${(bw*0.74).toFixed(1)}" height="${Math.max(0,y1-y0).toFixed(1)}" fill="${c}" opacity=".9"/>`;
-        acc+=v; });
+        acc+=v; parts.push({n,c,v}); });
+      const prevQ = qs[i-4];   /* 同比＝去年同季 */
+      const prevTot = prevQ ? CO.reduce((s,[t])=>s+val(C,t,prevQ),0) : 0;
+      HIT.bar.push({q, parts, tot: acc, yoy: prevTot>0 ? (acc/prevTot-1)*100 : null});
+      /* 透明 hit 区盖满整列（含空白部分，好瞄准） */
+      hits += `<rect data-hit="bar" data-i="${i}" x="${(padL+i*bw).toFixed(1)}" y="${padT}" width="${bw.toFixed(1)}" height="${(H-padT-padB).toFixed(1)}" fill="transparent" style="cursor:pointer"/>`;
       if(q.endsWith("Q1")) labs += `<text x="${(padL+i*bw+bw/2).toFixed(1)}" y="${H-10}" font-size="10.5" fill="var(--text2)" text-anchor="middle">${q.slice(0,4)}</text>`;
     });
     let grid="";
@@ -3309,7 +3315,7 @@ window.renderAicapex = (function(){
     const legend = CO.map(([t,n,c])=>`<span style="margin-right:12px;white-space:nowrap"><i style="display:inline-block;width:9px;height:9px;background:${c};border-radius:2px;margin-right:4px"></i>${n}</span>`).join("");
     const lastQ = qs[qs.length-1], lastTot = tot[tot.length-1];
     return `<div style="font-size:12px;color:var(--text2);margin:2px 0 6px">${legend}</div>
-      <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">${grid}${bars}${labs}
+      <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">${grid}${bars}${labs}${hits}
         <text x="${padL-6}" y="${(padT+8)}" font-size="10" fill="var(--text2)" text-anchor="end">亿$</text></svg>
       <div style="font-size:12px;color:var(--text2);margin-top:4px">最新完整季度 <b style="color:var(--gold)">${lastQ}</b> 四家合计 <b style="color:var(--gold)">${yi(lastTot)}美元</b>${withLease?"（含融资租赁）":"（纯 capex，不含融资租赁）"}</div>`;
   }
@@ -3321,6 +3327,49 @@ window.renderAicapex = (function(){
   let CUR = "all";
   const navBar = () => `<div id="ac-nav" style="display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 4px">` +
     SECS.map(([v,l])=>`<button data-sec="${v}" style="font-size:12.5px;padding:7px 13px;border-radius:16px;cursor:pointer;white-space:nowrap;border:1px solid ${v===CUR?"var(--accent)":"var(--border)"};background:${v===CUR?"var(--accent)":"transparent"};color:${v===CUR?"#fff":"var(--text2)"};font-weight:${v===CUR?"600":"400"}">${l}</button>`).join("") + `</div>`;
+
+  /* 图表悬停信息层（2026-07-21 主人反馈：图表是死的，鼠标移上去应该出数）。
+     不用原生 title——有约 1 秒延迟且样式不可控（站内老教训）。自绘 + 透明 hit 区。
+     桌面 hover，触屏点击（幽灵浮窗铁律：触屏一律不做悬停）。 */
+  const FINE = matchMedia("(hover:hover) and (pointer:fine)").matches;
+  let HIT = {bar: [], cov: []};
+  function acTip(html, x, y){
+    let t = document.getElementById("ac-tip");
+    if(!t){
+      t = document.createElement("div"); t.id = "ac-tip";
+      t.style.cssText = "position:fixed;z-index:330;display:none;pointer-events:none;background:var(--panel2);"
+        + "border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:12.5px;line-height:1.85;"
+        + "color:var(--text);box-shadow:0 8px 24px rgba(0,0,0,.32);max-width:270px";
+      document.body.appendChild(t);
+    }
+    if(!html){ t.style.display = "none"; return; }
+    t.innerHTML = html; t.style.display = "block";
+    const w = t.offsetWidth, h = t.offsetHeight;
+    t.style.left = Math.max(8, Math.min(x + 14, innerWidth - w - 8)) + "px";
+    t.style.top  = Math.max(8, Math.min(y - h - 12, innerHeight - h - 8)) + "px";
+  }
+  const tipRow = (label, val, color) =>
+    `<div style="display:flex;justify-content:space-between;gap:14px"><span style="color:var(--text2)">${label}</span>`
+    + `<b style="white-space:nowrap${color?";color:"+color:""}">${val}</b></div>`;
+  function hitHTML(kind, i){
+    if(kind === "bar"){
+      const d = HIT.bar[i]; if(!d) return "";
+      return `<div style="font-weight:700;margin-bottom:5px">${d.q}${withLease?"（含融资租赁）":""}</div>`
+        + d.parts.map(p=>tipRow(`<i style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${p.c};margin-right:5px"></i>${p.n}`, p.v.toFixed(1)+" 亿$")).join("")
+        + `<div style="border-top:1px solid var(--border);margin-top:5px;padding-top:5px">`
+        + tipRow("四家合计", d.tot.toFixed(1)+" 亿$", "var(--gold)")
+        + (d.yoy!=null ? tipRow("同比", (d.yoy>0?"+":"")+d.yoy.toFixed(0)+"%", d.yoy>0?"var(--up)":"var(--down)") : "")
+        + `</div>`;
+    }
+    const d = HIT.cov[i]; if(!d) return "";
+    return `<div style="font-weight:700;margin-bottom:5px">${d.q}</div>`
+      + tipRow("经营现金流", d.oc.toFixed(0)+" 亿$", "var(--up)")
+      + tipRow("资本开支", d.cx.toFixed(0)+" 亿$", "var(--accent)")
+      + `<div style="border-top:1px solid var(--border);margin-top:5px;padding-top:5px">`
+      + tipRow("覆盖率", d.r.toFixed(2)+"x", d.r<1?"var(--down)":d.r<1.5?"var(--gold)":"var(--up)")
+      + `</div><div style="font-size:11.5px;color:var(--text2);margin-top:4px">${
+          d.r<1 ? "赚的钱不够建，缺口靠融资" : d.r<1.5 ? "缓冲已经很薄" : "仍有余裕"}</div>`;
+  }
 
   /* 计算层：几个跨段共用的派生数字 */
   function calc(){
@@ -3433,6 +3482,9 @@ window.renderAicapex = (function(){
     let labs="";
     rows.forEach((r,i)=>{ if(r.q.endsWith("Q1")) labs += `<text x="${X(i).toFixed(1)}" y="${H-9}" font-size="10.5" fill="var(--text2)" text-anchor="middle">${r.q.slice(0,4)}</text>`; });
     const dots = rows.map((r,i)=>`<circle cx="${X(i).toFixed(1)}" cy="${Y(r.r).toFixed(1)}" r="${i===rows.length-1?4:2}" fill="${r.r<1?"var(--down)":"var(--up)"}"/>`).join("");
+    HIT.cov = rows;
+    const cw = (W-padL-padR)/rows.length;
+    const chits = rows.map((r,i)=>`<rect data-hit="cov" data-i="${i}" x="${(X(i)-cw/2).toFixed(1)}" y="${padT}" width="${cw.toFixed(1)}" height="${(H-padT-padB).toFixed(1)}" fill="transparent" style="cursor:pointer"/>`).join("");
     /* 各家最新季度 */
     const per = CO.map(([t,n])=>{
       const qq = Object.keys(C[t].capex).filter(q=>(C[t].ocf||{})[q]>0 && C[t].capex[q]>0).sort();
@@ -3451,7 +3503,7 @@ window.renderAicapex = (function(){
       + `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">
           <defs><linearGradient id="acov" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="var(--accent)" stop-opacity=".28"/><stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>
-          ${grid}<path d="${area}" fill="url(#acov)"/><path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2.2"/>${dots}${labs}</svg>`
+          ${grid}<path d="${area}" fill="url(#acov)"/><path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2.2"/>${dots}${labs}${chits}</svg>`
       + `<div style="font-size:12px;color:var(--text2);margin:6px 0 12px;line-height:1.75">红色虚线＝警戒线 1.0。四家合计覆盖率从 ${first.q} 的 <b style="color:var(--up)">${first.r.toFixed(2)}x</b> 一路降到 ${last.q} 的 <b style="color:${last.r<1.3?"var(--down)":"var(--gold)"}">${last.r.toFixed(2)}x</b>——<b>三年间赚钱能力对建设支出的缓冲几乎被消耗殆尽</b>。</div>`
       + `<div style="font-size:13px;font-weight:600;margin-bottom:4px">分公司最新季度（由低到高）</div>`
       + `<table style="width:100%;border-collapse:collapse;font-size:12.5px"><tr style="color:var(--text2)"><th style="text-align:left;padding:5px 8px">公司</th><th style="text-align:right;padding:5px 8px">覆盖率</th><th style="text-align:right;padding:5px 8px">经营现金流</th><th style="text-align:right;padding:5px 8px">资本开支</th><th style="text-align:left;padding:5px 8px">状态</th></tr>`
@@ -3488,7 +3540,11 @@ window.renderAicapex = (function(){
       + `<div style="margin-top:14px;font-size:13px;font-weight:600">年度合计与增速${g("auto")}</div>`
       + `<table style="width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px"><tr style="color:var(--text2)"><th style="text-align:left;padding:5px 8px">年份</th><th style="text-align:right;padding:5px 8px">四家合计</th><th style="text-align:right;padding:5px 8px">同比</th></tr>`
       + [2023,2024,2025].map(y=>{ const v=yearTot(y), p=yearTot(y-1), yoy = p?((v/p-1)*100):null;
-          return `<tr style="border-top:1px solid var(--border)"><td style="text-align:left;padding:6px 8px">${y}</td><td style="text-align:right;padding:6px 8px;white-space:nowrap">${yi(v)}美元</td><td style="text-align:right;padding:6px 8px;color:var(--up);white-space:nowrap">${yoy!==null?"+"+yoy.toFixed(0)+"%":"–"}</td></tr>`; }).join("")
+          /* 符号只加一次（曾写成 "+"+(-3) = "+−3%"），颜色守绿涨红跌铁律 */
+          const yc = yoy==null ? "var(--text2)" : yoy>0 ? "var(--up)" : "var(--down)";
+          const yt = yoy==null ? "–" : (yoy>0?"+":"") + yoy.toFixed(0) + "%";
+          const note = y===2023 ? '<span style="font-size:11px;color:var(--text2)">　AI 军备竞赛前夜，四家反而在收缩</span>' : "";
+          return `<tr style="border-top:1px solid var(--border)"><td style="text-align:left;padding:6px 8px">${y}${note}</td><td style="text-align:right;padding:6px 8px;white-space:nowrap">${yi(v)}美元</td><td style="text-align:right;padding:6px 8px;color:${yc};white-space:nowrap">${yt}</td></tr>`; }).join("")
       + `</table>`
       + `<div style="margin-top:14px;font-size:13px;font-weight:600">2026 年指引${g("media")}</div>`
       + `<div style="font-size:11.5px;color:var(--text2);margin:2px 0 6px;line-height:1.7">⚠️ ${hd.capex2026.warn}</div>`
@@ -3698,8 +3754,24 @@ window.renderAicapex = (function(){
       return;
     }
     const b = e.target.closest("[data-lease]");
-    if(b && root.contains(b)){ withLease = b.dataset.lease==="1"; build(); }
+    if(b && root.contains(b)){ withLease = b.dataset.lease==="1"; build(); return; }
+    if(!FINE){                       /* 触屏：点图表出信息，点别处收起 */
+      const hitEl = e.target.closest("[data-hit]");
+      if(hitEl && root.contains(hitEl)){
+        e.stopPropagation();
+        acTip(hitHTML(hitEl.dataset.hit, +hitEl.dataset.i), e.clientX, e.clientY + 10);
+      } else acTip(null);
+    }
   });
+  if(FINE){                          /* 桌面：悬停即出，移开即收 */
+    document.addEventListener("mousemove", e=>{
+      const root = document.getElementById("view-aicapex");
+      if(!root || root.classList.contains("hidden")) return;
+      const hitEl = e.target.closest && e.target.closest("[data-hit]");
+      if(hitEl && root.contains(hitEl)) acTip(hitHTML(hitEl.dataset.hit, +hitEl.dataset.i), e.clientX, e.clientY);
+      else acTip(null);
+    });
+  }
 
   return function(){
     CUR = "all";                      /* 每次点进重置为总览 */
