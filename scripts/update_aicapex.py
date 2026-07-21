@@ -28,28 +28,21 @@ COMPANIES = [
     ("AAPL",  "苹果（对照）", "0000320193", "美股"),
 ]
 
-# capex 概念按优先级回退：各家用的 tag 不完全一致（亚马逊历史上用过 ProductiveAssets）
-CAPEX_TAGS = [
-    "PaymentsToAcquirePropertyPlantAndEquipment",
-    "PaymentsToAcquireProductiveAssets",
-    "PaymentsToAcquireOtherPropertyPlantAndEquipment",
-]
-# 融资租赁新增（非现金，但同样是真金白银的算力投入）
-LEASE_TAGS = [
-    "RightOfUseAssetObtainedInExchangeForFinanceLeaseLiability",
-    "FinanceLeaseRightOfUseAssetObtainedInExchangeForFinanceLeaseLiability",
-]
+# 【2026-07-21 首跑教训】各家用的 XBRL 标签不一致，且会中途更换：
+#   亚马逊 PaymentsToAcquirePropertyPlantAndEquipment 只到 2017Q1、英伟达只到 2020Q3，都已废弃改用别的标签。
+#   所以绝不能"按优先级取第一个有数据的"——那会死抱废弃标签。
+#   正解 = 拉 companyfacts 一次拿全所有概念，正则筛出候选，自动挑「最新且最全」的那个，再用其余补缺口。
+import re
+CAPEX_RE = re.compile(r"^(Payments|Purchase)[A-Za-z]*(PropertyPlantAndEquipment|ProductiveAssets|PropertyAndEquipment)")
+LEASE_RE = re.compile(r"FinanceLease.*(ObtainedInExchange|RightOfUseAsset)|RightOfUseAssetObtainedInExchangeForFinanceLease")
+# 排除退款/处置/出售类科目（它们是现金流入，混进来会把 capex 算小）
+EXCLUDE_RE = re.compile(r"Proceeds|Disposal|Sale|Refund|Receivable|Held", re.I)
 
 
-def fetch(cik, tag):
-    url = f"https://data.sec.gov/api/xbrl/companyconcept/CIK{cik}/us-gaap/{tag}.json"
+def fetch_facts(cik):
+    url = f"https://data.sec.gov/api/xbrl/companyfacts/CIK{cik}.json"
     req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept-Encoding": "gzip, deflate"})
-    try:
-        raw = urllib.request.urlopen(req, timeout=40).read()
-    except urllib.error.HTTPError as e:
-        if e.code == 404:
-            return None          # 这家没用这个 tag，回退下一个
-        raise
+    raw = urllib.request.urlopen(req, timeout=90).read()
     import gzip, io
     if raw[:2] == b"\x1f\x8b":
         raw = gzip.GzipFile(fileobj=io.BytesIO(raw)).read()
@@ -99,23 +92,34 @@ def to_quarters(entries):
     return dict(sorted(out.items()))
 
 
-def series_for(cik, tags):
-    for t in tags:
-        d = fetch(cik, t)
-        time.sleep(0.15)                                # SEC 限速 10 req/s，留足余量
-        if d:
-            ents = (d.get("units") or {}).get("USD") or []
-            if ents:
-                q = to_quarters(ents)
-                if q:
-                    return q, t
-    return {}, None
+def series_for(facts, pattern):
+    """扫描全部 us-gaap 概念，选出最新且最全的候选做主序列，其余候选补缺口。"""
+    cands = []
+    for tag, node in (facts.get("facts", {}).get("us-gaap") or {}).items():
+        if not pattern.search(tag) or EXCLUDE_RE.search(tag):
+            continue
+        ents = (node.get("units") or {}).get("USD") or []
+        q = to_quarters(ents)
+        if q:
+            cands.append((max(q), len(q), tag, q))       # 按(最新季度, 季度数)择优
+    if not cands:
+        return {}, None
+    cands.sort(reverse=True)
+    _, _, best_tag, merged = cands[0]
+    merged = dict(merged)
+    for _, _, _, q in cands[1:]:                         # 其余候选只补主序列没有的季度
+        for k, v in q.items():
+            merged.setdefault(k, v)
+    used = best_tag if len(cands) == 1 else f"{best_tag}(+{len(cands)-1})"
+    return dict(sorted(merged.items())), used
 
 
 companies, diag = {}, []
 for tic, name, cik, mkt in COMPANIES:
-    capex, ctag = series_for(cik, CAPEX_TAGS)
-    lease, ltag = series_for(cik, LEASE_TAGS)
+    facts = fetch_facts(cik)
+    time.sleep(0.3)                                      # SEC 限速 10 req/s，留足余量
+    capex, ctag = series_for(facts, CAPEX_RE)
+    lease, ltag = series_for(facts, LEASE_RE)
     if not capex:
         diag.append(f"{tic}: capex 抓取失败（所有 tag 均无数据）")
         continue

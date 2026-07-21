@@ -1,0 +1,125 @@
+{
+ "asof": "2026-07-21",
+ "note": "AI资金底图人工层。自动层在 data/aicapex.json（SEC XBRL 每周刷新）。每条数据必带 grade 与 src：auto=财报直出 / report=人工抄自季报电话会 / research=机构研究口径 / media=媒体报道未经证实。前端按 grade 挂徽标，不许出现无出处的数字。",
+
+ "headline": {
+  "capex2026": {"v": 7250, "unit": "亿美元", "yoy": 77, "base2025": 4100,
+   "d": "微软·谷歌·亚马逊·Meta 四家 2026 日历年资本开支指引合计",
+   "grade": "media", "src": "CNBC / Tom's Hardware 汇总各家指引",
+   "warn": "各家分项加总与该总数不完全吻合（媒体汇总口径差异），以自动层财报实际数为准"},
+  "payback": {"d": "累计投入 ÷ AI 年化收入 = 回本倍数", "grade": "research",
+   "formula": "四大云厂 2023Q2 起累计 capex ÷ (OpenAI+Anthropic 当期 ARR)",
+   "warn": "分母只含两家模型公司公开 run-rate，不含云厂自身 AI 收入，是极保守口径；此指标看趋势不看绝对值"}
+ },
+
+ "layer1_source": {
+  "title": "钱从哪来",
+  "grade": "report",
+  "items": [
+   {"k": "经营现金流", "d": "四大云厂主业现金流仍是主力，但覆盖率逐季下滑——这是泡沫最早的裂缝", "grade": "auto", "src": "SEC 现金流量表（待接管线）"},
+   {"k": "公司债", "d": "Meta 在 SPV 交易后数周内于公司债市场再融资约 300 亿美元", "v": 300, "unit": "亿美元", "grade": "media", "src": "Techerati / Quinn Emanuel 客户提示"},
+   {"k": "表外 SPV", "d": "Meta·Oracle·xAI·CoreWeave 通过特殊目的实体把逾 1200 亿美元数据中心债务移出资产负债表", "v": 1200, "unit": "亿美元", "grade": "media", "src": "Cryptopolitan / Futunn 汇总"},
+   {"k": "私募信贷", "d": "Pimco·BlackRock·Apollo·Blue Owl 是实际出资方；私募信贷不透明，风险要传导到银行保险养老金才会显形", "grade": "research", "src": "Quinn Emanuel: Emerging Litigation Risks in Financing AI Data Centers"}
+  ],
+  "spv": [
+   {"who": "Meta", "site": "Hyperion（路易斯安那）", "v": 300, "unit": "亿美元",
+    "d": "与 Blue Owl 设立 SPV「Beignet Investor」，其中约 270 亿为 Pimco/BlackRock/Apollo 等机构贷款。Meta 持股 20%，若设施价值跌破阈值且租约不续，须承担损失。",
+    "grade": "media", "src": "Quinn Emanuel / Techerati"},
+   {"who": "Oracle", "site": "德州", "v": 130, "unit": "亿美元", "d": "Blue Owl 与摩根大通投资，含 100 亿债务融资", "grade": "media", "src": "Cryptopolitan"},
+   {"who": "Oracle", "site": "德州＋威斯康星", "v": 380, "unit": "亿美元", "d": "两座数据中心的债务包", "grade": "media", "src": "Cryptopolitan"},
+   {"who": "Oracle", "site": "新墨西哥", "v": 180, "unit": "亿美元", "d": "单站点贷款", "grade": "media", "src": "Cryptopolitan"}
+  ]
+ },
+
+ "layer2_spend": {
+  "title": "谁在花",
+  "guide2026": [
+   {"c": "AMZN", "n": "亚马逊", "lo": 2000, "hi": 2000, "grade": "media", "src": "公司指引·媒体转述"},
+   {"c": "GOOGL", "n": "Alphabet", "lo": 1750, "hi": 1850, "grade": "media", "src": "公司指引·媒体转述"},
+   {"c": "MSFT", "n": "微软", "lo": 1900, "hi": 1900, "grade": "media", "src": "日历年口径·媒体转述",
+    "warn": "微软财年 6 月底结束，与其他三家差半年；另有来源给出约 1200 亿的口径，分歧未消"},
+   {"c": "META", "n": "Meta", "lo": 1250, "hi": 1450, "grade": "media", "src": "年初指引 1150–1350，后因内存涨价与数据中心成本上修"}
+  ],
+  "cn": [
+   {"c": "09988", "n": "阿里巴巴", "d": "三年 3800 亿元人民币计划，CEO 吴泳铭称因算力中心投入或将超出原计划", "grade": "media", "src": "财联社 / 界面新闻", "todo": "待人工从季报核实单季实际数"},
+   {"c": "00700", "n": "腾讯", "d": "管理层称 2026 年 AI 相关资本开支将增加，下半年尤甚", "grade": "media", "src": "财联社", "todo": "待人工从季报核实单季实际数"},
+   {"c": "BIDU", "n": "百度", "d": "待补", "grade": "media", "todo": "待人工从季报核实"},
+   {"c": "BYTEDANCE", "n": "字节跳动", "d": "未上市不披露。媒体口径互相矛盾：一说 2026 capex 约 700 亿美元，一说破 2000 亿（疑为人民币）。", "grade": "media", "src": "雪球 / 香港经济日报", "warn": "无法核实，面板上只作参考不入合计"}
+  ],
+  "insight": "本层独家视角＝指引上修轨迹：年初说 X → Q1 改 Y → Q2 改 Z。上修速度比绝对值更能说明周期位置。"
+ },
+
+ "layer3_split": {
+  "title": "钱花给谁",
+  "grade": "research",
+  "src": "Epoch AI 一 GW 数据中心 TCO 拆解 / iot-analytics / 投行口径中值",
+  "warn": "各来源给的是区间，此处取中值并归一到 100%；口径为「研究判断」非抓取数据，季度校准",
+  "items": [
+   {"k": "GPU／加速器", "pct": 39, "who": "英伟达（毛利约 75%）、AMD", "note": "HBM 内存成本藏在这一档里，不是独立科目"},
+   {"k": "厂房建设", "pct": 34, "who": "EPC 承包商、数据中心 REIT"},
+   {"k": "网络互连", "pct": 13, "who": "博通、Arista、光模块厂"},
+   {"k": "电气系统", "pct": 6.5, "who": "施耐德、伊顿、维谛"},
+   {"k": "CPU", "pct": 3, "who": "AMD、Intel"},
+   {"k": "冷却", "pct": 3.2, "who": "Vertiv、英维克"},
+   {"k": "存储", "pct": 1.3, "who": "希捷、西数、SanDisk"}
+  ],
+  "secondary": {
+   "d": "二次分账：GPU 那 39% 并非英伟达独吞——毛利之外交给台积电（先进制程与 CoWoS 封装）与 SK 海力士／三星／美光（HBM）。这张图是本页最值得原创的一块，暂用研究口径占位。",
+   "grade": "research", "todo": "待用各家数据中心分部收入反推校验"
+  },
+  "gwcost": {"v": "110–130", "unit": "亿美元/GW", "d": "一 GW 级 AI 数据中心的总拥有成本，用于把 capex 换算成算力", "grade": "research", "src": "Epoch AI / Investing.com 汇总"}
+ },
+
+ "layer4_output": {
+  "title": "钱变成了什么",
+  "items": [
+   {"k": "全球数据中心关键 IT 功率", "v": "49 GW（2023）→ 96 GW（2026E）", "d": "增量的 90% 来自 AI", "grade": "research", "src": "SemiAnalysis"},
+   {"k": "全球在建 IT 容量", "v": "23 GW", "grade": "research", "src": "BloombergNEF"},
+   {"k": "美国 2026 在建 vs 规划", "v": "规划 16 GW，实际在建仅约 5 GW", "d": "规划与落地的缺口＝电力与工期瓶颈的直接证据", "grade": "media", "warn": "来源可信度一般，待换权威口径"},
+   {"k": "Meta×AMD 部署协议", "v": "至多 6 GW", "d": "首个 GW 的出货自 2026 下半年开始", "grade": "auto", "src": "AMD 官方新闻稿 2026-02-24"},
+   {"k": "中国日均 Token 消耗", "v": "约 180 万亿/天", "d": "2026 年 2 月口径；火山引擎豆包单家超 120 万亿/天，三个月翻倍", "grade": "media", "src": "中国日报 / CEIBS"}
+  ],
+  "todo": "本层数据最稀薄，先占位。缺口＝全球累计装机 GW、等效 GPU 保有量、全球 Token 日消耗（中国有数、全球无权威口径）"
+ },
+
+ "layer5_demand": {
+  "title": "谁来买单",
+  "companies": [
+   {"n": "OpenAI", "arr": 240, "arr_asof": "2026-04", "arr_note": "月收入约 20 亿美元推算的年化 run-rate，非审计收入",
+    "val": 8520, "val_asof": "2026-03-31", "val_note": "1220 亿美元融资轮投后估值，SoftBank 领投",
+    "raised": 1800, "raised_note": "累计约 15 轮",
+    "ipo": "2026-06-08 已向 SEC 秘密递交上市申请，目标估值超 1 万亿美元，高盛与摩根士丹利主承；时点未定可能推迟",
+    "grade": "media", "src": "Sacra / Tech Insider 汇总"},
+   {"n": "Anthropic", "arr": 300, "arr_asof": "2026-05", "arr_note": "官方口径 300 亿美元收入 run-rate，称同比约 80 倍；另有媒体报道 5 月已达 470 亿，未获官方确认",
+    "val": 9650, "val_asof": "2026-05-28", "val_note": "650 亿美元 Series H 投后估值",
+    "raised": 1320, "raised_note": "累计约 18 轮",
+    "grade": "media", "src": "VentureBeat（官方 ARR）/ Sacra / Forbes"}
+  ],
+  "warn": "本层全部为 run-rate 与媒体口径，非审计财务数据，且两家均未上市。面板上必须与 ⚙️ 自动层在视觉上明确区分。"
+ },
+
+ "deals": [
+  {"buyer": "Anthropic", "seller": "AWS", "v": "1000+", "unit": "亿美元/10年", "cap": "至多 5 GW", "st": "已签", "d": "2026 年底前约 1 GW Trainium2/3 容量", "grade": "media"},
+  {"buyer": "Anthropic", "seller": "SpaceX", "v": "12.5", "unit": "亿美元/月", "cap": "Colossus 1，300 MW+，约 32.5 万张 GPU", "st": "已签", "d": "2026-05 签署，包下该数据中心全部 AI 容量；另有轨道数据中心意向，SpaceX 称最早 2028 部署（高度存疑）", "grade": "media", "src": "CNBC 2026-05-06 / SpaceX IPO 文件（DCD 报道）"},
+  {"buyer": "Anthropic", "seller": "Microsoft Azure", "v": "300", "unit": "亿美元", "st": "已签", "grade": "media"},
+  {"buyer": "Anthropic", "seller": "英伟达", "v": "—", "cap": "至多 1 GW", "st": "已签", "d": "英伟达同时承诺投资至多 100 亿美元，微软至多 50 亿", "grade": "media"},
+  {"buyer": "Anthropic", "seller": "Google／博通", "cap": "数 GW TPU", "st": "已签", "d": "下一代 TPU 容量，2027 年起上线", "grade": "media"},
+  {"buyer": "Anthropic", "seller": "待定（IREN 等竞标）", "v": "150–220", "unit": "亿美元", "cap": "1.4 GW（澳大利亚）", "st": "招标中", "d": "泄露文件显示可能拆成 4–5 份合同分给多家；IREN 的 800 MW Bundey 园区已锁电网接入，是热门但未签约", "grade": "media", "warn": "市场已按预期定价，属传闻定价"},
+  {"buyer": "Microsoft", "seller": "IREN", "v": "97", "unit": "亿美元", "st": "已签", "grade": "media"},
+  {"buyer": "英伟达", "seller": "IREN", "v": "34", "unit": "亿美元/5年", "st": "已签", "d": "Blackwell GPU 云容量", "grade": "media"},
+  {"buyer": "Meta", "seller": "AMD", "cap": "至多 6 GW", "st": "已签", "d": "Instinct GPU，首 GW 出货自 2026H2", "grade": "auto", "src": "AMD 官方新闻稿"}
+ ],
+
+ "nvidia_inv": {
+  "title": "英伟达对外投资谱系",
+  "total": 400, "unit": "亿美元", "period": "2026 年前四个月",
+  "d": "公司发展部负责大额战略投资，NVentures 负责早期高频投资（2025 年 30 笔，2026 前五个月约 20 笔）；累计投资初创逾 90 家。",
+  "grade": "media", "src": "CNBC 2026-05-09",
+  "items": [
+   {"n": "OpenAI", "v": 300, "when": "2026 初", "d": "参与其 1100 亿美元融资轮"},
+   {"n": "Anthropic", "v": 100, "when": "2024-11", "d": "另承诺至多 1 GW 算力供应"},
+   {"n": "xAI", "v": 20, "when": "2026", "d": "至多 20 亿美元"}
+  ],
+  "signal": "黄仁勋 2026-03 称对 OpenAI 的投资「可能是最后一笔」——供应商给客户投钱这种循环交易正在收敛，这句话本身就是周期信号。"
+ }
+}
