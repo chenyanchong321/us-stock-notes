@@ -5311,6 +5311,34 @@
      "ath_floor": 0
     },
     {
+     "name": "康明斯",
+     "code": "CMI",
+     "market": "美股",
+     "yahoo": "CMI",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 882.3,
+      "approx": true
+     },
+     "mcap_base_price": 639.43,
+     "ath_floor": 0
+    },
+    {
+     "name": "卡特彼勒",
+     "code": "CAT",
+     "market": "美股",
+     "yahoo": "CAT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3980.9,
+      "approx": true
+     },
+     "mcap_base_price": 864.3,
+     "ath_floor": 0
+    },
+    {
      "name": "英维克",
      "code": "002837",
      "market": "A股",
@@ -5439,13 +5467,15 @@
      ]
     },
     {
-     "name": "燃气轮机与发电设备",
+     "name": "燃气轮机与备用电源（中·美对照）",
      "codes": [
       "01072",
       "01133",
       "000338",
       "02338",
-      "02722"
+      "02722",
+      "CMI",
+      "CAT"
      ]
     },
     {
