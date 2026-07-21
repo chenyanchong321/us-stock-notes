@@ -543,9 +543,24 @@ def main():
             d = datetime.datetime.fromtimestamp(ets, datetime.timezone(datetime.timedelta(hours=8))).strftime("%Y-%m-%d")
             ev_rows.append({"d": d, "code": it["code"], "name": it["name"], "est": est})
     ev_rows.sort(key=lambda x: x["d"])
-    (ROOT / "data/events.json").write_text(
-        json.dumps({"updated": out["updated"], "earnings": ev_rows}, ensure_ascii=False, indent=1), encoding="utf-8")
-    print(f"财报日历：未来120天 {len(ev_rows)} 场")
+    # 防呆：Yahoo v7 quote 偶发整批失败（cookie/crumb 过期、限流），earn_map 会空，
+    # 直接写入就把已有财报日历清零——2026-07-21 19:00 那班实测把 113 场写成 0 场，
+    # 前端财报倒计时徽标随之全灭。**坏数据比旧数据危害大**（同 IAU 坏行、fmtPct 教训），
+    # 故本次结果显著少于上一版（不足三成）时保留旧文件，只打印告警。
+    ev_path = ROOT / "data/events.json"
+    prev_n = 0
+    if ev_path.exists():
+        try:
+            prev_n = len(json.loads(ev_path.read_text(encoding="utf-8")).get("earnings") or [])
+        except Exception:
+            prev_n = 0
+    if prev_n >= 10 and len(ev_rows) < prev_n * 0.3:
+        print(f"  !! 财报日历本次仅 {len(ev_rows)} 场、上一版 {prev_n} 场，疑似 Yahoo v7 整批失败，"
+              f"保留旧文件不覆盖", file=sys.stderr)
+    else:
+        ev_path.write_text(
+            json.dumps({"updated": out["updated"], "earnings": ev_rows}, ensure_ascii=False, indent=1), encoding="utf-8")
+        print(f"财报日历：未来120天 {len(ev_rows)} 场")
     # ==== 市场规模（全球主要股市 + 金银 + 比特币总市值）====
     build_market_scale()
     rows_all = [r for s in sections_out for r in s["rows"]]
