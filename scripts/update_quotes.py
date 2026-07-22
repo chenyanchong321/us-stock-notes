@@ -206,6 +206,55 @@ def fetch_history(sym, hist=None):
 def pct(cur, base):
     return (cur / base - 1) * 100
 
+# ---- Beta（2026-07-22 主人需求：判断"这次跌幅是大盘的锅还是自己的锅"）----
+# 口径：近 250 交易日的日收益率，对**匹配本市场的基准指数**做最小二乘回归，取斜率＝Beta，
+# 同时给出 R²（拟合优度）——R² 低说明这只票跟大盘本就不同步，此时 Beta 数值不可信，
+# 前端据此标注"参考性低"。全部复用已抓的 5 年日线，**零额外请求**。
+BETA_WIN = 250
+# 基准与前端 benchOf 同源（丹霖原则：锚必须匹配市场）。港股统一用恒指——
+# 后端拿不到板块上下文（前端才按科技/传统拆恒生科技），保持单一口径可解释。
+BENCH_LABEL = {"000300.SS": "沪深300", "^HSI": "恒生指数", "^GSPC": "标普500",
+               "^N225": "日经225", "^KS11": "KOSPI", "^TWII": "台湾加权", "^IXIC": "纳斯达克"}
+BENCH_BY_MKT = [("A股", "000300.SS"), ("港股", "^HSI"), ("美股", "^GSPC"),
+                ("日", "^N225"), ("韩", "^KS11"), ("台股", "^TWII"), ("加密", "^IXIC")]
+
+def bench_sym_for(market):
+    m = str(market or "")
+    for prefix, sym in BENCH_BY_MKT:
+        if m.startswith(prefix):
+            return sym
+    return None
+
+def calc_beta(pairs, bench_pairs):
+    """返回 (beta, r2, 样本数)；数据不足或基准缺失返回 (None, None, 0)。
+
+    **先按交易日取交集、再在交集上算收益率**——不能各自算完收益率再对齐：
+    个股停牌或两地休市日不同会让两边的收益率跨越不同天数，回归出来的 Beta 是失真的
+    （实测抽掉 20% 交易日，真值 2.00 会被算成 1.71）。先对齐再求收益率，两边区间严格一致。"""
+    if not pairs or not bench_pairs:
+        return None, None, 0
+    pa, pb = dict(pairs), dict(bench_pairs)
+    ts = sorted(set(pa) & set(pb))[-(BETA_WIN + 1):]
+    xs, ys = [], []
+    for i in range(1, len(ts)):
+        a0, a1 = pa[ts[i - 1]], pa[ts[i]]
+        b0, b1 = pb[ts[i - 1]], pb[ts[i]]
+        if a0 > 0 and b0 > 0:
+            ys.append(a1 / a0 - 1)      # 个股
+            xs.append(b1 / b0 - 1)      # 基准
+    n = len(xs)
+    if n < 60:                          # 样本太少（新股/长期停牌）不给 Beta，宁缺勿假
+        return None, None, n
+    mx, my = sum(xs) / n, sum(ys) / n
+    sxx = sum((x - mx) ** 2 for x in xs)
+    if sxx <= 0:
+        return None, None, n
+    sxy = sum((x - mx) * (y - my) for x, y in zip(xs, ys))
+    beta = sxy / sxx
+    syy = sum((y - my) ** 2 for y in ys)
+    r2 = (sxy * sxy) / (sxx * syy) if syy > 0 else None
+    return round(beta, 2), (round(r2, 2) if r2 is not None else None), n
+
 def price_at(pairs, target_ts):
     """target_ts 之前最近一个交易日的收盘价；若上市晚于 target_ts 返回 None"""
     if pairs[0][0] > target_ts:
@@ -452,6 +501,21 @@ def main():
                     print(f"  !! {sym} ath_since={since} 之后无数据，沿用全历史高点", file=sys.stderr)
             dd = pct(price, ath)
 
+            def beta_info():
+                """[beta, r2, 基准标签]；指数自己对自己无意义，不给。"""
+                m = str(it["market"] or "")
+                if "指数" in m:
+                    return None
+                bsym = bench_sym_for(m)
+                if not bsym:
+                    return None
+                bp = cache.get(bsym)
+                bpairs = bp[0] if bp else None
+                b, r2, _n = calc_beta(pairs, bpairs)
+                if b is None:
+                    return None
+                return [b, r2, BENCH_LABEL.get(bsym, "")]
+
             def ma_list():
                 """五条关键均线 [MA20,MA50,MA60,MA120,MA200]，数据不足的档位为 None。
                 复用已抓的5年复权日线，零额外请求（2026-07-13 主人需求：现价浮窗均线支撑）。"""
@@ -515,16 +579,17 @@ def main():
                          pe_map.get(sym), *pos_52w(pairs, ts_1y, cur),
                          round(pct(pairs[-1][1], pairs[-2][1]), 2) if len(pairs) >= 2 else None,
                          ext_map.get(sym) if it["market"].startswith("美股") else None,
-                         w1, fpe_map.get(sym), ma_list(), vol_info(), last5_daily()])
+                         w1, fpe_map.get(sym), ma_list(), vol_info(), last5_daily(),
+                         beta_info()])
             print(f"  {it['code']:>10} {it['name'][:12]:<14} 现价 {price:,.2f}  回撤 {dd:.1f}%")
         sections_out.append({"sec": sec["name"], "rows": rows})
 
     # 完整性校验（2026-07-16 IAU 19字段坏行事故后加）：任何行长度不等于23一律拒绝发布，
-    # 让 workflow 失败、线上保留旧数据——坏数据比旧数据危害大得多。（2026-07-17 r[22]近5日 22→23）
+    # 让 workflow 失败、线上保留旧数据——坏数据比旧数据危害大得多。（2026-07-17 r[22]近5日 22→23；2026-07-22 r[23]Beta 23→24）
     for _s in sections_out:
         for _r in _s["rows"]:
-            if len(_r) != 23:
-                raise SystemExit(f"::error::行完整性校验失败 {_r[1] if len(_r)>1 else _r} 长度{len(_r)}≠23，拒绝发布")
+            if len(_r) != 24:
+                raise SystemExit(f"::error::行完整性校验失败 {_r[1] if len(_r)>1 else _r} 长度{len(_r)}≠24，拒绝发布")
     out = {"updated": now.astimezone(datetime.timezone(datetime.timedelta(hours=8))).strftime("%Y-%m-%d %H:%M") + " 北京时间",
            "sections": sections_out}
     (ROOT / "data/quotes.json").write_text(

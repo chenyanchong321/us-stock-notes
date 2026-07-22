@@ -764,6 +764,10 @@ body.resizing{user-select:none;cursor:col-resize}
   .main,#footer{margin-left:0;padding-left:16px;padding-right:16px;min-width:0;max-width:100%;box-sizing:border-box}
 }
 
+/* Beta 小字（回撤格第二行） */
+.betac{color:var(--text2);opacity:.85}
+.betac.weak{opacity:.5}
+
 /* 📅 财报倒计时徽标 */
 .earnb{display:inline-block;margin-left:5px;padding:0 5px;border-radius:4px;font-size:10.5px;line-height:16px;
   vertical-align:middle;cursor:pointer;white-space:nowrap;font-weight:600}
@@ -1199,9 +1203,23 @@ function ladderOf(r){   /* 从历史高点往下 −30%~−80% 的价格台阶 *
 /* 去掉数字前的货币符号（名称栏已标了市场，页面上不必再重复；浮窗里仍保留符号）。
    只去最前面的前缀，区间串「HK$4.18–6.56」也只去开头。 */
 function stripCur(s){ return String(s).replace(/^(HK\$|NT\$|US\$|\$|¥|₩)/,""); }
+/* Beta（2026-07-22 主人定，放回撤格）：回撤答"跌了多少"、Beta 答"该跌多少"，
+   两者配对才完整——单看 −45% 不知该慌该淡定，配上 β2.2 就知道大盘跌18%时它理应跌40%。
+   r[23]=[beta, r2, 基准标签]，指数不给（对自己 Beta=1 无意义）。 */
+function betaOf(r){ const b=r[23]; return (Array.isArray(b) && typeof b[0]==="number") ? b : null; }
+function betaLevel(v){
+  return v>=1.8?"极高弹性" : v>=1.2?"偏高弹性" : v>=0.8?"跟随大盘" : v>=0.5?"低波动" : "防守型";
+}
+function betaCell(r){
+  const b = betaOf(r);
+  if(!b) return "";
+  const weak = (typeof b[1]==="number" && b[1] < 0.2);   /* R²太低＝与大盘本就不同步，Beta 参考性差 */
+  return `<span class="betac${weak?" weak":""}" style="display:block;font-size:11px;white-space:nowrap">β${b[0].toFixed(2)}${weak?"?":""}</span>`;
+}
 function athCell(r){
-  /* 2026-07-13 主人定：只显示回撤，去掉第二行ATH价格（悬停回撤台阶浮窗里已有ATH，双行干扰） */
-  return `<span style="display:block;white-space:nowrap;font-weight:500">${ddCell(r[6])}</span>`;
+  /* 2026-07-13 主人定：只显示回撤，去掉第二行ATH价格（悬停回撤台阶浮窗里已有ATH，双行干扰）
+     2026-07-22 第二行改放 Beta（详情见 betaCell 注释） */
+  return `<span style="display:block;white-space:nowrap;font-weight:500">${ddCell(r[6])}</span>${betaCell(r)}`;
 }
 /* 当日/1周：当日在上、近1周在下（第二行小字），一眼对比今天和本周。最右侧独立「1周」列不变。 */
 function dayWeekCell(r){
@@ -4304,6 +4322,36 @@ let PROFILES = {};
       line2 += `<span style="display:block;margin-top:5px;font-size:11px;color:var(--text2);opacity:.85">⏳ 港股行情延时约15分钟，触达判断可能滞后</span>`;
     return `${wk}<b>🎯 观察位</b>　<span style="color:var(--gold);font-weight:700">${b}</span>${sline}${line2}${usdLine}${maBlock(r)}`;
   }
+  /* 贝塔归因（2026-07-22 主人需求）：把"这次跌幅是大盘的锅还是自己的锅"从人工比同业变成自动算。
+     近1年基准涨跌 × Beta ＝ 该跌多少（预期）；实际减预期＝公司自身的超额部分。
+     这正是 AVAV 归因报告里"同业同跌说明是板块因素、超额部分归因于公司自身"那句话的量化版。 */
+  function betaAttrib(r){
+    const b = (typeof betaOf==="function") ? betaOf(r) : null;
+    if(!b) return "";
+    const [beta, r2, blab] = b;
+    const bench = window.benchOf ? window.benchOf(r[2], "") : null;
+    const by1 = bench && typeof bench.y1==="number" ? bench.y1 : null;
+    const my1 = typeof r[11]==="number" ? r[11] : null;
+    const weak = (typeof r2==="number" && r2 < 0.2);
+    let body = `<div style="display:flex;justify-content:space-between;gap:14px"><span>Beta</span>`
+      + `<b style="color:var(--text)">${beta.toFixed(2)}</b></div>`
+      + `<div style="color:var(--text2);margin-top:2px">波动约为${blab||"大盘"}的 ${beta.toFixed(2)} 倍 · ${betaLevel(beta)}</div>`;
+    if(by1 !== null && my1 !== null){
+      const exp = by1 * beta;            /* 预期涨跌 = 基准涨跌 × Beta */
+      const alpha = my1 - exp;           /* 超额 = 实际 − 预期，归因于公司自身 */
+      const sg = v => (v>0?"+":"") + v.toFixed(1) + "%";
+      const ac = alpha >= 0 ? "var(--up)" : "var(--down)";
+      body += `<div style="margin-top:6px;border-top:1px solid var(--border);padding-top:5px">`
+        + `<div style="display:flex;justify-content:space-between"><span style="color:var(--text2)">近1年 ${blab||"基准"}</span><span>${sg(by1)}</span></div>`
+        + `<div style="display:flex;justify-content:space-between"><span style="color:var(--text2)">按 Beta 预期</span><span>${sg(exp)}</span></div>`
+        + `<div style="display:flex;justify-content:space-between"><span style="color:var(--text2)">实际</span><span>${sg(my1)}</span></div>`
+        + `<div style="display:flex;justify-content:space-between;margin-top:2px"><span>超额（公司自身）</span><b style="color:${ac}">${sg(alpha)}</b></div></div>`;
+    }
+    if(weak) body += `<div style="margin-top:5px;color:var(--text2)">R²=${r2} 偏低，这只票与${blab||"大盘"}本就不同步，Beta 参考性有限</div>`;
+    return `<div style="margin-top:9px;border-top:1px solid var(--border);padding-top:7px;font-size:12px">`
+      + `<b>📐 贝塔归因</b>${body}`
+      + `<div style="margin-top:5px;font-size:11px;color:var(--text2)">近250交易日回归 · 基准${blab||"—"} · 历史统计不预测未来</div></div>`;
+  }
   function athTip(tr){   /* 历史高点悬停＝回撤台阶表（两列：跌幅+价格，现价插入档金色） */
     const code=tr.dataset.code; if(!code) return null;
     let r=null;
@@ -4345,7 +4393,8 @@ let PROFILES = {};
     }).join("");
     return `<b>🪜 回撤台阶</b>　<span style="color:var(--text2);font-size:12px">ATH ${L.ath}</span>
       <table style="margin-top:6px;font-size:12.5px;border-collapse:collapse;min-width:190px">${rows}</table>
-      <div style="margin-top:5px;font-size:11px;color:var(--text2)">金色＝现价 · 绿色🎯＝观察位 · 灰色＝已跌破</div>`;
+      <div style="margin-top:5px;font-size:11px;color:var(--text2)">金色＝现价 · 绿色🎯＝观察位 · 灰色＝已跌破</div>`
+      + betaAttrib(r);
   }
   function rowOfTr(tr){
     const code=tr&&tr.dataset&&tr.dataset.code; if(!code) return null;
