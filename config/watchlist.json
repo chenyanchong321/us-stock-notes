@@ -6155,6 +6155,34 @@
      "ath_floor": 0
     },
     {
+     "name": "发那科",
+     "code": "6954",
+     "market": "日股",
+     "yahoo": "6954.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 64136,
+      "approx": true
+     },
+     "mcap_base_price": 6873,
+     "ath_floor": 0
+    },
+    {
+     "name": "安川电机",
+     "code": "6506",
+     "market": "日股",
+     "yahoo": "6506.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 13521,
+      "approx": true
+     },
+     "mcap_base_price": 5213,
+     "ath_floor": 0
+    },
+    {
      "name": "三花智控",
      "code": "002050",
      "market": "A股",
@@ -6581,6 +6609,8 @@
     {
      "name": "执行器·运动控制与Tier1",
      "codes": [
+      "6954",
+      "6506",
       "002050",
       "02050",
       "601689",
