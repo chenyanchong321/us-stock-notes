@@ -4325,6 +4325,10 @@ let PROFILES = {};
   /* 贝塔归因（2026-07-22 主人需求）：把"这次跌幅是大盘的锅还是自己的锅"从人工比同业变成自动算。
      近1年基准涨跌 × Beta ＝ 该跌多少（预期）；实际减预期＝公司自身的超额部分。
      这正是 AVAV 归因报告里"同业同跌说明是板块因素、超额部分归因于公司自身"那句话的量化版。 */
+  /* 贝塔归因（2026-07-22 主人需求；同日二版改为可视化横条）：把"这次涨跌是大盘的锅还是自己的锅"
+     从人工比同业变成自动算，且**让长度替用户做减法**——实际那根条切两段：蓝＝大盘给的、
+     绿/红＝公司自己的，段有多长超额就有多大，不必心算 实际−预期。
+     反向情形（该涨却跌）用零轴居中，两根条一左一右，方向反了一眼可见。 */
   function betaAttrib(r){
     const b = (typeof betaOf==="function") ? betaOf(r) : null;
     if(!b) return "";
@@ -4333,24 +4337,48 @@ let PROFILES = {};
     const by1 = bench && typeof bench.y1==="number" ? bench.y1 : null;
     const my1 = typeof r[11]==="number" ? r[11] : null;
     const weak = (typeof r2==="number" && r2 < 0.2);
-    let body = `<div style="display:flex;justify-content:space-between;gap:14px"><span>Beta</span>`
-      + `<b style="color:var(--text)">${beta.toFixed(2)}</b></div>`
-      + `<div style="color:var(--text2);margin-top:2px">波动约为${blab||"大盘"}的 ${beta.toFixed(2)} 倍 · ${betaLevel(beta)}</div>`;
+    const head = `<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">`
+      + `<span style="font-weight:600">📐 贝塔归因</span>`
+      + `<span><b style="font-size:14px">β${beta.toFixed(2)}</b> <span style="color:var(--text2);font-size:10.5px">${betaLevel(beta)}</span></span></div>`;
+    let body = "";
     if(by1 !== null && my1 !== null){
-      const exp = by1 * beta;            /* 预期涨跌 = 基准涨跌 × Beta */
-      const alpha = my1 - exp;           /* 超额 = 实际 − 预期，归因于公司自身 */
+      const exp = by1 * beta;              /* 该涨 = 基准涨跌 × Beta */
+      const alpha = my1 - exp;             /* 超额 = 实际 − 该涨，归因于公司自身 */
       const sg = v => (v>0?"+":"") + v.toFixed(1) + "%";
-      const ac = alpha >= 0 ? "var(--up)" : "var(--down)";
-      body += `<div style="margin-top:6px;border-top:1px solid var(--border);padding-top:5px">`
-        + `<div style="display:flex;justify-content:space-between"><span style="color:var(--text2)">近1年 ${blab||"基准"}</span><span>${sg(by1)}</span></div>`
-        + `<div style="display:flex;justify-content:space-between"><span style="color:var(--text2)">按 Beta 预期</span><span>${sg(exp)}</span></div>`
-        + `<div style="display:flex;justify-content:space-between"><span style="color:var(--text2)">实际</span><span>${sg(my1)}</span></div>`
-        + `<div style="display:flex;justify-content:space-between;margin-top:2px"><span>超额（公司自身）</span><b style="color:${ac}">${sg(alpha)}</b></div></div>`;
+      const lo = Math.min(0, exp, my1), hi = Math.max(0, exp, my1);
+      const span = (hi - lo) || 1;
+      const zero = (0 - lo) / span * 100;                       /* 零轴位置（%） */
+      const posOf = v => (v - lo) / span * 100;
+      const AC = alpha >= 0 ? "var(--up)" : "var(--down)";
+      /* 一根条：从零轴画到该值；实际条在"该涨"之后的那一段用超额色标出 */
+      const bar = (val, color, seg) => {
+        const a = Math.min(zero, posOf(val)), w = Math.abs(posOf(val) - zero);
+        let inner = `<span style="position:absolute;left:${a}%;top:0;height:100%;width:${w}%;background:${color};border-radius:2px"></span>`;
+        if(seg){   /* seg=[起,止] 用超额色覆盖后半段 */
+          const s0 = Math.min(posOf(seg[0]), posOf(seg[1])), s1 = Math.max(posOf(seg[0]), posOf(seg[1]));
+          inner += `<span style="position:absolute;left:${s0}%;top:0;height:100%;width:${s1-s0}%;background:${AC};border-radius:2px"></span>`;
+        }
+        return `<span style="position:relative;display:block;flex:1;height:13px;background:rgba(128,128,128,.14);border-radius:3px">${inner}`
+          + `<span style="position:absolute;left:${zero}%;top:-2px;width:1px;height:17px;background:var(--text2);opacity:.5"></span></span>`;
+      };
+      const row = (lab, valTxt, valColor, barHTML) =>
+        `<div style="display:flex;align-items:center;gap:7px;margin-bottom:5px">`
+        + `<span style="color:var(--text2);font-size:11px;width:26px;flex:0 0 auto">${lab}</span>${barHTML}`
+        + `<span style="color:${valColor};font-size:11px;width:50px;text-align:right;flex:0 0 auto">${valTxt}</span></div>`;
+      body = `<div style="color:var(--text2);font-size:11px;margin-bottom:8px">近1年${blab||"基准"} ${sg(by1)}　×${beta.toFixed(2)} →</div>`
+        + row("该涨", sg(exp), "var(--text)", bar(exp, "var(--accent)", null))
+        + row("实际", sg(my1), AC, bar(my1, "var(--accent)", [exp, my1]))
+        + `<div style="display:flex;align-items:center;gap:6px;margin-top:7px;font-size:11px">`
+        + `<span style="width:9px;height:9px;background:${AC};border-radius:2px;flex:0 0 auto"></span>`
+        + `<span style="color:var(--text2)">${alpha>=0?"这段＝公司自己挣的":"这段＝公司自己亏的"}</span>`
+        + `<b style="color:${AC};margin-left:auto">${sg(alpha)}</b></div>`;
+    }else{
+      body = `<div style="color:var(--text2);font-size:11px">波动约为${blab||"大盘"}的 ${beta.toFixed(2)} 倍</div>`;
     }
-    if(weak) body += `<div style="margin-top:5px;color:var(--text2)">R²=${r2} 偏低，这只票与${blab||"大盘"}本就不同步，Beta 参考性有限</div>`;
-    return `<div style="margin-top:9px;border-top:1px solid var(--border);padding-top:7px;font-size:12px">`
-      + `<b>📐 贝塔归因</b>${body}`
-      + `<div style="margin-top:5px;font-size:11px;color:var(--text2)">近250交易日回归 · 基准${blab||"—"} · 历史统计不预测未来</div></div>`;
+    const foot = `<div style="color:var(--text2);font-size:10.5px;margin-top:7px">`
+      + (weak ? `R² ${r2} 偏低，与${blab||"大盘"}本就不同步 · ` : (typeof r2==="number" ? `R² ${r2} · ` : ""))
+      + `近250日 · 基准${blab||"—"}</div>`;
+    return `<div style="margin-top:9px;border-top:1px solid var(--border);padding-top:8px;font-size:12px">${head}${body}${foot}</div>`;
   }
   function athTip(tr){   /* 历史高点悬停＝回撤台阶表（两列：跌幅+价格，现价插入档金色） */
     const code=tr.dataset.code; if(!code) return null;
