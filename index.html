@@ -1663,7 +1663,7 @@ function renderDash(quotes){
   window.buildOpps = function(){
     const rowsAll = DATA.flatMap(s=>s.rows);
     const seen = new Set();
-    const hits = rowsAll.filter(r=>{ if(seen.has(r[1])||!mktOk(r[2])) return false; seen.add(r[1]); return buyHit(r); });
+    const hits = rowsAll.filter(r=>{ if(seen.has(r[1])||!mktOk(r[2], r[1])) return false; seen.add(r[1]); return buyHit(r); });
     const el = document.getElementById("opps");
     if(!window.MEMBER){
       if(!BUYCODES.size){ el.classList.add("hidden"); return; }
@@ -1718,7 +1718,7 @@ function renderDash(quotes){
   function flatRows(){
     const seen = new Set(), out = [];
     DATA.forEach(s=>s.rows.forEach(r=>{
-      if(seen.has(r[1]) || r[3]==="获取失败" || !mktOk(r[2])) return;
+      if(seen.has(r[1]) || r[3]==="获取失败" || !mktOk(r[2], r[1])) return;
       seen.add(r[1]);
       out.push({r, sec: s.sec.replace(/^\d+ /,"")});
     }));
@@ -1780,7 +1780,7 @@ function renderDash(quotes){
       if(r[3]==="获取失败") return;
       const mk=String(r[2]||"");
       cnt[""].add(r[1]);
-      MK.forEach(m=>{ if(m && MKT_RULE[m] && MKT_RULE[m](mk)) cnt[m].add(r[1]); });
+      MK.forEach(m=>{ if(m && MKT_RULE[m] && (MKT_RULE[m](mk) || (m==="加密" && window.CRYPTO_STOCK.has(r[1])))) cnt[m].add(r[1]); });
     }));
     const pill=m=>{
       let dot="", sub="";
@@ -2241,7 +2241,7 @@ function renderDash(quotes){
       const seen=new Set();
       DATA.forEach(s=>s.rows.forEach(r=>{
         if(seen.has(r[1])) return;
-        if(!m || (MKT_RULE[m]&&MKT_RULE[m](String(r[2]||"")))) seen.add(r[1]);
+        if(!m || (MKT_RULE[m]&&MKT_RULE[m](String(r[2]||""))) || (m==="加密" && window.CRYPTO_STOCK.has(r[1]))) seen.add(r[1]);
       }));
       return seen.size;
     }
@@ -2304,7 +2304,7 @@ function renderDash(quotes){
         if(r[3]==="获取失败") return;
         const mk=String(r[2]||"");
         c[""].add(r[1]);
-        MK.forEach(m=>{ if(m&&MKT_RULE[m]&&MKT_RULE[m](mk)) c[m].add(r[1]); });
+        MK.forEach(m=>{ if(m&&MKT_RULE[m]&&(MKT_RULE[m](mk)||(m==="加密"&&window.CRYPTO_STOCK.has(r[1])))) c[m].add(r[1]); });
       }));
       dock.innerHTML=MK.map(m=>{
         const st=m?(window.mktStatus?mktStatus(m):null):null;
@@ -2383,7 +2383,7 @@ function renderDash(quotes){
         if(r[3]==="获取失败") return;
         const mk=String(r[2]||"");
         c[""].add(r[1]);
-        MK.forEach(m=>{ if(m&&MKT_RULE[m]&&MKT_RULE[m](mk)) c[m].add(r[1]); });
+        MK.forEach(m=>{ if(m&&MKT_RULE[m]&&(MKT_RULE[m](mk)||(m==="加密"&&window.CRYPTO_STOCK.has(r[1])))) c[m].add(r[1]); });
       }));
       title.textContent="🌐 切换市场";
       grid.classList.remove("one");
@@ -2505,8 +2505,13 @@ const MKT_RULE = {"A股":m=>m.startsWith("A股"),"港股":m=>m.startsWith("港�
                   /* 2026-07-20 主人定：商品自成一档（黄金/白银/铜/原油/碳酸锂）——股票之外的第二类资产，
                      此前只能靠搜索找。market 字段形如「外汇 / 商品」 */
                   "商品":m=>/(外汇|商品)/.test(m)};
-function mktOk(m){
+/* 加密概念股白名单（2026-07-22 主人定）：COIN/CRCL/MSTR/HOOD 是美股，但也是加密概念股，
+   点「加密」市场筛选时应一并出现。用代码集放行、不改 market 字段——若改字段会连累梯队金标
+   （line 1344 /加密/.test 会误把这几只真公司股当资产排除）等一串基于 market 前缀的逻辑。 */
+window.CRYPTO_STOCK = new Set(["COIN","CRCL","MSTR","HOOD"]);
+function mktOk(m, code){
   if(!window.CURMKT) return true;
+  if(window.CURMKT==="加密" && code && window.CRYPTO_STOCK.has(code)) return true;
   const f = MKT_RULE[window.CURMKT];
   return f ? f(String(m||"")) : true;
 }
@@ -2519,7 +2524,7 @@ function applyFilter(){
     sec.querySelectorAll("tbody tr").forEach(tr=>{
       if(tr.classList.contains("grp")) return;   /* 分组标题行下面单独处理 */
       if(!tr.dataset.key){ tr.classList.toggle("hidden", filtering); return; }
-      const hit = (!q || tr.dataset.key.includes(q)) && mktOk(tr.dataset.mkt);
+      const hit = (!q || tr.dataset.key.includes(q)) && mktOk(tr.dataset.mkt, tr.dataset.code);
       tr.classList.toggle("hidden",!hit);
       if(hit){ vis++; if(tr.dataset.grp) visGroups.add(tr.dataset.grp); }
     });
