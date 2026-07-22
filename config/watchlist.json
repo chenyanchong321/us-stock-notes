@@ -7692,6 +7692,20 @@
      "ath_floor": 543.0
     },
     {
+     "name": "Coinbase",
+     "code": "COIN",
+     "market": "美股",
+     "yahoo": "COIN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 463.3,
+      "approx": true
+     },
+     "mcap_base_price": 175.85,
+     "ath_floor": 0
+    },
+    {
      "name": "以太坊",
      "code": "ETH",
      "market": "加密资产",
