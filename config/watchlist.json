@@ -7356,6 +7356,20 @@
      },
      "mcap_base_price": 319.87,
      "ath_floor": 0
+    },
+    {
+     "name": "迈瑞医疗",
+     "code": "300760",
+     "market": "A股",
+     "yahoo": "300760.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1832.48,
+      "approx": true
+     },
+     "mcap_base_price": 151.14,
+     "ath_floor": 0
     }
    ],
    "groups": [
@@ -7432,6 +7446,12 @@
       "ABBV",
       "AXP",
       "SYK"
+     ]
+    },
+    {
+     "name": "医疗器械（周期错杀）",
+     "codes": [
+      "300760"
      ]
     }
    ]
