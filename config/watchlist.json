@@ -8196,6 +8196,20 @@
      "ath_floor": 0
     },
     {
+     "name": "丹纳赫",
+     "code": "DHR",
+     "market": "美股",
+     "yahoo": "DHR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1259.3,
+      "approx": true
+     },
+     "mcap_base_price": 179.14,
+     "ath_floor": 0
+    },
+    {
      "name": "迈瑞医疗",
      "code": "300760",
      "market": "A股",
@@ -8276,7 +8290,8 @@
       "GEHC",
       "PHG",
       "ROG",
-      "SHL"
+      "SHL",
+      "DHR"
      ]
     },
     {
