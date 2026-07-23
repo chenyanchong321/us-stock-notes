@@ -4888,11 +4888,12 @@
      "name": "布伦特原油",
      "code": "BRENT",
      "market": "外汇 / 商品",
-     "yahoo": "BZ=F",
+     "yahoo": "BZ.EM",
      "currency": "$",
      "mcap_base": null,
-     "mcap_base_price": 1.0,
-     "ath_floor": 0
+     "mcap_base_price": 94.0,
+     "ath_floor": 0,
+     "hist": "em:112.B00Y"
     },
     {
      "name": "Constellation Energy",
