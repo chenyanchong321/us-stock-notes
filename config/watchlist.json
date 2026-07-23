@@ -8208,6 +8208,48 @@
      },
      "mcap_base_price": 151.14,
      "ath_floor": 0
+    },
+    {
+     "name": "联影医疗",
+     "code": "688271",
+     "market": "A股",
+     "yahoo": "688271.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 938.3,
+      "approx": true
+     },
+     "mcap_base_price": 113.85,
+     "ath_floor": 0
+    },
+    {
+     "name": "新产业",
+     "code": "300832",
+     "market": "A股",
+     "yahoo": "300832.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 374.47,
+      "approx": true
+     },
+     "mcap_base_price": 47.66,
+     "ath_floor": 0
+    },
+    {
+     "name": "迈克生物",
+     "code": "300463",
+     "market": "A股",
+     "yahoo": "300463.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 53.15,
+      "approx": true
+     },
+     "mcap_base_price": 8.79,
+     "ath_floor": 0
     }
    ],
    "groups": [
@@ -8226,7 +8268,10 @@
     {
      "name": "中国龙头",
      "codes": [
-      "300760"
+      "300760",
+      "688271",
+      "300832",
+      "300463"
      ]
     }
    ]
