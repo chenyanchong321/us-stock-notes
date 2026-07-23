@@ -1839,6 +1839,20 @@
      "ath_floor": 80.15
     },
     {
+     "name": "歌尔股份",
+     "code": "002241",
+     "market": "A股",
+     "yahoo": "002241.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 34.5,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "立讯精密",
      "code": "02475",
      "market": "港股",
@@ -1935,6 +1949,7 @@
      "name": "连接器与 AI 互连组装",
      "codes": [
       "002475",
+      "002241",
       "02475"
      ]
     }
