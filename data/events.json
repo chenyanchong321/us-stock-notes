@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-23 22:00 北京时间",
+ "updated": "2026-07-23 22:09 北京时间",
  "earnings": [
   {
    "d": "2026-07-23",
@@ -573,8 +573,20 @@
   },
   {
    "d": "2026-08-05",
+   "code": "HL",
+   "name": "赫克拉矿业（Hecla Mining）",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
    "code": "CRCL",
    "name": "Circle",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
+   "code": "KTOS",
+   "name": "Kratos",
    "est": false
   },
   {
@@ -599,6 +611,12 @@
    "d": "2026-08-06",
    "code": "5801",
    "name": "古河电工",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
+   "code": "MTSI",
+   "name": "MACOM",
    "est": false
   },
   {
