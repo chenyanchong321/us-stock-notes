@@ -7637,6 +7637,48 @@
      },
      "mcap_base_price": 46.76,
      "ath_floor": 0
+    },
+    {
+     "name": "中矿资源",
+     "code": "002738",
+     "market": "A股",
+     "yahoo": "002738.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 365.29,
+      "approx": true
+     },
+     "mcap_base_price": 50.63,
+     "ath_floor": 0
+    },
+    {
+     "name": "永兴材料",
+     "code": "002756",
+     "market": "A股",
+     "yahoo": "002756.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 245.88,
+      "approx": true
+     },
+     "mcap_base_price": 45.61,
+     "ath_floor": 0
+    },
+    {
+     "name": "雅化集团",
+     "code": "002497",
+     "market": "A股",
+     "yahoo": "002497.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 204.58,
+      "approx": true
+     },
+     "mcap_base_price": 17.75,
+     "ath_floor": 0
     }
    ],
    "groups": [
@@ -7672,7 +7714,10 @@
       "LC0",
       "002460",
       "01772",
-      "603799"
+      "603799",
+      "002738",
+      "002756",
+      "002497"
      ]
     }
    ]
