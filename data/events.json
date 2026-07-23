@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-23 19:00 北京时间",
+ "updated": "2026-07-23 20:08 北京时间",
  "earnings": [
   {
    "d": "2026-07-22",
@@ -23,12 +23,6 @@
    "d": "2026-07-23",
    "code": "TXN",
    "name": "德州仪器",
-   "est": false
-  },
-  {
-   "d": "2026-07-23",
-   "code": "NOK",
-   "name": "诺基亚",
    "est": false
   },
   {
@@ -93,12 +87,6 @@
   },
   {
    "d": "2026-07-28",
-   "code": "GLW",
-   "name": "康宁",
-   "est": false
-  },
-  {
-   "d": "2026-07-28",
    "code": "APLD",
    "name": "Applied Digital",
    "est": false
@@ -117,12 +105,6 @@
   },
   {
    "d": "2026-07-28",
-   "code": "CLS",
-   "name": "天弘科技（Celestica）",
-   "est": false
-  },
-  {
-   "d": "2026-07-28",
    "code": "ECL",
    "name": "艺康集团（Ecolab）",
    "est": false
@@ -137,6 +119,12 @@
    "d": "2026-07-28",
    "code": "SPGI",
    "name": "标普全球",
+   "est": false
+  },
+  {
+   "d": "2026-07-28",
+   "code": "PHG",
+   "name": "飞利浦",
    "est": false
   },
   {
@@ -165,12 +153,6 @@
   },
   {
    "d": "2026-07-29",
-   "code": "APH",
-   "name": "安费诺",
-   "est": false
-  },
-  {
-   "d": "2026-07-29",
    "code": "VRT",
    "name": "Vertiv Holdings",
    "est": false
@@ -179,12 +161,6 @@
    "d": "2026-07-29",
    "code": "KLAC",
    "name": "科磊",
-   "est": false
-  },
-  {
-   "d": "2026-07-29",
-   "code": "TER",
-   "name": "泰瑞达",
    "est": false
   },
   {
@@ -221,6 +197,12 @@
    "d": "2026-07-29",
    "code": "GNRC",
    "name": "Generac",
+   "est": false
+  },
+  {
+   "d": "2026-07-29",
+   "code": "GEHC",
+   "name": "GE医疗",
    "est": false
   },
   {
@@ -369,12 +351,6 @@
   },
   {
    "d": "2026-07-31",
-   "code": "CCJ",
-   "name": "Cameco",
-   "est": false
-  },
-  {
-   "d": "2026-07-31",
    "code": "6268",
    "name": "纳博特斯克",
    "est": false
@@ -413,6 +389,12 @@
    "d": "2026-07-31",
    "code": "TEM",
    "name": "Tempus AI",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "SHL",
+   "name": "西门子医疗",
    "est": false
   },
   {
@@ -471,12 +453,6 @@
   },
   {
    "d": "2026-08-04",
-   "code": "CAT",
-   "name": "卡特彼勒",
-   "est": false
-  },
-  {
-   "d": "2026-08-04",
    "code": "PLTR",
    "name": "Palantir",
    "est": false
@@ -485,12 +461,6 @@
    "d": "2026-08-04",
    "code": "MCD",
    "name": "麦当劳",
-   "est": false
-  },
-  {
-   "d": "2026-08-05",
-   "code": "AMD",
-   "name": "AMD",
    "est": false
   },
   {
@@ -836,6 +806,12 @@
    "est": false
   },
   {
+   "d": "2026-09-01",
+   "code": "MDT",
+   "name": "美敦力",
+   "est": false
+  },
+  {
    "d": "2026-09-04",
    "code": "DELL",
    "name": "戴尔科技",
@@ -848,10 +824,28 @@
    "est": false
   },
   {
+   "d": "2026-10-13",
+   "code": "JNJ",
+   "name": "强生",
+   "est": false
+  },
+  {
    "d": "2026-10-14",
    "code": "ASML",
    "name": "阿斯麦",
    "est": false
+  },
+  {
+   "d": "2026-10-14",
+   "code": "ABT",
+   "name": "雅培",
+   "est": true
+  },
+  {
+   "d": "2026-10-21",
+   "code": "EQT",
+   "name": "EQT（天然气）",
+   "est": true
   }
  ]
 }
