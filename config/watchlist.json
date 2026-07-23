@@ -8250,6 +8250,20 @@
      },
      "mcap_base_price": 8.79,
      "ath_floor": 0
+    },
+    {
+     "name": "鱼跃医疗",
+     "code": "002223",
+     "market": "A股",
+     "yahoo": "002223.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 274.48,
+      "approx": true
+     },
+     "mcap_base_price": 27.38,
+     "ath_floor": 0
     }
    ],
    "groups": [
@@ -8271,7 +8285,8 @@
       "300760",
       "688271",
       "300832",
-      "300463"
+      "300463",
+      "002223"
      ]
     }
    ]
