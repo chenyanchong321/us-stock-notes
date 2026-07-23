@@ -1496,7 +1496,7 @@ function volTip(tr){
   return parts.length ? parts.join("") : null;
 }
 /* 各币种对美元汇率（1本币=?美元，粗略即可，只影响排名不影响展示；口径约2026年中） */
-const FX2USD = {USD:1, HKD:1/7.8, CNY:1/7.2, JPY:1/158, KRW:1/1370, TWD:1/32};
+const FX2USD = {USD:1, HKD:1/7.8, CNY:1/7.2, JPY:1/158, KRW:1/1370, TWD:1/32, EUR:1.09, CHF:1.25};
 function curOf(mkt){
   const m = String(mkt||"");
   if(m.startsWith("港股")) return "HKD";
@@ -1504,6 +1504,8 @@ function curOf(mkt){
   if(m.startsWith("日股")||m.startsWith("日本")) return "JPY";
   if(m.startsWith("韩"))   return "KRW";
   if(m.startsWith("台股")) return "TWD";
+  if(m.startsWith("欧股")) return "EUR";   /* 2026-07-23 医疗器械全球巨头（西门子医疗等欧元区） */
+  if(m.startsWith("瑞股")) return "CHF";   /* 罗氏等瑞士法郎计价 */
   return "USD";   /* 美股/加密/外汇/其它默认按美元 */
 }
 /* 市值排序键：先把"$4.90万亿""¥5427.6亿"统一到"亿本币"，再按市场对应汇率折成"亿美元"，无法解析的沉底 */
@@ -1515,7 +1517,7 @@ function mcapVal(r){
 }
 /* ===== 悬停美元换算：只对「带真实价格的非美元个股」生效 =====
    跳过：指数（恒生指数24175换美元是笑话）、美股/加密（本就是美元）、外汇/商品/宏观。 */
-const FX_NOTE = {HKD:"1美元≈7.8港元", CNY:"1美元≈7.2人民币", JPY:"1美元≈158日元", KRW:"1美元≈1370韩元", TWD:"1美元≈32台币"};
+const FX_NOTE = {HKD:"1美元≈7.8港元", CNY:"1美元≈7.2人民币", JPY:"1美元≈158日元", KRW:"1美元≈1370韩元", TWD:"1美元≈32台币", EUR:"1美元≈0.92欧元", CHF:"1美元≈0.80瑞郎"};
 function needUSD(r){
   const m=String(r[2]||"");
   if(m.indexOf("指数")>=0) return false;

@@ -7356,20 +7356,6 @@
      },
      "mcap_base_price": 319.87,
      "ath_floor": 0
-    },
-    {
-     "name": "迈瑞医疗",
-     "code": "300760",
-     "market": "A股",
-     "yahoo": "300760.SZ",
-     "currency": "¥",
-     "mcap_base": {
-      "prefix": "¥",
-      "yi": 1832.48,
-      "approx": true
-     },
-     "mcap_base_price": 151.14,
-     "ath_floor": 0
     }
    ],
    "groups": [
@@ -7446,12 +7432,6 @@
       "ABBV",
       "AXP",
       "SYK"
-     ]
-    },
-    {
-     "name": "医疗器械（周期错杀）",
-     "codes": [
-      "300760"
      ]
     }
    ]
@@ -8111,6 +8091,143 @@
      },
      "mcap_base_price": 62.0,
      "ath_floor": 0
+    }
+   ]
+  },
+  {
+   "name": "24 医疗器械与诊断",
+   "items": [
+    {
+     "name": "美敦力",
+     "code": "MDT",
+     "market": "美股",
+     "yahoo": "MDT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1048.2,
+      "approx": true
+     },
+     "mcap_base_price": 81.89,
+     "ath_floor": 0
+    },
+    {
+     "name": "强生",
+     "code": "JNJ",
+     "market": "美股",
+     "yahoo": "JNJ",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 6153.6,
+      "approx": true
+     },
+     "mcap_base_price": 255.63,
+     "ath_floor": 0
+    },
+    {
+     "name": "雅培",
+     "code": "ABT",
+     "market": "美股",
+     "yahoo": "ABT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1751.7,
+      "approx": true
+     },
+     "mcap_base_price": 100.57,
+     "ath_floor": 0
+    },
+    {
+     "name": "GE医疗",
+     "code": "GEHC",
+     "market": "美股",
+     "yahoo": "GEHC",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 279.3,
+      "approx": true
+     },
+     "mcap_base_price": 61.41,
+     "ath_floor": 0
+    },
+    {
+     "name": "飞利浦",
+     "code": "PHG",
+     "market": "美股 ADR",
+     "yahoo": "PHG",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 256.9,
+      "approx": true
+     },
+     "mcap_base_price": 26.27,
+     "ath_floor": 0
+    },
+    {
+     "name": "罗氏",
+     "code": "ROG",
+     "market": "瑞股",
+     "yahoo": "ROG.SW",
+     "currency": "CHF ",
+     "mcap_base": {
+      "prefix": "CHF ",
+      "yi": 2900.0,
+      "approx": true
+     },
+     "mcap_base_price": 362.4,
+     "ath_floor": 0
+    },
+    {
+     "name": "西门子医疗",
+     "code": "SHL",
+     "market": "欧股",
+     "yahoo": "SHL.DE",
+     "currency": "€",
+     "mcap_base": {
+      "prefix": "€",
+      "yi": 525.0,
+      "approx": true
+     },
+     "mcap_base_price": 47.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "迈瑞医疗",
+     "code": "300760",
+     "market": "A股",
+     "yahoo": "300760.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1832.48,
+      "approx": true
+     },
+     "mcap_base_price": 151.14,
+     "ath_floor": 0
+    }
+   ],
+   "groups": [
+    {
+     "name": "全球巨头",
+     "codes": [
+      "MDT",
+      "JNJ",
+      "ABT",
+      "GEHC",
+      "PHG",
+      "ROG",
+      "SHL"
+     ]
+    },
+    {
+     "name": "中国龙头",
+     "codes": [
+      "300760"
+     ]
     }
    ]
   }
