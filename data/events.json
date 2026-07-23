@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-23 23:21 北京时间",
+ "updated": "2026-07-23 23:30 北京时间",
  "earnings": [
   {
    "d": "2026-07-23",
@@ -93,12 +93,6 @@
   },
   {
    "d": "2026-07-28",
-   "code": "APLD",
-   "name": "Applied Digital",
-   "est": false
-  },
-  {
-   "d": "2026-07-28",
    "code": "AMKR",
    "name": "艾马克技术（Amkor）",
    "est": false
@@ -185,6 +179,12 @@
    "d": "2026-07-29",
    "code": "TER",
    "name": "泰瑞达",
+   "est": false
+  },
+  {
+   "d": "2026-07-29",
+   "code": "6857",
+   "name": "爱德万测试",
    "est": false
   },
   {
@@ -795,6 +795,12 @@
   },
   {
    "d": "2026-08-10",
+   "code": "CAMT",
+   "name": "康特科技",
+   "est": false
+  },
+  {
+   "d": "2026-08-10",
    "code": "MNDY",
    "name": "monday.com",
    "est": false
@@ -848,12 +854,6 @@
    "est": false
   },
   {
-   "d": "2026-08-18",
-   "code": "FN",
-   "name": "Fabrinet",
-   "est": true
-  },
-  {
    "d": "2026-08-21",
    "code": "02899",
    "name": "紫金矿业",
@@ -878,6 +878,12 @@
    "est": false
   },
   {
+   "d": "2026-09-03",
+   "code": "CRM",
+   "name": "赛富时（Salesforce）",
+   "est": true
+  },
+  {
    "d": "2026-09-04",
    "code": "DELL",
    "name": "戴尔科技",
@@ -900,6 +906,12 @@
    "code": "ASML",
    "name": "阿斯麦",
    "est": false
+  },
+  {
+   "d": "2026-10-14",
+   "code": "ABT",
+   "name": "雅培",
+   "est": true
   }
  ]
 }
