@@ -1,11 +1,11 @@
 {
- "updated": "2026-07-23 18:00 北京时间",
+ "updated": "2026-07-23 18:15 北京时间",
  "earnings": [
   {
    "d": "2026-07-22",
    "code": "GEV",
    "name": "GE Vernova",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-23",
@@ -17,7 +17,7 @@
    "d": "2026-07-23",
    "code": "TSLA",
    "name": "特斯拉",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-23",
@@ -41,7 +41,7 @@
    "d": "2026-07-23",
    "code": "IBM",
    "name": "IBM",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-23",
