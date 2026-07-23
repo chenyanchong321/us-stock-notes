@@ -476,8 +476,12 @@ def main():
                 time.sleep(0.4)  # 温和限速
             fetched = cache[sym]
             if fetched is None:
+                # 兜底行必须与正常行等长（当前24字段）——个别标的抓取失败时以此行占位，
+                # 不阻断其它标的发布。字段升级时这里和正常行(575)、校验(591)三处必须同步改，
+                # 否则任何一只标的失败就会生成短行、触发校验、阻断全站发布（2026-07-23 罗氏欧股降级踩中）。
                 rows.append([it["name"], it["code"], it["market"], "获取失败",
-                             "-", "-", 0.0, "-", "-", "-", "-", "-", gmap.get(it["code"], ""), None, None, None, None, None, None, None, None, None, None])
+                             "-", "-", 0.0, "-", "-", "-", "-", "-", gmap.get(it["code"], ""),
+                             None, None, None, None, None, None, None, None, None, None, None])
                 continue
             pairs, hist_max = fetched
             price = pairs[-1][1]
