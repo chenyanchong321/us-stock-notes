@@ -1074,16 +1074,12 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
 
 <div id="view-scenarios" class="hidden" style="max-width:980px;margin:var(--header-h) auto 0;padding:18px 14px 60px">
   <style>
-  #view-scenarios .scn-scroll{overflow:auto;max-height:76vh;border:1px solid var(--border);border-radius:10px}
   #view-scenarios .scn-tbl{width:100%;border-collapse:collapse;font-size:13px}
   #view-scenarios .scn-tbl th,#view-scenarios .scn-tbl td{padding:7px 9px;text-align:right;white-space:nowrap}
-  #view-scenarios .scn-tbl thead th{position:sticky;top:0;background:var(--panel2);z-index:2;cursor:pointer;border-bottom:2px solid var(--border)}
+  #view-scenarios .scn-tbl thead th{cursor:pointer;border-bottom:2px solid var(--border)}
   #view-scenarios .scn-tbl tbody tr{border-bottom:1px solid var(--border)}
-  #view-scenarios .scn-c0{position:sticky;left:0;text-align:left;background:var(--bg);z-index:1}
-  #view-scenarios .scn-tbl thead th.scn-c0{z-index:3;background:var(--panel2)}
-  #view-scenarios .scn-sub{font-size:11px;color:var(--text2)}
-  #view-scenarios .scn-fill{width:100%;padding:0;border:none}
-  @media(max-width:860px){#view-scenarios .scn-tbl{width:max-content;min-width:100%;font-size:11.5px}#view-scenarios .scn-tbl th,#view-scenarios .scn-tbl td{padding:6px 7px}#view-scenarios .scn-fill{display:none}}
+  #view-scenarios .scn-tbl .fill{width:100%;padding:0;border:none}
+  @media(max-width:860px){#view-scenarios .scn-tbl{width:max-content;min-width:100%;font-size:11.5px}#view-scenarios .scn-tbl th,#view-scenarios .scn-tbl td{padding:6px 7px}#view-scenarios .scn-tbl .fill{display:none}}
   </style>
   <div class="kbar" data-kbar="scenarios"></div>
   <h2 style="font-size:18px;margin:6px 0 2px">📊 情景演绎</h2>
@@ -2749,7 +2745,7 @@ window.updateFresh = function(){
   function onScroll(){
     TOP = topOf();
     let found=null;
-    for(const wrap of document.querySelectorAll("#view-dash:not(.hidden) .tbl-wrap")){
+    for(const wrap of document.querySelectorAll("#view-dash:not(.hidden) .tbl-wrap, #view-scenarios:not(.hidden) .tbl-wrap")){
       const r=wrap.getBoundingClientRect();
       if(r.top<TOP+4 && r.bottom>TOP+80){ found=wrap; break; }
     }
@@ -3220,24 +3216,24 @@ window.renderScenarios = (function(){
     if(MK!=="全部") items=items.filter(x=>inMk(MK,x));
     items.sort((a,b)=>{ if(SORTK==='name')return a.name.localeCompare(b.name)*DIR; let av=a[SORTK],bv=b[SORTK]; if(av==null)av=(DIR<0?-1e9:1e9); if(bv==null)bv=(DIR<0?-1e9:1e9); return (av-bv)*DIR; });
     const th=(k,lb)=>'<th data-sk="'+k+'">'+lb+(SORTK===k?(DIR<0?' ▾':' ▴'):'')+'</th>';
-    let h='<div class="scn-scroll"><table class="scn-tbl">';
+    let h='<div class="tbl-wrap"><table class="scn-tbl">';
     h+='<thead><tr>'
-      +'<th data-sk="name" class="scn-c0">公司</th>'+th('px','现价')+th('ev_pct','期望价')+th('down','悲观')+th('mid_pct','中性')+th('up','乐观')+th('odds','赔率')
-      +'<th class="scn-fill"></th></tr></thead><tbody>';
+      +'<th data-sk="name">公司</th>'+th('px','现价')+th('ev_pct','期望价')+th('down','悲观')+th('mid_pct','中性')+th('up','乐观')+th('odds','赔率')
+      +'<th class="fill"></th></tr></thead><tbody>';
     items.forEach(x=>{
       h+='<tr>'
-        +'<td class="scn-c0"><b>'+esc(x.name)+'</b><br><span class="scn-sub">'+esc(x.mkt)+'·'+esc(x.sector)+'</span></td>'
+        +'<td class="name"><span class="cn">'+esc(x.name)+'</span><span class="sub">'+esc(x.sector)+'<span class="mkt">'+esc(x.mkt)+'</span></span></td>'
         +'<td>'+esc(x.sym)+x.px+'</td>'
         +'<td>'+(x.ev_est?'~':'')+x.ev+'<br>'+pc(x.ev_pct)+'</td>'
         +'<td>'+x.bear+'<br>'+pc(x.bear_pct)+'</td>'
         +'<td>'+x.mid+'<br>'+pc(x.mid_pct)+'</td>'
         +'<td>'+x.bull+'<br>'+pc(x.bull_pct)+'</td>'
         +'<td>'+oddsTxt(x)+'</td>'
-        +'<td class="scn-fill"></td></tr>';
+        +'<td class="fill"></td></tr>';
     });
     h+='</tbody></table></div>';
     document.getElementById("scn-list").innerHTML=h;
-    document.querySelectorAll(".scn-tbl th[data-sk]").forEach(t=>t.onclick=()=>{const k=t.dataset.sk; if(SORTK===k)DIR=-DIR; else{SORTK=k;DIR=(k==='name')?1:-1;} paint();});
+    document.querySelectorAll("#scn-list th[data-sk]").forEach(t=>t.onclick=()=>{const k=t.dataset.sk; if(SORTK===k)DIR=-DIR; else{SORTK=k;DIR=(k==='name')?1:-1;} paint(); if(window.__fhKick)window.__fhKick();});
   }
   function paintPills(){
     const box=document.getElementById("scn-mk"); if(!box)return;
