@@ -1078,8 +1078,8 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
   #view-scenarios .scn-tbl th,#view-scenarios .scn-tbl td{padding:7px 9px;text-align:right;white-space:nowrap}
   #view-scenarios .scn-tbl thead th{cursor:pointer;border-bottom:2px solid var(--border)}
   #view-scenarios .scn-tbl tbody tr{border-bottom:1px solid var(--border)}
-  #view-scenarios .scn-tbl td.name{text-align:left;max-width:210px}
-  #view-scenarios .scn-tbl td.name .sub{white-space:normal;line-height:1.5}
+  #view-scenarios .scn-tbl td.name{text-align:left}
+  #view-scenarios .scn-tbl td.name .sub{display:block;white-space:nowrap;margin-top:2px}
   .attr-badge{display:inline-block;margin-left:6px;padding:0 6px;border:1px solid var(--gold);border-radius:5px;color:var(--gold);font-size:11px;font-weight:600;text-decoration:none;vertical-align:1px;line-height:1.6;white-space:nowrap}
   .attr-badge:hover{background:rgba(232,182,76,.12)}
   .attr-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:12px}
@@ -3272,7 +3272,7 @@ window.renderScenarios = (function(){
       +'<th class="fill"></th></tr></thead><tbody>';
     items.forEach(x=>{
       h+='<tr data-code="'+esc(x.code)+'">'
-        +'<td class="name"><span class="cn">'+esc(x.name)+'</span><a class="attr-badge" href="attrib/'+esc(x.code)+'_full.pdf" target="_blank" rel="noopener" title="打开完整版归因分析">归因</a><span class="sub">'+esc(x.sector)+'<span class="mkt">'+esc(x.mkt)+'</span></span></td>'
+        +'<td class="name"><span class="cn">'+esc(x.name)+'</span><a class="attr-badge" href="attrib/'+esc(x.code)+'_full.pdf" target="_blank" rel="noopener" title="打开完整版归因分析">归因</a><span class="sub">'+esc(x.code)+'<span class="mkt">'+esc(x.mkt)+'</span></span></td>'
         +'<td>'+esc(x.sym)+x.px+'</td>'
         +'<td>'+(x.ev_est?'~':'')+x.ev+'<br>'+pc(x.ev_pct)+'</td>'
         +'<td>'+x.bear+'<br>'+pc(x.bear_pct)+'</td>'
@@ -3290,18 +3290,46 @@ window.renderScenarios = (function(){
     box.innerHTML=MKS.filter(m=>m==="全部"||DATA.items.some(x=>inMk(m,x))).map(m=>{const n=m==="全部"?DATA.items.length:DATA.items.filter(x=>inMk(m,x)).length; return '<button class="perf-pill'+(m===MK?' on':'')+'" data-mk="'+m+'">'+m+' '+n+'</button>';}).join("");
     box.querySelectorAll("button").forEach(b=>b.onclick=()=>{MK=b.dataset.mk;paint();paintPills();});
   }
-  let lastHover=null;
-  function bindHover(){
-    const list=document.getElementById('scn-list'); if(!list||list._hb)return; list._hb=1;
-    const show=(nm)=>{ const tr=nm.closest('tr[data-code]'); if(!tr)return; const code=tr.dataset.code; const r=nm.getBoundingClientRect(); if(window.openStockCard) openStockCard(code, r.left+20, r.bottom-4); };
-    list.addEventListener('mouseover',e=>{ if(e.target.closest('.attr-badge'))return; const nm=e.target.closest('td.name'); if(!nm)return; const tr=nm.closest('tr[data-code]'); if(!tr)return; if(tr.dataset.code===lastHover)return; lastHover=tr.dataset.code; show(nm); });
-    list.addEventListener('mouseout',e=>{ if(!e.relatedTarget||!e.relatedTarget.closest('td.name')) lastHover=null; });
-    list.addEventListener('click',e=>{ if(e.target.closest('.attr-badge'))return; const nm=e.target.closest('td.name'); if(!nm)return; show(nm); });
-  }
   return function(){
-    if(DATA){paint();paintPills();bindHover();return;}
-    fetch("data/scenarios.json?v="+Date.now()).then(r=>r.json()).then(d=>{DATA=d; const el=document.getElementById("scn-asof"); if(el)el.textContent="报告快照 · 截至 "+d.asof+" · 共 "+d.items.length+" 家"; paint();paintPills();bindHover();}).catch(e=>{const el=document.getElementById("scn-list"); if(el)el.innerHTML='<div style="color:var(--text2);padding:20px">数据加载失败</div>';});
+    if(DATA){paint();paintPills();return;}
+    fetch("data/scenarios.json?v="+Date.now()).then(r=>r.json()).then(d=>{DATA=d; const el=document.getElementById("scn-asof"); if(el)el.textContent="报告快照 · 截至 "+d.asof+" · 共 "+d.items.length+" 家"; paint();paintPills();}).catch(e=>{const el=document.getElementById("scn-list"); if(el)el.innerHTML='<div style="color:var(--text2);padding:20px">数据加载失败</div>';});
   };
+})();
+
+
+/* 情景演绎表：名称悬停显示简介 —— 照抄数据面板/宇宙机制（150ms显示、280ms移开关闭、移到#stip不关） */
+(function(){
+  const TOUCHYS = matchMedia("(hover: none), (pointer: coarse)").matches;
+  const codeOf = el => { const tr=el.closest && el.closest("tr[data-code]"); return tr?tr.dataset.code:null; };
+  document.addEventListener("click", e=>{
+    if(e.target.closest && e.target.closest(".attr-badge")) return;
+    const nm=e.target.closest ? e.target.closest("#scn-list td.name") : null; if(!nm) return;
+    const code=codeOf(nm); if(!code) return; const rc=nm.getBoundingClientRect();
+    window.openStockCard && openStockCard(code, rc.left+20, rc.bottom-4);
+  }, true);
+  if(!TOUCHYS){
+    let ht=null, ct=null;
+    const cancelClose=()=>{ if(ct){clearTimeout(ct);ct=null;} };
+    const scheduleClose=()=>{ cancelClose(); ct=setTimeout(()=>{ window.closeStip && closeStip(); }, 280); };
+    document.addEventListener("mouseover", e=>{
+      if(e.target.closest && e.target.closest(".attr-badge")) return;
+      const nm=e.target.closest ? e.target.closest("#scn-list td.name") : null;
+      if(nm){ cancelClose(); clearTimeout(ht);
+        ht=setTimeout(()=>{ const code=codeOf(nm); if(!code)return; const rc=nm.getBoundingClientRect();
+          window.openStockCard && openStockCard(code, rc.left+20, rc.bottom-4); }, 150);
+        return; }
+      if(e.target.closest && e.target.closest("#stip")){ cancelClose(); }
+    });
+    document.addEventListener("mouseout", e=>{
+      const nm=e.target.closest ? e.target.closest("#scn-list td.name") : null;
+      const toTip=e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest("#stip");
+      const toNm=e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest("#scn-list td.name");
+      if(nm){ clearTimeout(ht); if(!toTip && !toNm) scheduleClose(); return; }
+      if(e.target.closest && e.target.closest("#stip") && !toTip){
+        const v=document.getElementById("view-scenarios"); if(v && !v.classList.contains("hidden")) scheduleClose();
+      }
+    });
+  }
 })();
 
 window.renderReads = (function(){
