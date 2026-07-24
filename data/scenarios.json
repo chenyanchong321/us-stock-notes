@@ -1426,6 +1426,35 @@
    "ev": 30575,
    "ev_est": false,
    "ev_pct": 5.6
+  },
+  {
+   "code": "NOW",
+   "name": "ServiceNow",
+   "mkt": "美股",
+   "sym": "$",
+   "sector": "企业软件SaaS",
+   "px": 91.94,
+   "bear": 70,
+   "mid": 92,
+   "bull": 140,
+   "prob": [
+    30,
+    40,
+    30
+   ],
+   "tag": "业绩最硬估值最便宜·等AI叙事反转",
+   "folder": "ServiceNow（2026.7.24）",
+   "pdf_full": "NOW_full.pdf",
+   "pdf_one": "NOW_1p.pdf",
+   "bear_pct": -23.9,
+   "mid_pct": 0.1,
+   "bull_pct": 52.3,
+   "up": 52.3,
+   "down": -23.9,
+   "odds": 2.19,
+   "ev": 99.8,
+   "ev_est": false,
+   "ev_pct": 8.5
   }
  ]
 }
