@@ -917,6 +917,20 @@
      },
      "mcap_base_price": 382.6,
      "ath_floor": 0
+    },
+    {
+     "name": "澜起科技",
+     "code": "688008",
+     "market": "A股",
+     "yahoo": "688008.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2104,
+      "approx": true
+     },
+     "mcap_base_price": 183.6,
+     "ath_floor": 0
     }
    ],
    "groups": [
@@ -939,7 +953,8 @@
      "codes": [
       "AVGO",
       "MRVL",
-      "06809"
+      "06809",
+      "688008"
      ]
     }
    ]
@@ -1182,6 +1197,20 @@
      "ath_floor": 0
     },
     {
+     "name": "澜起科技",
+     "code": "688008",
+     "market": "A股",
+     "yahoo": "688008.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2104,
+      "approx": true
+     },
+     "mcap_base_price": 183.6,
+     "ath_floor": 0
+    },
+    {
      "name": "聚辰股份",
      "code": "688123",
      "market": "A股",
@@ -1293,6 +1322,7 @@
       "603986",
       "03986",
       "06809",
+      "688008",
       "688123",
       "300223",
       "688110"
