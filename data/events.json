@@ -1,28 +1,10 @@
 {
- "updated": "2026-07-24 22:00 北京时间",
+ "updated": "2026-07-24 22:06 北京时间",
  "earnings": [
   {
-   "d": "2026-07-24",
-   "code": "INTC",
-   "name": "英特尔",
-   "est": true
-  },
-  {
    "d": "2026-07-28",
-   "code": "000660.KS",
-   "name": "SK海力士",
-   "est": false
-  },
-  {
-   "d": "2026-07-28",
-   "code": "RMBS",
-   "name": "Rambus",
-   "est": false
-  },
-  {
-   "d": "2026-07-28",
-   "code": "GLW",
-   "name": "康宁",
+   "code": "APLD",
+   "name": "Applied Digital",
    "est": false
   },
   {
@@ -38,33 +20,33 @@
    "est": false
   },
   {
-   "d": "2026-07-29",
-   "code": "NXPI",
-   "name": "恩智浦",
+   "d": "2026-07-28",
+   "code": "267260",
+   "name": "现代电气",
    "est": false
   },
   {
    "d": "2026-07-29",
-   "code": "SKHY",
-   "name": "SK海力士(美股ADR)",
+   "code": "VRT",
+   "name": "Vertiv Holdings",
    "est": false
   },
   {
    "d": "2026-07-29",
-   "code": "005930",
-   "name": "三星电子",
+   "code": "KLAC",
+   "name": "科磊",
    "est": false
   },
   {
    "d": "2026-07-29",
-   "code": "STX",
-   "name": "希捷科技",
+   "code": "TER",
+   "name": "泰瑞达",
    "est": false
   },
   {
    "d": "2026-07-29",
-   "code": "APH",
-   "name": "安费诺",
+   "code": "6857",
+   "name": "爱德万测试",
    "est": false
   },
   {
@@ -99,14 +81,26 @@
   },
   {
    "d": "2026-07-30",
-   "code": "ARM",
-   "name": "Arm Holdings",
+   "code": "EQIX",
+   "name": "易昆尼克斯（Equinix）",
    "est": false
   },
   {
    "d": "2026-07-30",
-   "code": "QCOM",
-   "name": "高通",
+   "code": "LRCX",
+   "name": "泛林集团",
+   "est": false
+  },
+  {
+   "d": "2026-07-30",
+   "code": "FORM",
+   "name": "FormFactor",
+   "est": false
+  },
+  {
+   "d": "2026-07-30",
+   "code": "FTNT",
+   "name": "飞塔信息（Fortinet）",
    "est": false
   },
   {
@@ -123,26 +117,8 @@
   },
   {
    "d": "2026-07-31",
-   "code": "285A",
-   "name": "铠侠",
-   "est": false
-  },
-  {
-   "d": "2026-07-31",
-   "code": "6723",
-   "name": "瑞萨电子",
-   "est": false
-  },
-  {
-   "d": "2026-07-31",
-   "code": "AXTI",
-   "name": "AXT Inc",
-   "est": false
-  },
-  {
-   "d": "2026-07-31",
-   "code": "5802",
-   "name": "住友电气",
+   "code": "COHU",
+   "name": "科休半导体",
    "est": false
   },
   {
@@ -164,15 +140,57 @@
    "est": false
   },
   {
+   "d": "2026-07-31",
+   "code": "CCJ",
+   "name": "Cameco",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "6268",
+   "name": "纳博特斯克",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "6954",
+   "name": "发那科",
+   "est": false
+  },
+  {
    "d": "2026-08-04",
-   "code": "ON",
-   "name": "安森美半导体",
+   "code": "CIFR",
+   "name": "Cipher Mining",
    "est": false
   },
   {
    "d": "2026-08-04",
    "code": "7011",
    "name": "三菱重工",
+   "est": false
+  },
+  {
+   "d": "2026-08-04",
+   "code": "WMB",
+   "name": "Williams Companies",
+   "est": false
+  },
+  {
+   "d": "2026-08-04",
+   "code": "CMI",
+   "name": "康明斯",
+   "est": false
+  },
+  {
+   "d": "2026-08-04",
+   "code": "CAT",
+   "name": "卡特彼勒",
+   "est": false
+  },
+  {
+   "d": "2026-08-04",
+   "code": "PLTR",
+   "name": "Palantir",
    "est": false
   },
   {
@@ -183,62 +201,50 @@
   },
   {
    "d": "2026-08-05",
-   "code": "ANET",
-   "name": "Arista Networks",
-   "est": false
-  },
-  {
-   "d": "2026-08-05",
-   "code": "ALAB",
-   "name": "Astera Labs",
-   "est": false
-  },
-  {
-   "d": "2026-08-05",
    "code": "6976",
    "name": "太阳诱电",
    "est": false
   },
   {
    "d": "2026-08-05",
-   "code": "NOVT",
-   "name": "Novanta",
+   "code": "SHOP",
+   "name": "Shopify",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
+   "code": "TOST",
+   "name": "Toast",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
+   "code": "ZETA",
+   "name": "Zeta Global",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
+   "code": "6481",
+   "name": "THK",
    "est": false
   },
   {
    "d": "2026-08-06",
-   "code": "SNDK",
-   "name": "闪迪",
+   "code": "ACLS",
+   "name": "Axcelis",
    "est": false
   },
   {
    "d": "2026-08-06",
-   "code": "WDC",
-   "name": "西部数据",
+   "code": "VECO",
+   "name": "维易科精密（Veeco）",
    "est": false
   },
   {
    "d": "2026-08-06",
-   "code": "5801",
-   "name": "古河电工",
-   "est": false
-  },
-  {
-   "d": "2026-08-06",
-   "code": "MTSI",
-   "name": "MACOM",
-   "est": false
-  },
-  {
-   "d": "2026-08-06",
-   "code": "VIAV",
-   "name": "Viavi Solutions",
-   "est": false
-  },
-  {
-   "d": "2026-08-06",
-   "code": "HIMX",
-   "name": "奇景光电",
+   "code": "NVMI",
+   "name": "Nova",
    "est": false
   },
   {
@@ -261,14 +267,38 @@
   },
   {
    "d": "2026-08-06",
-   "code": "SYM",
-   "name": "Symbotic",
+   "code": "DDOG",
+   "name": "Datadog",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
+   "code": "APP",
+   "name": "Applovin",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
+   "code": "HUBS",
+   "name": "HubSpot",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
+   "code": "KVYO",
+   "name": "Klaviyo",
    "est": false
   },
   {
    "d": "2026-08-07",
-   "code": "AAOI",
-   "name": "Applied Optoelectronics",
+   "code": "ACMR",
+   "name": "ACM Research",
+   "est": false
+  },
+  {
+   "d": "2026-08-07",
+   "code": "ONTO",
+   "name": "Onto Innovation",
    "est": false
   },
   {
@@ -278,46 +308,64 @@
    "est": false
   },
   {
-   "d": "2026-08-12",
-   "code": "LITE",
-   "name": "Lumentum",
+   "d": "2026-08-07",
+   "code": "NET",
+   "name": "Cloudflare",
+   "est": false
+  },
+  {
+   "d": "2026-08-07",
+   "code": "TWLO",
+   "name": "Twilio",
+   "est": false
+  },
+  {
+   "d": "2026-08-07",
+   "code": "TEAM",
+   "name": "Atlassian",
+   "est": false
+  },
+  {
+   "d": "2026-08-07",
+   "code": "FROG",
+   "name": "JFrog",
+   "est": false
+  },
+  {
+   "d": "2026-08-07",
+   "code": "6324",
+   "name": "哈默纳科机电",
+   "est": false
+  },
+  {
+   "d": "2026-08-10",
+   "code": "CAMT",
+   "name": "康特科技",
+   "est": false
+  },
+  {
+   "d": "2026-08-10",
+   "code": "MNDY",
+   "name": "monday.com",
    "est": false
   },
   {
    "d": "2026-08-12",
-   "code": "POET",
-   "name": "POET Technologies",
-   "est": true
-  },
-  {
-   "d": "2026-08-12",
-   "code": "00700",
-   "name": "腾讯控股",
+   "code": "SMCI",
+   "name": "超微电脑",
    "est": false
   },
   {
    "d": "2026-08-13",
-   "code": "CBRS",
-   "name": "Cerebras Systems",
+   "code": "00992",
+   "name": "联想集团",
    "est": false
   },
   {
-   "d": "2026-08-13",
-   "code": "COHR",
-   "name": "Coherent",
+   "d": "2026-08-14",
+   "code": "AMAT",
+   "name": "应用材料",
    "est": false
-  },
-  {
-   "d": "2026-08-18",
-   "code": "FN",
-   "name": "Fabrinet",
-   "est": true
-  },
-  {
-   "d": "2026-08-26",
-   "code": "00100",
-   "name": "MiniMax",
-   "est": true
   },
   {
    "d": "2026-08-27",
@@ -326,15 +374,39 @@
    "est": false
   },
   {
-   "d": "2026-09-24",
-   "code": "MU",
-   "name": "美光科技",
+   "d": "2026-09-03",
+   "code": "CRM",
+   "name": "赛富时（Salesforce）",
+   "est": true
+  },
+  {
+   "d": "2026-09-04",
+   "code": "DELL",
+   "name": "戴尔科技",
+   "est": false
+  },
+  {
+   "d": "2026-09-11",
+   "code": "ADBE",
+   "name": "Adobe",
+   "est": false
+  },
+  {
+   "d": "2026-10-14",
+   "code": "ASML",
+   "name": "阿斯麦",
+   "est": false
+  },
+  {
+   "d": "2026-10-21",
+   "code": "EQT",
+   "name": "EQT（天然气）",
    "est": false
   },
   {
    "d": "2026-10-22",
-   "code": "NOK",
-   "name": "诺基亚",
+   "code": "IBM",
+   "name": "IBM",
    "est": false
   }
  ]
