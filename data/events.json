@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-25 00:44 北京时间",
+ "updated": "2026-07-25 00:51 北京时间",
  "earnings": [
   {
    "d": "2026-07-24",
@@ -65,6 +65,18 @@
    "d": "2026-07-28",
    "code": "AMKR",
    "name": "艾马克技术（Amkor）",
+   "est": false
+  },
+  {
+   "d": "2026-07-28",
+   "code": "NVTS",
+   "name": "纳微半导体",
+   "est": false
+  },
+  {
+   "d": "2026-07-28",
+   "code": "CLS",
+   "name": "天弘科技（Celestica）",
    "est": false
   },
   {
@@ -153,8 +165,44 @@
   },
   {
    "d": "2026-07-29",
+   "code": "FLEX",
+   "name": "伟创力",
+   "est": false
+  },
+  {
+   "d": "2026-07-29",
+   "code": "2383",
+   "name": "台光电子",
+   "est": false
+  },
+  {
+   "d": "2026-07-29",
+   "code": "BE",
+   "name": "Bloom Energy",
+   "est": false
+  },
+  {
+   "d": "2026-07-29",
+   "code": "GNRC",
+   "name": "Generac",
+   "est": false
+  },
+  {
+   "d": "2026-07-29",
    "code": "GEHC",
    "name": "GE医疗",
+   "est": false
+  },
+  {
+   "d": "2026-07-30",
+   "code": "MSFT",
+   "name": "微软",
+   "est": false
+  },
+  {
+   "d": "2026-07-30",
+   "code": "META",
+   "name": "Meta Platforms",
    "est": false
   },
   {
@@ -213,6 +261,18 @@
   },
   {
    "d": "2026-07-31",
+   "code": "AAPL",
+   "name": "苹果",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "AMZN",
+   "name": "亚马逊",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
    "code": "285A",
    "name": "铠侠",
    "est": false
@@ -251,6 +311,36 @@
    "d": "2026-07-31",
    "code": "7741",
    "name": "保谷光学（HOYA）",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "MPWR",
+   "name": "Monolithic Power",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "ETN",
+   "name": "伊顿",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "6981",
+   "name": "村田制作所",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "6762",
+   "name": "TDK",
+   "est": false
+  },
+  {
+   "d": "2026-07-31",
+   "code": "NVT",
+   "name": "nVent Electric",
    "est": false
   },
   {
@@ -345,6 +435,12 @@
   },
   {
    "d": "2026-08-04",
+   "code": "7011",
+   "name": "三菱重工",
+   "est": false
+  },
+  {
+   "d": "2026-08-04",
    "code": "WMB",
    "name": "Williams Companies",
    "est": false
@@ -375,6 +471,12 @@
   },
   {
    "d": "2026-08-05",
+   "code": "AMD",
+   "name": "AMD",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
    "code": "ANET",
    "name": "Arista Networks",
    "est": false
@@ -383,6 +485,30 @@
    "d": "2026-08-05",
    "code": "ALAB",
    "name": "Astera Labs",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
+   "code": "3110",
+   "name": "日东纺织",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
+   "code": "IFNNY",
+   "name": "英飞凌 ADR",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
+   "code": "6963",
+   "name": "罗姆半导体",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
+   "code": "6976",
+   "name": "太阳诱电",
    "est": false
   },
   {
@@ -525,6 +651,24 @@
   },
   {
    "d": "2026-08-06",
+   "code": "TTMI",
+   "name": "TTM Technologies",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
+   "code": "CEG",
+   "name": "Constellation Energy",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
+   "code": "TLN",
+   "name": "Talen Energy",
+   "est": false
+  },
+  {
+   "d": "2026-08-06",
    "code": "DDOG",
    "name": "Datadog",
    "est": false
@@ -575,6 +719,18 @@
    "d": "2026-08-07",
    "code": "ONTO",
    "name": "Onto Innovation",
+   "est": false
+  },
+  {
+   "d": "2026-08-07",
+   "code": "5803",
+   "name": "藤仓（Fujikura）",
+   "est": false
+  },
+  {
+   "d": "2026-08-07",
+   "code": "VST",
+   "name": "Vistra Energy",
    "est": false
   },
   {
@@ -668,22 +824,10 @@
    "est": false
   },
   {
-   "d": "2026-08-13",
-   "code": "CVV",
-   "name": "CVD设备",
-   "est": false
-  },
-  {
    "d": "2026-08-14",
    "code": "AMAT",
    "name": "应用材料",
    "est": false
-  },
-  {
-   "d": "2026-08-18",
-   "code": "FN",
-   "name": "Fabrinet",
-   "est": true
   },
   {
    "d": "2026-08-21",
@@ -698,16 +842,16 @@
    "est": true
   },
   {
+   "d": "2026-08-27",
+   "code": "NVDA",
+   "name": "英伟达",
+   "est": false
+  },
+  {
    "d": "2026-09-01",
    "code": "MDT",
    "name": "美敦力",
    "est": false
-  },
-  {
-   "d": "2026-09-03",
-   "code": "CRM",
-   "name": "赛富时（Salesforce）",
-   "est": true
   },
   {
    "d": "2026-09-04",
@@ -731,18 +875,6 @@
    "d": "2026-10-14",
    "code": "ASML",
    "name": "阿斯麦",
-   "est": false
-  },
-  {
-   "d": "2026-10-14",
-   "code": "ABT",
-   "name": "雅培",
-   "est": true
-  },
-  {
-   "d": "2026-10-21",
-   "code": "EQT",
-   "name": "EQT（天然气）",
    "est": false
   },
   {
