@@ -1078,7 +1078,17 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
   #view-scenarios .scn-tbl th,#view-scenarios .scn-tbl td{padding:7px 9px;text-align:right;white-space:nowrap}
   #view-scenarios .scn-tbl thead th{cursor:pointer;border-bottom:2px solid var(--border)}
   #view-scenarios .scn-tbl tbody tr{border-bottom:1px solid var(--border)}
-  #view-scenarios .scn-tbl td.name{text-align:left}
+  #view-scenarios .scn-tbl td.name{text-align:left;max-width:210px}
+  #view-scenarios .scn-tbl td.name .sub{white-space:normal;line-height:1.5}
+  .attr-badge{display:inline-block;margin-left:6px;padding:0 6px;border:1px solid var(--gold);border-radius:5px;color:var(--gold);font-size:11px;font-weight:600;text-decoration:none;vertical-align:1px;line-height:1.6;white-space:nowrap}
+  .attr-badge:hover{background:rgba(232,182,76,.12)}
+  .attr-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:12px}
+  .attr-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px}
+  .attr-meta{font-size:11.5px;color:var(--text2);margin-bottom:10px}
+  .attr-btns{display:flex;gap:10px;flex-wrap:wrap}
+  .attr-btn{padding:5px 14px;border:1px solid var(--gold);border-radius:8px;color:var(--gold);background:none;font-size:12.5px;text-decoration:none;transition:background .15s}
+  .attr-btn:hover{background:rgba(232,182,76,.12)}
+  .attr-none{font-size:12px;color:var(--text2);align-self:center}
   #view-scenarios .scn-tbl .fill{width:100%;padding:0;border:none}
   @media(max-width:860px){#view-scenarios .scn-tbl{width:max-content;min-width:100%;font-size:11.5px}#view-scenarios .scn-tbl th,#view-scenarios .scn-tbl td{padding:6px 7px}#view-scenarios .scn-tbl .fill{display:none}}
   </style>
@@ -3225,12 +3235,12 @@ window.renderAttrib = (function(){
     items.sort((a,b)=>dateOf(b.folder).localeCompare(dateOf(a.folder)));
     let h='';
     items.forEach(x=>{ const dt=dateOf(x.folder);
-      h+='<div class="rep-card">'
-        +'<a class="rep-title" href="attrib/'+esc(x.pdf_full)+'" target="_blank" rel="noopener">'+esc(x.name)+'</a>'
-        +'<div class="rep-meta">'+esc(x.mkt)+'·'+esc(x.sector)+(dt?' · '+dt:'')+'</div>'
-        +'<div style="margin-top:8px;display:flex;gap:12px;flex-wrap:wrap">'
-        +'<a class="rep-go" href="attrib/'+esc(x.pdf_full)+'" target="_blank" rel="noopener">📄 完整版</a>'
-        +(x.pdf_one?'<a class="rep-go" href="attrib/'+esc(x.pdf_one)+'" target="_blank" rel="noopener">📑 一页纸</a>':'<span style="color:var(--text2);font-size:12px;align-self:center">一页纸暂无</span>')
+      h+='<div class="attr-card">'
+        +'<div class="attr-title">'+esc(x.name)+'</div>'
+        +'<div class="attr-meta">'+esc(x.mkt)+'·'+esc(x.sector)+(dt?' · '+dt:'')+'</div>'
+        +'<div class="attr-btns">'
+        +'<a class="attr-btn" href="attrib/'+esc(x.pdf_full)+'" target="_blank" rel="noopener">📄 完整版</a>'
+        +(x.pdf_one?'<a class="attr-btn" href="attrib/'+esc(x.pdf_one)+'" target="_blank" rel="noopener">📑 一页纸</a>':'<span class="attr-none">一页纸暂无</span>')
         +'</div></div>';
     });
     const box=document.getElementById('attr-list'); if(box)box.innerHTML=h||'<div style="color:var(--text2);padding:20px">没有匹配的报告</div>';
@@ -3262,7 +3272,7 @@ window.renderScenarios = (function(){
       +'<th class="fill"></th></tr></thead><tbody>';
     items.forEach(x=>{
       h+='<tr data-code="'+esc(x.code)+'">'
-        +'<td class="name"><span class="cn">'+esc(x.name)+'</span><a class="repb scn-attr" href="attrib/'+esc(x.code)+'_full.pdf" target="_blank" rel="noopener" title="打开完整版归因分析">归因</a><span class="sub">'+esc(x.sector)+'<span class="mkt">'+esc(x.mkt)+'</span></span></td>'
+        +'<td class="name"><span class="cn">'+esc(x.name)+'</span><a class="attr-badge" href="attrib/'+esc(x.code)+'_full.pdf" target="_blank" rel="noopener" title="打开完整版归因分析">归因</a><span class="sub">'+esc(x.sector)+'<span class="mkt">'+esc(x.mkt)+'</span></span></td>'
         +'<td>'+esc(x.sym)+x.px+'</td>'
         +'<td>'+(x.ev_est?'~':'')+x.ev+'<br>'+pc(x.ev_pct)+'</td>'
         +'<td>'+x.bear+'<br>'+pc(x.bear_pct)+'</td>'
@@ -3284,9 +3294,9 @@ window.renderScenarios = (function(){
   function bindHover(){
     const list=document.getElementById('scn-list'); if(!list||list._hb)return; list._hb=1;
     const show=(nm)=>{ const tr=nm.closest('tr[data-code]'); if(!tr)return; const code=tr.dataset.code; const r=nm.getBoundingClientRect(); if(window.openStockCard) openStockCard(code, r.left+20, r.bottom-4); };
-    list.addEventListener('mouseover',e=>{ if(e.target.closest('.scn-attr'))return; const nm=e.target.closest('td.name'); if(!nm)return; const tr=nm.closest('tr[data-code]'); if(!tr)return; if(tr.dataset.code===lastHover)return; lastHover=tr.dataset.code; show(nm); });
+    list.addEventListener('mouseover',e=>{ if(e.target.closest('.attr-badge'))return; const nm=e.target.closest('td.name'); if(!nm)return; const tr=nm.closest('tr[data-code]'); if(!tr)return; if(tr.dataset.code===lastHover)return; lastHover=tr.dataset.code; show(nm); });
     list.addEventListener('mouseout',e=>{ if(!e.relatedTarget||!e.relatedTarget.closest('td.name')) lastHover=null; });
-    list.addEventListener('click',e=>{ if(e.target.closest('.scn-attr'))return; const nm=e.target.closest('td.name'); if(!nm)return; show(nm); });
+    list.addEventListener('click',e=>{ if(e.target.closest('.attr-badge'))return; const nm=e.target.closest('td.name'); if(!nm)return; show(nm); });
   }
   return function(){
     if(DATA){paint();paintPills();bindHover();return;}
