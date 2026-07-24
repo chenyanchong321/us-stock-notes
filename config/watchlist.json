@@ -1211,6 +1211,34 @@
      "ath_floor": 0
     },
     {
+     "name": "Rambus",
+     "code": "RMBS",
+     "market": "美股",
+     "yahoo": "RMBS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1.08,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "瑞萨电子",
+     "code": "6723",
+     "market": "日本",
+     "yahoo": "6723.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 18.5,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "聚辰股份",
      "code": "688123",
      "market": "A股",
@@ -1323,6 +1351,8 @@
       "03986",
       "06809",
       "688008",
+      "RMBS",
+      "6723",
       "688123",
       "300223",
       "688110"
