@@ -1073,7 +1073,7 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
 </div>
 
 <div id="view-scenarios" class="hidden" style="max-width:980px;margin:var(--header-h) auto 0;padding:18px 14px 60px">
-  <style>@media(max-width:860px){#view-scenarios .scn-tbl{font-size:11.5px}#view-scenarios .scn-tag{display:none}#view-scenarios .scn-tbl td,#view-scenarios .scn-tbl th{padding-left:2px !important;padding-right:2px !important}}</style>
+  <style>#view-scenarios .scn-fill{width:100%;padding:0;border:none}#view-scenarios .scn-tbl{table-layout:auto}@media(max-width:860px){#view-scenarios .scn-tbl{font-size:11.5px}#view-scenarios .scn-tag{display:none}#view-scenarios .scn-tbl td,#view-scenarios .scn-tbl th{padding-left:2px !important;padding-right:2px !important}}</style>
   <div class="kbar" data-kbar="scenarios"></div>
   <h2 style="font-size:18px;margin:6px 0 2px">📊 情景演绎</h2>
   <div style="font-size:12px;color:var(--text2)" id="scn-asof">数据加载中…</div>
@@ -3211,7 +3211,7 @@ window.renderScenarios = (function(){
     let h='<table class="scn-tbl" style="width:100%;border-collapse:collapse;font-size:13px;table-layout:auto">';
     h+='<thead><tr style="border-bottom:2px solid var(--border)">'
       +'<th data-sk="name" style="text-align:left;cursor:pointer;padding:6px 3px">公司</th>'+th('px','现价')+th('down','悲观')
-      +'<th style="text-align:right;padding:6px 3px">中性</th>'+th('up','乐观')+th('ev_pct','期望价')+th('odds','赔率')
+      +'<th style="text-align:right;padding:6px 3px">中性</th>'+th('up','乐观')+th('ev_pct','期望价')+th('odds','赔率')+'<th class="scn-fill"></th>'
       +'</tr></thead><tbody>';
     items.forEach(x=>{
       h+='<tr style="border-bottom:1px solid var(--border);text-align:right">'
@@ -3220,8 +3220,8 @@ window.renderScenarios = (function(){
         +'<td style="padding:7px 3px">'+x.bear+'<br>'+pc(x.bear_pct)+'</td>'
         +'<td style="padding:7px 3px">'+x.mid+'<br>'+pc(x.mid_pct)+'</td>'
         +'<td style="padding:7px 3px">'+x.bull+'<br>'+pc(x.bull_pct)+'</td>'
-        +'<td style="padding:7px 3px">'+(x.ev?x.ev+'<br>'+pc(x.ev_pct):'<span style="color:#999">—</span>')+'</td>'
-        +'<td style="padding:7px 3px">'+oddsTxt(x)+'</td>'
+        +'<td style="padding:7px 3px">'+(x.ev_est?'~':'')+x.ev+'<br>'+pc(x.ev_pct)+'</td>'
+        +'<td style="padding:7px 3px">'+oddsTxt(x)+'</td>'+'<td class="scn-fill"></td>'
         +'</tr>';
     });
     h+='</tbody></table>';
