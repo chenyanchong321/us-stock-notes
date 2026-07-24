@@ -1072,6 +1072,18 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
   <div id="ac-body"></div>
 </div>
 
+<div id="view-scenarios" class="hidden" style="max-width:980px;margin:var(--header-h) auto 0;padding:18px 14px 60px">
+  <style>@media(max-width:860px){#view-scenarios .scn-tbl{font-size:11.5px}#view-scenarios .scn-tag{display:none}#view-scenarios .scn-tbl td,#view-scenarios .scn-tbl th{padding-left:2px !important;padding-right:2px !important}}</style>
+  <div class="kbar" data-kbar="scenarios"></div>
+  <h2 style="font-size:18px;margin:6px 0 2px">📊 情景演绎</h2>
+  <div style="font-size:12px;color:var(--text2)" id="scn-asof">数据加载中…</div>
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 15px;margin:13px 0;font-size:12.5px;line-height:1.8;color:var(--text2)">
+    把每份走势归因报告里的「三情景演绎」抽出来横向对比：<b>悲观／中性／乐观</b>三档目标价、相对现价空间、<b>赔率</b>（＝乐观上行÷悲观下行）与概率加权<b>期望价</b>。<b>点表头可排序</b>。赔率 &gt;1.5 偏上行(绿)、&lt;0.8 偏下行(红)。现价为报告撰写时快照、非实时；概率与期望价仅部分报告提供。<b>仅供学习，不构成投资建议。</b>
+  </div>
+  <div id="scn-mk" class="mktbar" style="margin:10px 0;display:flex;flex-wrap:wrap;gap:6px"></div>
+  <div id="scn-list"></div>
+</div>
+
 <div id="view-history" class="hidden">
   <div class="hist-main">
     <div class="kbar" data-kbar="history"></div>
@@ -3183,6 +3195,51 @@ function renderLev(D){
 /* 📖 烟囱荐读（2026-07-21 主人需求）：每日读到的好文的链接收藏＋荐语。
    铁律：只存标题/出处/荐语/链接，正文绝不转载（版权）。数据 config/reads.json。
    布局＝按日期倒序分组的时间轴 + 主题标签筛选（标签由数据自动聚合，无需维护清单）。 */
+
+window.renderScenarios = (function(){
+  let DATA=null, MK="全部", SORTK="odds", DIR=-1;
+  const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const MKS=["全部","美股","A股","港股","日股","其他"];
+  function pc(v){ if(v==null)return '<span style="color:#999">—</span>'; const c=v>=0?'var(--up)':'var(--down)'; return '<span style="color:'+c+'">'+(v>=0?'+':'')+v+'%</span>'; }
+  function oc(o){ if(o==null)return '#999'; if(o<0)return 'var(--down)'; if(o>=1.5)return 'var(--up)'; if(o<0.8)return 'var(--down)'; return 'var(--text)'; }
+  function oddsTxt(x){ if(x.odds==null){ return x.px<x.bear? '<b style="color:var(--up)">现价&lt;悲观</b>':'—'; } if(x.odds<0) return '<b style="color:var(--down)">已超乐观</b>'; return '<b style="color:'+oc(x.odds)+'">'+x.odds.toFixed(2)+'</b>'; }
+  function paint(){
+    let items=DATA.items.slice();
+    if(MK!=="全部") items=items.filter(x=>MK==="其他"?!["美股","A股","港股","日股"].includes(x.mkt):x.mkt===MK);
+    items.sort((a,b)=>{ if(SORTK==='name')return a.name.localeCompare(b.name)*DIR; let av=a[SORTK],bv=b[SORTK]; if(av==null)av=(DIR<0?-1e9:1e9); if(bv==null)bv=(DIR<0?-1e9:1e9); return (av-bv)*DIR; });
+    const th=(k,lb)=>'<th data-sk="'+k+'" style="cursor:pointer;white-space:nowrap;text-align:right;padding:6px 3px">'+lb+(SORTK===k?(DIR<0?' ▾':' ▴'):'')+'</th>';
+    let h='<table class="scn-tbl" style="width:100%;border-collapse:collapse;font-size:13px;table-layout:auto">';
+    h+='<thead><tr style="border-bottom:2px solid var(--border)">'
+      +'<th data-sk="name" style="text-align:left;cursor:pointer;padding:6px 3px">公司</th>'+th('px','现价')+th('down','悲观')
+      +'<th style="text-align:right;padding:6px 3px">中性</th>'+th('up','乐观')+th('odds','赔率')+th('ev_pct','期望价')
+      +'<th class="scn-tag" style="text-align:left;padding:6px 3px">一句话</th></tr></thead><tbody>';
+    items.forEach(x=>{
+      h+='<tr style="border-bottom:1px solid var(--border);text-align:right">'
+        +'<td style="text-align:left;padding:7px 3px"><b>'+esc(x.name)+'</b><br><span style="font-size:11px;color:var(--text2)">'+esc(x.mkt)+'·'+esc(x.sector)+'</span></td>'
+        +'<td style="padding:7px 3px">'+esc(x.sym)+x.px+'</td>'
+        +'<td style="padding:7px 3px">'+x.bear+'<br>'+pc(x.bear_pct)+'</td>'
+        +'<td style="padding:7px 3px">'+x.mid+'</td>'
+        +'<td style="padding:7px 3px">'+x.bull+'<br>'+pc(x.bull_pct)+'</td>'
+        +'<td style="padding:7px 3px">'+oddsTxt(x)+'</td>'
+        +'<td style="padding:7px 3px">'+(x.ev?x.ev+'<br>'+pc(x.ev_pct):'<span style="color:#999">—</span>')+'</td>'
+        +'<td class="scn-tag" style="text-align:left;font-size:12px;color:var(--text2);padding:7px 3px">'+esc(x.tag)+'</td>'
+        +'</tr>';
+    });
+    h+='</tbody></table>';
+    document.getElementById("scn-list").innerHTML=h;
+    document.querySelectorAll(".scn-tbl th[data-sk]").forEach(t=>t.onclick=()=>{const k=t.dataset.sk; if(SORTK===k)DIR=-DIR; else{SORTK=k;DIR=(k==='name')?1:-1;} paint();});
+  }
+  function paintPills(){
+    const box=document.getElementById("scn-mk"); if(!box)return;
+    box.innerHTML=MKS.map(m=>{const n=m==="全部"?DATA.items.length:DATA.items.filter(x=>m==="其他"?!["美股","A股","港股","日股"].includes(x.mkt):x.mkt===m).length; return '<button class="perf-pill'+(m===MK?' on':'')+'" data-mk="'+m+'">'+m+' '+n+'</button>';}).join("");
+    box.querySelectorAll("button").forEach(b=>b.onclick=()=>{MK=b.dataset.mk;paint();paintPills();});
+  }
+  return function(){
+    if(DATA){paint();paintPills();return;}
+    fetch("data/scenarios.json?v="+Date.now()).then(r=>r.json()).then(d=>{DATA=d; const el=document.getElementById("scn-asof"); if(el)el.textContent="报告快照 · 截至 "+d.asof+" · 共 "+d.items.length+" 家"; paint();paintPills();}).catch(e=>{const el=document.getElementById("scn-list"); if(el)el.innerHTML='<div style="color:var(--text2);padding:20px">数据加载失败</div>';});
+  };
+})();
+
 window.renderReads = (function(){
   let DATA = null, TAG = "", KW = "";
   const esc = s => String(s==null?"":s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -5525,7 +5582,7 @@ document.addEventListener("click", e=>{
      KB_VIEWS 下的任何页都算「学习笔记」页签高亮范围；新增栏目在 KB 数组加一项即全站生效。 */
   const KB = [["notes","📚 学习笔记"],["dict","📖 术语词典"],["history","📜 金融史"],["imap","🗺 产业地图"],
               ["universe","🌌 股票宇宙"],["events","📅 大事件"],["lev","⚖️ 杠杆率"],["margin","💳 融资余额"],["reads","📖 烟囱荐读"],
-              ["aicapex","💰 AI资金"]];
+              ["aicapex","💰 AI资金"],["scenarios","📊 情景演绎"]];
   const KB_VIEWS = KB.map(x=>x[0]);
   document.querySelectorAll(".kbar[data-kbar]").forEach(k=>{
     k.innerHTML = KB.map(([v,l])=>`<button data-view="${v}"${v===k.dataset.kbar?' class="on"':''}>${l}</button>`).join("");
@@ -5533,7 +5590,7 @@ document.addEventListener("click", e=>{
   window.switchTab = function(v){
     document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",
       t.dataset.view===v || (v==="repread" && t.dataset.view==="reports") || (KB_VIEWS.includes(v) && v!=="notes" && t.dataset.view==="notes")));
-    ["dash","events","notes","dict","history","lev","margin","reads","aicapex","reports","repread","imap","universe"].forEach(x=>{
+    ["dash","events","notes","dict","history","lev","margin","reads","aicapex","scenarios","reports","repread","imap","universe"].forEach(x=>{
       const el = document.getElementById("view-"+x);
       if(el) el.classList.toggle("hidden", v!==x);
     });
@@ -5545,7 +5602,8 @@ document.addEventListener("click", e=>{
     if(v==="universe" && typeof renderUniverse==="function"){ try{ renderUniverse(); }catch(e){} }   /* 宇宙同款：切入即刷 */
     if(v==="margin" && window.renderMargin){ try{ renderMargin(); }catch(e){} }   /* 融资余额：切入懒加载 */
     if(v==="aicapex" && window.renderAicapex){ try{ renderAicapex(); }catch(e){} } /* AI资金底图：切入懒加载 */
-    if(v==="reads" && window.renderReads){ try{ renderReads(); }catch(e){} }   /* 烟囱荐读：切入懒加载 */
+    if(v==="reads" && window.renderReads){ try{ renderReads(); }catch(e){} }
+    if(v==="scenarios" && window.renderScenarios){ try{ renderScenarios(); }catch(e){} }   /* 烟囱荐读：切入懒加载 */
     const mb=document.getElementById("mbottom");
     if(mb) mb.style.display = v==="dash" ? "" : "none";
     document.body.classList.toggle("reading", v==="repread");   /* 阅读态白衣：顶栏与白纸统一 */
