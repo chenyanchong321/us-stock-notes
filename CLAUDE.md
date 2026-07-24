@@ -696,3 +696,9 @@ json.dump(d,open("data/scenarios.json","w"),ensure_ascii=False,indent=1)
 # shutil.copy(完整版pdf,"attrib/XXXX_full.pdf")；有一页纸再 copy _1p.pdf
 ```
 现价/三情景取不到实时行情时（沙箱连不上行情源），用报告撰写时的快照值即可（页面已注明"报告快照·非实时"）。
+
+## 拆股后 mcap_base 股本必须同步（2026-07-24 ServiceNow 事故立规）
+- **症状**：ServiceNow(NOW) 数据面板市值显示 2022 亿，实际约 1000 亿——翻了一倍。现价(97.72)正常。
+- **根因**：NOW 于 **2025-12 做了 5 拆 1 拆股**，股本从约 2 亿股变成约 10.3 亿股、股价从 ~$500 变 ~$100。但 watchlist 的 `mcap_base` 设成 `yi:2200 @ price:106.32`，隐含股本 = 2200÷106.32 ≈ **20.7 亿股**（是拆股后真实 10.3 亿的两倍）——设置时把拆股前的市值口径和拆股后的价格混用了，股本多算一倍，市值随之翻倍。
+- **铁律**：`mcap_base` 的本质是股本数（`yi ÷ mcap_base_price = 总股本亿股`）。**凡标的做过拆股，必须核对这个隐含股本是「拆股后」的股数**——用 `mcap_base_price` 除出来的股本要等于拆股后总股本，否则市值成倍错。
+- **加股票自查追加**：新增或维护标的时，除了现价锚，多问一句「它最近有没有拆股/并股？」；有的话 `yi÷price` 必须对上拆股后的最新股本（可搜 shares outstanding 核对，或让流水线回读 sharesOutstanding 校正）。修法：改 `mcap_base.yi`（保持 price 不变），使 `yi÷price = 拆股后股本`。
