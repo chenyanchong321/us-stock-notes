@@ -1463,7 +1463,7 @@
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 20700,
+      "yi": 83108,
       "approx": true
      },
      "mcap_base_price": 2664.0,
@@ -1491,7 +1491,7 @@
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 1427,
+      "yi": 2066,
       "approx": true
      },
      "mcap_base_price": 1659.23,
@@ -1631,7 +1631,7 @@
      "currency": "$",
      "mcap_base": {
       "prefix": "$",
-      "yi": 6.6,
+      "yi": 15,
       "approx": false
      },
      "mcap_base_price": 8.76,
@@ -1659,7 +1659,7 @@
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 3735,
+      "yi": 7334,
       "approx": true
      },
      "mcap_base_price": 526.0,
@@ -1673,7 +1673,7 @@
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 975,
+      "yi": 2728,
       "approx": true
      },
      "mcap_base_price": 250.1,
@@ -2901,7 +2901,7 @@
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 2565,
+      "yi": 3962,
       "approx": true
      },
      "mcap_base_price": 413.69,
@@ -3083,7 +3083,7 @@
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 32900,
+      "yi": 65190,
       "approx": true
      },
      "mcap_base_price": 23345.0,
@@ -3097,7 +3097,7 @@
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 2595,
+      "yi": 5553,
       "approx": true
      },
      "mcap_base_price": 4990.0,
@@ -3595,7 +3595,7 @@
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 1269,
+      "yi": 6598,
       "approx": true
      },
      "mcap_base_price": 3625.0,
@@ -4110,7 +4110,7 @@
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 20700,
+      "yi": 83108,
       "approx": true
      },
      "mcap_base_price": 2664.0,
@@ -4124,7 +4124,7 @@
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 15800,
+      "yi": 88710,
       "approx": true
      },
      "mcap_base_price": 5358.0,
@@ -4642,7 +4642,7 @@
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 1269,
+      "yi": 6598,
       "approx": true
      },
      "mcap_base_price": 3625.0,
@@ -4836,7 +4836,7 @@
      "currency": "NT$",
      "mcap_base": {
       "prefix": "NT$",
-      "yi": 4.69,
+      "yi": 21,
       "approx": true
      },
      "mcap_base_price": 1.0,
@@ -5465,7 +5465,7 @@
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 407,
+      "yi": 700,
       "approx": true
      },
      "mcap_base_price": 71.43,
@@ -5493,7 +5493,7 @@
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 306,
+      "yi": 441,
       "approx": true
      },
      "mcap_base_price": 117.78,
@@ -5796,7 +5796,7 @@
      "currency": "$",
      "mcap_base": {
       "prefix": "$",
-      "yi": 485,
+      "yi": 1975,
       "approx": false
      },
      "mcap_base_price": 193.98,
@@ -5810,7 +5810,7 @@
      "currency": "$",
      "mcap_base": {
       "prefix": "$",
-      "yi": 1149,
+      "yi": 2837,
       "approx": false
      },
      "mcap_base_price": 348.06,
@@ -7316,7 +7316,7 @@
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 6.5,
+      "yi": 13,
       "approx": true
      },
      "mcap_base_price": 1.0,
