@@ -1073,7 +1073,18 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
 </div>
 
 <div id="view-scenarios" class="hidden" style="max-width:980px;margin:var(--header-h) auto 0;padding:18px 14px 60px">
-  <style>#view-scenarios .scn-fill{width:100%;padding:0;border:none}#view-scenarios .scn-tbl{table-layout:auto}@media(max-width:860px){#view-scenarios .scn-tbl{font-size:11.5px}#view-scenarios .scn-tag{display:none}#view-scenarios .scn-tbl td,#view-scenarios .scn-tbl th{padding-left:2px !important;padding-right:2px !important}}</style>
+  <style>
+  #view-scenarios .scn-scroll{overflow:auto;max-height:76vh;border:1px solid var(--border);border-radius:10px}
+  #view-scenarios .scn-tbl{width:100%;border-collapse:collapse;font-size:13px}
+  #view-scenarios .scn-tbl th,#view-scenarios .scn-tbl td{padding:7px 9px;text-align:right;white-space:nowrap}
+  #view-scenarios .scn-tbl thead th{position:sticky;top:0;background:var(--panel2);z-index:2;cursor:pointer;border-bottom:2px solid var(--border)}
+  #view-scenarios .scn-tbl tbody tr{border-bottom:1px solid var(--border)}
+  #view-scenarios .scn-c0{position:sticky;left:0;text-align:left;background:var(--bg);z-index:1}
+  #view-scenarios .scn-tbl thead th.scn-c0{z-index:3;background:var(--panel2)}
+  #view-scenarios .scn-sub{font-size:11px;color:var(--text2)}
+  #view-scenarios .scn-fill{width:100%;padding:0;border:none}
+  @media(max-width:860px){#view-scenarios .scn-tbl{width:max-content;min-width:100%;font-size:11.5px}#view-scenarios .scn-tbl th,#view-scenarios .scn-tbl td{padding:6px 7px}#view-scenarios .scn-fill{display:none}}
+  </style>
   <div class="kbar" data-kbar="scenarios"></div>
   <h2 style="font-size:18px;margin:6px 0 2px">📊 情景演绎</h2>
   <div style="font-size:12px;color:var(--text2)" id="scn-asof">数据加载中…</div>
@@ -3200,37 +3211,37 @@ window.renderScenarios = (function(){
   let DATA=null, MK="全部", SORTK="odds", DIR=-1;
   const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const MKS=["全部","美股","A股","港股","日股","其他"];
+  const inMk=(m,x)=>m==="其他"?!["美股","A股","港股","日股"].includes(x.mkt):x.mkt===m;
   function pc(v){ if(v==null)return '<span style="color:#999">—</span>'; const c=v>=0?'var(--up)':'var(--down)'; return '<span style="color:'+c+'">'+(v>=0?'+':'')+v+'%</span>'; }
   function oc(o){ if(o==null)return '#999'; if(o<0)return 'var(--down)'; if(o>=1.5)return 'var(--up)'; if(o<0.8)return 'var(--down)'; return 'var(--text)'; }
   function oddsTxt(x){ if(x.odds==null){ return x.px<x.bear? '<b style="color:var(--up)">现价&lt;悲观</b>':'—'; } if(x.odds<0) return '<b style="color:var(--down)">已超乐观</b>'; return '<b style="color:'+oc(x.odds)+'">'+x.odds.toFixed(2)+'</b>'; }
   function paint(){
     let items=DATA.items.slice();
-    if(MK!=="全部") items=items.filter(x=>MK==="其他"?!["美股","A股","港股","日股"].includes(x.mkt):x.mkt===MK);
+    if(MK!=="全部") items=items.filter(x=>inMk(MK,x));
     items.sort((a,b)=>{ if(SORTK==='name')return a.name.localeCompare(b.name)*DIR; let av=a[SORTK],bv=b[SORTK]; if(av==null)av=(DIR<0?-1e9:1e9); if(bv==null)bv=(DIR<0?-1e9:1e9); return (av-bv)*DIR; });
-    const th=(k,lb)=>'<th data-sk="'+k+'" style="cursor:pointer;white-space:nowrap;text-align:right;padding:6px 3px">'+lb+(SORTK===k?(DIR<0?' ▾':' ▴'):'')+'</th>';
-    let h='<table class="scn-tbl" style="width:100%;border-collapse:collapse;font-size:13px;table-layout:auto">';
-    h+='<thead><tr style="border-bottom:2px solid var(--border)">'
-      +'<th data-sk="name" style="text-align:left;cursor:pointer;padding:6px 3px">公司</th>'+th('px','现价')+th('down','悲观')
-      +'<th style="text-align:right;padding:6px 3px">中性</th>'+th('up','乐观')+th('ev_pct','期望价')+th('odds','赔率')+'<th class="scn-fill"></th>'
-      +'</tr></thead><tbody>';
+    const th=(k,lb)=>'<th data-sk="'+k+'">'+lb+(SORTK===k?(DIR<0?' ▾':' ▴'):'')+'</th>';
+    let h='<div class="scn-scroll"><table class="scn-tbl">';
+    h+='<thead><tr>'
+      +'<th data-sk="name" class="scn-c0">公司</th>'+th('px','现价')+th('ev_pct','期望价')+th('down','悲观')+th('mid_pct','中性')+th('up','乐观')+th('odds','赔率')
+      +'<th class="scn-fill"></th></tr></thead><tbody>';
     items.forEach(x=>{
-      h+='<tr style="border-bottom:1px solid var(--border);text-align:right">'
-        +'<td style="text-align:left;padding:7px 3px"><b>'+esc(x.name)+'</b><br><span style="font-size:11px;color:var(--text2)">'+esc(x.mkt)+'·'+esc(x.sector)+'</span></td>'
-        +'<td style="padding:7px 3px">'+esc(x.sym)+x.px+'</td>'
-        +'<td style="padding:7px 3px">'+x.bear+'<br>'+pc(x.bear_pct)+'</td>'
-        +'<td style="padding:7px 3px">'+x.mid+'<br>'+pc(x.mid_pct)+'</td>'
-        +'<td style="padding:7px 3px">'+x.bull+'<br>'+pc(x.bull_pct)+'</td>'
-        +'<td style="padding:7px 3px">'+(x.ev_est?'~':'')+x.ev+'<br>'+pc(x.ev_pct)+'</td>'
-        +'<td style="padding:7px 3px">'+oddsTxt(x)+'</td>'+'<td class="scn-fill"></td>'
-        +'</tr>';
+      h+='<tr>'
+        +'<td class="scn-c0"><b>'+esc(x.name)+'</b><br><span class="scn-sub">'+esc(x.mkt)+'·'+esc(x.sector)+'</span></td>'
+        +'<td>'+esc(x.sym)+x.px+'</td>'
+        +'<td>'+(x.ev_est?'~':'')+x.ev+'<br>'+pc(x.ev_pct)+'</td>'
+        +'<td>'+x.bear+'<br>'+pc(x.bear_pct)+'</td>'
+        +'<td>'+x.mid+'<br>'+pc(x.mid_pct)+'</td>'
+        +'<td>'+x.bull+'<br>'+pc(x.bull_pct)+'</td>'
+        +'<td>'+oddsTxt(x)+'</td>'
+        +'<td class="scn-fill"></td></tr>';
     });
-    h+='</tbody></table>';
+    h+='</tbody></table></div>';
     document.getElementById("scn-list").innerHTML=h;
     document.querySelectorAll(".scn-tbl th[data-sk]").forEach(t=>t.onclick=()=>{const k=t.dataset.sk; if(SORTK===k)DIR=-DIR; else{SORTK=k;DIR=(k==='name')?1:-1;} paint();});
   }
   function paintPills(){
     const box=document.getElementById("scn-mk"); if(!box)return;
-    box.innerHTML=MKS.map(m=>{const n=m==="全部"?DATA.items.length:DATA.items.filter(x=>m==="其他"?!["美股","A股","港股","日股"].includes(x.mkt):x.mkt===m).length; return '<button class="perf-pill'+(m===MK?' on':'')+'" data-mk="'+m+'">'+m+' '+n+'</button>';}).join("");
+    box.innerHTML=MKS.filter(m=>m==="全部"||DATA.items.some(x=>inMk(m,x))).map(m=>{const n=m==="全部"?DATA.items.length:DATA.items.filter(x=>inMk(m,x)).length; return '<button class="perf-pill'+(m===MK?' on':'')+'" data-mk="'+m+'">'+m+' '+n+'</button>';}).join("");
     box.querySelectorAll("button").forEach(b=>b.onclick=()=>{MK=b.dataset.mk;paint();paintPills();});
   }
   return function(){
