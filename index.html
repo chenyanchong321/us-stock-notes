@@ -3261,8 +3261,8 @@ window.renderScenarios = (function(){
       +'<th data-sk="name" style="text-align:left">公司</th>'+th('px','现价')+th('ev_pct','期望价')+th('down','悲观')+th('mid_pct','中性')+th('up','乐观')+th('odds','赔率')
       +'<th class="fill"></th></tr></thead><tbody>';
     items.forEach(x=>{
-      h+='<tr>'
-        +'<td class="name"><span class="cn">'+esc(x.name)+'</span><span class="sub">'+esc(x.sector)+'<span class="mkt">'+esc(x.mkt)+'</span></span></td>'
+      h+='<tr data-code="'+esc(x.code)+'">'
+        +'<td class="name"><span class="cn">'+esc(x.name)+'</span><a class="repb scn-attr" href="attrib/'+esc(x.code)+'_full.pdf" target="_blank" rel="noopener" title="打开完整版归因分析">归因</a><span class="sub">'+esc(x.sector)+'<span class="mkt">'+esc(x.mkt)+'</span></span></td>'
         +'<td>'+esc(x.sym)+x.px+'</td>'
         +'<td>'+(x.ev_est?'~':'')+x.ev+'<br>'+pc(x.ev_pct)+'</td>'
         +'<td>'+x.bear+'<br>'+pc(x.bear_pct)+'</td>'
@@ -3280,9 +3280,17 @@ window.renderScenarios = (function(){
     box.innerHTML=MKS.filter(m=>m==="全部"||DATA.items.some(x=>inMk(m,x))).map(m=>{const n=m==="全部"?DATA.items.length:DATA.items.filter(x=>inMk(m,x)).length; return '<button class="perf-pill'+(m===MK?' on':'')+'" data-mk="'+m+'">'+m+' '+n+'</button>';}).join("");
     box.querySelectorAll("button").forEach(b=>b.onclick=()=>{MK=b.dataset.mk;paint();paintPills();});
   }
+  let lastHover=null;
+  function bindHover(){
+    const list=document.getElementById('scn-list'); if(!list||list._hb)return; list._hb=1;
+    const show=(nm)=>{ const tr=nm.closest('tr[data-code]'); if(!tr)return; const code=tr.dataset.code; const r=nm.getBoundingClientRect(); if(window.openStockCard) openStockCard(code, r.left+20, r.bottom-4); };
+    list.addEventListener('mouseover',e=>{ if(e.target.closest('.scn-attr'))return; const nm=e.target.closest('td.name'); if(!nm)return; const tr=nm.closest('tr[data-code]'); if(!tr)return; if(tr.dataset.code===lastHover)return; lastHover=tr.dataset.code; show(nm); });
+    list.addEventListener('mouseout',e=>{ if(!e.relatedTarget||!e.relatedTarget.closest('td.name')) lastHover=null; });
+    list.addEventListener('click',e=>{ if(e.target.closest('.scn-attr'))return; const nm=e.target.closest('td.name'); if(!nm)return; show(nm); });
+  }
   return function(){
-    if(DATA){paint();paintPills();return;}
-    fetch("data/scenarios.json?v="+Date.now()).then(r=>r.json()).then(d=>{DATA=d; const el=document.getElementById("scn-asof"); if(el)el.textContent="报告快照 · 截至 "+d.asof+" · 共 "+d.items.length+" 家"; paint();paintPills();}).catch(e=>{const el=document.getElementById("scn-list"); if(el)el.innerHTML='<div style="color:var(--text2);padding:20px">数据加载失败</div>';});
+    if(DATA){paint();paintPills();bindHover();return;}
+    fetch("data/scenarios.json?v="+Date.now()).then(r=>r.json()).then(d=>{DATA=d; const el=document.getElementById("scn-asof"); if(el)el.textContent="报告快照 · 截至 "+d.asof+" · 共 "+d.items.length+" 家"; paint();paintPills();bindHover();}).catch(e=>{const el=document.getElementById("scn-list"); if(el)el.innerHTML='<div style="color:var(--text2);padding:20px">数据加载失败</div>';});
   };
 })();
 
