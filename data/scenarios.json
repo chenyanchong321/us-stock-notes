@@ -977,6 +977,31 @@
    "ev_est": true,
    "pdf_full": "6324_full.pdf",
    "pdf_one": "6324_1p.pdf"
+  },
+  {
+   "code": "HIMX",
+   "name": "奇景光电",
+   "mkt": "美股",
+   "sym": "$",
+   "sector": "显示驱动/AR光学",
+   "px": 13.75,
+   "bear": 5.26,
+   "mid": 10.52,
+   "bull": 22.63,
+   "prob": null,
+   "ev": 12.23,
+   "tag": "周期股→AR成长股重估·赔率对称",
+   "folder": "奇景光电（2026.7.22）",
+   "pdf_full": "HIMX_full.pdf",
+   "pdf_one": "HIMX_1p.pdf",
+   "bear_pct": -61.7,
+   "mid_pct": -23.5,
+   "bull_pct": 64.6,
+   "up": 64.6,
+   "down": -61.7,
+   "odds": 1.05,
+   "ev_est": true,
+   "ev_pct": -11.1
   }
  ]
 }
