@@ -705,6 +705,20 @@
      "ath_floor": 0
     },
     {
+     "name": "微芯科技",
+     "code": "MCHP",
+     "market": "美股",
+     "yahoo": "MCHP",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 5.4,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "台积电",
      "code": "TSM",
      "market": "美股 ADR",
@@ -802,7 +816,8 @@
       "QCOM",
       "NXPI",
       "TXN",
-      "ON"
+      "ON",
+      "MCHP"
      ]
     },
     {
