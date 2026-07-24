@@ -1092,6 +1092,17 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
   <div id="scn-list"></div>
 </div>
 
+<div id="view-attrib" class="hidden" style="max-width:860px;margin:var(--header-h) auto 0;padding:18px 14px 60px">
+  <div class="kbar" data-kbar="attrib"></div>
+  <h2 style="font-size:18px;margin:6px 0 2px">📄 归因分析</h2>
+  <div style="font-size:12px;color:var(--text2)" id="attr-cnt">加载中…</div>
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 15px;margin:13px 0;font-size:12.5px;line-height:1.8;color:var(--text2)">
+    每份走势归因报告的完整存档，公开可读。<b>完整版</b>是深度分析，<b>一页纸</b>是精简决策摘要（部分早期报告暂无一页纸）。点标题或"完整版"打开 PDF。仅供学习，不构成投资建议。
+  </div>
+  <div style="position:relative;margin:12px 0"><input id="attr-q" type="search" enterkeyhint="search" autocomplete="off" placeholder="🔍 搜公司 / 板块 / 代码" style="width:100%;box-sizing:border-box;padding:10px 14px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;color:var(--text);outline:none;font-size:16px"></div>
+  <div id="attr-list"></div>
+</div>
+
 <div id="view-history" class="hidden">
   <div class="hist-main">
     <div class="kbar" data-kbar="history"></div>
@@ -3203,6 +3214,34 @@ function renderLev(D){
 /* 📖 烟囱荐读（2026-07-21 主人需求）：每日读到的好文的链接收藏＋荐语。
    铁律：只存标题/出处/荐语/链接，正文绝不转载（版权）。数据 config/reads.json。
    布局＝按日期倒序分组的时间轴 + 主题标签筛选（标签由数据自动聚合，无需维护清单）。 */
+
+window.renderAttrib = (function(){
+  let DATA=null, KW="";
+  const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const dateOf=f=>{const m=(f||'').match(/(\d{4})[.．](\d{1,2})[.．](\d{1,2})/);return m?m[1]+'.'+m[2]+'.'+m[3]:'';};
+  function paint(){
+    const ws=KW.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    let items=DATA.items.filter(x=>{ if(!ws.length)return true; const hay=[x.name,x.sector,x.mkt,x.code].join(' ').toLowerCase(); return ws.every(w=>hay.includes(w)); });
+    items.sort((a,b)=>dateOf(b.folder).localeCompare(dateOf(a.folder)));
+    let h='';
+    items.forEach(x=>{ const dt=dateOf(x.folder);
+      h+='<div class="rep-card">'
+        +'<a class="rep-title" href="attrib/'+esc(x.pdf_full)+'" target="_blank" rel="noopener">'+esc(x.name)+'</a>'
+        +'<div class="rep-meta">'+esc(x.mkt)+'·'+esc(x.sector)+(dt?' · '+dt:'')+'</div>'
+        +'<div style="margin-top:8px;display:flex;gap:12px;flex-wrap:wrap">'
+        +'<a class="rep-go" href="attrib/'+esc(x.pdf_full)+'" target="_blank" rel="noopener">📄 完整版</a>'
+        +(x.pdf_one?'<a class="rep-go" href="attrib/'+esc(x.pdf_one)+'" target="_blank" rel="noopener">📑 一页纸</a>':'<span style="color:var(--text2);font-size:12px;align-self:center">一页纸暂无</span>')
+        +'</div></div>';
+    });
+    const box=document.getElementById('attr-list'); if(box)box.innerHTML=h||'<div style="color:var(--text2);padding:20px">没有匹配的报告</div>';
+    const c=document.getElementById('attr-cnt'); if(c)c.textContent='共 '+DATA.items.length+' 份 · 按日期倒序 · 点标题看完整版';
+  }
+  function bind(){ const q=document.getElementById('attr-q'); if(q&&!q._b){q._b=1;q.addEventListener('input',()=>{KW=q.value;paint();});} }
+  return function(){
+    if(DATA){paint();bind();return;}
+    fetch("data/scenarios.json?v="+Date.now()).then(r=>r.json()).then(d=>{DATA=d;paint();bind();}).catch(e=>{const b=document.getElementById('attr-list');if(b)b.innerHTML='<div style="color:var(--text2);padding:20px">加载失败</div>';});
+  };
+})();
 
 window.renderScenarios = (function(){
   let DATA=null, MK="全部", SORTK="odds", DIR=-1;
@@ -5589,7 +5628,7 @@ document.addEventListener("click", e=>{
      KB_VIEWS 下的任何页都算「学习笔记」页签高亮范围；新增栏目在 KB 数组加一项即全站生效。 */
   const KB = [["notes","📚 学习笔记"],["dict","📖 术语词典"],["history","📜 金融史"],["imap","🗺 产业地图"],
               ["universe","🌌 股票宇宙"],["events","📅 大事件"],["lev","⚖️ 杠杆率"],["margin","💳 融资余额"],["reads","📖 烟囱荐读"],
-              ["aicapex","💰 AI资金"],["scenarios","📊 情景演绎"]];
+              ["aicapex","💰 AI资金"],["scenarios","📊 情景演绎"],["attrib","📄 归因分析"]];
   const KB_VIEWS = KB.map(x=>x[0]);
   document.querySelectorAll(".kbar[data-kbar]").forEach(k=>{
     k.innerHTML = KB.map(([v,l])=>`<button data-view="${v}"${v===k.dataset.kbar?' class="on"':''}>${l}</button>`).join("");
@@ -5597,7 +5636,7 @@ document.addEventListener("click", e=>{
   window.switchTab = function(v){
     document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",
       t.dataset.view===v || (v==="repread" && t.dataset.view==="reports") || (KB_VIEWS.includes(v) && v!=="notes" && t.dataset.view==="notes")));
-    ["dash","events","notes","dict","history","lev","margin","reads","aicapex","scenarios","reports","repread","imap","universe"].forEach(x=>{
+    ["dash","events","notes","dict","history","lev","margin","reads","aicapex","scenarios","attrib","reports","repread","imap","universe"].forEach(x=>{
       const el = document.getElementById("view-"+x);
       if(el) el.classList.toggle("hidden", v!==x);
     });
@@ -5610,7 +5649,8 @@ document.addEventListener("click", e=>{
     if(v==="margin" && window.renderMargin){ try{ renderMargin(); }catch(e){} }   /* 融资余额：切入懒加载 */
     if(v==="aicapex" && window.renderAicapex){ try{ renderAicapex(); }catch(e){} } /* AI资金底图：切入懒加载 */
     if(v==="reads" && window.renderReads){ try{ renderReads(); }catch(e){} }
-    if(v==="scenarios" && window.renderScenarios){ try{ renderScenarios(); }catch(e){} }   /* 烟囱荐读：切入懒加载 */
+    if(v==="scenarios" && window.renderScenarios){ try{ renderScenarios(); }catch(e){} }
+    if(v==="attrib" && window.renderAttrib){ try{ renderAttrib(); }catch(e){} }   /* 归因分析：切入懒加载 */
     const mb=document.getElementById("mbottom");
     if(mb) mb.style.display = v==="dash" ? "" : "none";
     document.body.classList.toggle("reading", v==="repread");   /* 阅读态白衣：顶栏与白纸统一 */

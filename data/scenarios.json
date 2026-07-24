@@ -27,7 +27,9 @@
    "ev_pct": -4.3,
    "tag": "纯期权·杀业绩",
    "folder": "特斯拉（2026.7.23）",
-   "ev_est": false
+   "ev_est": false,
+   "pdf_full": "TSLA_full.pdf",
+   "pdf_one": "TSLA_1p.pdf"
   },
   {
    "code": "GOOGL",
@@ -54,7 +56,9 @@
    "ev_pct": 8.8,
    "tag": "业绩全beat·情绪错杀",
    "folder": "谷歌Alphabet（2026.7.23）",
-   "ev_est": false
+   "ev_est": false,
+   "pdf_full": "GOOGL_full.pdf",
+   "pdf_one": "GOOGL_1p.pdf"
   },
   {
    "code": "INTC",
@@ -81,7 +85,9 @@
    "ev_pct": -3.7,
    "tag": "看空→中性·验证性上涨",
    "folder": "英特尔更新版（2026.7.24）",
-   "ev_est": false
+   "ev_est": false,
+   "pdf_full": "INTC_full.pdf",
+   "pdf_one": "INTC_1p.pdf"
   },
   {
    "code": "STM",
@@ -108,7 +114,9 @@
    "ev_pct": 5.1,
    "tag": "复苏中·杀预期半错杀",
    "folder": "意法半导体STM（2026.7.23）",
-   "ev_est": false
+   "ev_est": false,
+   "pdf_full": "STM_full.pdf",
+   "pdf_one": "STM_1p.pdf"
   },
   {
    "code": "AMD",
@@ -135,7 +143,9 @@
    "ev_pct": 3.9,
    "tag": "高位回吐·赔率略偏正",
    "folder": "AMD超威半导体（2026.7.24）",
-   "ev_est": false
+   "ev_est": false,
+   "pdf_full": "AMD_full.pdf",
+   "pdf_one": "AMD_1p.pdf"
   },
   {
    "code": "BE",
@@ -162,7 +172,9 @@
    "ev_pct": -19.3,
    "tag": "窗口期期权·安全垫薄",
    "folder": "Bloom Energy（2026.7.24）",
-   "ev_est": false
+   "ev_est": false,
+   "pdf_full": "BE_full.pdf",
+   "pdf_one": "BE_1p.pdf"
   },
   {
    "code": "MRVL",
@@ -185,7 +197,9 @@
    "ev_pct": -7.7,
    "tag": "中性略上·赌2027执行",
    "folder": "Marvell迈威尔 走势归因分析（2026.7.22）",
-   "ev_est": true
+   "ev_est": true,
+   "pdf_full": "MRVL_full.pdf",
+   "pdf_one": null
   },
   {
    "code": "GLW",
@@ -208,7 +222,9 @@
    "ev_pct": -26.1,
    "tag": "中性与乐观间·无边际",
    "folder": "Corning康宁 走势归因分析（2026.7.22）",
-   "ev_est": true
+   "ev_est": true,
+   "pdf_full": "GLW_full.pdf",
+   "pdf_one": null
   },
   {
    "code": "KLAC",
@@ -231,7 +247,9 @@
    "ev_pct": -33.8,
    "tag": "逼近乐观·空间很窄",
    "folder": "KLA科磊 走势归因分析（2026.7.22）",
-   "ev_est": true
+   "ev_est": true,
+   "pdf_full": "KLAC_full.pdf",
+   "pdf_one": null
   },
   {
    "code": "ON",
@@ -254,7 +272,9 @@
    "ev_pct": -12.0,
    "tag": "要求相信中性偏乐观",
    "folder": "安森美半导体 走势归因分析（2026.7.22）（Codex）",
-   "ev_est": true
+   "ev_est": true,
+   "pdf_full": "ON_full.pdf",
+   "pdf_one": "ON_1p.pdf"
   },
   {
    "code": "TSM",
@@ -281,7 +301,9 @@
    "ev_pct": -0.2,
    "tag": "最硬长牛·已到合理上沿",
    "folder": "台积电TSMC（2026.7.24）",
-   "ev_est": false
+   "ev_est": false,
+   "pdf_full": "TSM_full.pdf",
+   "pdf_one": "TSM_1p.pdf"
   },
   {
    "code": "IFNNY",
@@ -304,7 +326,9 @@
    "ev_pct": -18.9,
    "tag": "现价高于中性·偏贵",
    "folder": "英飞凌（2026.7.22）",
-   "ev_est": true
+   "ev_est": true,
+   "pdf_full": "IFNNY_full.pdf",
+   "pdf_one": "IFNNY_1p.pdf"
   },
   {
    "code": "603986",
@@ -331,7 +355,9 @@
    "ev_pct": -0.9,
    "tag": "周期顶背离·业绩顶=股价险",
    "folder": "兆易创新（2026.7.24）",
-   "ev_est": false
+   "ev_est": false,
+   "pdf_full": "603986_full.pdf",
+   "pdf_one": "603986_1p.pdf"
   },
   {
    "code": "002475",
@@ -358,7 +384,9 @@
    "ev_pct": 20.2,
    "tag": "低于中性·赔率占优",
    "folder": "立讯精密（2026.7.23）",
-   "ev_est": false
+   "ev_est": false,
+   "pdf_full": "002475_full.pdf",
+   "pdf_one": "002475_1p.pdf"
   },
   {
    "code": "300308",
@@ -385,7 +413,9 @@
    "ev_pct": -2.4,
    "tag": "涨幅回吐·公允略贵",
    "folder": "中际旭创（2026.7.24）",
-   "ev_est": false
+   "ev_est": false,
+   "pdf_full": "300308_full.pdf",
+   "pdf_one": "300308_1p.pdf"
   },
   {
    "code": "300760",
@@ -412,7 +442,9 @@
    "ev_pct": 24.0,
    "tag": "集采压制·低于期望·错杀",
    "folder": "迈瑞医疗（2026.7.23）",
-   "ev_est": false
+   "ev_est": false,
+   "pdf_full": "300760_full.pdf",
+   "pdf_one": "300760_1p.pdf"
   },
   {
    "code": "600011",
@@ -435,7 +467,9 @@
    "ev_pct": 9.7,
    "tag": "本系列赔率最好之一",
    "folder": "华能国际（2026.7.22）",
-   "ev_est": true
+   "ev_est": true,
+   "pdf_full": "600011_full.pdf",
+   "pdf_one": "600011_1p.pdf"
   },
   {
    "code": "002353",
@@ -458,7 +492,9 @@
    "ev_pct": -25.4,
    "tag": "高于中性·近乐观",
    "folder": "杰瑞股份 走势归因分析（2026.7.21）",
-   "ev_est": true
+   "ev_est": true,
+   "pdf_full": "002353_full.pdf",
+   "pdf_one": null
   },
   {
    "code": "605499",
@@ -481,7 +517,9 @@
    "ev_pct": 93.6,
    "tag": "悲观都高于现价·便宜",
    "folder": "东鹏饮料 走势归因分析（2026.7.22）",
-   "ev_est": true
+   "ev_est": true,
+   "pdf_full": "605499_full.pdf",
+   "pdf_one": null
   },
   {
    "code": "601899",
@@ -504,7 +542,9 @@
    "ev_pct": 27.4,
    "tag": "A股赔率2.8·H股更好",
    "folder": "紫金矿业 走势归因分析（2026.7.23）",
-   "ev_est": true
+   "ev_est": true,
+   "pdf_full": "601899_full.pdf",
+   "pdf_one": "601899_1p.pdf"
   },
   {
    "code": "688169",
@@ -527,7 +567,9 @@
    "ev_pct": 60.4,
    "tag": "赔率3.8·高度敏感利润率",
    "folder": "石头科技 走势归因分析（2026.7.22）（Codex）",
-   "ev_est": true
+   "ev_est": true,
+   "pdf_full": "688169_full.pdf",
+   "pdf_one": "688169_1p.pdf"
   },
   {
    "code": "601689",
@@ -550,7 +592,9 @@
    "ev_pct": -15.8,
    "tag": "回撤大·仍要求利润修复",
    "folder": "拓普集团 走势归因分析（2026.7.22）（Codex）",
-   "ev_est": true
+   "ev_est": true,
+   "pdf_full": "601689_full.pdf",
+   "pdf_one": "601689_1p.pdf"
   },
   {
    "code": "002595",
@@ -573,7 +617,9 @@
    "ev_pct": 4.2,
    "tag": "几乎等于基准价值",
    "folder": "豪迈科技 走势归因分析（2026.7.22）（Codex）",
-   "ev_est": true
+   "ev_est": true,
+   "pdf_full": "002595_full.pdf",
+   "pdf_one": "002595_1p.pdf"
   },
   {
    "code": "603728",
@@ -600,7 +646,9 @@
    "ev_pct": -30.0,
    "tag": "现价接近乐观·赔率差",
    "folder": "鸣志电器 走势归因分析（2026.7.23）（Codex）",
-   "ev_est": false
+   "ev_est": false,
+   "pdf_full": "603728_full.pdf",
+   "pdf_one": "603728_1p.pdf"
   },
   {
    "code": "002384",
@@ -623,7 +671,9 @@
    "ev_pct": -48.5,
    "tag": "现价高于乐观上沿",
    "folder": "东山精密002384_走势归因_20260721",
-   "ev_est": true
+   "ev_est": true,
+   "pdf_full": "002384_full.pdf",
+   "pdf_one": null
   },
   {
    "code": "02338",
@@ -646,7 +696,9 @@
    "ev_pct": 9.6,
    "tag": "现价≈中性·市场已定价",
    "folder": "潍柴动力 走势归因分析（2026.7.21）",
-   "ev_est": true
+   "ev_est": true,
+   "pdf_full": "02338_full.pdf",
+   "pdf_one": null
   },
   {
    "code": "03750",
@@ -673,7 +725,9 @@
    "ev_pct": -14.4,
    "tag": "H股偏贵·基本盘仍强",
    "folder": "宁德时代 走势归因分析（2026.7.23）（Codex）",
-   "ev_est": false
+   "ev_est": false,
+   "pdf_full": "03750_full.pdf",
+   "pdf_one": "03750_1p.pdf"
   },
   {
    "code": "00883",
@@ -700,7 +754,9 @@
    "ev_pct": 8.4,
    "tag": "估值近高位·含地缘溢价",
    "folder": "中国海洋石油 走势归因分析（2026.7.23）（Codex）",
-   "ev_est": false
+   "ev_est": false,
+   "pdf_full": "00883_full.pdf",
+   "pdf_one": "00883_1p.pdf"
   },
   {
    "code": "00836",
@@ -727,7 +783,9 @@
    "ev_pct": 8.4,
    "tag": "赔率1.8·电力修复",
    "folder": "华润电力 走势归因分析（2026.7.23）（Codex）",
-   "ev_est": false
+   "ev_est": false,
+   "pdf_full": "00836_full.pdf",
+   "pdf_one": "00836_1p.pdf"
   },
   {
    "code": "00991",
@@ -754,7 +812,9 @@
    "ev_pct": 2.7,
    "tag": "近中性·定增摊薄",
    "folder": "大唐发电 走势归因分析（2026.7.23）（Codex）",
-   "ev_est": false
+   "ev_est": false,
+   "pdf_full": "00991_full.pdf",
+   "pdf_one": "00991_1p.pdf"
   },
   {
    "code": "4063",
@@ -781,7 +841,9 @@
    "ev_pct": -3.9,
    "tag": "日股里相对最均衡",
    "folder": "信越化学（2026.7.23）",
-   "ev_est": false
+   "ev_est": false,
+   "pdf_full": "4063_full.pdf",
+   "pdf_one": "4063_1p.pdf"
   },
   {
    "code": "7741",
@@ -808,7 +870,9 @@
    "ev_pct": 7.7,
    "tag": "双引擎·低于期望·偏错杀",
    "folder": "HOYA保谷光学（2026.7.23）",
-   "ev_est": false
+   "ev_est": false,
+   "pdf_full": "7741_full.pdf",
+   "pdf_one": "7741_1p.pdf"
   },
   {
    "code": "4186",
@@ -835,7 +899,9 @@
    "ev_pct": -6.0,
    "tag": "略高于中性·赔率偏空",
    "folder": "东京应化（2026.7.23）",
-   "ev_est": false
+   "ev_est": false,
+   "pdf_full": "4186_full.pdf",
+   "pdf_one": "4186_1p.pdf"
   },
   {
    "code": "3436",
@@ -858,7 +924,9 @@
    "ev_pct": -14.5,
    "tag": "下行明显大于上行",
    "folder": "胜高SUMCO（2026.7.23）",
-   "ev_est": true
+   "ev_est": true,
+   "pdf_full": "3436_full.pdf",
+   "pdf_one": "3436_1p.pdf"
   },
   {
    "code": "7011",
@@ -881,7 +949,9 @@
    "ev_pct": -7.8,
    "tag": "略高于中性·地板厚",
    "folder": "三菱重工（2026.7.23）",
-   "ev_est": true
+   "ev_est": true,
+   "pdf_full": "7011_full.pdf",
+   "pdf_one": "7011_1p.pdf"
   },
   {
    "code": "6324",
@@ -904,7 +974,9 @@
    "ev_pct": -38.7,
    "tag": "纯期权·赔率0.24极差",
    "folder": "哈默纳科（2026.7.22）",
-   "ev_est": true
+   "ev_est": true,
+   "pdf_full": "6324_full.pdf",
+   "pdf_one": "6324_1p.pdf"
   }
  ]
 }
