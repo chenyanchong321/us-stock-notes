@@ -3219,7 +3219,7 @@ window.renderScenarios = (function(){
     const th=(k,lb)=>'<th data-sk="'+k+'">'+lb+(SORTK===k?(DIR<0?' ▾':' ▴'):'')+'</th>';
     let h='<div class="tbl-wrap"><table class="scn-tbl">';
     h+='<thead><tr>'
-      +'<th data-sk="name">公司</th>'+th('px','现价')+th('ev_pct','期望价')+th('down','悲观')+th('mid_pct','中性')+th('up','乐观')+th('odds','赔率')
+      +'<th data-sk="name" style="text-align:left">公司</th>'+th('px','现价')+th('ev_pct','期望价')+th('down','悲观')+th('mid_pct','中性')+th('up','乐观')+th('odds','赔率')
       +'<th class="fill"></th></tr></thead><tbody>';
     items.forEach(x=>{
       h+='<tr>'
