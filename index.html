@@ -1641,9 +1641,9 @@ function usdMcapTip(r){
   h+=grp("规模与现金");
   h+=`<div style="display:flex;gap:16px;margin-bottom:2px"><span style="flex:1;display:flex;justify-content:space-between;align-items:baseline"><span style="color:var(--text2);font-size:12px">市值</span><span style="font-weight:600;font-size:14px">${r[3]}</span></span><span style="flex:1;display:flex;justify-content:space-between;align-items:baseline"><span style="color:var(--text2);font-size:12px">企业价值 EV</span><span style="font-weight:600;font-size:14px">${fmtBig(F.ev)}</span></span></div>`;
   h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px 18px;margin-top:9px">`+
-    cell("营收", fmtBig(F.rev)+" "+pct(F.revG))+
+    cell("营收", fmtBig(F.rev)+" "+pct(F.revG)+(fin(F.revG)?'<sup style="font-size:8.5px;color:var(--text2);opacity:.75;font-weight:400">季</sup>':""))+
     cell("营业利润", (oi==null?"–":fmtBig(oi))+(fin(F.om)?' <span style="color:var(--text2);font-size:11px">'+num(F.om*100)+'%</span>':""))+
-    cell("净利", (ni==null?"–":fmtBig(ni))+" "+pct(F.earnG))+
+    cell("净利", (ni==null?"–":fmtBig(ni))+" "+pct(F.earnG)+(fin(F.earnG)?'<sup style="font-size:8.5px;color:var(--text2);opacity:.75;font-weight:400">季</sup>':""))+
     cell("毛利率", fin(F.gm)?num(F.gm*100)+"%":"–")+
     cell("净利率", fin(F.pm)?num(F.pm*100)+"%":"–")+
     cell("净现金", fin(F.netCash)?`<span style="color:var(--${F.netCash>=0?"up":"down"})">${fmtBig(F.netCash)}</span>`:"–")+
@@ -1653,7 +1653,7 @@ function usdMcapTip(r){
     ? `<div style="margin-top:11px;border-top:0.5px solid var(--border);padding-top:8px">${expl}</div>`
     : `<div style="margin-top:11px;border-top:0.5px solid var(--border);padding-top:8px"><span onclick="var d=document.getElementById('mcapExpl');var o=d.style.display==='none';d.style.display=o?'block':'none';this.firstChild.textContent=o?'▾ 指标说明':'▸ 指标说明'" style="cursor:pointer;user-select:none;font-size:11.5px;color:var(--gold)"><span>▸ 指标说明</span><span style="color:var(--text2);opacity:.6;font-size:10.5px"> （点这里展开大白话）</span></span><div id="mcapExpl" style="display:none;margin-top:7px">${expl}</div></div>`;
   const rate = needUSD(r) ? (FX_NOTE[curOf(mkt)]||"") : "";
-  h+=`<div style="margin-top:9px;font-size:10px;color:var(--text2);opacity:.7">数据 Yahoo · ${window.FUND_ASOF||""} · 档位为通用参考，跨行业差异大${rate?" · "+rate:""}</div>`;
+  h+=`<div style="margin-top:9px;font-size:10px;color:var(--text2);opacity:.7">数据 Yahoo · ${window.FUND_ASOF||""} · <b style="color:var(--gold)">同比“季”＝最新季报单季</b>，营收/净利额为近12个月TTM · 档位通用参考${rate?" · "+rate:""}</div>`;
   h+=`</div>`;
   return h;
 }
@@ -2160,7 +2160,7 @@ function renderDash(quotes){
     }).join("");
     const mktLab=window.CURMKT||"全市场";
     const mbar=(mktBarHTML().match(/<div class="mktbar">[\s\S]*?<\/div>/)||[""])[0];
-    window.FV_TIP="基本面榜：名称→市值→营收/毛利/营业利润/净利→自由现金流/企业价值→PE/PB/PS/EV·EBITDA/ROE。金额列上行本币、下行折美元(汇率粗略，只影响排序)。点表头按该列排序，再点切换升降。营收带同比增速。数据 Yahoo(季度)，缺失显 – 并沉底。指数/ETF/商品/加密不列入。";
+    window.FV_TIP="基本面榜：名称→市值→营收/毛利/营业利润/净利→自由现金流/企业价值→PE/PB/PS/EV·EBITDA/ROE。金额列上行本币、下行折美元(汇率粗略，只影响排序)。点表头按该列排序，再点切换升降。营收带同比增速（同比＝最新季报单季，营收/净利额为近12个月TTM）。数据 Yahoo，缺失显 – 并沉底。指数/ETF/商品/加密不列入。";
     const html=`<div class="section"><div class="section-head"><h2>🧬 基本面榜 · ${mktLab}（共 ${list.length}）<a class="fvinfo" href="javascript:;">ⓘ 说明</a></h2></div>${mbar}
       <div class="tbl-wrap"><table class="fund-tbl">${head}<tbody>${body}</tbody></table></div></div>`;
     if(el.__h===html){ el.classList.remove("hidden"); return; }
