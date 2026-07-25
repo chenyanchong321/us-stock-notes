@@ -32,7 +32,7 @@ for c,y,cur in targets:
         if not r: continue
         r=r[0]; sd=r.get("summaryDetail",{}); dk=r.get("defaultKeyStatistics",{}); fd=r.get("financialData",{})
         cash=raw(fd,"totalCash"); debt=raw(fd,"totalDebt")
-        rec={"cur":cur,"pe":raw(sd,"trailingPE"),"pb":raw(dk,"priceToBook"),
+        rec={"cur":cur,"pe":raw(sd,"trailingPE"),"pb":raw(dk,"priceToBook"),"ps":raw(sd,"priceToSalesTrailing12Months"),
           "ev":raw(dk,"enterpriseValue"),"evEbitda":raw(dk,"enterpriseToEbitda"),
           "roe":raw(fd,"returnOnEquity"),"fcf":raw(fd,"freeCashflow"),
           "cash":cash,"debt":debt,"netCash":(cash-debt if cash is not None and debt is not None else None),
