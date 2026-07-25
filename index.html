@@ -1558,6 +1558,8 @@ function mcapVal(r){
 }
 /* ===== 悬停美元换算：只对「带真实价格的非美元个股」生效 =====
    跳过：指数（恒生指数24175换美元是笑话）、美股/加密（本就是美元）、外汇/商品/宏观。 */
+window.FUND=null; window.FUND_ASOF="";
+fetch("data/fundamentals.json?v="+Date.now()).then(r=>r.ok?r.json():null).then(d=>{if(d){window.FUND=d.items;window.FUND_ASOF=d.asof;}}).catch(()=>{});
 const FX_NOTE = {HKD:"1美元≈7.8港元", CNY:"1美元≈7.2人民币", JPY:"1美元≈158日元", KRW:"1美元≈1370韩元", TWD:"1美元≈32台币", EUR:"1美元≈0.92欧元", CHF:"1美元≈0.80瑞郎"};
 function needUSD(r){
   const m=String(r[2]||"");
@@ -1583,15 +1585,67 @@ function usdPriceLine(r){
 /* 美元市值换算浮窗：两行——①美元市值（不重复本币原值）②灰色汇率。非目标行返回 null */
 /* 市值悬停浮窗：PE 从表格挪到这里（看得少的退到浮窗）；非美元个股再附一行换算汇率。 */
 function usdMcapTip(r){
-  let pe="";
-  if(typeof r[13]==="number") pe=`市盈率 PE ${r[13].toFixed(1)}`;
-  else if(typeof r[19]==="number") pe=`远期市盈率 ${r[19].toFixed(1)}`;   /* 亏损公司用下一年预期利润 */
-  const rate = needUSD(r) ? (FX_NOTE[curOf(r[2])]||"") : "";
-  if(!pe && !rate) return null;
-  let h="";
-  if(pe)   h += `<span style="display:block;font-size:14px;color:var(--text);font-weight:600">${pe}</span>`;
-  if(rate) h += `<span style="display:block;margin-top:${pe?4:0}px;font-size:11px;color:var(--text2)">${rate}</span>`;
-  return h || null;
+  const code=r[1], F=(window.FUND&&window.FUND[code])||null;
+  const mkt=String(r[2]||"");
+  if(!F){
+    let pe="";
+    if(typeof r[13]==="number") pe=`市盈率 PE ${r[13].toFixed(1)}`;
+    else if(typeof r[19]==="number") pe=`远期市盈率 ${r[19].toFixed(1)}`;
+    const rate = needUSD(r) ? (FX_NOTE[curOf(r[2])]||"") : "";
+    if(!pe && !rate) return null;
+    let h="";
+    if(pe)   h += `<span style="display:block;font-size:14px;color:var(--text);font-weight:600">${pe}</span>`;
+    if(rate) h += `<span style="display:block;margin-top:${pe?4:0}px;font-size:11px;color:var(--text2)">${rate}</span>`;
+    return h || null;
+  }
+  const sym = ({USD:"$",HKD:"HK$",CNY:"¥",JPY:"¥",KRW:"₩",TWD:"NT$",EUR:"€",CHF:"CHF"})[curOf(mkt)]||"";
+  const isA = mkt.indexOf("A股")===0;
+  const fin=(x)=> x!=null && isFinite(x);
+  const fmtBig=(n)=>{ if(!fin(n)) return "–"; const neg=n<0?"−":""; const a=Math.abs(n);
+    return neg+sym+(a>=1e12?(a/1e12).toFixed(2)+"万亿":a>=1e8?Math.round(a/1e8)+"亿":a>=1e4?Math.round(a/1e4)+"万":Math.round(a)); };
+  const pct=(x)=> !fin(x)?"–":`<span style="color:var(--${x>=0?"up":"down"})">${x>=0?"+":"−"}${Math.abs(x*100).toFixed(1)}%</span>`;
+  const num=(x,d)=> !fin(x)?"–":x.toFixed(d==null?1:d);
+  const seg=(labels,idx,col)=>`<span style="flex:1;display:flex;gap:3px;font-size:9.5px;text-align:center">`+
+    labels.map((x,j)=>`<span style="flex:${j===idx?1.15:1};padding:2px 0;border-radius:4px;border:${j===idx?("1px solid "+col):"0.5px solid var(--border)"};${j===idx?("color:"+col+";font-weight:600"):"color:var(--text2);opacity:.85"}">${x}</span>`).join("")+`</span>`;
+  const bucket=(v,th)=> !fin(v)?-1 : v<th[0]?0 : v<th[1]?1 : v<th[2]?2 : 3;
+  const GOLD="var(--gold)", GRN="var(--up)";
+  const row=(name,valStr,labels,idx,col)=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><span style="width:82px;flex:0 0 82px">${name}</span><span style="font-weight:500;width:46px">${valStr}</span>${idx<0?'<span style="flex:1;color:var(--text2);font-size:11px;opacity:.7">数据缺失</span>':seg(labels,idx,col)}</div>`;
+  const peTh = isA?[20,35,55]:[15,25,40];
+  let h=`<div style="min-width:300px;max-width:360px">`;
+  h+=`<div style="font-size:11px;color:var(--text2);letter-spacing:1px;margin:0 0 6px">估值</div>`;
+  h+=row("市盈率 PE", num(F.pe), ["&lt;"+peTh[0]+"低",peTh[0]+"-"+peTh[1],peTh[1]+"-"+peTh[2],"&gt;"+peTh[2]+"高"], bucket(F.pe,peTh), GOLD);
+  h+=row("市净率 PB", num(F.pb), ["&lt;1破净","1-3","3-6","&gt;6高"], bucket(F.pb,[1,3,6]), GOLD);
+  h+=row("EV/EBITDA", num(F.evEbitda), ["&lt;10低","10-15","15-25","&gt;25高"], bucket(F.evEbitda,[10,15,25]), GOLD);
+  h+=row("市销率 PS", num(F.ps), ["&lt;1低","1-5","5-10","&gt;10高"], bucket(F.ps,[1,5,10]), GOLD);
+  h+=`<div style="font-size:11.5px;color:var(--text2);line-height:1.6;margin-top:7px;background:var(--panel);border-radius:6px;padding:7px 9px">
+    <span style="display:block">PE｜每赚 1 元利润，市场愿付几元</span>
+    <span style="display:block">PB｜每 1 元净资产，市场给几元</span>
+    <span style="display:block">EV/EBITDA｜整套主业几年现金回本（剔负债与折旧）</span>
+    <span style="display:block">PS｜每 1 元营收，市场给几元（亏损也能用）</span>
+    <span style="display:block;margin-top:4px;color:var(--text)">PB 高但 ROE 也高 → 是「贵得有道理」的优质公司。</span></div>`;
+  const roeV = fin(F.roe)?F.roe*100:null;
+  h+=`<div style="font-size:11px;color:var(--text2);letter-spacing:1px;margin:11px 0 6px">盈利质量</div>`;
+  h+=row("ROE", roeV==null?"–":num(roeV)+"%", ["&lt;8弱","8-15尚可","15-25优","&gt;25顶尖"], bucket(roeV,[8,15,25]), GRN);
+  h+=`<div style="font-size:11.5px;color:var(--text2);line-height:1.55;margin-top:6px;background:var(--panel);border-radius:6px;padding:6px 9px">ROE｜股东每投入 1 元，一年能赚回多少钱。</div>`;
+  h+=`<div style="font-size:11px;color:var(--text2);letter-spacing:1px;margin:11px 0 6px">规模与现金</div>`;
+  h+=`<div style="display:flex;gap:16px;margin-bottom:5px"><span style="flex:1;display:flex;justify-content:space-between"><span style="color:var(--text2)">市值</span><span style="font-weight:500">${String(r[3]).replace(/^[^\d\-−]*/,m=>m)}</span></span><span style="flex:1;display:flex;justify-content:space-between"><span style="color:var(--text2)">企业价值 EV</span><span style="font-weight:500">${fmtBig(F.ev)}</span></span></div>`;
+  let evnote="EV = 市值 + 净负债。EV 高于市值 → 有净负债；低于 → 净现金充裕、家底厚。";
+  if(fin(F.netCash)) evnote += F.netCash>=0? ` 此处净现金 ${fmtBig(F.netCash)}，家底厚。` : ` 此处有净负债 ${fmtBig(-F.netCash)}。`;
+  h+=`<div style="font-size:11.5px;color:var(--text2);line-height:1.55;background:var(--panel);border-radius:6px;padding:6px 9px">${evnote}</div>`;
+  const ni = (fin(F.rev)&&fin(F.pm))? F.rev*F.pm : null;
+  const cell=(k,v)=>`<span style="display:flex;justify-content:space-between"><span style="color:var(--text2)">${k}</span><span>${v}</span></span>`;
+  h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px 16px;margin-top:7px">`+
+    cell("营收", fmtBig(F.rev)+" "+pct(F.revG))+
+    cell("净利", (ni==null?"–":fmtBig(ni))+" "+pct(F.earnG))+
+    cell("毛利率", fin(F.gm)?num(F.gm*100)+"%":"–")+
+    cell("净利率", fin(F.pm)?num(F.pm*100)+"%":"–")+
+    cell("净现金", fin(F.netCash)?`<span style="color:var(--${F.netCash>=0?"up":"down"})">${fmtBig(F.netCash)}</span>`:"–")+
+    cell("自由现金流", fin(F.fcf)?`<span style="color:var(--${F.fcf>=0?"up":"down"})">${fmtBig(F.fcf)}</span>`:"–")+
+    `</div>`;
+  const rate = needUSD(r) ? (FX_NOTE[curOf(mkt)]||"") : "";
+  h+=`<div style="border-top:0.5px solid var(--border);margin-top:11px;padding-top:7px;font-size:10.5px;color:var(--text2);opacity:.85">数据 Yahoo · ${window.FUND_ASOF||""} · 档位为通用参考，跨行业差异大${rate?" · "+rate:""}</div>`;
+  h+=`</div>`;
+  return h;
 }
 function rowHTML(r, grp){
   return `<tr class="${BUYCODES.has(r[1])?"buy":""}" data-grp="${grp||""}" data-code="${r[1]}" data-mkt="${r[2]||""}" data-key="${(r[0]+r[1]).toLowerCase()}">
