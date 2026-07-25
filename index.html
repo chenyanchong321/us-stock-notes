@@ -1609,28 +1609,32 @@ function usdMcapTip(r){
     labels.map((x,j)=>`<span style="flex:${j===idx?1.2:1};padding:3px 0;border-radius:4px;border:${j===idx?("1px solid "+col):"0.5px solid var(--border)"};${j===idx?("color:"+col+";font-weight:700;background:rgba(232,182,76,.10)"):"color:var(--text2);opacity:.65"}">${x}</span>`).join("")+`</span>`;
   const bucket=(v,th)=> !fin(v)?-1 : v<th[0]?0 : v<th[1]?1 : v<th[2]?2 : 3;
   const GOLD="var(--gold)", GRN="var(--up)";
-  const grp=(t)=>`<div style="font-size:11px;color:var(--text2);font-weight:600;letter-spacing:1px;margin:14px 0 8px;padding-bottom:5px;border-bottom:0.5px solid var(--border)">${t}</div>`;
-  const note=(html)=>`<div style="font-size:11px;color:var(--text2);line-height:1.65;margin:7px 0 2px;padding:7px 10px;border-left:2px solid var(--gold);background:rgba(127,127,127,.06);border-radius:0 6px 6px 0">${html}</div>`;
+  const grp=(t)=>`<div style="font-size:11px;color:var(--text2);font-weight:600;letter-spacing:1px;margin:13px 0 8px;padding-bottom:5px;border-bottom:0.5px solid var(--border)">${t}</div>`;
   const row=(name,valStr,labels,idx,col)=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span style="width:74px;flex:0 0 74px;font-size:12px;color:var(--text2)">${name}</span><span style="font-weight:600;font-size:16px;width:54px;color:var(--text)">${valStr}</span>${idx<0?'<span style="flex:1;color:var(--text2);font-size:11px;opacity:.6">数据缺失</span>':seg(labels,idx,col)}</div>`;
   const peTh = isA?[20,35,55]:[15,25,40];
+  const ni = (fin(F.rev)&&fin(F.pm))? F.rev*F.pm : null;
+  const cell=(k,v)=>`<span style="display:flex;justify-content:space-between;align-items:baseline"><span style="color:var(--text2);font-size:12px">${k}</span><span style="font-weight:500">${v}</span></span>`;
+  let evTail="";
+  if(fin(F.netCash)) evTail = F.netCash>=0? ` 此处净现金 ${fmtBig(F.netCash)}，家底厚。` : ` 此处有净负债 ${fmtBig(-F.netCash)}。`;
+  const expl=`<div style="font-size:11px;color:var(--text2);line-height:1.65;padding:7px 10px;border-left:2px solid var(--gold);background:rgba(127,127,127,.06);border-radius:0 6px 6px 0">
+    <span style="display:block">PE｜每赚 1 元利润，市场愿付几元</span>
+    <span style="display:block">PB｜每 1 元净资产，市场给几元</span>
+    <span style="display:block">EV/EBITDA｜整套主业几年现金回本（剔负债与折旧）</span>
+    <span style="display:block">PS｜每 1 元营收，市场给几元（亏损也能用）</span>
+    <span style="display:block">ROE｜股东每投入 1 元，一年能赚回多少钱</span>
+    <span style="display:block">EV｜= 市值 + 净负债。高于市值 → 有净负债；低于 → 净现金厚。${evTail}</span>
+    <span style="display:block;margin-top:5px;color:var(--text)">PB 高但 ROE 也高 → 是「贵得有道理」的优质公司。</span></div>`;
+  const roeV = fin(F.roe)?F.roe*100:null;
   let h=`<div style="min-width:312px;max-width:364px;max-height:82vh;overflow-y:auto">`;
   h+=`<div style="font-size:11px;color:var(--text2);font-weight:600;letter-spacing:1px;margin:0 0 8px;padding-bottom:5px;border-bottom:0.5px solid var(--border)">估值</div>`;
   h+=row("市盈率 PE", num(F.pe), ["&lt;"+peTh[0]+"低",peTh[0]+"-"+peTh[1],peTh[1]+"-"+peTh[2],"&gt;"+peTh[2]+"高"], bucket(F.pe,peTh), GOLD);
   h+=row("市净率 PB", num(F.pb), ["&lt;1破净","1-3","3-6","&gt;6高"], bucket(F.pb,[1,3,6]), GOLD);
   h+=row("EV/EBITDA", num(F.evEbitda), ["&lt;10低","10-15","15-25","&gt;25高"], bucket(F.evEbitda,[10,15,25]), GOLD);
   h+=row("市销率 PS", num(F.ps), ["&lt;1低","1-5","5-10","&gt;10高"], bucket(F.ps,[1,5,10]), GOLD);
-  h+=note(`<span style="display:block">PE｜每赚 1 元利润，市场愿付几元</span><span style="display:block">PB｜每 1 元净资产，市场给几元</span><span style="display:block">EV/EBITDA｜整套主业几年现金回本（剔负债与折旧）</span><span style="display:block">PS｜每 1 元营收，市场给几元（亏损也能用）</span><span style="display:block;margin-top:5px;color:var(--text)">PB 高但 ROE 也高 → 是「贵得有道理」的优质公司。</span>`);
-  const roeV = fin(F.roe)?F.roe*100:null;
   h+=grp("盈利质量");
   h+=row("ROE", roeV==null?"–":num(roeV)+"%", ["&lt;8弱","8-15尚可","15-25优","&gt;25顶尖"], bucket(roeV,[8,15,25]), GRN);
-  h+=note(`ROE｜股东每投入 1 元，一年能赚回多少钱。`);
   h+=grp("规模与现金");
   h+=`<div style="display:flex;gap:16px;margin-bottom:2px"><span style="flex:1;display:flex;justify-content:space-between;align-items:baseline"><span style="color:var(--text2);font-size:12px">市值</span><span style="font-weight:600;font-size:14px">${r[3]}</span></span><span style="flex:1;display:flex;justify-content:space-between;align-items:baseline"><span style="color:var(--text2);font-size:12px">企业价值 EV</span><span style="font-weight:600;font-size:14px">${fmtBig(F.ev)}</span></span></div>`;
-  let evnote="EV = 市值 + 净负债。EV 高于市值 → 有净负债；低于 → 净现金充裕、家底厚。";
-  if(fin(F.netCash)) evnote += F.netCash>=0? ` 此处净现金 ${fmtBig(F.netCash)}，家底厚。` : ` 此处有净负债 ${fmtBig(-F.netCash)}。`;
-  h+=note(evnote);
-  const ni = (fin(F.rev)&&fin(F.pm))? F.rev*F.pm : null;
-  const cell=(k,v)=>`<span style="display:flex;justify-content:space-between;align-items:baseline"><span style="color:var(--text2);font-size:12px">${k}</span><span style="font-weight:500">${v}</span></span>`;
   h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px 18px;margin-top:9px">`+
     cell("营收", fmtBig(F.rev)+" "+pct(F.revG))+
     cell("净利", (ni==null?"–":fmtBig(ni))+" "+pct(F.earnG))+
@@ -1639,8 +1643,11 @@ function usdMcapTip(r){
     cell("净现金", fin(F.netCash)?`<span style="color:var(--${F.netCash>=0?"up":"down"})">${fmtBig(F.netCash)}</span>`:"–")+
     cell("自由现金流", fin(F.fcf)?`<span style="color:var(--${F.fcf>=0?"up":"down"})">${fmtBig(F.fcf)}</span>`:"–")+
     `</div>`;
+  h+=`<div style="margin-top:11px;border-top:0.5px solid var(--border);padding-top:8px">
+    <span onclick="var d=document.getElementById('mcapExpl');var o=d.style.display==='none';d.style.display=o?'block':'none';this.firstChild.textContent=o?'▾ 指标说明':'▸ 指标说明'" style="cursor:pointer;user-select:none;font-size:11.5px;color:var(--gold)"><span>▸ 指标说明</span><span style="color:var(--text2);opacity:.6;font-size:10.5px"> （点这里展开大白话）</span></span>
+    <div id="mcapExpl" style="display:none;margin-top:7px">${expl}</div></div>`;
   const rate = needUSD(r) ? (FX_NOTE[curOf(mkt)]||"") : "";
-  h+=`<div style="border-top:0.5px solid var(--border);margin-top:12px;padding-top:8px;font-size:10px;color:var(--text2);opacity:.7">数据 Yahoo · ${window.FUND_ASOF||""} · 档位为通用参考，跨行业差异大${rate?" · "+rate:""}</div>`;
+  h+=`<div style="margin-top:9px;font-size:10px;color:var(--text2);opacity:.7">数据 Yahoo · ${window.FUND_ASOF||""} · 档位为通用参考，跨行业差异大${rate?" · "+rate:""}</div>`;
   h+=`</div>`;
   return h;
 }
