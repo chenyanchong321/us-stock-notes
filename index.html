@@ -870,6 +870,7 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
       <div class="stat vc xtra hidden" data-view="hi"><div class="k">🚀 回撤榜（&lt;30%）</div><div class="v" id="st-hi">–</div></div>
       <div class="stat vc xtra hidden" data-view="mcap"><div class="k">💰 市值排行榜</div><div class="v" id="st-mcap">全表</div></div>
       <div class="stat vc xtra hidden" data-view="turn"><div class="k">🔥 成交榜</div><div class="v" id="st-turn">–</div></div>
+      <div class="stat vc xtra hidden" data-view="fund"><div class="k">🧬 基本面榜</div><div class="v" id="st-fund">全表</div></div>
       <div class="stat vc xtra hidden" data-view="alpha"><div class="k">超额榜</div><div class="v">Top30</div></div>
       <div class="stat vc xtra hidden" data-view="ladder"><div class="k">🪜 回撤阶梯</div><div class="v">全表</div></div>
       <div class="stat vc xtra hidden" data-view="heat"><div class="k">板块热力</div><div class="v" id="st-heat">21</div></div>
@@ -2095,11 +2096,81 @@ function renderDash(quotes){
     }));
   }
 
+  function buildFund(el){
+    /* 基本面榜（2026-07-25 主人需求）：从盯价格转向看基本面家底。
+       列＝规模→盈利→现金→估值；金额列双行(本币原值+美元折算，同市值列)；
+       点任意表头按该列排序(降↔升切换)，默认市值降序。数据源 window.FUND(fundamentals.json)。 */
+    const CURSYM={USD:"$",HKD:"HK$",CNY:"¥",JPY:"¥",KRW:"₩",TWD:"NT$",EUR:"€",CHF:"CHF"};
+    const fin=v=> v!=null && isFinite(v);
+    const fb=v=>{ const a=Math.abs(v),neg=v<0?"−":""; return neg+(a>=1e12?(a/1e12).toFixed(2)+"万亿":a>=1e8?Math.round(a/1e8)+"亿":a>=1e4?Math.round(a/1e4)+"万":Math.round(a)); };
+    function money(v,mkt){
+      if(!fin(v)) return '<span class="flat">–</span>';
+      const cur=curOf(mkt), sym=CURSYM[cur]||"", col=v<0?' style="color:var(--down)"':"";
+      const l1=`<span${col}>${sym}${fb(v)}</span>`;
+      if(cur==="USD") return l1;
+      const u=v*(FX2USD[cur]||1);
+      return `${l1}<span class="sub" style="display:block;color:var(--text2);font-size:11px">≈$${fb(u)}</span>`;
+    }
+    const rows=flatRows().map(x=>({r:x.r, F:(window.FUND&&window.FUND[x.r[1]])||null}))
+      .filter(x=>x.F && !/ETF|指数|商品|外汇|宏观|加密/.test(String(x.r[2])));
+    const seen=new Set(); const list=rows.filter(x=>{ if(seen.has(x.r[1])) return false; seen.add(x.r[1]); return true; });
+    if(!window.FUNDSORT) window.FUNDSORT={k:"mcap",d:-1};
+    const S=window.FUNDSORT;
+    const fx=x=>FX2USD[curOf(x.r[2])]||1;
+    const M={ rev:x=>x.F.rev,
+      gross:x=>(fin(x.F.rev)&&fin(x.F.gm))?x.F.rev*x.F.gm:null,
+      oi:x=>(fin(x.F.rev)&&fin(x.F.om))?x.F.rev*x.F.om:null,
+      ni:x=>(fin(x.F.rev)&&fin(x.F.pm))?x.F.rev*x.F.pm:null,
+      fcf:x=>x.F.fcf, ev:x=>x.F.ev };
+    const sv=x=>{ const k=S.k,F=x.F;
+      if(k==="mcap") return mcapVal(x.r);
+      if(M[k]){ const v=M[k](x); return fin(v)?v*fx(x):null; }
+      if(k==="roe") return F.roe;
+      return F[k]; };
+    list.sort((a,b)=>{ const va=sv(a),vb=sv(b), na=!fin(va), nb=!fin(vb);
+      if(na&&nb) return 0; if(na) return 1; if(nb) return -1;
+      return S.d===-1 ? (vb-va) : (va-vb); });
+    const cols=[["mcap","市值"],["rev","营收"],["gross","毛利润"],["oi","营业利润"],["ni","净利润"],
+      ["fcf","自由现金流"],["ev","企业价值 EV"],["pe","PE"],["pb","PB"],["ps","PS"],["evEbitda","EV/EBITDA"],["roe","ROE"]];
+    const arrow=k=> S.k===k ? (S.d===-1?" ▼":" ▲") : "";
+    const th=cols.map(([k,lab])=>`<th data-fk="${k}" style="cursor:pointer;white-space:nowrap;${S.k===k?"color:var(--gold)":""}">${lab}${arrow(k)}</th>`).join("");
+    const head=`<thead><tr><th class="name" style="text-align:left">名称</th>${th}<th class="fill"></th></tr></thead>`;
+    const rat=v=> fin(v)? v.toFixed(1) : '<span class="flat">–</span>';
+    const body=list.map(x=>{ const r=x.r,F=x.F;
+      const g=F.revG, gtxt=fin(g)?` <span style="font-size:11px;color:var(--${g>=0?"up":"down"})">${g>=0?"+":"−"}${Math.abs(g*100).toFixed(1)}%</span>`:"";
+      return `<tr data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
+        <td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
+        <td class="mcapc">${mcapCell(r)}</td>
+        <td>${money(F.rev,r[2])}${gtxt}</td>
+        <td>${money(M.gross(x),r[2])}</td>
+        <td>${money(M.oi(x),r[2])}</td>
+        <td>${money(M.ni(x),r[2])}</td>
+        <td>${money(F.fcf,r[2])}</td>
+        <td>${money(F.ev,r[2])}</td>
+        <td>${rat(F.pe)}</td><td>${rat(F.pb)}</td><td>${rat(F.ps)}</td><td>${rat(F.evEbitda)}</td>
+        <td>${fin(F.roe)?(F.roe*100).toFixed(1)+"%":'<span class="flat">–</span>'}</td>
+        <td class="fill"></td></tr>`;
+    }).join("");
+    const mktLab=window.CURMKT||"全市场";
+    window.FV_TIP="基本面榜：名称→市值→营收/毛利/营业利润/净利→自由现金流/企业价值→PE/PB/PS/EV·EBITDA/ROE。金额列上行本币、下行折美元(汇率粗略，只影响排序)。点表头按该列排序，再点切换升降。营收带同比增速。数据 Yahoo(季度)，缺失显 – 并沉底。指数/ETF/商品/加密不列入。";
+    const html=`<div class="section"><div class="section-head"><h2>🧬 基本面榜 · ${mktLab}（共 ${list.length}）<a class="fvinfo" href="javascript:;">ⓘ 说明</a></h2></div>
+      <div class="tbl-wrap"><table class="fund-tbl">${head}<tbody>${body}</tbody></table></div></div>`;
+    if(el.__h===html){ el.classList.remove("hidden"); return; }
+    el.__h=html; el.innerHTML=html; el.dataset.fv="fund"; el.classList.remove("hidden");
+    el.querySelectorAll("th[data-fk]").forEach(t=>t.addEventListener("click",()=>{
+      const k=t.dataset.fk;
+      if(window.FUNDSORT.k===k) window.FUNDSORT.d=-window.FUNDSORT.d;
+      else window.FUNDSORT={k, d:-1};
+      buildFund(el);
+    }));
+  }
+
   window.buildFlat = function(){
     const v = window.CURVIEW;
     const el = document.getElementById("flatview");
     if(v==="all"){ el.classList.add("hidden"); return; }
     if(v==="multimkt"){ buildMultiMkt(el); return; }
+    if(v==="fund"){ buildFund(el); return; }
     /* 说明性文字收进标题旁ⓘ浮层（2026-07-18 主人定：黄金位置不放说明）；note 只留功能组件（胶囊/切换条） */
     let title="", note="", tip="", head=FV_HEAD(), body="";
     if(v==="focus"){
@@ -2326,7 +2397,7 @@ function renderDash(quotes){
     }
     if(v==="multimkt") window.MM_W="d";   /* 周期每次点进重置「今日」；角标由 buildMultiMkt 统一维护（指标记忆） */
     window.updateMbottom && window.updateMbottom();
-    const inXtra = ["dd","hi","mcap","turn","alpha","ladder","heat"].includes(v);   /* ①收纳（2026-07-18 主人定）：常驻只留5卡 */
+    const inXtra = ["dd","hi","mcap","turn","fund","alpha","ladder","heat"].includes(v);   /* ①收纳（2026-07-18 主人定）：常驻只留5卡 */
     if(inXtra && window.ensureXtra) window.ensureXtra();
     const mc0 = document.getElementById("morecard");
     if(mc0) mc0.classList.toggle("on", inXtra);
@@ -2470,10 +2541,10 @@ function renderDash(quotes){
     if(!mbMkt) return;
     const VIEWS=[["all","市场全景"],["focus","⭐ 重点清单"],["gain","📈 涨幅榜"],["loss","📉 跌幅榜"],
                  ["multimkt","🌐 多市场榜"],
-                 ["dd","回撤榜 >30%"],["hi","🚀 回撤榜 <30%"],["mcap","💰 市值排行榜"],["turn","🔥 成交榜"],
+                 ["dd","回撤榜 >30%"],["hi","🚀 回撤榜 <30%"],["mcap","💰 市值排行榜"],["turn","🔥 成交榜"],["fund","🧬 基本面榜"],
                  ["alpha","超额榜"],["ladder","🪜 回撤阶梯"],["heat","板块热力"]];
     const VSHORT={all:"全景",focus:"重点清单",gain:"涨幅榜",loss:"跌幅榜",multimkt:"多市场榜",dd:"回撤>30%",hi:"回撤<30%",
-                  mcap:"市值榜",turn:"成交榜",alpha:"超额榜",ladder:"回撤阶梯",heat:"板块热力"};
+                  mcap:"市值榜",turn:"成交榜",fund:"基本面榜",alpha:"超额榜",ladder:"回撤阶梯",heat:"板块热力"};
     window.updateMbottom=function(){
       mbMkt.textContent = `🌐 ${window.CURMKT||"全部"}`;
       mbView.textContent = `📊 ${VSHORT[window.CURVIEW||"all"]||"全景"}`;
