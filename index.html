@@ -1625,7 +1625,9 @@ function usdMcapTip(r){
     const B = (finA(qAmt)||fin(qG))
       ? `${finA(qAmt)?'<span style="font-weight:600">'+fmtBig(qAmt)+'</span> ':""}${fin(qG)?pct(qG):""}`
       : `<span style="color:var(--text2);opacity:.4">–</span>`;
-    return `<span style="font-size:12px;color:var(--text2)">${name}</span><span style="font-size:12.5px">${A}</span><span style="font-size:12.5px">${B}</span>`;
+    /* 与下方单值网格同构：第1格 标签左+年值右，第2格 季值右 → 右边缘全站对齐成两条竖线 */
+    return `<span style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><span style="color:var(--text2);font-size:12px;flex:0 0 auto">${name}</span><span style="font-size:12.5px;text-align:right">${A}</span></span>`
+         + `<span style="font-size:12.5px;text-align:right">${B}</span>`;
   };
   let evTail="";
   if(fin(F.netCash)) evTail = F.netCash>=0? ` 此处净现金 ${fmtBig(F.netCash)}，家底厚。` : ` 此处有净负债 ${fmtBig(-F.netCash)}。`;
@@ -1649,8 +1651,8 @@ function usdMcapTip(r){
   h+=grp("盈利质量");
   h+=row("ROE", roeV==null?"–":num(roeV)+"%", ["&lt;8弱","8-15尚可","15-25优","&gt;25顶尖"], bucket(roeV,[8,15,25]), GRN);
   h+=grp("规模与现金");
-  h+=`<div style="display:grid;grid-template-columns:38px 1fr 1fr;gap:6px 14px;align-items:baseline;margin-bottom:11px">`
-    + `<span></span><span style="font-size:10px;color:var(--text2);opacity:.65">年 · 最近财年</span><span style="font-size:10px;color:var(--text2);opacity:.65">季 · 最新季报</span>`
+  h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px 18px;align-items:baseline;margin-bottom:11px">`
+    + `<span style="font-size:10px;color:var(--text2);opacity:.65;text-align:right">年 · 最近财年</span><span style="font-size:10px;color:var(--text2);opacity:.65;text-align:right">季 · 最新季报</span>`
     + biCell("营收", F.revA, F.revYoYa, F.revQ, F.revG, F.rev)
     + biCell("净利", F.niA, F.niYoYa, F.niQ, F.earnG, ni)
     + `</div>`;
