@@ -2138,13 +2138,14 @@ function renderDash(quotes){
     const rat=v=> fin(v)? v.toFixed(1) : '<span class="flat">–</span>';
     const body=list.map(x=>{ const r=x.r,F=x.F;
       const gg=v=>fin(v)?` <span style="font-size:11px;color:var(--${v>=0?"up":"down"})">${v>=0?"+":"−"}${Math.abs(v*100).toFixed(1)}%</span>`:"";
+      const rate=v=>fin(v)?` <span style="font-size:11px;color:var(--text2)">${(v*100).toFixed(1)}%</span>`:"";
       return `<tr data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
         <td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
         <td class="mcapc">${mcapCell(r)}</td>
         <td>${money(F.rev,r[2],F.cur)}${gg(F.revG)}</td>
-        <td>${money(M.gross(x),r[2],F.cur)}</td>
-        <td>${money(M.oi(x),r[2],F.cur)}</td>
-        <td>${money(M.ni(x),r[2],F.cur)}${gg(F.earnG)}</td>
+        <td>${money(M.gross(x),r[2],F.cur)}${rate(F.gm)}</td>
+        <td>${money(M.oi(x),r[2],F.cur)}${rate(F.om)}</td>
+        <td>${money(M.ni(x),r[2],F.cur)}${rate(F.pm)}</td>
         <td>${money(F.fcf,r[2],F.cur)}</td>
         <td>${money(F.ev,r[2],F.cur)}</td>
         <td>${rat(F.pe)}</td><td>${rat(F.pb)}</td><td>${rat(F.ps)}</td><td>${rat(F.evEbitda)}</td>
