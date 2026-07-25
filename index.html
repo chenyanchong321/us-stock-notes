@@ -2152,8 +2152,9 @@ function renderDash(quotes){
         <td class="fill"></td></tr>`;
     }).join("");
     const mktLab=window.CURMKT||"全市场";
+    const mbar=(mktBarHTML().match(/<div class="mktbar">[\s\S]*?<\/div>/)||[""])[0];
     window.FV_TIP="基本面榜：名称→市值→营收/毛利/营业利润/净利→自由现金流/企业价值→PE/PB/PS/EV·EBITDA/ROE。金额列上行本币、下行折美元(汇率粗略，只影响排序)。点表头按该列排序，再点切换升降。营收带同比增速。数据 Yahoo(季度)，缺失显 – 并沉底。指数/ETF/商品/加密不列入。";
-    const html=`<div class="section"><div class="section-head"><h2>🧬 基本面榜 · ${mktLab}（共 ${list.length}）<a class="fvinfo" href="javascript:;">ⓘ 说明</a></h2></div>
+    const html=`<div class="section"><div class="section-head"><h2>🧬 基本面榜 · ${mktLab}（共 ${list.length}）<a class="fvinfo" href="javascript:;">ⓘ 说明</a></h2></div>${mbar}
       <div class="tbl-wrap"><table class="fund-tbl">${head}<tbody>${body}</tbody></table></div></div>`;
     if(el.__h===html){ el.classList.remove("hidden"); return; }
     el.__h=html; el.innerHTML=html; el.dataset.fv="fund"; el.classList.remove("hidden");
@@ -2163,6 +2164,7 @@ function renderDash(quotes){
       else window.FUNDSORT={k, d:-1};
       buildFund(el);
     }));
+    el.querySelectorAll('.mktbar button[data-mkt]').forEach(b=>b.addEventListener("click",()=>{ if(window.setMkt) setMkt(b.dataset.mkt); }));
   }
 
   window.buildFlat = function(){
