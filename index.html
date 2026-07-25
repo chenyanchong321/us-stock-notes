@@ -1606,35 +1606,32 @@ function usdMcapTip(r){
   const pct=(x)=> !fin(x)?"–":`<span style="color:var(--${x>=0?"up":"down"})">${x>=0?"+":"−"}${Math.abs(x*100).toFixed(1)}%</span>`;
   const num=(x,d)=> !fin(x)?"–":x.toFixed(d==null?1:d);
   const seg=(labels,idx,col)=>`<span style="flex:1;display:flex;gap:3px;font-size:9.5px;text-align:center">`+
-    labels.map((x,j)=>`<span style="flex:${j===idx?1.15:1};padding:2px 0;border-radius:4px;border:${j===idx?("1px solid "+col):"0.5px solid var(--border)"};${j===idx?("color:"+col+";font-weight:600"):"color:var(--text2);opacity:.85"}">${x}</span>`).join("")+`</span>`;
+    labels.map((x,j)=>`<span style="flex:${j===idx?1.2:1};padding:3px 0;border-radius:4px;border:${j===idx?("1px solid "+col):"0.5px solid var(--border)"};${j===idx?("color:"+col+";font-weight:700;background:rgba(232,182,76,.10)"):"color:var(--text2);opacity:.65"}">${x}</span>`).join("")+`</span>`;
   const bucket=(v,th)=> !fin(v)?-1 : v<th[0]?0 : v<th[1]?1 : v<th[2]?2 : 3;
   const GOLD="var(--gold)", GRN="var(--up)";
-  const row=(name,valStr,labels,idx,col)=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><span style="width:82px;flex:0 0 82px">${name}</span><span style="font-weight:500;width:46px">${valStr}</span>${idx<0?'<span style="flex:1;color:var(--text2);font-size:11px;opacity:.7">数据缺失</span>':seg(labels,idx,col)}</div>`;
+  const grp=(t)=>`<div style="font-size:11px;color:var(--text2);font-weight:600;letter-spacing:1px;margin:14px 0 8px;padding-bottom:5px;border-bottom:0.5px solid var(--border)">${t}</div>`;
+  const note=(html)=>`<div style="font-size:11px;color:var(--text2);line-height:1.65;margin:7px 0 2px;padding:7px 10px;border-left:2px solid var(--gold);background:rgba(127,127,127,.06);border-radius:0 6px 6px 0">${html}</div>`;
+  const row=(name,valStr,labels,idx,col)=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span style="width:74px;flex:0 0 74px;font-size:12px;color:var(--text2)">${name}</span><span style="font-weight:600;font-size:16px;width:54px;color:var(--text)">${valStr}</span>${idx<0?'<span style="flex:1;color:var(--text2);font-size:11px;opacity:.6">数据缺失</span>':seg(labels,idx,col)}</div>`;
   const peTh = isA?[20,35,55]:[15,25,40];
-  let h=`<div style="min-width:300px;max-width:360px">`;
-  h+=`<div style="font-size:11px;color:var(--text2);letter-spacing:1px;margin:0 0 6px">估值</div>`;
+  let h=`<div style="min-width:312px;max-width:364px;max-height:82vh;overflow-y:auto">`;
+  h+=`<div style="font-size:11px;color:var(--text2);font-weight:600;letter-spacing:1px;margin:0 0 8px;padding-bottom:5px;border-bottom:0.5px solid var(--border)">估值</div>`;
   h+=row("市盈率 PE", num(F.pe), ["&lt;"+peTh[0]+"低",peTh[0]+"-"+peTh[1],peTh[1]+"-"+peTh[2],"&gt;"+peTh[2]+"高"], bucket(F.pe,peTh), GOLD);
   h+=row("市净率 PB", num(F.pb), ["&lt;1破净","1-3","3-6","&gt;6高"], bucket(F.pb,[1,3,6]), GOLD);
   h+=row("EV/EBITDA", num(F.evEbitda), ["&lt;10低","10-15","15-25","&gt;25高"], bucket(F.evEbitda,[10,15,25]), GOLD);
   h+=row("市销率 PS", num(F.ps), ["&lt;1低","1-5","5-10","&gt;10高"], bucket(F.ps,[1,5,10]), GOLD);
-  h+=`<div style="font-size:11.5px;color:var(--text2);line-height:1.6;margin-top:7px;background:var(--panel);border-radius:6px;padding:7px 9px">
-    <span style="display:block">PE｜每赚 1 元利润，市场愿付几元</span>
-    <span style="display:block">PB｜每 1 元净资产，市场给几元</span>
-    <span style="display:block">EV/EBITDA｜整套主业几年现金回本（剔负债与折旧）</span>
-    <span style="display:block">PS｜每 1 元营收，市场给几元（亏损也能用）</span>
-    <span style="display:block;margin-top:4px;color:var(--text)">PB 高但 ROE 也高 → 是「贵得有道理」的优质公司。</span></div>`;
+  h+=note(`<span style="display:block">PE｜每赚 1 元利润，市场愿付几元</span><span style="display:block">PB｜每 1 元净资产，市场给几元</span><span style="display:block">EV/EBITDA｜整套主业几年现金回本（剔负债与折旧）</span><span style="display:block">PS｜每 1 元营收，市场给几元（亏损也能用）</span><span style="display:block;margin-top:5px;color:var(--text)">PB 高但 ROE 也高 → 是「贵得有道理」的优质公司。</span>`);
   const roeV = fin(F.roe)?F.roe*100:null;
-  h+=`<div style="font-size:11px;color:var(--text2);letter-spacing:1px;margin:11px 0 6px">盈利质量</div>`;
+  h+=grp("盈利质量");
   h+=row("ROE", roeV==null?"–":num(roeV)+"%", ["&lt;8弱","8-15尚可","15-25优","&gt;25顶尖"], bucket(roeV,[8,15,25]), GRN);
-  h+=`<div style="font-size:11.5px;color:var(--text2);line-height:1.55;margin-top:6px;background:var(--panel);border-radius:6px;padding:6px 9px">ROE｜股东每投入 1 元，一年能赚回多少钱。</div>`;
-  h+=`<div style="font-size:11px;color:var(--text2);letter-spacing:1px;margin:11px 0 6px">规模与现金</div>`;
-  h+=`<div style="display:flex;gap:16px;margin-bottom:5px"><span style="flex:1;display:flex;justify-content:space-between"><span style="color:var(--text2)">市值</span><span style="font-weight:500">${String(r[3]).replace(/^[^\d\-−]*/,m=>m)}</span></span><span style="flex:1;display:flex;justify-content:space-between"><span style="color:var(--text2)">企业价值 EV</span><span style="font-weight:500">${fmtBig(F.ev)}</span></span></div>`;
+  h+=note(`ROE｜股东每投入 1 元，一年能赚回多少钱。`);
+  h+=grp("规模与现金");
+  h+=`<div style="display:flex;gap:16px;margin-bottom:2px"><span style="flex:1;display:flex;justify-content:space-between;align-items:baseline"><span style="color:var(--text2);font-size:12px">市值</span><span style="font-weight:600;font-size:14px">${r[3]}</span></span><span style="flex:1;display:flex;justify-content:space-between;align-items:baseline"><span style="color:var(--text2);font-size:12px">企业价值 EV</span><span style="font-weight:600;font-size:14px">${fmtBig(F.ev)}</span></span></div>`;
   let evnote="EV = 市值 + 净负债。EV 高于市值 → 有净负债；低于 → 净现金充裕、家底厚。";
   if(fin(F.netCash)) evnote += F.netCash>=0? ` 此处净现金 ${fmtBig(F.netCash)}，家底厚。` : ` 此处有净负债 ${fmtBig(-F.netCash)}。`;
-  h+=`<div style="font-size:11.5px;color:var(--text2);line-height:1.55;background:var(--panel);border-radius:6px;padding:6px 9px">${evnote}</div>`;
+  h+=note(evnote);
   const ni = (fin(F.rev)&&fin(F.pm))? F.rev*F.pm : null;
-  const cell=(k,v)=>`<span style="display:flex;justify-content:space-between"><span style="color:var(--text2)">${k}</span><span>${v}</span></span>`;
-  h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px 16px;margin-top:7px">`+
+  const cell=(k,v)=>`<span style="display:flex;justify-content:space-between;align-items:baseline"><span style="color:var(--text2);font-size:12px">${k}</span><span style="font-weight:500">${v}</span></span>`;
+  h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px 18px;margin-top:9px">`+
     cell("营收", fmtBig(F.rev)+" "+pct(F.revG))+
     cell("净利", (ni==null?"–":fmtBig(ni))+" "+pct(F.earnG))+
     cell("毛利率", fin(F.gm)?num(F.gm*100)+"%":"–")+
@@ -1643,7 +1640,7 @@ function usdMcapTip(r){
     cell("自由现金流", fin(F.fcf)?`<span style="color:var(--${F.fcf>=0?"up":"down"})">${fmtBig(F.fcf)}</span>`:"–")+
     `</div>`;
   const rate = needUSD(r) ? (FX_NOTE[curOf(mkt)]||"") : "";
-  h+=`<div style="border-top:0.5px solid var(--border);margin-top:11px;padding-top:7px;font-size:10.5px;color:var(--text2);opacity:.85">数据 Yahoo · ${window.FUND_ASOF||""} · 档位为通用参考，跨行业差异大${rate?" · "+rate:""}</div>`;
+  h+=`<div style="border-top:0.5px solid var(--border);margin-top:12px;padding-top:8px;font-size:10px;color:var(--text2);opacity:.7">数据 Yahoo · ${window.FUND_ASOF||""} · 档位为通用参考，跨行业差异大${rate?" · "+rate:""}</div>`;
   h+=`</div>`;
   return h;
 }
