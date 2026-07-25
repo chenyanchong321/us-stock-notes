@@ -3048,6 +3048,20 @@
      "ath_floor": 0
     },
     {
+     "name": "雅克科技",
+     "code": "002409",
+     "market": "A股",
+     "yahoo": "002409.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 690.0,
+      "approx": true
+     },
+     "mcap_base_price": 145.0,
+     "ath_floor": 0
+    },
+    {
      "name": "中船特气",
      "code": "688146",
      "market": "A股",
@@ -3062,17 +3076,73 @@
      "ath_floor": 0
     },
     {
-     "name": "雅克科技",
-     "code": "002409",
+     "name": "昊华科技",
+     "code": "600378",
      "market": "A股",
-     "yahoo": "002409.SZ",
+     "yahoo": "600378.SS",
      "currency": "¥",
      "mcap_base": {
       "prefix": "¥",
-      "yi": 690.0,
+      "yi": 563.7,
       "approx": true
      },
-     "mcap_base_price": 145.0,
+     "mcap_base_price": 43.7,
+     "ath_floor": 0
+    },
+    {
+     "name": "广钢气体",
+     "code": "688548",
+     "market": "A股",
+     "yahoo": "688548.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 507.3,
+      "approx": true
+     },
+     "mcap_base_price": 38.45,
+     "ath_floor": 0
+    },
+    {
+     "name": "华特气体",
+     "code": "688268",
+     "market": "A股",
+     "yahoo": "688268.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 190.3,
+      "approx": true
+     },
+     "mcap_base_price": 149.01,
+     "ath_floor": 0
+    },
+    {
+     "name": "金宏气体",
+     "code": "688106",
+     "market": "A股",
+     "yahoo": "688106.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 161.2,
+      "approx": true
+     },
+     "mcap_base_price": 30.1,
+     "ath_floor": 0
+    },
+    {
+     "name": "和远气体",
+     "code": "002971",
+     "market": "A股",
+     "yahoo": "002971.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 78.8,
+      "approx": true
+     },
+     "mcap_base_price": 37.43,
      "ath_floor": 0
     },
     {
@@ -3244,8 +3314,18 @@
      "codes": [
       "4186",
       "4109",
-      "688146",
       "002409"
+     ]
+    },
+    {
+     "name": "电子特气",
+     "codes": [
+      "688146",
+      "600378",
+      "688548",
+      "688268",
+      "688106",
+      "002971"
      ]
     },
     {
