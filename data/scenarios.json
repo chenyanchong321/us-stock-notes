@@ -1455,6 +1455,64 @@
    "ev": 99.8,
    "ev_est": false,
    "ev_pct": 8.5
+  },
+  {
+   "code": "QCOM",
+   "name": "高通 QCOM",
+   "mkt": "美股",
+   "sym": "$",
+   "sector": "移动芯片·SoC",
+   "px": 168.51,
+   "bear": 88,
+   "mid": 143,
+   "bull": 230,
+   "prob": [
+    30,
+    45,
+    25
+   ],
+   "tag": "被AI故事炒高又打回的价值转型股，略偏贵、赔率不烂，下行有PE+股息托底，苹果基带流失悬顶",
+   "folder": "高通QCOM 走势归因（2026.7.25）",
+   "pdf_full": "QCOM_full.pdf",
+   "pdf_one": "QCOM_1p.pdf",
+   "bear_pct": -47.8,
+   "mid_pct": -15.1,
+   "bull_pct": 36.5,
+   "up": 36.5,
+   "down": -47.8,
+   "odds": 0.76,
+   "ev": 148,
+   "ev_est": false,
+   "ev_pct": -12.2
+  },
+  {
+   "code": "NET",
+   "name": "Cloudflare",
+   "mkt": "美股",
+   "sym": "$",
+   "sector": "云·网络安全·AI流量",
+   "px": 265.29,
+   "bear": 125,
+   "mid": 192,
+   "bull": 278,
+   "prob": [
+    30,
+    45,
+    25
+   ],
+   "tag": "卡在AI流量咽喉的好生意，但价格把未来多年乐观提前付清，买的是信仰不是安全边际（赔率0.1）",
+   "folder": "Cloudflare(NET)走势归因",
+   "pdf_full": "NET_full.pdf",
+   "pdf_one": "NET_1p.pdf",
+   "bear_pct": -52.9,
+   "mid_pct": -27.6,
+   "bull_pct": 4.8,
+   "up": 4.8,
+   "down": -52.9,
+   "odds": 0.09,
+   "ev": 193,
+   "ev_est": false,
+   "ev_pct": -27.2
   }
  ]
 }
