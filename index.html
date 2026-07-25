@@ -1599,7 +1599,7 @@ function usdMcapTip(r){
     if(rate) h += `<span style="display:block;margin-top:${pe?4:0}px;font-size:11px;color:var(--text2)">${rate}</span>`;
     return h || null;
   }
-  const sym = ({USD:"$",HKD:"HK$",CNY:"¥",JPY:"¥",KRW:"₩",TWD:"NT$",EUR:"€",CHF:"CHF"})[curOf(mkt)]||"";
+  const sym = ({USD:"$",HKD:"HK$",CNY:"¥",JPY:"¥",KRW:"₩",TWD:"NT$",EUR:"€",CHF:"CHF"})[(F.cur&&FX2USD[F.cur]!=null)?F.cur:curOf(mkt)]||"";
   const isA = mkt.indexOf("A股")===0;
   const fin=(x)=> x!=null && isFinite(x);
   const fmtBig=(n)=>{ if(!fin(n)) return "–"; const neg=n<0?"−":""; const a=Math.abs(n);
@@ -2103,9 +2103,9 @@ function renderDash(quotes){
     const CURSYM={USD:"$",HKD:"HK$",CNY:"¥",JPY:"¥",KRW:"₩",TWD:"NT$",EUR:"€",CHF:"CHF"};
     const fin=v=> v!=null && isFinite(v);
     const fb=v=>{ const a=Math.abs(v),neg=v<0?"−":""; return neg+(a>=1e12?(a/1e12).toFixed(2)+"万亿":a>=1e8?Math.round(a/1e8)+"亿":a>=1e4?Math.round(a/1e4)+"万":Math.round(a)); };
-    function money(v,mkt){
+    function money(v,mkt,fcur){
       if(!fin(v)) return '<span class="flat">–</span>';
-      const cur=curOf(mkt), sym=CURSYM[cur]||"", col=v<0?' style="color:var(--down)"':"";
+      const cur=(fcur&&FX2USD[fcur]!=null)?fcur:curOf(mkt), sym=CURSYM[cur]||"", col=v<0?' style="color:var(--down)"':"";
       const l1=`<span${col}>${sym}${fb(v)}</span>`;
       if(cur==="USD") return l1;
       const u=v*(FX2USD[cur]||1);
@@ -2141,12 +2141,12 @@ function renderDash(quotes){
       return `<tr data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
         <td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
         <td class="mcapc">${mcapCell(r)}</td>
-        <td>${money(F.rev,r[2])}${gtxt}</td>
-        <td>${money(M.gross(x),r[2])}</td>
-        <td>${money(M.oi(x),r[2])}</td>
-        <td>${money(M.ni(x),r[2])}</td>
-        <td>${money(F.fcf,r[2])}</td>
-        <td>${money(F.ev,r[2])}</td>
+        <td>${money(F.rev,r[2],F.cur)}${gtxt}</td>
+        <td>${money(M.gross(x),r[2],F.cur)}</td>
+        <td>${money(M.oi(x),r[2],F.cur)}</td>
+        <td>${money(M.ni(x),r[2],F.cur)}</td>
+        <td>${money(F.fcf,r[2],F.cur)}</td>
+        <td>${money(F.ev,r[2],F.cur)}</td>
         <td>${rat(F.pe)}</td><td>${rat(F.pb)}</td><td>${rat(F.ps)}</td><td>${rat(F.evEbitda)}</td>
         <td>${fin(F.roe)?(F.roe*100).toFixed(1)+"%":'<span class="flat">–</span>'}</td>
         <td class="fill"></td></tr>`;
