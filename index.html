@@ -1643,7 +1643,7 @@ function usdMcapTip(r){
     cell("净现金", fin(F.netCash)?`<span style="color:var(--${F.netCash>=0?"up":"down"})">${fmtBig(F.netCash)}</span>`:"–")+
     cell("自由现金流", fin(F.fcf)?`<span style="color:var(--${F.fcf>=0?"up":"down"})">${fmtBig(F.fcf)}</span>`:"–")+
     `</div>`;
-  h+= TOUCHY
+  h+= matchMedia("(hover: none), (pointer: coarse)").matches
     ? `<div style="margin-top:11px;border-top:0.5px solid var(--border);padding-top:8px">${expl}</div>`
     : `<div style="margin-top:11px;border-top:0.5px solid var(--border);padding-top:8px"><span onclick="var d=document.getElementById('mcapExpl');var o=d.style.display==='none';d.style.display=o?'block':'none';this.firstChild.textContent=o?'▾ 指标说明':'▸ 指标说明'" style="cursor:pointer;user-select:none;font-size:11.5px;color:var(--gold)"><span>▸ 指标说明</span><span style="color:var(--text2);opacity:.6;font-size:10.5px"> （点这里展开大白话）</span></span><div id="mcapExpl" style="display:none;margin-top:7px">${expl}</div></div>`;
   const rate = needUSD(r) ? (FX_NOTE[curOf(mkt)]||"") : "";
