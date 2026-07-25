@@ -380,6 +380,7 @@ tr.buy .buyline.hit{color:var(--up)!important;font-weight:600}
 #opps span.opps-mkt{flex:0 0 auto;color:var(--text2);font-size:11.5px;border:1px solid var(--border);border-radius:4px;padding:0 7px;line-height:1.7}
 #opps .opps-items{flex:1;min-width:0}
 /* 区间表现榜周期胶囊 */
+.thsub{font-size:10px;color:var(--text2);font-weight:400}
 #perfbar,.mktbar{display:flex;gap:8px;align-items:center;margin:2px 0 12px;flex-wrap:wrap}
 #mktbar-all{margin:14px 0 2px}   /* 位置：本周大事之后、第一个板块之前（主人指定，贴内容区） */
 #mktbar-all .mktbar{margin-bottom:0}
@@ -2130,7 +2131,7 @@ function renderDash(quotes){
     list.sort((a,b)=>{ const va=sv(a),vb=sv(b), na=!fin(va), nb=!fin(vb);
       if(na&&nb) return 0; if(na) return 1; if(nb) return -1;
       return S.d===-1 ? (vb-va) : (va-vb); });
-    const cols=[["mcap","市值"],["rev","营收"],["gross","毛利润"],["oi","营业利润"],["ni","净利润"],
+    const cols=[["mcap","市值"],["rev","营收<span class='thsub'>/同比</span>"],["gross","毛利润<span class='thsub'>/毛利率</span>"],["oi","营业利润<span class='thsub'>/利润率</span>"],["ni","净利润<span class='thsub'>/同比·率</span>"],
       ["fcf","自由现金流"],["ev","企业价值 EV"],["pe","PE"],["pb","PB"],["ps","PS"],["evEbitda","EV/EBITDA"],["roe","ROE"]];
     const arrow=k=> S.k===k ? (S.d===-1?" ▼":" ▲") : "";
     const th=cols.map(([k,lab])=>`<th data-fk="${k}" style="cursor:pointer;white-space:nowrap;${S.k===k?"color:var(--gold)":""}">${lab}${arrow(k)}</th>`).join("");
@@ -2145,7 +2146,7 @@ function renderDash(quotes){
         <td>${money(F.rev,r[2],F.cur)}${gg(F.revG)}</td>
         <td>${money(M.gross(x),r[2],F.cur)}${rate(F.gm)}</td>
         <td>${money(M.oi(x),r[2],F.cur)}${rate(F.om)}</td>
-        <td>${money(M.ni(x),r[2],F.cur)}${rate(F.pm)}</td>
+        <td>${money(M.ni(x),r[2],F.cur)}${gg(F.earnG)}${rate(F.pm)}</td>
         <td>${money(F.fcf,r[2],F.cur)}</td>
         <td>${money(F.ev,r[2],F.cur)}</td>
         <td>${rat(F.pe)}</td><td>${rat(F.pb)}</td><td>${rat(F.ps)}</td><td>${rat(F.evEbitda)}</td>
