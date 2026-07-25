@@ -1618,14 +1618,14 @@ function usdMcapTip(r){
   const ni = (fin(F.rev)&&fin(F.pm))? F.rev*F.pm : null;
   const oi = (fin(F.rev)&&fin(F.om))? F.rev*F.om : null;
   const cell=(k,v)=>`<span style="display:flex;justify-content:space-between;align-items:baseline"><span style="color:var(--text2);font-size:12px">${k}</span><span style="font-weight:500">${v}</span></span>`;
-  const biLine=(name,aAmt,aG,qAmt,qG,ttm)=>{
+  const biCell=(name,aAmt,aG,qAmt,qG,ttm)=>{
     const A = finA(aAmt)
-      ? `<span style="color:var(--text2);font-size:10px">年 </span><span style="font-weight:600">${fmtBig(aAmt)}</span>${fin(aG)?" "+pct(aG):""}`
-      : (finA(ttm)? `<span style="color:var(--text2);font-size:10px">近12月 </span><span style="font-weight:600">${fmtBig(ttm)}</span>` : `<span style="color:var(--text2);opacity:.5">年 –</span>`);
+      ? `<span style="font-weight:600">${fmtBig(aAmt)}</span>${fin(aG)?" "+pct(aG):""}`
+      : (finA(ttm)? `<span style="color:var(--text2);font-size:10px">近12月 </span><span style="font-weight:600">${fmtBig(ttm)}</span>` : `<span style="color:var(--text2);opacity:.4">–</span>`);
     const B = (finA(qAmt)||fin(qG))
-      ? `<span style="color:var(--text2);font-size:10px">季 </span>${finA(qAmt)?'<span style="font-weight:600">'+fmtBig(qAmt)+'</span> ':""}${fin(qG)?pct(qG):""}`
-      : `<span style="color:var(--text2);opacity:.5">季 –</span>`;
-    return `<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:7px"><span style="width:40px;flex:0 0 40px;font-size:12px;color:var(--text2)">${name}</span><span style="flex:1;font-size:12.5px">${A}</span><span style="flex:1;font-size:12.5px">${B}</span></div>`;
+      ? `${finA(qAmt)?'<span style="font-weight:600">'+fmtBig(qAmt)+'</span> ':""}${fin(qG)?pct(qG):""}`
+      : `<span style="color:var(--text2);opacity:.4">–</span>`;
+    return `<span style="font-size:12px;color:var(--text2)">${name}</span><span style="font-size:12.5px">${A}</span><span style="font-size:12.5px">${B}</span>`;
   };
   let evTail="";
   if(fin(F.netCash)) evTail = F.netCash>=0? ` 此处净现金 ${fmtBig(F.netCash)}，家底厚。` : ` 此处有净负债 ${fmtBig(-F.netCash)}。`;
@@ -1649,12 +1649,14 @@ function usdMcapTip(r){
   h+=grp("盈利质量");
   h+=row("ROE", roeV==null?"–":num(roeV)+"%", ["&lt;8弱","8-15尚可","15-25优","&gt;25顶尖"], bucket(roeV,[8,15,25]), GRN);
   h+=grp("规模与现金");
-  h+=`<div style="display:flex;gap:16px;margin-bottom:2px"><span style="flex:1;display:flex;justify-content:space-between;align-items:baseline"><span style="color:var(--text2);font-size:12px">市值</span><span style="font-weight:600;font-size:14px">${r[3]}</span></span><span style="flex:1;display:flex;justify-content:space-between;align-items:baseline"><span style="color:var(--text2);font-size:12px">企业价值 EV</span><span style="font-weight:600;font-size:14px">${fmtBig(F.ev)}</span></span></div>`;
-  h+=`<div style="margin-top:9px">`+
-    biLine("营收", F.revA, F.revYoYa, F.revQ, F.revG, F.rev)+
-    biLine("净利", F.niA, F.niYoYa, F.niQ, F.earnG, ni)+
-    `</div>`;
-  h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px 18px;margin-top:6px">`+
+  h+=`<div style="display:grid;grid-template-columns:38px 1fr 1fr;gap:6px 14px;align-items:baseline;margin-bottom:11px">`
+    + `<span></span><span style="font-size:10px;color:var(--text2);opacity:.65">年 · 最近财年</span><span style="font-size:10px;color:var(--text2);opacity:.65">季 · 最新季报</span>`
+    + biCell("营收", F.revA, F.revYoYa, F.revQ, F.revG, F.rev)
+    + biCell("净利", F.niA, F.niYoYa, F.niQ, F.earnG, ni)
+    + `</div>`;
+  h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px 18px">`+
+    cell("市值", r[3])+
+    cell("企业价值", fmtBig(F.ev))+
     cell("营业利润", (oi==null?"–":fmtBig(oi))+(fin(F.om)?' <span style="color:var(--text2);font-size:11px">'+num(F.om*100)+'%</span>':""))+
     cell("毛利率", fin(F.gm)?num(F.gm*100)+"%":"–")+
     cell("净利率", fin(F.pm)?num(F.pm*100)+"%":"–")+
