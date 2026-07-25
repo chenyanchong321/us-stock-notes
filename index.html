@@ -1620,6 +1620,7 @@ function usdMcapTip(r){
   if(fin(F.netCash)) evTail = F.netCash>=0? ` 此处净现金 ${fmtBig(F.netCash)}，家底厚。` : ` 此处有净负债 ${fmtBig(-F.netCash)}。`;
   const expl=`<div style="font-size:11px;color:var(--text2);line-height:1.65;padding:7px 10px;border-left:2px solid var(--gold);background:rgba(127,127,127,.06);border-radius:0 6px 6px 0">
     <span style="display:block">PE｜每赚 1 元利润，市场愿付几元</span>
+    <span style="display:block">远期 PE｜按未来预期利润算，剔除一次性收益，比 TTM PE 更真实（TTM 被一次性收益垫高会虚低）</span>
     <span style="display:block">PB｜每 1 元净资产，市场给几元</span>
     <span style="display:block">EV/EBITDA｜整套主业几年现金回本（剔负债与折旧）</span>
     <span style="display:block">PS｜每 1 元营收，市场给几元（亏损也能用）</span>
@@ -1630,6 +1631,7 @@ function usdMcapTip(r){
   let h=`<div style="min-width:312px;max-width:364px;max-height:82vh;overflow-y:auto">`;
   h+=`<div style="font-size:11px;color:var(--text2);font-weight:600;letter-spacing:1px;margin:0 0 8px;padding-bottom:5px;border-bottom:0.5px solid var(--border)">估值</div>`;
   h+=row("市盈率 PE", num(F.pe), ["&lt;"+peTh[0]+"低",peTh[0]+"-"+peTh[1],peTh[1]+"-"+peTh[2],"&gt;"+peTh[2]+"高"], bucket(F.pe,peTh), GOLD);
+  h+=row("远期 PE", num(r[19]), ["&lt;"+peTh[0]+"低",peTh[0]+"-"+peTh[1],peTh[1]+"-"+peTh[2],"&gt;"+peTh[2]+"高"], bucket(r[19],peTh), GOLD);
   h+=row("市净率 PB", num(F.pb), ["&lt;1破净","1-3","3-6","&gt;6高"], bucket(F.pb,[1,3,6]), GOLD);
   h+=row("EV/EBITDA", num(F.evEbitda), ["&lt;10低","10-15","15-25","&gt;25高"], bucket(F.evEbitda,[10,15,25]), GOLD);
   h+=row("市销率 PS", num(F.ps), ["&lt;1低","1-5","5-10","&gt;10高"], bucket(F.ps,[1,5,10]), GOLD);
@@ -2126,13 +2128,14 @@ function renderDash(quotes){
     const sv=x=>{ const k=S.k,F=x.F;
       if(k==="mcap") return mcapVal(x.r);
       if(M[k]){ const v=M[k](x); return fin(v)?v*fx(x):null; }
+      if(k==="fpe") return x.r[19];
       if(k==="roe") return F.roe;
       return F[k]; };
     list.sort((a,b)=>{ const va=sv(a),vb=sv(b), na=!fin(va), nb=!fin(vb);
       if(na&&nb) return 0; if(na) return 1; if(nb) return -1;
       return S.d===-1 ? (vb-va) : (va-vb); });
     const cols=[["mcap","市值"],["rev","营收<span class='thsub'>/同比</span>"],["gross","毛利润<span class='thsub'>/毛利率</span>"],["oi","营业利润<span class='thsub'>/利润率</span>"],["ni","净利润<span class='thsub'>/同比·率</span>"],
-      ["fcf","自由现金流"],["ev","企业价值 EV"],["pe","PE"],["pb","PB"],["ps","PS"],["evEbitda","EV/EBITDA"],["roe","ROE"]];
+      ["fcf","自由现金流"],["ev","企业价值 EV"],["pe","PE"],["fpe","远期PE"],["pb","PB"],["ps","PS"],["evEbitda","EV/EBITDA"],["roe","ROE"]];
     const arrow=k=> S.k===k ? (S.d===-1?" ▼":" ▲") : "";
     const th=cols.map(([k,lab])=>`<th data-fk="${k}" style="cursor:pointer;white-space:nowrap;${S.k===k?"color:var(--gold)":""}">${lab}${arrow(k)}</th>`).join("");
     const head=`<thead><tr><th class="name" style="text-align:left">名称</th>${th}<th class="fill"></th></tr></thead>`;
@@ -2149,7 +2152,7 @@ function renderDash(quotes){
         <td>${money(M.ni(x),r[2],F.cur)}${gg(F.earnG)}${rate(F.pm)}</td>
         <td>${money(F.fcf,r[2],F.cur)}</td>
         <td>${money(F.ev,r[2],F.cur)}</td>
-        <td>${rat(F.pe)}</td><td>${rat(F.pb)}</td><td>${rat(F.ps)}</td><td>${rat(F.evEbitda)}</td>
+        <td>${rat(F.pe)}</td><td>${rat(r[19])}</td><td>${rat(F.pb)}</td><td>${rat(F.ps)}</td><td>${rat(F.evEbitda)}</td>
         <td>${fin(F.roe)?(F.roe*100).toFixed(1)+"%":'<span class="flat">–</span>'}</td>
         <td class="fill"></td></tr>`;
     }).join("");
