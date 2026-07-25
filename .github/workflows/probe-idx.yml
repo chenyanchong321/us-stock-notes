@@ -1,0 +1,19 @@
+name: probe-idx
+on:
+  push:
+    paths: [scripts/probe_idx.py]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/probe_idx.py
+      - run: |
+          git config user.name bot
+          git config user.email bot@example.com
+          git add data/probe_idx.json
+          git commit -m "chore: probe idx result" || true
+          git push
