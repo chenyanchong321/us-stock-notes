@@ -43,12 +43,13 @@ for c,y,cur in targets:
         # 年报（近4财年，[0]=最近财年）与季报（[0]=最近季度）序列
         ish=r.get("incomeStatementHistory",{}).get("incomeStatementHistory",[]) or []
         ishq=r.get("incomeStatementHistoryQuarterly",{}).get("incomeStatementHistory",[]) or []
-        revA=raw(ish[0],"totalRevenue") if len(ish)>=1 else None
-        niA =nival(ish[0])                if len(ish)>=1 else None
-        revYoYa=yoy(revA, raw(ish[1],"totalRevenue")) if len(ish)>=2 else None
-        niYoYa =yoy(niA,  nival(ish[1]))              if len(ish)>=2 else None
-        revQ=raw(ishq[0],"totalRevenue") if len(ishq)>=1 else None
-        niQ =nival(ishq[0])              if len(ishq)>=1 else None
+        z=lambda v: (None if v==0 else v)   # Yahoo 对A股季度净利额常返回字面0，是缺失哨兵，清成 None
+        revA=z(raw(ish[0],"totalRevenue")) if len(ish)>=1 else None
+        niA =z(nival(ish[0]))              if len(ish)>=1 else None
+        revYoYa=yoy(revA, z(raw(ish[1],"totalRevenue"))) if len(ish)>=2 else None
+        niYoYa =yoy(niA,  z(nival(ish[1])))              if len(ish)>=2 else None
+        revQ=z(raw(ishq[0],"totalRevenue")) if len(ishq)>=1 else None
+        niQ =z(nival(ishq[0]))              if len(ishq)>=1 else None
         rec={"cur":(fd.get("financialCurrency") or cur),"pe":raw(sd,"trailingPE"),"pb":raw(dk,"priceToBook"),"ps":raw(sd,"priceToSalesTrailing12Months"),
           "ev":raw(dk,"enterpriseValue"),"evEbitda":raw(dk,"enterpriseToEbitda"),
           "roe":raw(fd,"returnOnEquity"),"fcf":raw(fd,"freeCashflow"),

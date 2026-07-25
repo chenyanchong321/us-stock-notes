@@ -1603,6 +1603,7 @@ function usdMcapTip(r){
   const sym = ({USD:"$",HKD:"HK$",CNY:"¥",JPY:"¥",KRW:"₩",TWD:"NT$",EUR:"€",CHF:"CHF"})[(F.cur&&FX2USD[F.cur]!=null)?F.cur:curOf(mkt)]||"";
   const isA = mkt.indexOf("A股")===0;
   const fin=(x)=> x!=null && isFinite(x);
+  const finA=(x)=> x!=null && isFinite(x) && x!==0;
   const fmtBig=(n)=>{ if(!fin(n)) return "–"; const neg=n<0?"−":""; const a=Math.abs(n);
     return neg+sym+(a>=1e12?(a/1e12).toFixed(2)+"万亿":a>=1e8?Math.round(a/1e8)+"亿":a>=1e4?Math.round(a/1e4)+"万":Math.round(a)); };
   const pct=(x)=> !fin(x)?"–":`<span style="color:var(--${x>=0?"up":"down"})">${x>=0?"+":"−"}${Math.abs(x*100).toFixed(1)}%</span>`;
@@ -1617,6 +1618,15 @@ function usdMcapTip(r){
   const ni = (fin(F.rev)&&fin(F.pm))? F.rev*F.pm : null;
   const oi = (fin(F.rev)&&fin(F.om))? F.rev*F.om : null;
   const cell=(k,v)=>`<span style="display:flex;justify-content:space-between;align-items:baseline"><span style="color:var(--text2);font-size:12px">${k}</span><span style="font-weight:500">${v}</span></span>`;
+  const biLine=(name,aAmt,aG,qAmt,qG,ttm)=>{
+    const A = finA(aAmt)
+      ? `<span style="color:var(--text2);font-size:10px">年 </span><span style="font-weight:600">${fmtBig(aAmt)}</span>${fin(aG)?" "+pct(aG):""}`
+      : (finA(ttm)? `<span style="color:var(--text2);font-size:10px">近12月 </span><span style="font-weight:600">${fmtBig(ttm)}</span>` : `<span style="color:var(--text2);opacity:.5">年 –</span>`);
+    const B = (finA(qAmt)||fin(qG))
+      ? `<span style="color:var(--text2);font-size:10px">季 </span>${finA(qAmt)?'<span style="font-weight:600">'+fmtBig(qAmt)+'</span> ':""}${fin(qG)?pct(qG):""}`
+      : `<span style="color:var(--text2);opacity:.5">季 –</span>`;
+    return `<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:7px"><span style="width:40px;flex:0 0 40px;font-size:12px;color:var(--text2)">${name}</span><span style="flex:1;font-size:12.5px">${A}</span><span style="flex:1;font-size:12.5px">${B}</span></div>`;
+  };
   let evTail="";
   if(fin(F.netCash)) evTail = F.netCash>=0? ` 此处净现金 ${fmtBig(F.netCash)}，家底厚。` : ` 此处有净负债 ${fmtBig(-F.netCash)}。`;
   const expl=`<div style="font-size:11px;color:var(--text2);line-height:1.65;padding:7px 10px;border-left:2px solid var(--gold);background:rgba(127,127,127,.06);border-radius:0 6px 6px 0">
@@ -1640,10 +1650,12 @@ function usdMcapTip(r){
   h+=row("ROE", roeV==null?"–":num(roeV)+"%", ["&lt;8弱","8-15尚可","15-25优","&gt;25顶尖"], bucket(roeV,[8,15,25]), GRN);
   h+=grp("规模与现金");
   h+=`<div style="display:flex;gap:16px;margin-bottom:2px"><span style="flex:1;display:flex;justify-content:space-between;align-items:baseline"><span style="color:var(--text2);font-size:12px">市值</span><span style="font-weight:600;font-size:14px">${r[3]}</span></span><span style="flex:1;display:flex;justify-content:space-between;align-items:baseline"><span style="color:var(--text2);font-size:12px">企业价值 EV</span><span style="font-weight:600;font-size:14px">${fmtBig(F.ev)}</span></span></div>`;
-  h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px 18px;margin-top:9px">`+
-    cell("营收", fmtBig(F.rev)+" "+pct(F.revG)+(fin(F.revG)?'<sup style="font-size:8.5px;color:var(--text2);opacity:.75;font-weight:400">季</sup>':""))+
+  h+=`<div style="margin-top:9px">`+
+    biLine("营收", F.revA, F.revYoYa, F.revQ, F.revG, F.rev)+
+    biLine("净利", F.niA, F.niYoYa, F.niQ, F.earnG, ni)+
+    `</div>`;
+  h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px 18px;margin-top:6px">`+
     cell("营业利润", (oi==null?"–":fmtBig(oi))+(fin(F.om)?' <span style="color:var(--text2);font-size:11px">'+num(F.om*100)+'%</span>':""))+
-    cell("净利", (ni==null?"–":fmtBig(ni))+" "+pct(F.earnG)+(fin(F.earnG)?'<sup style="font-size:8.5px;color:var(--text2);opacity:.75;font-weight:400">季</sup>':""))+
     cell("毛利率", fin(F.gm)?num(F.gm*100)+"%":"–")+
     cell("净利率", fin(F.pm)?num(F.pm*100)+"%":"–")+
     cell("净现金", fin(F.netCash)?`<span style="color:var(--${F.netCash>=0?"up":"down"})">${fmtBig(F.netCash)}</span>`:"–")+
@@ -1653,7 +1665,7 @@ function usdMcapTip(r){
     ? `<div style="margin-top:11px;border-top:0.5px solid var(--border);padding-top:8px">${expl}</div>`
     : `<div style="margin-top:11px;border-top:0.5px solid var(--border);padding-top:8px"><span onclick="var d=document.getElementById('mcapExpl');var o=d.style.display==='none';d.style.display=o?'block':'none';this.firstChild.textContent=o?'▾ 指标说明':'▸ 指标说明'" style="cursor:pointer;user-select:none;font-size:11.5px;color:var(--gold)"><span>▸ 指标说明</span><span style="color:var(--text2);opacity:.6;font-size:10.5px"> （点这里展开大白话）</span></span><div id="mcapExpl" style="display:none;margin-top:7px">${expl}</div></div>`;
   const rate = needUSD(r) ? (FX_NOTE[curOf(mkt)]||"") : "";
-  h+=`<div style="margin-top:9px;font-size:10px;color:var(--text2);opacity:.7">数据 Yahoo · ${window.FUND_ASOF||""} · <b style="color:var(--gold)">同比“季”＝最新季报单季</b>，营收/净利额为近12个月TTM · 档位通用参考${rate?" · "+rate:""}</div>`;
+  h+=`<div style="margin-top:9px;font-size:10px;color:var(--text2);opacity:.7">数据 Yahoo · ${window.FUND_ASOF||""} · <b style="color:var(--gold)">年＝最近财年YoY，季＝最新季报单季YoY</b>，额为对应期间（缺年报时年列退显近12月TTM）· 档位通用参考${rate?" · "+rate:""}</div>`;
   h+=`</div>`;
   return h;
 }
