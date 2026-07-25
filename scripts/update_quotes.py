@@ -648,3 +648,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# 2026-07-25 触发重跑：美股市场规模指数切换为 ^DWCF 后需重新生成 data/marketscale.json
