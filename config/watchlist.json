@@ -4649,6 +4649,34 @@
      "ath_floor": 0
     },
     {
+     "name": "日本电气硝子NEG",
+     "code": "5214",
+     "market": "日本",
+     "yahoo": "5214.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 0.94,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "旭化成",
+     "code": "3407",
+     "market": "日本",
+     "yahoo": "3407.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 13.6,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
      "name": "宏和科技",
      "code": "603256",
      "market": "A股",
@@ -4755,6 +4783,8 @@
      "name": "上游玻纤与石英",
      "codes": [
       "3110",
+      "5214",
+      "3407",
       "603256",
       "300395",
       "301526"
