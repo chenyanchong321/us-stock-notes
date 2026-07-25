@@ -2116,7 +2116,7 @@ function renderDash(quotes){
     const seen=new Set(); const list=rows.filter(x=>{ if(seen.has(x.r[1])) return false; seen.add(x.r[1]); return true; });
     if(!window.FUNDSORT) window.FUNDSORT={k:"mcap",d:-1};
     const S=window.FUNDSORT;
-    const fx=x=>FX2USD[curOf(x.r[2])]||1;
+    const fx=x=>{const c=(x.F.cur&&FX2USD[x.F.cur]!=null)?x.F.cur:curOf(x.r[2]);return FX2USD[c]||1;};
     const M={ rev:x=>x.F.rev,
       gross:x=>(fin(x.F.rev)&&fin(x.F.gm))?x.F.rev*x.F.gm:null,
       oi:x=>(fin(x.F.rev)&&fin(x.F.om))?x.F.rev*x.F.om:null,
