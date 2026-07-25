@@ -330,14 +330,14 @@ def anchor_kr(diag):
 def anchor_us(cur, diag):
     """美股不改绝对锚（无免费自动源），只把浮动指数升级为 Wilshire 5000 全市场指数（若 Yahoo 有）。
     全市场指数自带新股/退市调整，漂移远小于标普500。"""
-    if cur.get("index") in ("^FTW5000", "^W5000"):
+    if cur.get("index") in ("^DWCF", "^FTW5000", "^W5000"):
         d, _ = yahoo_last(cur["index"])   # 健康检查：数据断供则报错（由人/AI 处理，不自动回退）
         if (datetime.date.today() - d).days > 10:
             raise RuntimeError(f"{cur['index']} 数据已停更（最后 {d}）")
         diag.append(f"{cur['index']} 健康（最后 {d}），无需变更")
         return None
     a_date = datetime.date.fromisoformat(cur.get("anchor_date") or "2026-07-09")
-    for sym in ("^FTW5000", "^W5000"):
+    for sym in ("^DWCF", "^FTW5000", "^W5000"):
         try:
             last_d, _ = yahoo_last(sym)
             if (datetime.date.today() - last_d).days > 10:
