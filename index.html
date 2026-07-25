@@ -1615,6 +1615,7 @@ function usdMcapTip(r){
   const row=(name,valStr,labels,idx,col)=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span style="width:74px;flex:0 0 74px;font-size:12px;color:var(--text2)">${name}</span><span style="font-weight:600;font-size:16px;width:54px;color:var(--text)">${valStr}</span>${idx<0?'<span style="flex:1;color:var(--text2);font-size:11px;opacity:.6">数据缺失</span>':seg(labels,idx,col)}</div>`;
   const peTh = isA?[20,35,55]:[15,25,40];
   const ni = (fin(F.rev)&&fin(F.pm))? F.rev*F.pm : null;
+  const oi = (fin(F.rev)&&fin(F.om))? F.rev*F.om : null;
   const cell=(k,v)=>`<span style="display:flex;justify-content:space-between;align-items:baseline"><span style="color:var(--text2);font-size:12px">${k}</span><span style="font-weight:500">${v}</span></span>`;
   let evTail="";
   if(fin(F.netCash)) evTail = F.netCash>=0? ` 此处净现金 ${fmtBig(F.netCash)}，家底厚。` : ` 此处有净负债 ${fmtBig(-F.netCash)}。`;
@@ -1641,6 +1642,7 @@ function usdMcapTip(r){
   h+=`<div style="display:flex;gap:16px;margin-bottom:2px"><span style="flex:1;display:flex;justify-content:space-between;align-items:baseline"><span style="color:var(--text2);font-size:12px">市值</span><span style="font-weight:600;font-size:14px">${r[3]}</span></span><span style="flex:1;display:flex;justify-content:space-between;align-items:baseline"><span style="color:var(--text2);font-size:12px">企业价值 EV</span><span style="font-weight:600;font-size:14px">${fmtBig(F.ev)}</span></span></div>`;
   h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px 18px;margin-top:9px">`+
     cell("营收", fmtBig(F.rev)+" "+pct(F.revG))+
+    cell("营业利润", (oi==null?"–":fmtBig(oi))+(fin(F.om)?' <span style="color:var(--text2);font-size:11px">'+num(F.om*100)+'%</span>':""))+
     cell("净利", (ni==null?"–":fmtBig(ni))+" "+pct(F.earnG))+
     cell("毛利率", fin(F.gm)?num(F.gm*100)+"%":"–")+
     cell("净利率", fin(F.pm)?num(F.pm*100)+"%":"–")+
