@@ -192,6 +192,30 @@ mcap_base 的本质是"股本数"：yi/mcap_base_price 应等于总股本（亿�
 4. Pages 部署偶发失败/CDN 缓存约10分钟：kick 空提交重试≤2次，然后等缓存。
 5. 新增标的时顺带做三件事：profiles.json 简介（记忆卡风格）、已知的重要事件（业绩预告/财报日/上市日）写入 config/events.json、若烟囱给了买点则按"具体数值+锚定日期"写 buypoints.json。
 
+## 加标的的完整清单（2026-07-26 定，「市值浮窗空白」事故后立规，任何新会话照此逐条过）
+
+**这是加股票的唯一权威清单。以前散落在各节的要求全部收拢到这里，缺任何一项都算任务没完成。**
+
+**必做五项：**
+1. `config/watchlist.json` —— 板块 items 加条目（`mcap_base.yi ÷ mcap_base_price = 拆股后总股本亿股`；有二级分组时 items 顺序必须与 groups 展开顺序一致）。
+2. `config/profiles.json` —— **每只必须手写记忆卡式简介**，60–120 字，`<b>粗体第一句</b>` + 2–3 句地位/叙事/与邻居的区分。
+3. `config/industrymap.json` —— 若该板块已建产业地图，members 加一行 `{c, s, a}`（不适用的板块跳过，但要说明为什么跳过）。
+4. **推送**（push 到 main 即自动触发两条管线，见下条），随后回读验证。
+5. 验证：`data/quotes.json` 有新行且字段数正确 → `data/fundamentals.json` 有该代码 → 页面 `?v=随机数` 实测行情、简介浮窗、**市值浮窗**三样都在。
+
+**两条管线是分开的，谁也不会替谁跑（这是「市值浮窗是空的」的根因）：**
+
+| 管线 | 产物 | 前端用途 | push 触发路径 |
+|---|---|---|---|
+| `update-data.yml` | `data/quotes.json` | 行情行：价格/回撤/涨跌幅/成交/Beta | `config/watchlist.json`、`scripts/update_quotes.py` |
+| `update-fundamentals.yml` | `data/fundamentals.json` | **市值格悬停浮窗**：PE/PB/PS/EV-EBITDA/ROE/营收净利年季双口径/毛利率/净现金/自由现金流 | `config/watchlist.json`、`scripts/update_fundamentals.py` |
+
+- **2026-07-26 之前 `update-fundamentals.yml` 的 push 路径里没有 watchlist.json**，所以加完标的行情秒出、市值浮窗却要等到次日 UTC 22:40 那班 cron 才补上——创新药板块 44 只上线当天全部空白，被烟囱当场抓到。已把 `config/watchlist.json` 加进它的 push paths，**从此自愈，不再依赖人记得手动触发**。
+- 若将来又出现「行情有、浮窗空」：先看 `update-fundamentals` 最近一次 run 是否跑过、是否被 crumb 失败跳过（脚本有防呆：抓到量不足旧文件三成时保留旧文件，会打 warning 不报错）。**手动补跑 = Actions → update-fundamentals → Run workflow。**
+- **通用原则（比这条规则本身更重要）：凡是「加了数据源却要人记得再点一下」的地方，一律改成 push 路径自动触发。机器保证 > 人记住。** 新建任何依赖 watchlist 的管线时，第一件事就是把 `config/watchlist.json` 写进它的 push paths。
+
+**按需项：** 事件写 `config/events.json`；新黑话补 `config/glossary.json`；烟囱给了点位则上 ECS 跑 `setbuy/settgt`（措辞用「观察位」，阿拉伯数字+锚定日期）；借壳/更名/反向拆股的票查一眼回撤是否 > −90%，异常补 `ath_since`；新市场标签类型要检查前端 `txCode` 是否覆盖；加密标的必须同时登记前端 `CG_IDS`。
+
 ## 锚点跳转防遮挡（2026-07-07）
 - tr.grp/.section 的 scroll-margin-top 改为动态 CSS 变量 --anchor-grp/--anchor-sec（floatHead IIFE 的 setAnchors() 实时测算 = 顶栏+吸顶视图条+悬浮表头高度）。以后凡改变顶部吸顶层高度（视图卡增减、顶栏换行）无需手调数字。
 
