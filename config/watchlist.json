@@ -3756,6 +3756,20 @@
      "ath_floor": 0
     },
     {
+     "name": "瀚天天成",
+     "code": "02726",
+     "market": "港股",
+     "yahoo": "2726.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 439.6,
+      "approx": false
+     },
+     "mcap_base_price": 103.3,
+     "ath_floor": 0
+    },
+    {
      "name": "晶升股份",
      "code": "688478",
      "market": "A股",
@@ -4108,9 +4122,10 @@
    ],
    "groups": [
     {
-     "name": "SiC 衬底 · 设备 · 测试",
+     "name": "SiC 衬底 · 外延 · 设备 · 测试",
      "codes": [
       "688234",
+      "02726",
       "688478",
       "002617",
       "300316",
