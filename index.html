@@ -5640,8 +5640,17 @@ function renderUniBubbles(body, secs, sizeBy){
     const dist = d.dist;
     /* 家数统一口径：有分布就用分布求和（与五个格子自洽、读者能自己加一遍） */
     const tot = dist ? dist.reduce((a,b)=>a+b,0) : (d.na||null);
-    const rkTxt = d.rk ? (RK[d.rk]||d.rk) : (N(d.rm) ? (d.rm<1.5?"强烈买入":d.rm<2.5?"买入":d.rm<3.5?"持有":d.rm<4.5?"减持":"卖出") : "");
-    const rkCol = (N(d.rm)&&d.rm<2.5) ? "var(--up)" : "var(--text)";
+    /* 结论文案（2026-07-26 补）：Yahoo 对部分标的返回 recommendationKey:"none"、recommendationMean:null，
+       原来直接原样输出，标题就成了「机构评级共识：none」（江波龙实测）。
+       改为三级兜底：rk 有效值 → rm 换算 → 用分布自己加权算（1强买…5卖出），全都没有才留空。 */
+    const lvl = v => v<1.5?"强烈买入":v<2.5?"买入":v<3.5?"持有":v<4.5?"减持":"卖出";
+    let rmUse = N(d.rm) ? d.rm : null;
+    if(rmUse===null && dist){
+      const tt=dist.reduce((a,b)=>a+b,0);
+      if(tt>0) rmUse = dist.reduce((a,b,i)=>a+b*(i+1),0)/tt;   /* 分布加权，与 1–5 同尺 */
+    }
+    const rkTxt = (d.rk && d.rk!=="none" && RK[d.rk]) ? RK[d.rk] : (rmUse!==null ? lvl(rmUse) : "");
+    const rkCol = (rmUse!==null && rmUse<2.5) ? "var(--up)" : "var(--text)";
 
     /* —— 头部：结论并进标题；ⓘ 与 ✕ 同行 —— */
     let h = `<div class="rt-h"><span class="rt-t">机构评级共识${rkTxt?`：<span style="color:${rkCol}">${rkTxt}</span>`:""}</span>`
