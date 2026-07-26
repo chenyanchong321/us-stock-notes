@@ -241,6 +241,17 @@ mcap_base 的本质是"股本数"：yi/mcap_base_price 应等于总股本（亿�
 - 正确姿势：把仓库 clone/复制到自己会话的 outputs 临时目录里干活，push 到远端；镜像同步只用 `git pull --ff-only origin main`，遇到 index.lock 存在就跳过同步并告知烟囱（哪个会话有删除权限哪个处理，或烟囱手动删）。
 - 镜像 origin 已内置 token（.git/config），临时副本可从镜像 config 里读 remote URL 拿到推送地址。
 
+## 铁律：绝不拿本地镜像的文件覆盖推送（2026-07-26 「Reddit 事故」立规）
+
+- **事故**：给 Reddit 建条目时，直接在烟囱本地镜像（`01_公司投研/us-stock-notes`）里改 `config/watchlist.json`＋`profiles.json`，再 clone 远端最新、把这两个文件 **cp 覆盖**上去推送。镜像当时落后远端 6 个 commit，于是把别的会话新增的「25 创新药」「26 CPO」两个板块共 **77 只标的整体回退**（613→536）。烟囱在页面上看到标的数掉了才发现。
+- **根因**：镜像只是"烟囱的本地副本"，**它随时可能落后**（机器人每 15-30 分钟提交行情，其它会话也在推配置）。`cp 旧文件 → 覆盖` 是**全量替换**，等于拿旧快照抹掉期间所有人的改动——git 不会报冲突，因为它看到的只是"一次正常的大改"。
+- **正确姿势（三选一，都要求"改在最新版上"）**：
+  1. clone/fetch 到临时目录 → **在克隆出来的最新文件上改** → commit push（首选）；
+  2. 必须以镜像为起点时，先 `git -C 镜像 fetch && git show origin/main:config/xxx.json` 取**远端最新版**作基线，再改；
+  3. 走 ECS 的 `/root/gh.py`（GitHub contents API），它天然读的是远端最新。
+- **提交前自查（一行，配置类改动必跑）**：`git diff --stat 远端最新 HEAD -- config/` —— **只应看到自己那几行的增量**。出现成百上千行的 `-` 删除，就是覆盖了别人的改动，立刻停手。
+- **推广**：同理适用于 `profiles.json / industrymap.json / glossary.json / events.json / notes.json / reads.json` 等一切多会话共同维护的 JSON。**这类文件永远"读最新→改增量"，禁止"本地整份覆盖"。**
+
 ## 回复语言（2026-07-07 定，烟囱明确要求）
 - **一律用中文回复烟囱**：不只是最终答复，连思考/推理过程也用中文，禁止夹带英文整句（如 "Got it, the updated rules…"）。烟囱看不懂英文思考过程。
 - 例外：代码、命令、专有名词、股票代码、API 字段名等技术标识按原文保留即可；术语缩写首次出现按烟囱偏好给「英文全称（中文译名）」。
