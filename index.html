@@ -5559,12 +5559,26 @@ function renderUniBubbles(body, secs, sizeBy){
   const N=v=>typeof v==="number"&&isFinite(v);
   const f2=v=>N(v)? (Math.abs(v)>=100? v.toFixed(0) : v.toFixed(2)) : "–";
   const pct=v=>(v>0?"+":"")+v.toFixed(1)+"%";
-  /* 现价：从 DATA 取（DATA 是脚本级 let，守卫必须用 typeof——站上踩过两次的坑） */
+  /* 现价：先从 DATA 取，再退 DOM。两个坑都踩过——
+     ① DATA 是脚本级 let（不在 window 上），守卫必须 typeof；
+     ② DATA 本身是**板块数组**，不是 {sections:[...]} 对象（第一版按对象取，取了个空）。 */
   function pxOf(code){
-    if(typeof DATA==="undefined" || !DATA) return null;
-    for(const sec of (DATA.sections||[])) for(const r of (sec.rows||[])){
-      if(r[1]===code){ const n=parseFloat(String(r[5]).replace(/[^0-9.]/g,"")); return N(n)?n:null; }
-    }
+    try{
+      if(typeof DATA!=="undefined" && DATA){
+        const secs = Array.isArray(DATA) ? DATA : (DATA.sections||[]);
+        for(const sec of secs){
+          const rows = Array.isArray(sec) ? sec : (sec && sec.rows) || [];
+          for(const r of rows){
+            if(r && r[1]===code){ const n=parseFloat(String(r[5]).replace(/[^0-9.]/g,"")); if(N(n)) return n; }
+          }
+        }
+      }
+    }catch(e){}
+    /* DOM 兜底：现价格第一行就是现价（实时层刷新后也准） */
+    try{
+      const td=document.querySelector('tr[data-code="'+code+'"] td.pxc');
+      if(td){ const m=String(td.textContent||"").match(/[\d,]+\.?\d*/); if(m){ const n=parseFloat(m[0].replace(/,/g,"")); if(N(n)) return n; } }
+    }catch(e){}
     return null;
   }
   const RK={strong_buy:"强烈买入",buy:"买入",hold:"持有",underperform:"减持",sell:"卖出"};
