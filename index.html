@@ -204,6 +204,24 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 .mmk-empty{padding:14px 10px;color:var(--text2);font-size:12px;text-align:center}
 .mctier{display:inline-block;margin-left:5px;padding:0 4px;border-radius:3px;font-size:10px;line-height:15px;vertical-align:1px;color:var(--gold);border:1px solid var(--gold);opacity:.8;font-weight:500;white-space:nowrap;touch-action:manipulation;cursor:pointer}
 .mctier:hover{opacity:1;background:rgba(232,182,76,.12)}
+/* ===== 机构评级共识（2026-07-26 新增，可整体下架：见 RATINGS_ON）===== */
+.rateb{display:inline-block;margin-left:5px;padding:0 5px;border-radius:4px;font-size:10.5px;line-height:16px;
+  vertical-align:middle;cursor:pointer;border:1px solid var(--border);color:var(--text2);background:transparent;
+  white-space:nowrap;touch-action:manipulation;user-select:none}
+.rateb.up{border-color:var(--up);color:var(--up)}
+.rateb.dn{border-color:var(--down);color:var(--down)}
+#ratetip{position:fixed;z-index:322;display:none;width:330px;max-width:calc(100vw - 20px);max-height:78vh;overflow:auto;
+  background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:13px 15px;font-size:12.5px;
+  line-height:1.6;color:var(--text);box-shadow:0 10px 30px rgba(0,0,0,.42);-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+#ratetip .rt-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
+#ratetip .rt-t{font-weight:700;font-size:13.5px}
+#ratetip .rt-s{color:var(--text2);font-size:10.5px}
+#ratetip .rt-sec{margin-top:13px;padding-top:11px;border-top:1px solid var(--border)}
+#ratetip .rt-lb{color:var(--text2);font-size:11px;margin-bottom:5px}
+#ratetip table{width:100%;border-collapse:collapse;font-size:11.5px}
+#ratetip td{padding:2px 0;white-space:nowrap}
+#ratetip .num{text-align:right;font-variant-numeric:tabular-nums}
+@media (max-width:860px){#ratetip{width:calc(100vw - 24px)}}
 #mmtiertip{position:fixed;z-index:320;display:none;max-width:280px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:10px 13px;font-size:12.5px;line-height:1.55;color:var(--text);box-shadow:0 8px 24px rgba(0,0,0,.35)}
 #mmtiertip b{color:var(--gold)}
 #mmtiertip .m{color:var(--text);font-weight:600}
@@ -1208,6 +1226,32 @@ function repBadge(code){
   /* 决策笔记/月会不挂名称徽标（多为宏观策略随笔，挂了会让名称列泛滥）；集合页与浮窗仍可达 */
   return h;
 }
+/* 评级徽标（2026-07-26）：常驻显示——凡抓得到机构评级的都显示，不做条件显隐；
+   近30天有净上调/下调时用颜色+箭头高亮。宽度固定两字，不带家数（家数在浮窗里）。 */
+function rateBadge(code){
+  if(typeof RATINGS_ON==="undefined" || !RATINGS_ON) return "";
+  const d = window.RATE && window.RATE[code]; if(!d) return "";
+  let cls="", arw="";
+  const e = d.eps && (d.eps.y0 || d.eps.y1);
+  if(e){
+    const up=(e.up30||0), dn=(e.dn30||0);
+    if(up>dn){ cls=" up"; arw=" ↑"; }
+    else if(dn>up){ cls=" dn"; arw=" ↓"; }
+  }
+  return `<span class="rateb${cls}" data-code="${code}">评级${arw}</span>`;
+}
+window.rateBadge = rateBadge;
+/* 数据是异步到货的，到货后把已渲染的行补上徽标（不整表重渲染，零副作用） */
+window.repaintRateBadges = function(){
+  if(!window.RATE) return;
+  document.querySelectorAll("tr[data-code] td.name").forEach(td=>{
+    const code = td.parentElement && td.parentElement.dataset.code; if(!code) return;
+    if(td.querySelector(".rateb")) return;
+    const h = rateBadge(code); if(!h) return;
+    const sub = td.querySelector(".sub");
+    if(sub) sub.insertAdjacentHTML("beforebegin", h); else td.insertAdjacentHTML("beforeend", h);
+  });
+};
 window.MEMBER = false; window.AUSER = "";
 const AUTH_API = location.host==="stock.ziyuanai.top" ? "/api" : "https://stock.ziyuanai.top/api";
 
@@ -1562,6 +1606,12 @@ function mcapVal(r){
    跳过：指数（恒生指数24175换美元是笑话）、美股/加密（本就是美元）、外汇/商品/宏观。 */
 window.FUND=null; window.FUND_ASOF="";
 fetch("data/fundamentals.json?v="+Date.now()).then(r=>r.ok?r.json():null).then(d=>{if(d){window.FUND=d.items;window.FUND_ASOF=d.asof;}}).catch(()=>{});
+/* 机构评级共识（2026-07-26）：独立文件，取不到就整块功能静默消失，不影响任何既有渲染。
+   下架开关：把 RATINGS_ON 改成 false，全站徽标与浮窗立即消失（比 revert 还快）。 */
+const RATINGS_ON = true;
+window.RATE = null; window.RATE_ASOF = "";
+if(RATINGS_ON) fetch("data/ratings.json?v="+Date.now()).then(r=>r.ok?r.json():null)
+  .then(d=>{ if(d){ window.RATE=d.items; window.RATE_ASOF=d.asof; if(window.repaintRateBadges) repaintRateBadges(); } }).catch(()=>{});
 const FX_NOTE = {HKD:"1美元≈7.8港元", CNY:"1美元≈7.2人民币", JPY:"1美元≈158日元", KRW:"1美元≈1370韩元", TWD:"1美元≈32台币", EUR:"1美元≈0.92欧元", CHF:"1美元≈0.80瑞郎"};
 function needUSD(r){
   const m=String(r[2]||"");
@@ -1675,7 +1725,7 @@ function usdMcapTip(r){
 }
 function rowHTML(r, grp){
   return `<tr class="${BUYCODES.has(r[1])?"buy":""}" data-grp="${grp||""}" data-code="${r[1]}" data-mkt="${r[2]||""}" data-key="${(r[0]+r[1]).toLowerCase()}">
-    <td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}${earnBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
+    <td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}${earnBadge(r[1])}${rateBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
     <td class="pxc">${priceCell(r)}</td>
     <td>${dayWeekCell(r)}</td>
     <td class="athc">${athCell(r)}</td>
@@ -2006,7 +2056,7 @@ function renderDash(quotes){
     const ath = `<td class="athc">${athCell(r)}</td>`;
     const pers = [18,7,8,9,10,11].filter(i=>i!==skipRi).map(i=>`<td>${fmtPct(r[i])}</td>`).join("");
     return `<tr class="${BUYCODES.has(r[1])?"buy":""}" data-grp="${r[12]||""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
-      <td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}${earnBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
+      <td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}${earnBadge(r[1])}${rateBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
       ${athFirst ? ath : ""}
       <td class="pxc">${priceCell(r, mode)}</td>${extraTd||""}
       <td>${dayWeekCell(r)}</td>
@@ -2162,7 +2212,7 @@ function renderDash(quotes){
       const gg=v=>fin(v)?` <span style="font-size:11px;color:var(--${v>=0?"up":"down"})">${v>=0?"+":"−"}${Math.abs(v*100).toFixed(1)}%</span>`:"";
       const rate=v=>fin(v)?` <span style="font-size:11px;color:var(--text2)">${(v*100).toFixed(1)}%</span>`:"";
       return `<tr data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
-        <td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
+        <td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}${rateBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
         <td class="mcapc">${mcapCell(r)}</td>
         <td>${money(F.rev,r[2],F.cur)}${gg(F.revG)}</td>
         <td>${money(M.gross(x),r[2],F.cur)}${rate(F.gm)}</td>
@@ -2241,7 +2291,7 @@ function renderDash(quotes){
           : `<span style="color:${lb>=2?"var(--down)":lb<=0.5?"var(--text2)":"var(--text)"}">${lb.toFixed(2)}</span>`;
         return `<tr class="${BUYCODES.has(r[1])?"buy":""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
           <td style="color:var(--text2)">${i+1}</td>
-          <td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}${earnBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
+          <td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}${earnBadge(r[1])}${rateBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
           <td class="volc">${volCell(r)}${vs==="lb"?"":""}</td>
           <td class="pxc">${priceCell(r)}</td>
           <td>${dayWeekCell(r)}</td>
@@ -2269,7 +2319,7 @@ function renderDash(quotes){
         const r=x.r;
         return `<tr class="${BUYCODES.has(r[1])?"buy":""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
           <td style="color:var(--text2)">${i+1}</td>
-          <td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}${earnBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
+          <td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}${earnBadge(r[1])}${rateBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
           <td class="mcapc">${mcapCell(r)}</td>
           <td class="pxc">${priceCell(r)}</td>
           <td>${dayWeekCell(r)}</td>
@@ -2338,7 +2388,7 @@ function renderDash(quotes){
           const st = s.active?'color:var(--gold);font-weight:700' : s.passed?'color:var(--text2);opacity:.5' : 'color:var(--text)';
           return `<td style="${st}">${s.active?"▸":""}${s.price}</td>`;
         }).join("");
-        return `<tr data-code="${r[1]}"><td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}${earnBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td><td>${r[5]}</td><td>${r[4]}<span style="display:block;font-size:11px">${ddCell(r[6])}</span></td>${cells}<td class="fill"></td></tr>`;
+        return `<tr data-code="${r[1]}"><td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}${earnBadge(r[1])}${rateBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td><td>${r[5]}</td><td>${r[4]}<span style="display:block;font-size:11px">${ddCell(r[6])}</span></td>${cells}<td class="fill"></td></tr>`;
       }).join("");
     }else if(v==="heat"){
       const HW={d:[16,"当日"],w1:[18,"近1周"],m1:[7,"近1月"]};
@@ -5491,7 +5541,182 @@ function renderUniBubbles(body, secs, sizeBy){
 (function(){
   const TOUCHY3 = matchMedia("(hover: none), (pointer: coarse)").matches;
   const extraOf = code => `<a class="imap-go" data-code="${code}" href="javascript:;" style="display:block;margin-top:7px;font-size:12px;border-top:1px solid var(--border);padding-top:6px;color:var(--accent);text-decoration:none">📊 查看行情 →</a>`;
-  /* 市值梯队说明卡：自绘即时浮层（原生 title 禁用老规矩）。桌面悬停动物、手机点按动物，点别处收起。 */
+  
+/* ============ 机构评级共识浮窗（2026-07-26 新增）============
+   触发：名称格里的「评级」徽标（与名称本身的简介卡两个独立热区，参照市值梯队金标的做法）。
+   排序按「结论 → 分歧 → 趋势 → 明细」：先给一句话结论，再给分布与目标价区间，
+   然后是真正的领先信号（一致预期EPS的7/30/60/90天修订），最后是逐家明细。
+   下架：RATINGS_ON=false 即全灭；或整体 revert 本次 commit。不依赖任何既有结构。 */
+(function(){
+  if(typeof RATINGS_ON==="undefined" || !RATINGS_ON) return;
+  const TOUCHY_R = matchMedia("(hover: none), (pointer: coarse)").matches;
+  let el=null, curCode=null, hideT=null;
+  const box=()=>{ if(!el){ el=document.createElement("div"); el.id="ratetip"; document.body.appendChild(el);
+      el.addEventListener("mouseenter",()=>clearTimeout(hideT));
+      el.addEventListener("mouseleave",()=>{ if(!TOUCHY_R) hideT=setTimeout(hideRate,240); }); } return el; };
+  const hideRate = window.hideRate = ()=>{ if(el) el.style.display="none"; curCode=null; };
+
+  const N=v=>typeof v==="number"&&isFinite(v);
+  const f2=v=>N(v)? (Math.abs(v)>=100? v.toFixed(0) : v.toFixed(2)) : "–";
+  const pct=v=>(v>0?"+":"")+v.toFixed(1)+"%";
+  /* 现价：从 DATA 取（DATA 是脚本级 let，守卫必须用 typeof——站上踩过两次的坑） */
+  function pxOf(code){
+    if(typeof DATA==="undefined" || !DATA) return null;
+    for(const sec of (DATA.sections||[])) for(const r of (sec.rows||[])){
+      if(r[1]===code){ const n=parseFloat(String(r[5]).replace(/[^0-9.]/g,"")); return N(n)?n:null; }
+    }
+    return null;
+  }
+  const RK={strong_buy:"强烈买入",buy:"买入",hold:"持有",underperform:"减持",sell:"卖出"};
+
+  function html(code){
+    const d = window.RATE && window.RATE[code]; if(!d) return null;
+    const px = pxOf(code);
+    const na = d.na || (d.dist? d.dist.reduce((a,b)=>a+b,0) : null);
+    /* —— 头部：一句话结论 —— */
+    const rkTxt = d.rk ? (RK[d.rk]||d.rk) : (N(d.rm) ? (d.rm<1.5?"强烈买入":d.rm<2.5?"买入":d.rm<3.5?"持有":d.rm<4.5?"减持":"卖出") : "–");
+    let h = `<div class="rt-h"><span class="rt-t">机构评级共识</span>`
+          + `<span class="rt-s">${na?na+" 家覆盖":"覆盖数未知"}${d.last?" · 最近变动 "+d.last.slice(5):""}</span></div>`;
+    /* 新鲜度：如实标注，不靠灰化隐藏 */
+    if(d.last){
+      const days = Math.round((Date.now()-new Date(d.last+"T00:00:00").getTime())/864e5);
+      if(days>90) h += `<div style="margin:-4px 0 8px;font-size:11px;color:var(--down)">已 ${days} 天无机构评级变动，下列共识可能滞后</div>`;
+    }
+    h += `<div style="font-size:15px;font-weight:700;color:${d.rm&&d.rm<2.5?"var(--up)":"var(--text)"}">${rkTxt}`
+       + (N(d.rm)?`<span style="font-size:11px;color:var(--text2);font-weight:400"> · 评分 ${d.rm.toFixed(2)}（1=强买 5=卖出）</span>`:"")+`</div>`;
+
+    /* —— 段1 分歧：评级分布堆叠条 —— */
+    if(d.dist){
+      const [sb,b,ho,se,ss]=d.dist, tot=sb+b+ho+se+ss||1;
+      const seg=(n,c)=> n? `<span style="width:${n/tot*100}%;background:${c}" title=""></span>` : "";
+      h += `<div class="rt-sec"><div class="rt-lb">评级分布（近一个月）</div>`
+        + `<div style="display:flex;height:9px;border-radius:5px;overflow:hidden;background:var(--border)">`
+        + seg(sb,"var(--up)")+seg(b,"rgba(24,143,77,.62)")+seg(ho,"var(--text2)")
+        + seg(se,"rgba(212,58,58,.62)")+seg(ss,"var(--down)")+`</div>`
+        + `<div style="display:flex;flex-wrap:wrap;gap:9px;margin-top:6px;font-size:11px">`
+        + [["强烈买入",sb,"var(--up)"],["买入",b,"rgba(24,143,77,.85)"],["持有",ho,"var(--text2)"],
+           ["减持",se,"rgba(212,58,58,.85)"],["卖出",ss,"var(--down)"]]
+          .map(([n,v,c])=>`<span style="color:${c}">${n} <b>${v}</b></span>`).join("")
+        + `</div></div>`;
+    }
+
+    /* —— 段2 目标价区间轴：现价落在共识区间的哪一格，一眼可见 —— */
+    if(N(d.tp)){
+      const lo=N(d.tpl)?d.tpl:d.tp, hi=N(d.tph)?d.tph:d.tp;
+      /* 坏数据入口截断：目标价与现价量级差太多（多为币种口径不一致），只列数字不画轴 */
+      const sane = N(px) && d.tp>px*0.15 && d.tp<px*6;
+      h += `<div class="rt-sec"><div class="rt-lb">目标价区间${d.cur?"（"+d.cur+"）":""}</div>`;
+      if(sane){
+        const a=Math.min(lo,px), z=Math.max(hi,px), span=(z-a)||1;
+        const P=v=>((v-a)/span*100).toFixed(1);
+        h += `<div style="position:relative;height:30px;margin:4px 0 2px">`
+          + `<span style="position:absolute;left:0;right:0;top:13px;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--down),var(--text2),var(--up));opacity:.5"></span>`
+          + `<span style="position:absolute;left:${P(d.tp)}%;top:8px;width:2px;height:14px;background:var(--gold);transform:translateX(-1px)"></span>`
+          + `<span style="position:absolute;left:${P(px)}%;top:6px;width:10px;height:18px;border-radius:3px;border:2px solid var(--text);background:var(--panel2);transform:translateX(-5px)"></span>`
+          + `</div>`
+          + `<table><tr><td>最低 ${f2(lo)}</td><td class="num">${N(px)?pct(lo/px*100-100):""}</td>`
+          + `<td style="padding-left:12px">均值 <b style="color:var(--gold)">${f2(d.tp)}</b></td><td class="num">${N(px)?pct(d.tp/px*100-100):""}</td></tr>`
+          + `<tr><td>最高 ${f2(hi)}</td><td class="num">${N(px)?pct(hi/px*100-100):""}</td>`
+          + `<td style="padding-left:12px">现价 <b>${f2(px)}</b></td><td class="num" style="color:var(--text2)">当前位置</td></tr></table>`;
+        if(px>hi) h+=`<div style="font-size:11px;color:var(--gold);margin-top:4px">现价已高于所有机构目标价</div>`;
+        else if(px<lo) h+=`<div style="font-size:11px;color:var(--up);margin-top:4px">现价已低于所有机构目标价</div>`;
+      }else{
+        h += `<table><tr><td>最低 ${f2(lo)}</td><td class="num">均值 <b style="color:var(--gold)">${f2(d.tp)}</b></td><td class="num">最高 ${f2(hi)}</td></tr></table>`
+          + `<div style="font-size:11px;color:var(--text2);margin-top:4px">目标价与现价币种口径可能不一致，未画对比轴</div>`;
+      }
+      h += `</div>`;
+    }
+
+    /* —— 段3 趋势：一致预期EPS + 前瞻PE + 7/30/60/90天修订（真正的领先信号）—— */
+    if(d.eps){
+      h += `<div class="rt-sec"><div class="rt-lb">一致预期 EPS 与修订趋势</div><table>`;
+      [["y0","今年"],["y1","明年"]].forEach(([k,lab])=>{
+        const e=d.eps[k]; if(!e||!N(e.avg)) return;
+        const yr = e.yr? String(e.yr).slice(0,4) : lab;
+        const fpe = (N(px)&&e.avg>0)? (px/e.avg) : null;
+        h += `<tr><td><b>${yr}E</b> ${f2(e.avg)}${e.n?`<span style="color:var(--text2)"> · ${e.n}家</span>`:""}</td>`
+          +  `<td class="num">${fpe?`前瞻PE <b>${fpe.toFixed(1)}x</b>`:""}</td></tr>`;
+        const seq=[["90天",e.d90],["60天",e.d60],["30天",e.d30],["7天",e.d7],["现在",e.avg]].filter(x=>N(x[1]));
+        if(seq.length>=2){
+          const base=seq[0][1], chg=base? (e.avg/base-1)*100 : null;
+          const col = chg>0.5?"var(--up)": chg<-0.5?"var(--down)":"var(--text2)";
+          h += `<tr><td colspan="2" style="padding:3px 0 7px">`
+            + `<span style="display:flex;gap:5px;align-items:center">`
+            + seq.map((x,i)=>`<span style="flex:1;text-align:center;font-size:10.5px;line-height:1.45;padding:3px 1px;border-radius:5px;${
+                i===seq.length-1?"border:1px solid "+col+";color:"+col+";font-weight:700":"border:1px solid var(--border);color:var(--text2);opacity:.85"}">`
+              +`${x[0]}<br>${f2(x[1])}</span>`).join("")+`</span>`
+            + (N(chg)?`<span style="display:block;font-size:11px;margin-top:4px;color:${col}">较 90 天前 ${pct(chg)}${
+                (e.up30||e.dn30)?`　近30天 <span style="color:var(--up)">上调 ${e.up30||0}</span> · <span style="color:var(--down)">下调 ${e.dn30||0}</span>`:""}</span>`:"")
+            + `</td></tr>`;
+        }
+      });
+      h += `</table></div>`;
+    }
+
+    /* —— 段4 明细：最近逐家变动 —— */
+    if(d.hist && d.hist.length){
+      h += `<div class="rt-sec"><div class="rt-lb">最近评级变动</div><table>`;
+      d.hist.slice(0,5).forEach(x=>{
+        const a=(x.a||"").toLowerCase();
+        const mark = a==="up"?`<span style="color:var(--up)">↑</span>`: a==="down"?`<span style="color:var(--down)">↓</span>`
+                   : a==="init"?`<span style="color:var(--gold)">新</span>`:"";
+        h += `<tr><td style="color:var(--text2)">${x.d.slice(5)}</td>`
+          +  `<td style="padding-left:8px;max-width:120px;overflow:hidden;text-overflow:ellipsis">${x.f||""}</td>`
+          +  `<td class="num">${x.fr&&x.fr!==x.to?x.fr+" → ":""}${x.to||""} ${mark}</td></tr>`;
+      });
+      h += `</table></div>`;
+    }
+
+    /* —— 说明：明确写清是什么、怎么用（不做灰暗隐藏，用站上已有的折叠件形态）—— */
+    h += `<div class="rt-sec"><details><summary style="cursor:pointer;color:var(--gold);font-size:11.5px;outline:none">▸ 这是什么 · 怎么用（点开看大白话）</summary>`
+      + `<div style="margin-top:7px;font-size:11.5px;color:var(--text2);line-height:1.65">`
+      + `<b style="color:var(--text)">是什么</b>：券商研究部（卖方分析师）对这家公司的盈利预测与估值判断的汇总，不是我们的观点。<br>`
+      + `<b style="color:var(--text)">怎么用</b>：① <b style="color:var(--text)">看修订方向优先于看绝对数字</b>——一致预期 EPS 的 7/30/90 天变化是领先信号，目标价通常滞后于股价；② 评级分布里"卖出"家数比"均值目标价"更有信息量；③ 把它当共识坐标，你的超额收益来自"你和共识差在哪"。<br>`
+      + `<b style="color:var(--text)">局限</b>：历史研究显示，严格按 12 个月末口径目标价达成率约 38%，且买入评级数量远多于卖出。它是参考，不是预测。`
+      + `</div></details>`
+      + `<div style="margin-top:8px;font-size:10px;color:var(--text2);opacity:.7">数据 Yahoo（LSEG 一致预期）· ${window.RATE_ASOF||""} · 覆盖以美股港股为主，A 股与日韩台多数暂无</div></div>`;
+    return h;
+  }
+
+  window.showRate = function(b){
+    const code=b.dataset.code; if(!code) return;
+    const h=html(code); if(!h) return;
+    window.closeStip && closeStip();          /* 名称格的简介卡若已开，先收掉防叠卡 */
+    window.mmHideTier && mmHideTier();
+    const e=box(); e.innerHTML=h; e.style.display="block"; curCode=code;
+    const rc=b.getBoundingClientRect(), w=e.offsetWidth, h2=e.offsetHeight;
+    let x=Math.min(rc.left, innerWidth-w-10), y=rc.bottom+6;
+    if(y+h2>innerHeight-(TOUCHY_R?96:12)) y=Math.max(6, rc.top-h2-6);
+    e.style.left=Math.max(6,x)+"px"; e.style.top=Math.max(6,y)+"px";
+  };
+
+  /* 捕获阶段委托：抢在名称格简介卡的冒泡 click 之前（与市值梯队金标同款做法） */
+  document.addEventListener("click", e=>{
+    const b = e.target.closest ? e.target.closest(".rateb") : null;
+    if(b){ e.stopPropagation(); e.preventDefault(); showRate(b); return; }
+    if(el && el.style.display==="block" && !(e.target.closest && e.target.closest("#ratetip"))) hideRate();
+  }, true);
+  /* 触屏另走 touchend 直连（iOS 会吞掉 click，站上黑匣子破过这个案） */
+  document.addEventListener("touchend", e=>{
+    const b = e.target.closest ? e.target.closest(".rateb") : null;
+    if(b){ e.stopPropagation(); e.preventDefault(); showRate(b); }
+  }, true);
+  /* 桌面悬停：进入即显示，移开延迟收起（触屏不挂悬停——幽灵浮窗铁律） */
+  if(!TOUCHY_R){
+    document.addEventListener("mouseover", e=>{
+      const b = e.target.closest ? e.target.closest(".rateb") : null;
+      if(b){ clearTimeout(hideT); if(curCode!==b.dataset.code) showRate(b); }
+    });
+    document.addEventListener("mouseout", e=>{
+      const b = e.target.closest ? e.target.closest(".rateb") : null;
+      if(b && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(".rateb,#ratetip")))
+        hideT=setTimeout(hideRate,240);
+    });
+  }
+  addEventListener("scroll", ()=>{ if(el && el.style.display==="block") hideRate(); }, {passive:true});
+})();
+
+/* 市值梯队说明卡：自绘即时浮层（原生 title 禁用老规矩）。桌面悬停动物、手机点按动物，点别处收起。 */
   let tipEl=null;
   const tierTip = ()=>{ if(!tipEl){ tipEl=document.createElement("div"); tipEl.id="mmtiertip"; document.body.appendChild(tipEl); } return tipEl; };
   window.mmHideTier = ()=>{ if(tipEl) tipEl.style.display="none"; };
