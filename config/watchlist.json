@@ -8068,6 +8068,20 @@
      "ath_floor": 0.731578
     },
     {
+     "name": "柴犬币",
+     "code": "SHIB",
+     "market": "加密资产",
+     "yahoo": "SHIB-USD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 31.41,
+      "approx": false
+     },
+     "mcap_base_price": 5.33e-06,
+     "ath_floor": 8e-05
+    },
+    {
      "name": "Pepe",
      "code": "PEPE",
      "market": "加密资产",
