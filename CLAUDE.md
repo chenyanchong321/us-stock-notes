@@ -216,6 +216,23 @@ mcap_base 的本质是"股本数"：yi/mcap_base_price 应等于总股本（亿�
 
 **按需项：** 事件写 `config/events.json`；新黑话补 `config/glossary.json`；烟囱给了点位则上 ECS 跑 `setbuy/settgt`（措辞用「观察位」，阿拉伯数字+锚定日期）；借壳/更名/反向拆股的票查一眼回撤是否 > −90%，异常补 `ath_since`；新市场标签类型要检查前端 `txCode` 是否覆盖；加密标的必须同时登记前端 `CG_IDS`。
 
+### 全站管线×触发路径审计表（2026-07-26 全量核过一遍，新增管线照此登记）
+
+| 工作流 | 读什么配置 | push 触发路径 | 加标的时会不会自动跑 | 结论 |
+|---|---|---|---|---|
+| `update-data` | `config/watchlist.json` | watchlist / marketscale / update_quotes.py | ✅ 会 | 正确 |
+| `update-fundamentals` | `config/watchlist.json` | watchlist / update_fundamentals.py | ✅ 会（2026-07-26 补上的） | 正确 |
+| `update-levratio` | `config/levratio.json`（杠杆产品名单，**不跟 watchlist**） | levratio.json / 脚本 / 本工作流 | ➖ 不需要 | 正确（新增杠杆产品改 levratio.json 即自动补） |
+| `update-margin` | 无（直连东财两融接口） | 脚本 | ➖ 不需要 | 正确 |
+| `update-aicapex` | 无（脚本内 `COMPANIES` 硬编码 CIK 名单） | 脚本 | ➖ 不需要 | 正确，但**要加 AI capex 公司必须改脚本里的 `COMPANIES`，不是改 watchlist** |
+| `update-anchors` | `config/marketscale.json`（且由它自己写） | 脚本 / 本工作流 | ➖ 不需要 | 正确 |
+| `gen-audio` | `config/notes.json` | `articles/**.html` / notes.json | ➖ 不需要 | 正确 |
+| ECS `live.json`（美股盘前/盘后） | `/var/www/us-stock/config/watchlist.json` | 无（**ECS cron 每 2 分钟全站 rsync 同步公开仓库**） | ✅ 会，最多滞后 2 分钟 | 正确，新美股自动纳入盘前盘后 |
+
+同批修的历史欠账：`update-levratio` 原来缺 `branches: [main]`（任意分支 push 都会跑）、缺 `permissions: contents: write`（靠仓库默认权限侥幸能提交）、concurrency 组名叫 `data-update`（孤儿名，跟谁都不互斥），已一并补齐。
+
+**新建管线的登记动作（三步，别省）**：① 想清楚它读哪个配置文件；② 把那个配置文件写进它的 `push.paths`；③ 回来把它加进上面这张表。**表里没有的管线 = 没人知道它什么时候该跑。**
+
 ## 锚点跳转防遮挡（2026-07-07）
 - tr.grp/.section 的 scroll-margin-top 改为动态 CSS 变量 --anchor-grp/--anchor-sec（floatHead IIFE 的 setAnchors() 实时测算 = 顶栏+吸顶视图条+悬浮表头高度）。以后凡改变顶部吸顶层高度（视图卡增减、顶栏换行）无需手调数字。
 

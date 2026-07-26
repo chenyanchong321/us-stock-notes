@@ -5,14 +5,20 @@ on:
     - cron: "18 21 * * 1-5"   # UTC 21:18 = 美股收盘后（北京 5:18），韩日早已收盘
   workflow_dispatch:
   push:
+    branches: [main]
+    # 本管线的产品清单是 config/levratio.json（人工维护的杠杆ETF/ETN名单），不跟 watchlist 走。
+    # 新增杠杆产品改那个文件即自动补数；普通个股不属于本管线范围。
     paths:
       - "scripts/update_levratio.py"
       - "config/levratio.json"
       - ".github/workflows/update-levratio.yml"
 
 concurrency:
-  group: data-update
+  group: update-levratio
   cancel-in-progress: false
+
+permissions:
+  contents: write
 
 jobs:
   update:
