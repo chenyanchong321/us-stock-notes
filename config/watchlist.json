@@ -351,6 +351,26 @@
      "mcap_base": null,
      "mcap_base_price": 150.48,
      "ath_floor": 0
+    },
+    {
+     "name": "港股创新药ETF（广发）",
+     "code": "513120",
+     "market": "A股 ETF",
+     "yahoo": "513120.SS",
+     "currency": "¥",
+     "mcap_base": null,
+     "mcap_base_price": 1.169,
+     "ath_floor": 0
+    },
+    {
+     "name": "创新药ETF（银华）",
+     "code": "159992",
+     "market": "A股 ETF",
+     "yahoo": "159992.SZ",
+     "currency": "¥",
+     "mcap_base": null,
+     "mcap_base_price": 0.839,
+     "ath_floor": 0
     }
    ],
    "groups": [
@@ -409,7 +429,9 @@
       "SOXX",
       "IGV",
       "PGJ",
-      "XBI"
+      "XBI",
+      "513120",
+      "159992"
      ]
     }
    ]
@@ -9125,6 +9147,26 @@
      "ath_floor": 0
     },
     {
+     "name": "港股创新药ETF（广发）",
+     "code": "513120",
+     "market": "A股 ETF",
+     "yahoo": "513120.SS",
+     "currency": "¥",
+     "mcap_base": null,
+     "mcap_base_price": 1.169,
+     "ath_floor": 0
+    },
+    {
+     "name": "创新药ETF（银华）",
+     "code": "159992",
+     "market": "A股 ETF",
+     "yahoo": "159992.SZ",
+     "currency": "¥",
+     "mcap_base": null,
+     "mcap_base_price": 0.839,
+     "ath_floor": 0
+    },
+    {
      "name": "标普生物科技ETF",
      "code": "XBI",
      "market": "美股 ETF",
@@ -9199,7 +9241,14 @@
       "AZN",
       "BMY",
       "SMMT",
-      "LEGN",
+      "LEGN"
+     ]
+    },
+    {
+     "name": "工具 · 板块 ETF",
+     "codes": [
+      "513120",
+      "159992",
       "XBI"
      ]
     }
