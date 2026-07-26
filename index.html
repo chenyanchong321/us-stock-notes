@@ -237,7 +237,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 #ratetip .num{text-align:right;font-variant-numeric:tabular-nums}
 /* 手机端：宽度铺满、限高更狠（占满屏没地方点收起是上一版的实际问题），✕ 与 ⓘ 做成 44px 触区 */
 @media (max-width:860px){
-  #ratetip{width:calc(100vw - 20px);max-height:62vh;padding:12px 13px}
+  /* 宽度不放宽：站上 #stip 的约定就是 max-width:330px 且手机端不覆盖（所以它在手机上留边）。
+     上一版我在这里写了 width:calc(100vw-20px)，把屏幕顶满，属于主动破坏既有约定，已撤销。 */
+  #ratetip{max-height:62vh;padding:12px 13px}
   #ratetip .rt-h{margin:-12px -13px 4px;padding:12px 13px 6px}
   #ratetip .rt-i,#ratetip .rt-x{min-height:34px;display:inline-flex;align-items:center;padding:0 10px;font-size:12px}
   #ratetip .rt-cell i{font-size:9px}
@@ -5628,6 +5630,7 @@ function renderUniBubbles(body, secs, sizeBy){
     + `<b style="color:var(--text)">这是什么</b>：券商研究部（卖方分析师）对这家公司的盈利预测与估值判断的汇总，<b style="color:var(--text)">不是本站观点</b>。<br>`
     + `<b style="color:var(--text)">怎么用</b>：① <b style="color:var(--text)">看修订方向优先于看绝对数字</b>——一致预期 EPS 的 7/30/90 天变化是领先信号，目标价通常滞后于股价；② 分布里"卖出"有几家，比"均值目标价"更有信息量；③ 当共识坐标用，你的超额收益来自"你和共识差在哪"。<br>`
     + `<b style="color:var(--text)">局限</b>：严格按 12 个月末口径，目标价达成率约 38%，且买入评级数量远多于卖出。<b style="color:var(--text)">它是参考，不是预测。</b><br>`
+    + `<b style="color:var(--text)">上调/下调</b>：指分析师改的是<b style="color:var(--text)">盈利预测数字</b>，不是评级——改数字比改评级快得多，所以它更领先。<br>`
     + `<b style="color:var(--text)">评级词对照</b>：Buy 买入 · Outperform 优于大市 · Overweight 增持 · Hold 持有 · Neutral 中性 · Market Perform 与大市同步 · Underweight 减持 · Underperform 跑输大市 · Sell 卖出<br>`
     + `<span style="opacity:.75">数据 Yahoo（LSEG 一致预期）· ${window.RATE_ASOF||""} · 覆盖以美股港股为主，A 股与日韩台多数暂无</span></div>`;
 
@@ -5699,22 +5702,36 @@ function renderUniBubbles(body, secs, sizeBy){
 
     /* —— 一致预期 EPS 与修订趋势（领先信号）—— */
     if(d.eps){
+      /* 四道防呆（2026-07-26 主人抓到江波龙与 SUMCO 后补）——坏数据比没数据危害大：
+         ① 覆盖≤2家：不显示前瞻PE（用一个人的预测算 PE 会给出"极度便宜"的错觉），并明写"不构成一致预期"；
+         ② 今明年 EPS 倒挂：明年预期低于今年，正常建模极少见，提示核对原始研报；
+         ③ 单次修订>100%：疑似口径变更，幅度改中性色（原来一律绿色，视觉上像大利好，实为警报）；
+         ④ **负数 EPS 的修订幅度算法**：原式 (now/base-1) 除以负数会把符号翻转——SUMCO 从 -52.07 变到
+            -52.89 明明是亏损扩大，却算出 +1.6% 显示绿色。正确式为 (now-base)/|base|，正负都成立。 */
+      const y0=d.eps.y0, y1=d.eps.y1;
+      const invert = y0&&y1&&N(y0.avg)&&N(y1.avg)&&y0.avg>0&&y1.avg>0&&y0.avg>y1.avg;
       h += `<div class="rt-sec"><div class="rt-lb">一致预期 EPS 与修订趋势</div>`;
+      if(invert) h += `<div style="font-size:10.5px;color:var(--gold);margin-bottom:3px">今明年预期倒挂（明年低于今年），建议核对原始研报</div>`;
       [["y0",""],["y1",""]].forEach(([k])=>{
         const e=d.eps[k]; if(!e||!N(e.avg)) return;
         const yr = e.yr? String(e.yr).slice(0,4)+"E" : "";
-        const fpe = (N(px)&&e.avg>0)? (px/e.avg) : null;
+        const thin = N(e.n) && e.n<=2;                       /* 覆盖过薄 */
+        const fpe = (!thin && N(px) && e.avg>0)? (px/e.avg) : null;
         h += `<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:4px">`
-          +   `<span><b>${yr} ${f2(e.avg)}</b>${e.n?`<span style="color:var(--text2);font-size:11px"> · ${e.n}家</span>`:""}</span>`
+          +   `<span><b>${yr} ${f2(e.avg)}</b>${e.n?`<span style="color:${thin?"var(--gold)":"var(--text2)"};font-size:11px"> · ${e.n}家</span>`:""}</span>`
           +   `<span style="font-size:11.5px">${fpe?`前瞻PE <b>${fpe.toFixed(1)}x</b>`:""}</span></div>`;
+        if(thin) h += `<div style="font-size:10.5px;color:var(--gold);margin-top:1px">仅 ${e.n} 家覆盖，不构成一致预期，前瞻PE 不计算</div>`;
         const seq=[["90天",e.d90],["60天",e.d60],["30天",e.d30],["7天",e.d7],["现在",e.avg]].filter(x=>N(x[1]));
         if(seq.length>=2){
-          const base=seq[0][1], chg=base? (e.avg/base-1)*100 : null;
-          const col = chg>0.5?"var(--up)": chg<-0.5?"var(--down)":"var(--text2)";
+          const base=seq[0][1];
+          const chg = (N(base)&&base!==0) ? (e.avg-base)/Math.abs(base)*100 : null;   /* 负数安全 */
+          const weird = N(chg) && Math.abs(chg)>100;          /* 疑似口径变更 */
+          const col = (thin||weird) ? "var(--gold)" : chg>0.5?"var(--up)": chg<-0.5?"var(--down)":"var(--text2)";
           h += `<div class="rt-grid" style="margin-top:4px">`
             + seq.map((x,i)=>`<span class="rt-cell${i===seq.length-1?" on":""}" style="${i===seq.length-1?"border-color:"+col:""}">`
               +`<b style="${i===seq.length-1?"color:"+col:"color:var(--text2)"}">${f2(x[1])}</b><i>${x[0]}</i></span>`).join("")+`</div>`
             + (N(chg)?`<div style="font-size:10.5px;margin-top:3px;color:${col}">较 90 天前 ${pct(chg)}${
+                weird?"（幅度异常，疑似口径变更）":""}${
                 (e.up30||e.dn30)?`　<span style="color:var(--text2)">近30天</span> <span style="color:var(--up)">上调 ${e.up30||0}</span> · <span style="color:var(--down)">下调 ${e.dn30||0}</span>`:""}</div>`:"");
         }
       });
