@@ -5621,19 +5621,44 @@ function renderUniBubbles(body, secs, sizeBy){
       const sane = N(px) && d.tp>px*0.15 && d.tp<px*6;
       h += `<div class="rt-sec"><div class="rt-lb">目标价区间${d.cur?"（"+d.cur+"）":""}</div>`;
       if(sane){
+        /* 2026-07-26 二版（主人反馈"看不懂"后重做）：
+           ① 去掉红→绿渐变——那是装饰不是信息，会被误读成"左危险右安全"，实际左右只是价格高低；
+           ② 标签直接标在轴上（均值在上、现价在下，一上一下永不打架）；
+           ③ 下面的数按价格从低到高排，现价那行高亮，不再把现价甩到最后一格；
+           ④ 补一行「读法」——站上表格的固定规矩，之前漏了。 */
         const a=Math.min(lo,px), z=Math.max(hi,px), span=(z-a)||1;
-        const P=v=>((v-a)/span*100).toFixed(1);
-        h += `<div style="position:relative;height:30px;margin:4px 0 2px">`
-          + `<span style="position:absolute;left:0;right:0;top:13px;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--down),var(--text2),var(--up));opacity:.5"></span>`
-          + `<span style="position:absolute;left:${P(d.tp)}%;top:8px;width:2px;height:14px;background:var(--gold);transform:translateX(-1px)"></span>`
-          + `<span style="position:absolute;left:${P(px)}%;top:6px;width:10px;height:18px;border-radius:3px;border:2px solid var(--text);background:var(--panel2);transform:translateX(-5px)"></span>`
+        const P=v=>Math.max(0,Math.min(100,(v-a)/span*100));
+        const pm=P(d.tp), pp=P(px);
+        const lab=(pos,txt,col)=>`<span style="position:absolute;left:${pos}%;transform:translateX(-50%);white-space:nowrap;font-size:10px;color:${col}">${txt}</span>`;
+        h += `<div style="position:relative;height:15px;margin-top:2px">${lab(pm,"均值 "+f2(d.tp),"var(--gold)")}</div>`
+          + `<div style="display:flex;align-items:center;gap:6px">`
+          +   `<span style="font-size:10px;color:var(--text2);white-space:nowrap">${f2(lo)}</span>`
+          +   `<span style="position:relative;flex:1;height:16px">`
+          +     `<span style="position:absolute;left:0;right:0;top:6px;height:4px;border-radius:2px;background:var(--border)"></span>`
+          +     `<span style="position:absolute;left:${P(lo)}%;width:${P(hi)-P(lo)}%;top:6px;height:4px;border-radius:2px;background:var(--accent);opacity:.55"></span>`
+          +     `<span style="position:absolute;left:${pm}%;top:2px;width:2px;height:12px;background:var(--gold);transform:translateX(-1px)"></span>`
+          +     `<span style="position:absolute;left:${pp}%;top:0;width:9px;height:16px;border-radius:3px;border:2px solid var(--text);background:var(--panel2);transform:translateX(-4.5px)"></span>`
+          +   `</span>`
+          +   `<span style="font-size:10px;color:var(--text2);white-space:nowrap">${f2(hi)}</span>`
           + `</div>`
-          + `<table><tr><td>最低 ${f2(lo)}</td><td class="num">${N(px)?pct(lo/px*100-100):""}</td>`
-          + `<td style="padding-left:12px">均值 <b style="color:var(--gold)">${f2(d.tp)}</b></td><td class="num">${N(px)?pct(d.tp/px*100-100):""}</td></tr>`
-          + `<tr><td>最高 ${f2(hi)}</td><td class="num">${N(px)?pct(hi/px*100-100):""}</td>`
-          + `<td style="padding-left:12px">现价 <b>${f2(px)}</b></td><td class="num" style="color:var(--text2)">当前位置</td></tr></table>`;
-        if(px>hi) h+=`<div style="font-size:11px;color:var(--gold);margin-top:4px">现价已高于所有机构目标价</div>`;
-        else if(px<lo) h+=`<div style="font-size:11px;color:var(--up);margin-top:4px">现价已低于所有机构目标价</div>`;
+          + `<div style="position:relative;height:15px">${lab(pp,"现价 "+f2(px),"var(--text)")}</div>`;
+        /* 数值按价格从低到高排，现价行高亮；末列统一是"相对现价" */
+        const rows=[["最低目标",lo,null],["现价",px,"me"],["平均目标",d.tp,null],["最高目标",hi,null]]
+          .sort((x,y)=>x[1]-y[1]);
+        h += `<table style="margin-top:5px">`+rows.map(([n,v,me])=>{
+          const diff = me? `<span style="color:var(--gold)">← 你在这里</span>`
+            : (v>px? `<span style="color:var(--up)">比现价高 ${pct(v/px*100-100).replace("+","")}</span>`
+                   : `<span style="color:var(--down)">比现价低 ${Math.abs(v/px*100-100).toFixed(1)}%</span>`);
+          return `<tr style="${me?"background:rgba(127,127,127,.13)":""}"><td style="padding-left:${me?"4px":"4px"}">${me?"<b>"+n+"</b>":n}</td>`
+               + `<td class="num" style="padding:0 8px"><b>${f2(v)}</b></td><td class="num" style="padding-right:4px">${diff}</td></tr>`;
+        }).join("")+`</table>`;
+        /* 读法一行（站上表格铁律：表下必有读法） */
+        const near = (px-lo)/span, pos = near<0.2?"贴近最低端":near>0.8?"贴近最高端":near<0.45?"偏低位":near>0.55?"偏高位":"居中";
+        h += `<div style="font-size:11px;color:var(--text2);margin-top:6px;line-height:1.55">`
+          + `<b style="color:var(--text)">读法：</b>${na?na+" 家":"这些"}机构给的目标价落在 ${f2(lo)}–${f2(hi)}，`
+          + `现价 ${f2(px)} 在这条区间里<b style="color:var(--text)">${pos}</b>。`
+          + `${px>hi?"现价已高于所有机构目标价。":px<lo?"现价已低于所有机构目标价。":""}`
+          + `<span style="opacity:.8">左右只代表价格高低，不代表好坏。</span></div>`;
       }else{
         h += `<table><tr><td>最低 ${f2(lo)}</td><td class="num">均值 <b style="color:var(--gold)">${f2(d.tp)}</b></td><td class="num">最高 ${f2(hi)}</td></tr></table>`
           + `<div style="font-size:11px;color:var(--text2);margin-top:4px">目标价与现价币种口径可能不一致，未画对比轴</div>`;
