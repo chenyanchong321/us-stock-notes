@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""基本面数据管线（低频，每天1次）：Yahoo quoteSummary 逐标的抓 15 项基本面，
+"""基本面数据管线（低频，每天1次；新增标的后可改本文件触发补数）：Yahoo quoteSummary 逐标的抓 15 项基本面，
 写 data/fundamentals.json，供前端市值浮窗读取。与高频行情/PE 彻底分离，不动行结构。
 防呆：crumb 失败或抓到量不足旧文件三成时，保留旧文件（坏数据比旧数据危害大，铁律）。"""
 import json,urllib.request,urllib.parse,http.cookiejar,ssl,time,datetime,sys,os
