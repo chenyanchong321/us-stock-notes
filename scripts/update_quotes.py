@@ -569,6 +569,11 @@ def main():
                     return f"上市后 {'+' if v >= 0 else ''}{v:.1f}%"
                 return round(pct(price, base), 1)
 
+            # 【量化守卫｜2026-07-26 SHIB上线当天发现】Yahoo 日线对超低价标的只保留到小数点后 6 位：
+            # SHIB 现价 5.3e-6，量化步长 1e-6 = 价格的 19% → 连续多日被压成同一个数(显示0.0%)，
+            # 跳一格就是 +34%，全是假数。宁可显示「–」也不给假涨跌幅（坏数据比没数据危害大，铁律）。
+            # 现价/市值/回撤走 v7 高精度报价，不受影响；真实涨跌由前端 CoinGecko 层接管（须在 CG_IDS 里登记）。
+            lowp = price is not None and 0 < price < 5e-5
             w1 = window(ts_1w, "1w")
             m1 = window(ts_1m, "1m")
             m3 = window(ts_3m, "3m")
@@ -576,14 +581,17 @@ def main():
             ytd = window(ts_ytd, "ytd")
             y1 = window(ts_1y, "1y")
 
+            if lowp:   # 日线精度不足 → 涨跌幅一律作废，只保留现价/市值/回撤等高精度字段
+                m1 = m3 = m6 = ytd = y1 = w1 = None
             rows.append([it["name"], it["code"], it["market"],
                          fmt_mcap(it, price, mcap_map.get(sym)),
                          fmt_price(cur, ath), fmt_price(cur, price),
                          round(dd, 1), m1, m3, m6, ytd, y1, gmap.get(it["code"], ""),
                          pe_map.get(sym), *pos_52w(pairs, ts_1y, cur),
-                         round(pct(pairs[-1][1], pairs[-2][1]), 2) if len(pairs) >= 2 else None,
+                         None if lowp else (round(pct(pairs[-1][1], pairs[-2][1]), 2) if len(pairs) >= 2 else None),
                          ext_map.get(sym) if it["market"].startswith("美股") else None,
-                         w1, fpe_map.get(sym), ma_list(), vol_info(), last5_daily(),
+                         w1, fpe_map.get(sym), ma_list(), vol_info(),
+                         None if lowp else last5_daily(),
                          beta_info()])
             print(f"  {it['code']:>10} {it['name'][:12]:<14} 现价 {price:,.2f}  回撤 {dd:.1f}%")
         sections_out.append({"sec": sec["name"], "rows": rows})

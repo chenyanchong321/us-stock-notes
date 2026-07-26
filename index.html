@@ -3105,8 +3105,11 @@ window.updateFresh = function(){
      不知流通量）；CoinMarketCap 需 key 且不能跨域；CoinGecko 免 key、浏览器可直连、一次请求
      返回现价+真实流通市值+历史高点+多周期涨跌。稳定币价格恒为1、市值只随发行量变，必须取真值。
      缺「近3月/年初至今」，那两列仍由 Yahoo 流水线提供。取不到就静默降级，不覆盖任何东西。 */
+  /* 【铁律】新增加密标的必须在此登记，否则：成交/换手空白、且超低价币（<5e-5）的涨跌幅拿不到
+     可信来源（Yahoo 日线只有6位小数，量化步长可达19%，流水线已把这类标的的涨跌幅置空）。 */
   const CG_IDS = {BTC:"bitcoin", ETH:"ethereum", BNB:"binancecoin", SOL:"solana",
-                  DOGE:"dogecoin", PEPE:"pepe", USDT:"tether", USDC:"usd-coin", HYPE:"hyperliquid"};
+                  DOGE:"dogecoin", SHIB:"shiba-inu", PEPE:"pepe", USDT:"tether",
+                  USDC:"usd-coin", HYPE:"hyperliquid"};
   let cgCooldown = 0;   /* 被限流(429)后退避，别把免费额度打爆 */
   function cgNum(v){
     if(v>=10000) return v.toLocaleString("en-US",{maximumFractionDigits:0});
