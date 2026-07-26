@@ -210,18 +210,37 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
   white-space:nowrap;touch-action:manipulation;user-select:none}
 .rateb.up{border-color:var(--up);color:var(--up)}
 .rateb.dn{border-color:var(--down);color:var(--down)}
-#ratetip{position:fixed;z-index:322;display:none;width:330px;max-width:calc(100vw - 20px);max-height:78vh;overflow:auto;
-  background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:13px 15px;font-size:12.5px;
+#ratetip{position:fixed;z-index:322;display:none;width:330px;max-width:calc(100vw - 20px);max-height:70vh;overflow:auto;
+  background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-size:12.5px;
   line-height:1.6;color:var(--text);box-shadow:0 10px 30px rgba(0,0,0,.42);-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-#ratetip .rt-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
-#ratetip .rt-t{font-weight:700;font-size:13.5px}
+#ratemsk{position:fixed;inset:0;z-index:321;display:none;background:transparent}
+#ratetip .rt-h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
+#ratetip .rt-t{font-weight:700;font-size:13.5px;line-height:1.35}
 #ratetip .rt-s{color:var(--text2);font-size:10.5px}
-#ratetip .rt-sec{margin-top:13px;padding-top:11px;border-top:1px solid var(--border)}
-#ratetip .rt-lb{color:var(--text2);font-size:11px;margin-bottom:5px}
+#ratetip .rt-i,#ratetip .rt-x{cursor:pointer;user-select:none;border:1px solid var(--border);border-radius:6px;
+  color:var(--text2);font-size:10.5px;line-height:1;padding:5px 6px;white-space:nowrap;touch-action:manipulation}
+#ratetip .rt-x{font-size:12px;padding:4px 8px}
+#ratetip .rt-i:hover,#ratetip .rt-x:hover{color:var(--text);border-color:var(--text2)}
+#ratetip .rt-info{margin:7px 0 2px;padding:9px 10px;border:1px solid var(--border);border-radius:8px;background:rgba(127,127,127,.07)}
+#ratetip .rt-sec{margin-top:11px;padding-top:9px;border-top:1px solid var(--border)}
+#ratetip .rt-lb{color:var(--text2);font-size:11px;margin-bottom:4px}
+#ratetip .rt-grid{display:flex;gap:4px}
+#ratetip .rt-cell{flex:1;min-width:0;text-align:center;border:1px solid var(--border);border-radius:6px;padding:4px 1px;line-height:1.3}
+#ratetip .rt-cell b{display:block;font-size:13px;font-variant-numeric:tabular-nums}
+#ratetip .rt-cell i{display:block;font-style:normal;font-size:9.5px;color:var(--text2);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+#ratetip .rt-cell.z{opacity:.42}
+#ratetip .rt-cell.on b{font-weight:700}
 #ratetip table{width:100%;border-collapse:collapse;font-size:11.5px}
 #ratetip td{padding:2px 0;white-space:nowrap}
 #ratetip .num{text-align:right;font-variant-numeric:tabular-nums}
-@media (max-width:860px){#ratetip{width:calc(100vw - 24px)}}
+/* 手机端：宽度铺满、限高更狠（占满屏没地方点收起是上一版的实际问题），✕ 与 ⓘ 做成 44px 触区 */
+@media (max-width:860px){
+  #ratetip{width:calc(100vw - 20px);max-height:62vh;padding:12px 13px}
+  #ratemsk{display:none}
+  #ratetip .rt-i,#ratetip .rt-x{min-height:34px;display:inline-flex;align-items:center;padding:0 10px;font-size:12px}
+  #ratetip .rt-cell i{font-size:9px}
+}
 #mmtiertip{position:fixed;z-index:320;display:none;max-width:280px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:10px 13px;font-size:12.5px;line-height:1.55;color:var(--text);box-shadow:0 8px 24px rgba(0,0,0,.35)}
 #mmtiertip b{color:var(--gold)}
 #mmtiertip .m{color:var(--text);font-weight:600}
@@ -5542,205 +5561,227 @@ function renderUniBubbles(body, secs, sizeBy){
   const TOUCHY3 = matchMedia("(hover: none), (pointer: coarse)").matches;
   const extraOf = code => `<a class="imap-go" data-code="${code}" href="javascript:;" style="display:block;margin-top:7px;font-size:12px;border-top:1px solid var(--border);padding-top:6px;color:var(--accent);text-decoration:none">📊 查看行情 →</a>`;
   
-/* ============ 机构评级共识浮窗（2026-07-26 新增）============
-   触发：名称格里的「评级」徽标（与名称本身的简介卡两个独立热区，参照市值梯队金标的做法）。
-   排序按「结论 → 分歧 → 趋势 → 明细」：先给一句话结论，再给分布与目标价区间，
-   然后是真正的领先信号（一致预期EPS的7/30/60/90天修订），最后是逐家明细。
-   下架：RATINGS_ON=false 即全灭；或整体 revert 本次 commit。不依赖任何既有结构。 */
+/* ============ 机构评级共识浮窗（2026-07-26；同日二版按主人反馈重做）============
+   二版改了四件事，每一件都对应一条踩过的原理：
+   ① 定位不再以徽标左缘为锚——那等于让浮窗第一件事就把自己的触发器和整个名称列压在身下。
+      改为复刻站上 place() 的算法：从徽标**右缘 +14** 起铺，放不下才翻转，触发点永远露在外面。
+   ② 目标价区间：价格标签直接标在轴上，砍掉下面的四行表格与三行读法——
+      原来那是"图和表在重复表达同一件事"，图没起到压缩信息的作用，反而成了表格的插图。
+   ③ 头部砍掉"评分1.41"（五档评级算术平均，无决策价值却占了第一眼），结论并进标题；
+      评级分布不用堆叠条（五段里三段是0、两段同为绿色系、且只表达占比而非家数），改五格数字。
+      家数统一用分布求和——原来头部用"分析师意见数"、下面用"评级分布"，两个口径对不上（54 vs 64）。
+   ④ 评级英文原词中文化；补渲染"维持"（原来只渲染↑↓和"新"，导致维持类整行看起来是空的）；
+      说明从底部折叠移到顶部 ⓘ 原地展开——放底部要滚动才看得到，手机上更糟。
+   移动端：加常驻 ✕ 关闭键（≥44px 触区）+ 透明遮罩点任意处关闭，解决"占满屏没地方点收起"。
+   下架：RATINGS_ON=false 即全灭。 */
 (function(){
   if(typeof RATINGS_ON==="undefined" || !RATINGS_ON) return;
   const TOUCHY_R = matchMedia("(hover: none), (pointer: coarse)").matches;
-  let el=null, curCode=null, hideT=null;
+  let el=null, msk=null, curCode=null, curBadge=null, hideT=null, infoOpen=false;
+
   const box=()=>{ if(!el){ el=document.createElement("div"); el.id="ratetip"; document.body.appendChild(el);
       el.addEventListener("mouseenter",()=>clearTimeout(hideT));
       el.addEventListener("mouseleave",()=>{ if(!TOUCHY_R) hideT=setTimeout(hideRate,240); }); } return el; };
-  const hideRate = window.hideRate = ()=>{ if(el) el.style.display="none"; curCode=null; };
+  const mask=()=>{ if(!msk){ msk=document.createElement("div"); msk.id="ratemsk";
+      msk.addEventListener("click",e=>{ e.stopPropagation(); hideRate(); }, true);
+      msk.addEventListener("touchend",e=>{ e.stopPropagation(); e.preventDefault(); hideRate(); }, true);
+      document.body.appendChild(msk); } return msk; };
+  const hideRate = window.hideRate = ()=>{ if(el) el.style.display="none"; if(msk) msk.style.display="none";
+    curCode=null; curBadge=null; infoOpen=false; };
 
   const N=v=>typeof v==="number"&&isFinite(v);
   const f2=v=>N(v)? (Math.abs(v)>=100? v.toFixed(0) : v.toFixed(2)) : "–";
   const pct=v=>(v>0?"+":"")+v.toFixed(1)+"%";
-  /* 现价：先从 DATA 取，再退 DOM。两个坑都踩过——
-     ① DATA 是脚本级 let（不在 window 上），守卫必须 typeof；
-     ② DATA 本身是**板块数组**，不是 {sections:[...]} 对象（第一版按对象取，取了个空）。 */
+  const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  /* 现价：先 DATA 后 DOM。两个坑都踩过——DATA 是脚本级 let 且本身是**板块数组**不是对象。 */
   function pxOf(code){
     try{
       if(typeof DATA!=="undefined" && DATA){
         const secs = Array.isArray(DATA) ? DATA : (DATA.sections||[]);
         for(const sec of secs){
           const rows = Array.isArray(sec) ? sec : (sec && sec.rows) || [];
-          for(const r of rows){
-            if(r && r[1]===code){ const n=parseFloat(String(r[5]).replace(/[^0-9.]/g,"")); if(N(n)) return n; }
-          }
+          for(const r of rows){ if(r && r[1]===code){ const n=parseFloat(String(r[5]).replace(/[^0-9.]/g,"")); if(N(n)) return n; } }
         }
       }
     }catch(e){}
-    /* DOM 兜底：现价格第一行就是现价（实时层刷新后也准） */
-    try{
-      const td=document.querySelector('tr[data-code="'+code+'"] td.pxc');
+    try{ const td=document.querySelector('tr[data-code="'+code+'"] td.pxc');
       if(td){ const m=String(td.textContent||"").match(/[\d,]+\.?\d*/); if(m){ const n=parseFloat(m[0].replace(/,/g,"")); if(N(n)) return n; } }
     }catch(e){}
     return null;
   }
+  /* 卖方评级英文原词 → 中文。各家用词不统一（同样看好，大摩叫Overweight、BMO叫Outperform）。 */
+  const GMAP={"strong buy":"强烈买入","conviction buy":"强力买入","buy":"买入","top pick":"首选",
+    "outperform":"优于大市","market outperform":"优于大市","sector outperform":"优于同业","outperformer":"优于大市",
+    "overweight":"增持","accumulate":"增持","add":"增持","positive":"正面","long-term buy":"长期买入",
+    "speculative buy":"投机买入","hold":"持有","neutral":"中性","equal-weight":"标配","equal weight":"标配",
+    "market perform":"与大市同步","sector perform":"与同业同步","in-line":"与大市同步","peer perform":"与同业同步",
+    "perform":"中性","sector weight":"同业标配","underweight":"减持","reduce":"减持","underperform":"跑输大市",
+    "market underperform":"跑输大市","sector underperform":"跑输同业","underperformer":"跑输大市",
+    "sell":"卖出","strong sell":"强烈卖出","negative":"负面","not rated":"未评级","suspended":"暂停评级"};
+  const gz = g => { const k=String(g||"").trim().toLowerCase(); return k? (GMAP[k]||g) : ""; };
+  const AMAP={up:["上调","var(--up)"],down:["下调","var(--down)"],init:["首次","var(--gold)"],
+              main:["维持","var(--text2)"],reit:["重申","var(--text2)"]};
   const RK={strong_buy:"强烈买入",buy:"买入",hold:"持有",underperform:"减持",sell:"卖出"};
+
+  const INFO = `<div style="font-size:11.5px;line-height:1.7;color:var(--text2)">`
+    + `<b style="color:var(--text)">这是什么</b>：券商研究部（卖方分析师）对这家公司的盈利预测与估值判断的汇总，<b style="color:var(--text)">不是本站观点</b>。<br>`
+    + `<b style="color:var(--text)">怎么用</b>：① <b style="color:var(--text)">看修订方向优先于看绝对数字</b>——一致预期 EPS 的 7/30/90 天变化是领先信号，目标价通常滞后于股价；② 分布里"卖出"有几家，比"均值目标价"更有信息量；③ 当共识坐标用，你的超额收益来自"你和共识差在哪"。<br>`
+    + `<b style="color:var(--text)">局限</b>：严格按 12 个月末口径，目标价达成率约 38%，且买入评级数量远多于卖出。<b style="color:var(--text)">它是参考，不是预测。</b><br>`
+    + `<b style="color:var(--text)">评级词对照</b>：Buy 买入 · Outperform 优于大市 · Overweight 增持 · Hold 持有 · Neutral 中性 · Market Perform 与大市同步 · Underweight 减持 · Underperform 跑输大市 · Sell 卖出<br>`
+    + `<span style="opacity:.75">数据 Yahoo（LSEG 一致预期）· ${window.RATE_ASOF||""} · 覆盖以美股港股为主，A 股与日韩台多数暂无</span></div>`;
 
   function html(code){
     const d = window.RATE && window.RATE[code]; if(!d) return null;
     const px = pxOf(code);
-    const na = d.na || (d.dist? d.dist.reduce((a,b)=>a+b,0) : null);
-    /* —— 头部：一句话结论 —— */
-    const rkTxt = d.rk ? (RK[d.rk]||d.rk) : (N(d.rm) ? (d.rm<1.5?"强烈买入":d.rm<2.5?"买入":d.rm<3.5?"持有":d.rm<4.5?"减持":"卖出") : "–");
-    let h = `<div class="rt-h"><span class="rt-t">机构评级共识</span>`
-          + `<span class="rt-s">${na?na+" 家覆盖":"覆盖数未知"}${d.last?" · 最近变动 "+d.last.slice(5):""}</span></div>`;
-    /* 新鲜度：如实标注，不靠灰化隐藏 */
+    const dist = d.dist;
+    /* 家数统一口径：有分布就用分布求和（与五个格子自洽、读者能自己加一遍） */
+    const tot = dist ? dist.reduce((a,b)=>a+b,0) : (d.na||null);
+    const rkTxt = d.rk ? (RK[d.rk]||d.rk) : (N(d.rm) ? (d.rm<1.5?"强烈买入":d.rm<2.5?"买入":d.rm<3.5?"持有":d.rm<4.5?"减持":"卖出") : "");
+    const rkCol = (N(d.rm)&&d.rm<2.5) ? "var(--up)" : "var(--text)";
+
+    /* —— 头部：结论并进标题；ⓘ 与 ✕ 同行 —— */
+    let h = `<div class="rt-h"><span class="rt-t">机构评级共识${rkTxt?`：<span style="color:${rkCol}">${rkTxt}</span>`:""}</span>`
+          + `<span style="display:flex;align-items:center;gap:4px;flex:0 0 auto">`
+          + `<span class="rt-i" title="">ⓘ 说明</span><span class="rt-x" title="">✕</span></span></div>`
+      + `<div class="rt-s" style="margin:-4px 0 2px">${tot?`共 ${tot} 家给出评级`:""}${d.last?" · 最近变动 "+d.last.slice(5):""}</div>`
+      + `<div class="rt-info" style="display:none">${INFO}</div>`;
     if(d.last){
       const days = Math.round((Date.now()-new Date(d.last+"T00:00:00").getTime())/864e5);
-      if(days>90) h += `<div style="margin:-4px 0 8px;font-size:11px;color:var(--down)">已 ${days} 天无机构评级变动，下列共识可能滞后</div>`;
+      if(days>90) h += `<div style="margin:5px 0 0;font-size:11px;color:var(--down)">已 ${days} 天无机构评级变动，下列共识可能滞后</div>`;
     }
-    h += `<div style="font-size:15px;font-weight:700;color:${d.rm&&d.rm<2.5?"var(--up)":"var(--text)"}">${rkTxt}`
-       + (N(d.rm)?`<span style="font-size:11px;color:var(--text2);font-weight:400"> · 评分 ${d.rm.toFixed(2)}（1=强买 5=卖出）</span>`:"")+`</div>`;
 
-    /* —— 段1 分歧：评级分布堆叠条 —— */
-    if(d.dist){
-      const [sb,b,ho,se,ss]=d.dist, tot=sb+b+ho+se+ss||1;
-      const seg=(n,c)=> n? `<span style="width:${n/tot*100}%;background:${c}" title=""></span>` : "";
-      h += `<div class="rt-sec"><div class="rt-lb">评级分布（近一个月）</div>`
-        + `<div style="display:flex;height:9px;border-radius:5px;overflow:hidden;background:var(--border)">`
-        + seg(sb,"var(--up)")+seg(b,"rgba(24,143,77,.62)")+seg(ho,"var(--text2)")
-        + seg(se,"rgba(212,58,58,.62)")+seg(ss,"var(--down)")+`</div>`
-        + `<div style="display:flex;flex-wrap:wrap;gap:9px;margin-top:6px;font-size:11px">`
-        + [["强烈买入",sb,"var(--up)"],["买入",b,"rgba(24,143,77,.85)"],["持有",ho,"var(--text2)"],
-           ["减持",se,"rgba(212,58,58,.85)"],["卖出",ss,"var(--down)"]]
-          .map(([n,v,c])=>`<span style="color:${c}">${n} <b>${v}</b></span>`).join("")
+    /* —— 评级分布：五格数字，格子本身就是分布，不再另画条 —— */
+    if(dist){
+      const NAMES=["强烈买入","买入","持有","减持","卖出"];
+      const COLS=["var(--up)","var(--up)","var(--text)","var(--down)","var(--down)"];
+      h += `<div class="rt-sec"><div class="rt-lb">评级分布（近一个月）</div><div class="rt-grid">`
+        + dist.map((v,i)=>`<span class="rt-cell${v?"":" z"}"><b style="color:${v?COLS[i]:"var(--text2)"}">${v}</b><i>${NAMES[i]}</i></span>`).join("")
         + `</div></div>`;
     }
 
-    /* —— 段2 目标价区间轴：现价落在共识区间的哪一格，一眼可见 —— */
+    /* —— 目标价区间：所有标签标在轴上，下面不再有表格与读法 —— */
     if(N(d.tp)){
       const lo=N(d.tpl)?d.tpl:d.tp, hi=N(d.tph)?d.tph:d.tp;
-      /* 坏数据入口截断：目标价与现价量级差太多（多为币种口径不一致），只列数字不画轴 */
       const sane = N(px) && d.tp>px*0.15 && d.tp<px*6;
       h += `<div class="rt-sec"><div class="rt-lb">目标价区间${d.cur?"（"+d.cur+"）":""}</div>`;
       if(sane){
-        /* 2026-07-26 二版（主人反馈"看不懂"后重做）：
-           ① 去掉红→绿渐变——那是装饰不是信息，会被误读成"左危险右安全"，实际左右只是价格高低；
-           ② 标签直接标在轴上（均值在上、现价在下，一上一下永不打架）；
-           ③ 下面的数按价格从低到高排，现价那行高亮，不再把现价甩到最后一格；
-           ④ 补一行「读法」——站上表格的固定规矩，之前漏了。 */
         const a=Math.min(lo,px), z=Math.max(hi,px), span=(z-a)||1;
         const P=v=>Math.max(0,Math.min(100,(v-a)/span*100));
         const pm=P(d.tp), pp=P(px);
-        const lab=(pos,txt,col)=>`<span style="position:absolute;left:${pos}%;transform:translateX(-50%);white-space:nowrap;font-size:10px;color:${col}">${txt}</span>`;
-        h += `<div style="position:relative;height:15px;margin-top:2px">${lab(pm,"均值 "+f2(d.tp),"var(--gold)")}</div>`
-          + `<div style="display:flex;align-items:center;gap:6px">`
-          +   `<span style="font-size:10px;color:var(--text2);white-space:nowrap">${f2(lo)}</span>`
-          +   `<span style="position:relative;flex:1;height:16px">`
+        /* 贴边时改左/右对齐，避免标签溢出容器 */
+        const anch=q => q<16 ? "left:0;transform:none" : q>84 ? "right:0;left:auto;transform:none" : `left:${q}%;transform:translateX(-50%)`;
+        const dp = v => N(px)&&px>0 ? pct(v/px*100-100) : "";
+        h += `<div style="position:relative;height:16px">`
+          +   `<span style="position:absolute;${anch(pm)};white-space:nowrap;font-size:10.5px;color:var(--gold)">均值 <b>${f2(d.tp)}</b> ${dp(d.tp)}</span></div>`
+          + `<div style="display:flex;align-items:center;gap:7px">`
+          +   `<span style="flex:0 0 auto;text-align:right;line-height:1.25"><span style="font-size:11px">${f2(lo)}</span>`
+          +     `<i style="display:block;font-size:9.5px;font-style:normal;color:var(--text2)">最低 ${dp(lo)}</i></span>`
+          +   `<span style="position:relative;flex:1;height:16px;min-width:80px">`
           +     `<span style="position:absolute;left:0;right:0;top:6px;height:4px;border-radius:2px;background:var(--border)"></span>`
-          +     `<span style="position:absolute;left:${P(lo)}%;width:${P(hi)-P(lo)}%;top:6px;height:4px;border-radius:2px;background:var(--accent);opacity:.55"></span>`
+          +     `<span style="position:absolute;left:${P(lo)}%;width:${Math.max(0,P(hi)-P(lo))}%;top:6px;height:4px;border-radius:2px;background:var(--accent);opacity:.55"></span>`
           +     `<span style="position:absolute;left:${pm}%;top:2px;width:2px;height:12px;background:var(--gold);transform:translateX(-1px)"></span>`
           +     `<span style="position:absolute;left:${pp}%;top:0;width:9px;height:16px;border-radius:3px;border:2px solid var(--text);background:var(--panel2);transform:translateX(-4.5px)"></span>`
           +   `</span>`
-          +   `<span style="font-size:10px;color:var(--text2);white-space:nowrap">${f2(hi)}</span>`
+          +   `<span style="flex:0 0 auto;line-height:1.25"><span style="font-size:11px">${f2(hi)}</span>`
+          +     `<i style="display:block;font-size:9.5px;font-style:normal;color:var(--text2)">最高 ${dp(hi)}</i></span>`
           + `</div>`
-          + `<div style="position:relative;height:15px">${lab(pp,"现价 "+f2(px),"var(--text)")}</div>`;
-        /* 数值按价格从低到高排，现价行高亮；末列统一是"相对现价" */
-        const rows=[["最低目标",lo,null],["现价",px,"me"],["平均目标",d.tp,null],["最高目标",hi,null]]
-          .sort((x,y)=>x[1]-y[1]);
-        h += `<table style="margin-top:5px">`+rows.map(([n,v,me])=>{
-          const diff = me? `<span style="color:var(--gold)">← 你在这里</span>`
-            : (v>px? `<span style="color:var(--up)">比现价高 ${pct(v/px*100-100).replace("+","")}</span>`
-                   : `<span style="color:var(--down)">比现价低 ${Math.abs(v/px*100-100).toFixed(1)}%</span>`);
-          return `<tr style="${me?"background:rgba(127,127,127,.13)":""}"><td style="padding-left:${me?"4px":"4px"}">${me?"<b>"+n+"</b>":n}</td>`
-               + `<td class="num" style="padding:0 8px"><b>${f2(v)}</b></td><td class="num" style="padding-right:4px">${diff}</td></tr>`;
-        }).join("")+`</table>`;
-        /* 读法一行（站上表格铁律：表下必有读法） */
-        const near = (px-lo)/span, pos = near<0.2?"贴近最低端":near>0.8?"贴近最高端":near<0.45?"偏低位":near>0.55?"偏高位":"居中";
-        h += `<div style="font-size:11px;color:var(--text2);margin-top:6px;line-height:1.55">`
-          + `<b style="color:var(--text)">读法：</b>${na?na+" 家":"这些"}机构给的目标价落在 ${f2(lo)}–${f2(hi)}，`
-          + `现价 ${f2(px)} 在这条区间里<b style="color:var(--text)">${pos}</b>。`
-          + `${px>hi?"现价已高于所有机构目标价。":px<lo?"现价已低于所有机构目标价。":""}`
-          + `<span style="opacity:.8">左右只代表价格高低，不代表好坏。</span></div>`;
+          + `<div style="position:relative;height:16px">`
+          +   `<span style="position:absolute;${anch(pp)};white-space:nowrap;font-size:10.5px;color:var(--text)">现价 <b>${f2(px)}</b></span></div>`;
+        if(px>hi) h+=`<div style="font-size:10.5px;color:var(--gold);margin-top:2px">现价已高于所有机构目标价</div>`;
+        else if(px<lo) h+=`<div style="font-size:10.5px;color:var(--up);margin-top:2px">现价已低于所有机构目标价</div>`;
       }else{
-        h += `<table><tr><td>最低 ${f2(lo)}</td><td class="num">均值 <b style="color:var(--gold)">${f2(d.tp)}</b></td><td class="num">最高 ${f2(hi)}</td></tr></table>`
-          + `<div style="font-size:11px;color:var(--text2);margin-top:4px">目标价与现价币种口径可能不一致，未画对比轴</div>`;
+        h += `<div style="font-size:11.5px">最低 ${f2(lo)}　均值 <b style="color:var(--gold)">${f2(d.tp)}</b>　最高 ${f2(hi)}</div>`
+          +  `<div style="font-size:10.5px;color:var(--text2);margin-top:3px">与现价币种口径可能不一致，未画对比轴</div>`;
       }
       h += `</div>`;
     }
 
-    /* —— 段3 趋势：一致预期EPS + 前瞻PE + 7/30/60/90天修订（真正的领先信号）—— */
+    /* —— 一致预期 EPS 与修订趋势（领先信号）—— */
     if(d.eps){
-      h += `<div class="rt-sec"><div class="rt-lb">一致预期 EPS 与修订趋势</div><table>`;
-      [["y0","今年"],["y1","明年"]].forEach(([k,lab])=>{
+      h += `<div class="rt-sec"><div class="rt-lb">一致预期 EPS 与修订趋势</div>`;
+      [["y0",""],["y1",""]].forEach(([k])=>{
         const e=d.eps[k]; if(!e||!N(e.avg)) return;
-        const yr = e.yr? String(e.yr).slice(0,4) : lab;
+        const yr = e.yr? String(e.yr).slice(0,4)+"E" : "";
         const fpe = (N(px)&&e.avg>0)? (px/e.avg) : null;
-        h += `<tr><td><b>${yr}E</b> ${f2(e.avg)}${e.n?`<span style="color:var(--text2)"> · ${e.n}家</span>`:""}</td>`
-          +  `<td class="num">${fpe?`前瞻PE <b>${fpe.toFixed(1)}x</b>`:""}</td></tr>`;
+        h += `<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:4px">`
+          +   `<span><b>${yr} ${f2(e.avg)}</b>${e.n?`<span style="color:var(--text2);font-size:11px"> · ${e.n}家</span>`:""}</span>`
+          +   `<span style="font-size:11.5px">${fpe?`前瞻PE <b>${fpe.toFixed(1)}x</b>`:""}</span></div>`;
         const seq=[["90天",e.d90],["60天",e.d60],["30天",e.d30],["7天",e.d7],["现在",e.avg]].filter(x=>N(x[1]));
         if(seq.length>=2){
           const base=seq[0][1], chg=base? (e.avg/base-1)*100 : null;
           const col = chg>0.5?"var(--up)": chg<-0.5?"var(--down)":"var(--text2)";
-          h += `<tr><td colspan="2" style="padding:3px 0 7px">`
-            + `<span style="display:flex;gap:5px;align-items:center">`
-            + seq.map((x,i)=>`<span style="flex:1;text-align:center;font-size:10.5px;line-height:1.45;padding:3px 1px;border-radius:5px;${
-                i===seq.length-1?"border:1px solid "+col+";color:"+col+";font-weight:700":"border:1px solid var(--border);color:var(--text2);opacity:.85"}">`
-              +`${x[0]}<br>${f2(x[1])}</span>`).join("")+`</span>`
-            + (N(chg)?`<span style="display:block;font-size:11px;margin-top:4px;color:${col}">较 90 天前 ${pct(chg)}${
-                (e.up30||e.dn30)?`　近30天 <span style="color:var(--up)">上调 ${e.up30||0}</span> · <span style="color:var(--down)">下调 ${e.dn30||0}</span>`:""}</span>`:"")
-            + `</td></tr>`;
+          h += `<div class="rt-grid" style="margin-top:4px">`
+            + seq.map((x,i)=>`<span class="rt-cell${i===seq.length-1?" on":""}" style="${i===seq.length-1?"border-color:"+col:""}">`
+              +`<b style="${i===seq.length-1?"color:"+col:"color:var(--text2)"}">${f2(x[1])}</b><i>${x[0]}</i></span>`).join("")+`</div>`
+            + (N(chg)?`<div style="font-size:10.5px;margin-top:3px;color:${col}">较 90 天前 ${pct(chg)}${
+                (e.up30||e.dn30)?`　<span style="color:var(--text2)">近30天</span> <span style="color:var(--up)">上调 ${e.up30||0}</span> · <span style="color:var(--down)">下调 ${e.dn30||0}</span>`:""}</div>`:"");
         }
       });
-      h += `</table></div>`;
+      h += `</div>`;
     }
 
-    /* —— 段4 明细：最近逐家变动 —— */
+    /* —— 最近评级变动：中文评级 + 补渲染"维持" —— */
     if(d.hist && d.hist.length){
       h += `<div class="rt-sec"><div class="rt-lb">最近评级变动</div><table>`;
       d.hist.slice(0,5).forEach(x=>{
-        const a=(x.a||"").toLowerCase();
-        const mark = a==="up"?`<span style="color:var(--up)">↑</span>`: a==="down"?`<span style="color:var(--down)">↓</span>`
-                   : a==="init"?`<span style="color:var(--gold)">新</span>`:"";
-        h += `<tr><td style="color:var(--text2)">${x.d.slice(5)}</td>`
-          +  `<td style="padding-left:8px;max-width:120px;overflow:hidden;text-overflow:ellipsis">${x.f||""}</td>`
-          +  `<td class="num">${x.fr&&x.fr!==x.to?x.fr+" → ":""}${x.to||""} ${mark}</td></tr>`;
+        const a=AMAP[String(x.a||"").toLowerCase()]||["",""];
+        const to=gz(x.to), fr=gz(x.fr);
+        const chg = (fr && fr!==to) ? `<span style="color:var(--text2)">${esc(fr)}→</span>${esc(to)}` : esc(to);
+        h += `<tr><td style="color:var(--text2);width:38px">${esc(x.d.slice(5))}</td>`
+          +  `<td style="padding-left:6px;max-width:118px;overflow:hidden;text-overflow:ellipsis">${esc(x.f||"")}</td>`
+          +  `<td class="num" style="padding-left:6px">${chg}${a[0]?` <span style="color:${a[1]};font-size:10.5px">${a[0]}</span>`:""}</td></tr>`;
       });
       h += `</table></div>`;
     }
-
-    /* —— 说明：明确写清是什么、怎么用（不做灰暗隐藏，用站上已有的折叠件形态）—— */
-    h += `<div class="rt-sec"><details><summary style="cursor:pointer;color:var(--gold);font-size:11.5px;outline:none">▸ 这是什么 · 怎么用（点开看大白话）</summary>`
-      + `<div style="margin-top:7px;font-size:11.5px;color:var(--text2);line-height:1.65">`
-      + `<b style="color:var(--text)">是什么</b>：券商研究部（卖方分析师）对这家公司的盈利预测与估值判断的汇总，不是我们的观点。<br>`
-      + `<b style="color:var(--text)">怎么用</b>：① <b style="color:var(--text)">看修订方向优先于看绝对数字</b>——一致预期 EPS 的 7/30/90 天变化是领先信号，目标价通常滞后于股价；② 评级分布里"卖出"家数比"均值目标价"更有信息量；③ 把它当共识坐标，你的超额收益来自"你和共识差在哪"。<br>`
-      + `<b style="color:var(--text)">局限</b>：历史研究显示，严格按 12 个月末口径目标价达成率约 38%，且买入评级数量远多于卖出。它是参考，不是预测。`
-      + `</div></details>`
-      + `<div style="margin-top:8px;font-size:10px;color:var(--text2);opacity:.7">数据 Yahoo（LSEG 一致预期）· ${window.RATE_ASOF||""} · 覆盖以美股港股为主，A 股与日韩台多数暂无</div></div>`;
     return h;
+  }
+
+  /* 定位：复刻站上 place() —— 从徽标**右缘**起铺，触发点永远露在外面 */
+  function locate(b){
+    const e=box(), rc=b.getBoundingClientRect(), w=e.offsetWidth, h=e.offsetHeight;
+    if(TOUCHY_R){   /* 手机：横向居中，纵向避开顶栏与底部三按钮栏 */
+      e.style.left = Math.max(8,(innerWidth-w)/2)+"px";
+      e.style.top  = Math.max(100, Math.min(rc.bottom+10, innerHeight-96-h))+"px";
+      return;
+    }
+    const pad=8;
+    let L = rc.right + 14, T = rc.top - 6;
+    if(L + w > innerWidth - pad) L = Math.max(pad, rc.left - w - 14);   /* 右边放不下 → 翻左 */
+    if(T + h > innerHeight - pad) T = Math.max(pad, rc.bottom - h + 6); /* 下边放不下 → 上对齐 */
+    if(T + h > innerHeight - pad) T = Math.max(pad, innerHeight - pad - h);
+    e.style.left=L+"px"; e.style.top=T+"px";
   }
 
   window.showRate = function(b){
     const code=b.dataset.code; if(!code) return;
     const h=html(code); if(!h) return;
-    window.closeStip && closeStip();          /* 名称格的简介卡若已开，先收掉防叠卡 */
+    window.closeStip && closeStip();
     window.mmHideTier && mmHideTier();
-    const e=box(); e.innerHTML=h; e.style.display="block"; curCode=code;
-    const rc=b.getBoundingClientRect(), w=e.offsetWidth, h2=e.offsetHeight;
-    let x=Math.min(rc.left, innerWidth-w-10), y=rc.bottom+6;
-    if(y+h2>innerHeight-(TOUCHY_R?96:12)) y=Math.max(6, rc.top-h2-6);
-    e.style.left=Math.max(6,x)+"px"; e.style.top=Math.max(6,y)+"px";
+    const e=box(); e.innerHTML=h; e.style.display="block"; curCode=code; curBadge=b; infoOpen=false;
+    if(TOUCHY_R){ const m=mask(); m.style.display="block"; }
+    locate(b);
   };
 
-  /* 捕获阶段委托：抢在名称格简介卡的冒泡 click 之前（与市值梯队金标同款做法） */
+  /* 捕获阶段委托：抢在名称格简介卡的冒泡 click 之前 */
   document.addEventListener("click", e=>{
-    const b = e.target.closest ? e.target.closest(".rateb") : null;
+    const t=e.target;
+    if(t.closest && t.closest(".rt-x")){ e.stopPropagation(); e.preventDefault(); hideRate(); return; }
+    if(t.closest && t.closest(".rt-i")){        /* ⓘ：原地展开/收起说明，不另开浮窗（浮窗叠浮窗手机端是灾难） */
+      e.stopPropagation(); e.preventDefault();
+      const box2=el && el.querySelector(".rt-info"); if(box2){ infoOpen=!infoOpen; box2.style.display=infoOpen?"block":"none";
+        if(curBadge) locate(curBadge); }
+      return;
+    }
+    const b = t.closest ? t.closest(".rateb") : null;
     if(b){ e.stopPropagation(); e.preventDefault(); showRate(b); return; }
-    if(el && el.style.display==="block" && !(e.target.closest && e.target.closest("#ratetip"))) hideRate();
+    if(el && el.style.display==="block" && !(t.closest && t.closest("#ratetip"))) hideRate();
   }, true);
-  /* 触屏另走 touchend 直连（iOS 会吞掉 click，站上黑匣子破过这个案） */
   document.addEventListener("touchend", e=>{
-    const b = e.target.closest ? e.target.closest(".rateb") : null;
+    const t=e.target;
+    if(t.closest && (t.closest(".rt-x")||t.closest(".rt-i"))) return;   /* 交给 click 分支处理 */
+    const b = t.closest ? t.closest(".rateb") : null;
     if(b){ e.stopPropagation(); e.preventDefault(); showRate(b); }
   }, true);
-  /* 桌面悬停：进入即显示，移开延迟收起（触屏不挂悬停——幽灵浮窗铁律） */
   if(!TOUCHY_R){
     document.addEventListener("mouseover", e=>{
       const b = e.target.closest ? e.target.closest(".rateb") : null;
@@ -5752,7 +5793,13 @@ function renderUniBubbles(body, secs, sizeBy){
         hideT=setTimeout(hideRate,240);
     });
   }
-  addEventListener("scroll", ()=>{ if(el && el.style.display==="block") hideRate(); }, {passive:true});
+  /* 滚动跟随（不再一滚就关）：徽标滚出视口才收 */
+  addEventListener("scroll", ()=>{
+    if(!el || el.style.display!=="block" || !curBadge) return;
+    const rc=curBadge.getBoundingClientRect();
+    if(rc.bottom<0 || rc.top>innerHeight) { hideRate(); return; }
+    locate(curBadge);
+  }, {passive:true});
 })();
 
 /* 市值梯队说明卡：自绘即时浮层（原生 title 禁用老规矩）。桌面悬停动物、手机点按动物，点别处收起。 */
