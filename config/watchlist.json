@@ -341,6 +341,16 @@
      "mcap_base": null,
      "mcap_base_price": 1.0,
      "ath_floor": 0
+    },
+    {
+     "name": "标普生物科技ETF",
+     "code": "XBI",
+     "market": "美股 ETF",
+     "yahoo": "XBI",
+     "currency": "$",
+     "mcap_base": null,
+     "mcap_base_price": 150.48,
+     "ath_floor": 0
     }
    ],
    "groups": [
@@ -398,7 +408,8 @@
       "SPY",
       "SOXX",
       "IGV",
-      "PGJ"
+      "PGJ",
+      "XBI"
      ]
     }
    ]
@@ -8532,6 +8543,664 @@
       "300832",
       "300463",
       "002223"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "25 创新药与生物科技（BD出海·商业化兑现）",
+   "items": [
+    {
+     "name": "百济神州",
+     "code": "06160",
+     "market": "港股",
+     "yahoo": "6160.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 3070.5,
+      "approx": true
+     },
+     "mcap_base_price": 199.2,
+     "ath_floor": 0
+    },
+    {
+     "name": "百济神州A",
+     "code": "688235",
+     "market": "A股",
+     "yahoo": "688235.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 4177.2,
+      "approx": true
+     },
+     "mcap_base_price": 271.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "百济神州US",
+     "code": "ONC",
+     "market": "美股 ADR",
+     "yahoo": "ONC",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 362.3,
+      "approx": true
+     },
+     "mcap_base_price": 325.9,
+     "ath_floor": 0
+    },
+    {
+     "name": "恒瑞医药H",
+     "code": "01276",
+     "market": "港股",
+     "yahoo": "1276.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 3760.0,
+      "approx": true
+     },
+     "mcap_base_price": 56.65,
+     "ath_floor": 0
+    },
+    {
+     "name": "恒瑞医药",
+     "code": "600276",
+     "market": "A股",
+     "yahoo": "600276.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 3547.6,
+      "approx": true
+     },
+     "mcap_base_price": 53.45,
+     "ath_floor": 0
+    },
+    {
+     "name": "信达生物",
+     "code": "01801",
+     "market": "港股",
+     "yahoo": "1801.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 1566.0,
+      "approx": true
+     },
+     "mcap_base_price": 89.95,
+     "ath_floor": 0
+    },
+    {
+     "name": "石药集团",
+     "code": "01093",
+     "market": "港股",
+     "yahoo": "1093.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 985.2,
+      "approx": true
+     },
+     "mcap_base_price": 8.55,
+     "ath_floor": 0
+    },
+    {
+     "name": "中国生物制药",
+     "code": "01177",
+     "market": "港股",
+     "yahoo": "1177.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 962.2,
+      "approx": true
+     },
+     "mcap_base_price": 5.15,
+     "ath_floor": 0
+    },
+    {
+     "name": "翰森制药",
+     "code": "03692",
+     "market": "港股",
+     "yahoo": "3692.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 1955.1,
+      "approx": true
+     },
+     "mcap_base_price": 32.24,
+     "ath_floor": 0
+    },
+    {
+     "name": "先声药业",
+     "code": "02096",
+     "market": "港股",
+     "yahoo": "2096.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 326.9,
+      "approx": true
+     },
+     "mcap_base_price": 12.73,
+     "ath_floor": 0
+    },
+    {
+     "name": "康方生物",
+     "code": "09926",
+     "market": "港股",
+     "yahoo": "9926.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 916.5,
+      "approx": true
+     },
+     "mcap_base_price": 99.5,
+     "ath_floor": 0
+    },
+    {
+     "name": "科伦博泰",
+     "code": "06990",
+     "market": "港股",
+     "yahoo": "6990.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 1228.6,
+      "approx": true
+     },
+     "mcap_base_price": 514.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "荣昌生物",
+     "code": "09995",
+     "market": "港股",
+     "yahoo": "9995.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 469.6,
+      "approx": true
+     },
+     "mcap_base_price": 83.2,
+     "ath_floor": 0
+    },
+    {
+     "name": "三生制药",
+     "code": "01530",
+     "market": "港股",
+     "yahoo": "1530.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 437.1,
+      "approx": true
+     },
+     "mcap_base_price": 17.28,
+     "ath_floor": 0
+    },
+    {
+     "name": "康诺亚",
+     "code": "02162",
+     "market": "港股",
+     "yahoo": "2162.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 247.4,
+      "approx": true
+     },
+     "mcap_base_price": 82.8,
+     "ath_floor": 0
+    },
+    {
+     "name": "科济药业",
+     "code": "02171",
+     "market": "港股",
+     "yahoo": "2171.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 87.8,
+      "approx": true
+     },
+     "mcap_base_price": 14.77,
+     "ath_floor": 0
+    },
+    {
+     "name": "再鼎医药H",
+     "code": "09688",
+     "market": "港股",
+     "yahoo": "9688.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 175.0,
+      "approx": true
+     },
+     "mcap_base_price": 15.38,
+     "ath_floor": 0
+    },
+    {
+     "name": "再鼎医药US",
+     "code": "ZLAB",
+     "market": "美股 ADR",
+     "yahoo": "ZLAB",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 21.9,
+      "approx": true
+     },
+     "mcap_base_price": 19.22,
+     "ath_floor": 0
+    },
+    {
+     "name": "和黄医药",
+     "code": "00013",
+     "market": "港股",
+     "yahoo": "0013.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 153.0,
+      "approx": true
+     },
+     "mcap_base_price": 17.54,
+     "ath_floor": 0
+    },
+    {
+     "name": "百利天恒",
+     "code": "688506",
+     "market": "A股",
+     "yahoo": "688506.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1284.0,
+      "approx": true
+     },
+     "mcap_base_price": 311.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "迪哲医药",
+     "code": "688192",
+     "market": "A股",
+     "yahoo": "688192.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 258.6,
+      "approx": true
+     },
+     "mcap_base_price": 55.6,
+     "ath_floor": 0
+    },
+    {
+     "name": "君实生物",
+     "code": "688180",
+     "market": "A股",
+     "yahoo": "688180.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 368.4,
+      "approx": true
+     },
+     "mcap_base_price": 35.88,
+     "ath_floor": 0
+    },
+    {
+     "name": "泽璟制药",
+     "code": "688266",
+     "market": "A股",
+     "yahoo": "688266.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 359.9,
+      "approx": true
+     },
+     "mcap_base_price": 135.95,
+     "ath_floor": 0
+    },
+    {
+     "name": "迈威生物",
+     "code": "688062",
+     "market": "A股",
+     "yahoo": "688062.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 138.9,
+      "approx": true
+     },
+     "mcap_base_price": 31.09,
+     "ath_floor": 0
+    },
+    {
+     "name": "艾力斯",
+     "code": "688578",
+     "market": "A股",
+     "yahoo": "688578.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 536.6,
+      "approx": true
+     },
+     "mcap_base_price": 119.24,
+     "ath_floor": 0
+    },
+    {
+     "name": "药明生物",
+     "code": "02269",
+     "market": "港股",
+     "yahoo": "2269.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 1620.1,
+      "approx": true
+     },
+     "mcap_base_price": 39.1,
+     "ath_floor": 0
+    },
+    {
+     "name": "药明康德H",
+     "code": "02359",
+     "market": "港股",
+     "yahoo": "2359.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 4664.7,
+      "approx": true
+     },
+     "mcap_base_price": 157.4,
+     "ath_floor": 0
+    },
+    {
+     "name": "药明康德",
+     "code": "603259",
+     "market": "A股",
+     "yahoo": "603259.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 3729.7,
+      "approx": true
+     },
+     "mcap_base_price": 125.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "康龙化成",
+     "code": "300759",
+     "market": "A股",
+     "yahoo": "300759.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 707.9,
+      "approx": true
+     },
+     "mcap_base_price": 38.53,
+     "ath_floor": 0
+    },
+    {
+     "name": "凯莱英",
+     "code": "002821",
+     "market": "A股",
+     "yahoo": "002821.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 570.8,
+      "approx": true
+     },
+     "mcap_base_price": 158.22,
+     "ath_floor": 0
+    },
+    {
+     "name": "泰格医药",
+     "code": "300347",
+     "market": "A股",
+     "yahoo": "300347.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 404.3,
+      "approx": true
+     },
+     "mcap_base_price": 46.95,
+     "ath_floor": 0
+    },
+    {
+     "name": "礼来",
+     "code": "LLY",
+     "market": "美股",
+     "yahoo": "LLY",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 11263.5,
+      "approx": true
+     },
+     "mcap_base_price": 1196.03,
+     "ath_floor": 0
+    },
+    {
+     "name": "默沙东",
+     "code": "MRK",
+     "market": "美股",
+     "yahoo": "MRK",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3237.2,
+      "approx": true
+     },
+     "mcap_base_price": 131.07,
+     "ath_floor": 0
+    },
+    {
+     "name": "辉瑞",
+     "code": "PFE",
+     "market": "美股",
+     "yahoo": "PFE",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1398.6,
+      "approx": true
+     },
+     "mcap_base_price": 24.54,
+     "ath_floor": 0
+    },
+    {
+     "name": "艾伯维",
+     "code": "ABBV",
+     "market": "美股",
+     "yahoo": "ABBV",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 4496.0,
+      "approx": true
+     },
+     "mcap_base_price": 254.49,
+     "ath_floor": 0
+    },
+    {
+     "name": "强生",
+     "code": "JNJ",
+     "market": "美股",
+     "yahoo": "JNJ",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 6153.6,
+      "approx": true
+     },
+     "mcap_base_price": 255.63,
+     "ath_floor": 0
+    },
+    {
+     "name": "诺和诺德",
+     "code": "NVO",
+     "market": "美股 ADR",
+     "yahoo": "NVO",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2157.0,
+      "approx": true
+     },
+     "mcap_base_price": 48.77,
+     "ath_floor": 0
+    },
+    {
+     "name": "阿斯利康",
+     "code": "AZN",
+     "market": "美股 ADR",
+     "yahoo": "AZN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2625.3,
+      "approx": true
+     },
+     "mcap_base_price": 169.26,
+     "ath_floor": 0
+    },
+    {
+     "name": "百时美施贵宝",
+     "code": "BMY",
+     "market": "美股",
+     "yahoo": "BMY",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1267.9,
+      "approx": true
+     },
+     "mcap_base_price": 62.09,
+     "ath_floor": 0
+    },
+    {
+     "name": "Summit Therapeutics",
+     "code": "SMMT",
+     "market": "美股",
+     "yahoo": "SMMT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 109.0,
+      "approx": true
+     },
+     "mcap_base_price": 13.66,
+     "ath_floor": 0
+    },
+    {
+     "name": "传奇生物",
+     "code": "LEGN",
+     "market": "美股 ADR",
+     "yahoo": "LEGN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 43.0,
+      "approx": true
+     },
+     "mcap_base_price": 22.22,
+     "ath_floor": 0
+    },
+    {
+     "name": "标普生物科技ETF",
+     "code": "XBI",
+     "market": "美股 ETF",
+     "yahoo": "XBI",
+     "currency": "$",
+     "mcap_base": null,
+     "mcap_base_price": 150.48,
+     "ath_floor": 0
+    }
+   ],
+   "groups": [
+    {
+     "name": "中国创新药 · 大市值平台",
+     "codes": [
+      "06160",
+      "688235",
+      "ONC",
+      "01276",
+      "600276",
+      "01801",
+      "01093",
+      "01177",
+      "03692",
+      "02096"
+     ]
+    },
+    {
+     "name": "港股 Biotech · 弹性档",
+     "codes": [
+      "09926",
+      "06990",
+      "09995",
+      "01530",
+      "02162",
+      "02171",
+      "09688",
+      "ZLAB",
+      "00013"
+     ]
+    },
+    {
+     "name": "A股创新药 · 科创板",
+     "codes": [
+      "688506",
+      "688192",
+      "688180",
+      "688266",
+      "688062",
+      "688578"
+     ]
+    },
+    {
+     "name": "CXO · 卖铲子",
+     "codes": [
+      "02269",
+      "02359",
+      "603259",
+      "300759",
+      "002821",
+      "300347"
+     ]
+    },
+    {
+     "name": "全球大药企 · 估值坐标",
+     "codes": [
+      "LLY",
+      "MRK",
+      "PFE",
+      "ABBV",
+      "JNJ",
+      "NVO",
+      "AZN",
+      "BMY",
+      "SMMT",
+      "LEGN",
+      "XBI"
      ]
     }
    ]
