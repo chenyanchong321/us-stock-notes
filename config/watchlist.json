@@ -6811,6 +6811,32 @@
      "mcap_base_price": 99.17
     },
     {
+     "name": "科沃斯",
+     "code": "603486",
+     "market": "A股",
+     "yahoo": "603486.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 308.39,
+      "approx": false
+     },
+     "mcap_base_price": 53.3
+    },
+    {
+     "name": "九号公司",
+     "code": "689009",
+     "market": "A股",
+     "yahoo": "689009.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 280.95,
+      "approx": false
+     },
+     "mcap_base_price": 38.18
+    },
+    {
      "name": "群核科技",
      "code": "00068",
      "market": "港股",
@@ -6939,7 +6965,9 @@
      "codes": [
       "ISRG",
       "SYM",
-      "688169"
+      "688169",
+      "603486",
+      "689009"
      ]
     },
     {
