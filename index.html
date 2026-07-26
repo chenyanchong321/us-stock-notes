@@ -214,7 +214,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
   background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-size:12.5px;
   line-height:1.6;color:var(--text);box-shadow:0 10px 30px rgba(0,0,0,.42);-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 #ratemsk{position:fixed;inset:0;z-index:321;display:none;background:transparent}
-#ratetip .rt-h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
+#ratetip .rt-h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:-12px -14px 4px;padding:12px 14px 6px;
+  position:sticky;top:-12px;z-index:2;background:var(--panel2)}
 #ratetip .rt-t{font-weight:700;font-size:13.5px;line-height:1.35}
 #ratetip .rt-s{color:var(--text2);font-size:10.5px}
 #ratetip .rt-i,#ratetip .rt-x{cursor:pointer;user-select:none;border:1px solid var(--border);border-radius:6px;
@@ -237,7 +238,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 /* 手机端：宽度铺满、限高更狠（占满屏没地方点收起是上一版的实际问题），✕ 与 ⓘ 做成 44px 触区 */
 @media (max-width:860px){
   #ratetip{width:calc(100vw - 20px);max-height:62vh;padding:12px 13px}
-  #ratemsk{display:none}
+  #ratetip .rt-h{margin:-12px -13px 4px;padding:12px 13px 6px}
   #ratetip .rt-i,#ratetip .rt-x{min-height:34px;display:inline-flex;align-items:center;padding:0 10px;font-size:12px}
   #ratetip .rt-cell i{font-size:9px}
 }
