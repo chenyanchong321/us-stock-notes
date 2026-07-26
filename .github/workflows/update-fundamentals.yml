@@ -24,6 +24,6 @@ jobs:
       - run: |
           git config user.name bot
           git config user.email bot@example.com
-          git add data/fundamentals.json
+          git add data/fundamentals.json data/ratings.json
           git commit -m "chore: 更新基本面数据" || true
           git push
