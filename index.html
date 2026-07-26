@@ -205,11 +205,12 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 .mctier{display:inline-block;margin-left:5px;padding:0 4px;border-radius:3px;font-size:10px;line-height:15px;vertical-align:1px;color:var(--gold);border:1px solid var(--gold);opacity:.8;font-weight:500;white-space:nowrap;touch-action:manipulation;cursor:pointer}
 .mctier:hover{opacity:1;background:rgba(232,182,76,.12)}
 /* ===== 机构评级共识（2026-07-26 新增，可整体下架：见 RATINGS_ON）===== */
+/* 徽标统一绿色、不带方向箭头（2026-07-26 主人定）：原来近30天净下调就标红↓，
+   但「预测被下调」和「评级是卖出」是两件事——点进去共识其实还是买入，红↓会让人潜意识以为票出问题了。
+   它只是一个信息入口，不该自带判断。绿色是为了和研报/点评的金色区分开。 */
 .rateb{display:inline-block;margin-left:5px;padding:0 5px;border-radius:4px;font-size:10.5px;line-height:16px;
-  vertical-align:middle;cursor:pointer;border:1px solid var(--border);color:var(--text2);background:transparent;
+  vertical-align:middle;cursor:pointer;border:1px solid var(--up);color:var(--up);background:transparent;
   white-space:nowrap;touch-action:manipulation;user-select:none}
-.rateb.up{border-color:var(--up);color:var(--up)}
-.rateb.dn{border-color:var(--down);color:var(--down)}
 #ratetip{position:fixed;z-index:322;display:none;width:330px;max-width:calc(100vw - 20px);max-height:70vh;overflow:auto;
   background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-size:12.5px;
   line-height:1.6;color:var(--text);box-shadow:0 10px 30px rgba(0,0,0,.42);-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
@@ -1253,14 +1254,7 @@ function repBadge(code){
 function rateBadge(code){
   if(typeof RATINGS_ON==="undefined" || !RATINGS_ON) return "";
   const d = window.RATE && window.RATE[code]; if(!d) return "";
-  let cls="", arw="";
-  const e = d.eps && (d.eps.y0 || d.eps.y1);
-  if(e){
-    const up=(e.up30||0), dn=(e.dn30||0);
-    if(up>dn){ cls=" up"; arw=" ↑"; }
-    else if(dn>up){ cls=" dn"; arw=" ↓"; }
-  }
-  return `<span class="rateb${cls}" data-code="${code}">评级${arw}</span>`;
+  return `<span class="rateb" data-code="${code}">评级</span>`;   /* 纯入口，不带方向判断 */
 }
 window.rateBadge = rateBadge;
 /* 数据是异步到货的，到货后把已渲染的行补上徽标（不整表重渲染，零副作用） */
@@ -5630,6 +5624,8 @@ function renderUniBubbles(body, secs, sizeBy){
     + `<b style="color:var(--text)">这是什么</b>：券商研究部（卖方分析师）对这家公司的盈利预测与估值判断的汇总，<b style="color:var(--text)">不是本站观点</b>。<br>`
     + `<b style="color:var(--text)">怎么用</b>：① <b style="color:var(--text)">看修订方向优先于看绝对数字</b>——一致预期 EPS 的 7/30/90 天变化是领先信号，目标价通常滞后于股价；② 分布里"卖出"有几家，比"均值目标价"更有信息量；③ 当共识坐标用，你的超额收益来自"你和共识差在哪"。<br>`
     + `<b style="color:var(--text)">局限</b>：严格按 12 个月末口径，目标价达成率约 38%，且买入评级数量远多于卖出。<b style="color:var(--text)">它是参考，不是预测。</b><br>`
+    + `<b style="color:var(--text)">EPS 是什么</b>：Earnings Per Share，每股收益 ＝ 公司一年的净利润 ÷ 总股本，也就是「每一股分到多少钱」。它是估值的分母——<b style="color:var(--text)">股价 ÷ EPS ＝ 市盈率</b>，所以 EPS 预测被上调，等于同样股价对应的 PE 变低、票「变便宜了」。负数表示预计亏损。<br>`
+    + `<b style="color:var(--text)">那排格子</b>：同一个预测值在不同时点的快照——90 天前机构认为能赚多少，一路改到现在是多少。<br>`
     + `<b style="color:var(--text)">上调/下调</b>：指分析师改的是<b style="color:var(--text)">盈利预测数字</b>，不是评级——改数字比改评级快得多，所以它更领先。<br>`
     + `<b style="color:var(--text)">评级词对照</b>：Buy 买入 · Outperform 优于大市 · Overweight 增持 · Hold 持有 · Neutral 中性 · Market Perform 与大市同步 · Underweight 减持 · Underperform 跑输大市 · Sell 卖出<br>`
     + `<span style="opacity:.75">数据 Yahoo（LSEG 一致预期）· ${window.RATE_ASOF||""} · 覆盖以美股港股为主，A 股与日韩台多数暂无</span></div>`;
@@ -5719,7 +5715,7 @@ function renderUniBubbles(body, secs, sizeBy){
             -52.89 明明是亏损扩大，却算出 +1.6% 显示绿色。正确式为 (now-base)/|base|，正负都成立。 */
       const y0=d.eps.y0, y1=d.eps.y1;
       const invert = y0&&y1&&N(y0.avg)&&N(y1.avg)&&y0.avg>0&&y1.avg>0&&y0.avg>y1.avg;
-      h += `<div class="rt-sec"><div class="rt-lb">一致预期 EPS 与修订趋势</div>`;
+      h += `<div class="rt-sec"><div class="rt-lb">每股收益（EPS）预测与修订趋势</div>`;
       if(invert) h += `<div style="font-size:10.5px;color:var(--gold);margin-bottom:3px">今明年预期倒挂（明年低于今年），建议核对原始研报</div>`;
       [["y0",""],["y1",""]].forEach(([k])=>{
         const e=d.eps[k]; if(!e||!N(e.avg)) return;
@@ -5730,7 +5726,10 @@ function renderUniBubbles(body, secs, sizeBy){
           +   `<span><b>${yr} ${f2(e.avg)}</b>${e.n?`<span style="color:${thin?"var(--gold)":"var(--text2)"};font-size:11px"> · ${e.n}家</span>`:""}</span>`
           +   `<span style="font-size:11.5px">${fpe?`前瞻PE <b>${fpe.toFixed(1)}x</b>`:""}</span></div>`;
         if(thin) h += `<div style="font-size:10.5px;color:var(--gold);margin-top:1px">仅 ${e.n} 家覆盖，不构成一致预期，前瞻PE 不计算</div>`;
-        const seq=[["90天",e.d90],["60天",e.d60],["30天",e.d30],["7天",e.d7],["现在",e.avg]].filter(x=>N(x[1]));
+        /* 一行说明（2026-07-26）：主人反馈「那排数字看不懂」，根因是标签只写「90天」，
+           没说清那是**当时的预测值**。标签统一补「前」，并在首个年度上方点明这排格子是什么。 */
+        if(k==="y0") h += `<div style="font-size:10.5px;color:var(--text2);margin-top:2px">下面每格 ＝ 当时机构对 ${yr.replace("E","")} 年 EPS 的预测值${e.avg<0?"（负数＝预计亏损）":""}</div>`;
+        const seq=[["90天前",e.d90],["60天前",e.d60],["30天前",e.d30],["7天前",e.d7],["现在",e.avg]].filter(x=>N(x[1]));
         if(seq.length>=2){
           const base=seq[0][1];
           const chg = (N(base)&&base!==0) ? (e.avg-base)/Math.abs(base)*100 : null;   /* 负数安全 */
