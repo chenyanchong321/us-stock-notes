@@ -309,6 +309,20 @@
      "ath_floor": 760.4
     },
     {
+     "name": "标普500动量ETF（Invesco SPMO）",
+     "code": "SPMO",
+     "market": "美股 ETF",
+     "yahoo": "SPMO",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 222.0,
+      "approx": true
+     },
+     "mcap_base_price": 143.89,
+     "ath_floor": 0
+    },
+    {
      "name": "半导体ETF（iShares SOXX）",
      "code": "SOXX",
      "market": "美股 ETF",
@@ -426,6 +440,7 @@
      "codes": [
       "QQQ",
       "SPY",
+      "SPMO",
       "SOXX",
       "IGV",
       "PGJ",
