@@ -724,6 +724,20 @@
      "ath_floor": 0
     },
     {
+     "name": "亚德诺",
+     "code": "ADI",
+     "market": "美股",
+     "yahoo": "ADI",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1864.0,
+      "approx": true
+     },
+     "mcap_base_price": 382.81,
+     "ath_floor": 0
+    },
+    {
      "name": "安森美半导体",
      "code": "ON",
      "market": "美股",
@@ -764,6 +778,20 @@
      },
      "mcap_base_price": 434.16,
      "ath_floor": 479.0
+    },
+    {
+     "name": "联电",
+     "code": "UMC",
+     "market": "美股 ADR",
+     "yahoo": "UMC",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 530.0,
+      "approx": true
+     },
+     "mcap_base_price": 21.19,
+     "ath_floor": 0
     },
     {
      "name": "中芯国际",
@@ -849,6 +877,7 @@
       "QCOM",
       "NXPI",
       "TXN",
+      "ADI",
       "ON",
       "MCHP"
      ]
@@ -857,6 +886,7 @@
      "name": "晶圆代工",
      "codes": [
       "TSM",
+      "UMC",
       "688981",
       "00981",
       "688347",
