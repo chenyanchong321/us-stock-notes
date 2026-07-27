@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-28 02:00 北京时间",
+ "updated": "2026-07-28 02:08 北京时间",
  "earnings": [
   {
    "d": "2026-07-27",
@@ -567,6 +567,18 @@
   },
   {
    "d": "2026-08-05",
+   "code": "ENR",
+   "name": "西门子能源",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
+   "code": "7013",
+   "name": "IHI",
+   "est": false
+  },
+  {
+   "d": "2026-08-05",
    "code": "SHOP",
    "name": "Shopify",
    "est": false
@@ -815,6 +827,12 @@
    "d": "2026-08-07",
    "code": "VST",
    "name": "Vistra Energy",
+   "est": false
+  },
+  {
+   "d": "2026-08-07",
+   "code": "7012",
+   "name": "川崎重工",
    "est": false
   },
   {
