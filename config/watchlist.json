@@ -5350,6 +5350,20 @@
      "ath_floor": 0
     },
     {
+     "name": "西门子能源",
+     "code": "ENR",
+     "market": "欧股",
+     "yahoo": "ENR.DE",
+     "currency": "€",
+     "mcap_base": {
+      "prefix": "€",
+      "yi": 1193.5,
+      "approx": true
+     },
+     "mcap_base_price": 149.28,
+     "ath_floor": 0
+    },
+    {
      "name": "三菱重工",
      "code": "7011",
      "market": "日股",
@@ -5361,6 +5375,34 @@
       "approx": true
      },
      "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "川崎重工",
+     "code": "7012",
+     "market": "日股",
+     "yahoo": "7012.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 24886.0,
+      "approx": true
+     },
+     "mcap_base_price": 2964.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "IHI",
+     "code": "7013",
+     "market": "日股",
+     "yahoo": "7013.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 30090.0,
+      "approx": true
+     },
+     "mcap_base_price": 2779.0,
      "ath_floor": 0
     },
     {
@@ -5859,13 +5901,16 @@
      ]
     },
     {
-     "name": "电力与核能设备（美·日）",
+     "name": "电力与核能设备（美·日·欧）",
      "codes": [
       "CEG",
       "VST",
       "TLN",
       "GEV",
+      "ENR",
       "7011",
+      "7012",
+      "7013",
       "BE",
       "GNRC",
       "NVT",
