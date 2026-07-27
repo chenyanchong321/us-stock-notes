@@ -1067,6 +1067,20 @@
      "ath_floor": 0
     },
     {
+     "name": "长鑫科技",
+     "code": "688825",
+     "market": "A股",
+     "yahoo": "688825.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 33106.0,
+      "approx": true
+     },
+     "mcap_base_price": 49.5,
+     "ath_floor": 0
+    },
+    {
      "name": "南方两倍做多海力士",
      "code": "07709",
      "market": "港股 ETF",
@@ -1359,12 +1373,13 @@
    ],
    "groups": [
     {
-     "name": "HBM/DRAM 三巨头",
+     "name": "DRAM 原厂（HBM/DRAM）",
      "codes": [
       "000660.KS",
       "SKHY",
       "MU",
       "005930",
+      "688825",
       "07709",
       "DRAM"
      ]
