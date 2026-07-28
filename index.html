@@ -1156,6 +1156,28 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
   <div id="attr-list"></div>
 </div>
 
+<div id="view-soxbear" class="hidden" style="max-width:1040px;margin:var(--header-h) auto 0;padding:18px 14px 60px">
+  <style>
+  #view-soxbear .sxb-tbl{width:100%;border-collapse:collapse;font-size:13px}
+  #view-soxbear .sxb-tbl th,#view-soxbear .sxb-tbl td{padding:7px 9px;text-align:right;white-space:nowrap}
+  #view-soxbear .sxb-tbl thead th{cursor:pointer;border-bottom:2px solid var(--border)}
+  #view-soxbear .sxb-tbl tbody tr{border-bottom:1px solid var(--border)}
+  #view-soxbear .sxb-tbl td.name{text-align:left}
+  #view-soxbear .sxb-tbl td.name .sub{display:block;white-space:nowrap;margin-top:2px}
+  #view-soxbear .sxb-sub{display:block;font-size:11px;color:var(--text2);margin-top:1px;font-weight:400}
+  #view-soxbear .sxb-tbl .fill{width:100%;padding:0;border:none}
+  @media(max-width:860px){#view-soxbear .sxb-tbl{width:max-content;min-width:100%;font-size:11.5px}#view-soxbear .sxb-tbl th,#view-soxbear .sxb-tbl td{padding:6px 7px}#view-soxbear .sxb-tbl .fill{display:none}}
+  </style>
+  <div class="kbar" data-kbar="soxbear"></div>
+  <h2 style="font-size:18px;margin:6px 0 2px">🐻 费半熊市推算</h2>
+  <div style="font-size:12px;color:var(--text2)" id="sxb-asof">数据加载中…</div>
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 15px;margin:13px 0;font-size:12.5px;line-height:1.8;color:var(--text2)">
+    若费半从52周高点最终跌到 <b>-33%</b>（内生熊均值）/ <b>-38%</b>（2000年来13次熊市均值）/ <b>-40%</b>（保守情形），按每只成分股的相对弹性推算：<b>目标价</b>、<b>累计跌幅</b>与<b>从现价还要再跌</b>多少。<b>点表头可排序</b>，首次点击按更惨的在前。<span id="sxb-more" style="color:var(--accent);cursor:pointer">&#9432; 方法·数据来源·局限</span>
+    <div id="sxb-method" style="display:none;margin-top:8px;border-top:1px dashed var(--border);padding-top:8px"></div>
+  </div>
+  <div id="sxb-list"></div>
+</div>
+
 <div id="view-history" class="hidden">
   <div class="hist-main">
     <div class="kbar" data-kbar="history"></div>
@@ -3523,6 +3545,43 @@ window.renderScenarios = (function(){
   };
 })();
 
+
+window.renderSoxbear=(function(){
+  let D=null,SK="w",DIR=-1;
+  const IDX=-23.5,SC=[33,38,40];
+  const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const fp=v=>v>=1000?Math.round(v).toLocaleString("en-US"):(v>=100?v.toFixed(0):v.toFixed(1));
+  function calc(x){const dd=(x.px/x.hi-1)*100,r=dd/IDX,o={dd:dd,r:r};SC.forEach(T=>{const tg=-r*T,tp=x.hi*(1+tg/100),rm=((1+tg/100)/(1+dd/100)-1)*100;o["t"+T]=tg;o["p"+T]=tp;o["m"+T]=rm;});return o;}
+  function paint(){
+    const items=D.items.map(x=>Object.assign({},x,calc(x)));
+    items.sort((a,b)=>{if(SK==="n")return a.n.localeCompare(b.n)*DIR;let av=a[SK],bv=b[SK];if(av==null)av=(DIR<0?-1e9:1e9);if(bv==null)bv=(DIR<0?-1e9:1e9);return (av-bv)*DIR;});
+    const th=(k,l)=>'<th data-sk="'+k+'">'+l+(SK===k?(DIR<0?" ▾":" ▴"):"")+"</th>";
+    let h='<div class="tbl-wrap"><table class="sxb-tbl"><thead><tr><th data-sk="n" style="text-align:left">公司</th>'+th("w","权重")+th("px","现价")+th("dd","现跌幅")+th("r","弹性")+th("pe","PE·净利")+th("m33","-33%情景")+th("m38","-38%情景")+th("m40","-40%情景")+'<th class="fill"></th></tr></thead><tbody>';
+    items.forEach(x=>{
+      const cell=T=>"<td><b>"+fp(x["p"+T])+'</b><span class="sxb-sub">累计'+x["t"+T].toFixed(0)+'% · 再跌<span style="color:var(--down)">'+x["m"+T].toFixed(0)+"%</span></span></td>";
+      h+='<tr><td class="name"><span class="cn">'+esc(x.n)+'</span><span class="sub">'+esc(x.c)+" · "+esc(x.cls)+"</span></td>"
+        +"<td>"+x.w.toFixed(1)+"%</td>"
+        +"<td>"+fp(x.px)+'<span class="sxb-sub">高 '+fp(x.hi)+"</span></td>"
+        +'<td style="color:var(--down)">'+x.dd.toFixed(0)+"%</td>"
+        +"<td>"+x.r.toFixed(1)+"</td>"
+        +"<td>"+(x.pe==null?"亏损":x.pe)+" / "+x.fpe+'<span class="sxb-sub">'+(x.ni<0?"净亏$"+Math.abs(x.ni)+"亿":"净利$"+x.ni+"亿")+"</span></td>"
+        +cell(33)+cell(38)+cell(40)+'<td class="fill"></td></tr>';
+    });
+    h+="</tbody></table></div>";
+    document.getElementById("sxb-list").innerHTML=h;
+    document.querySelectorAll("#sxb-list th[data-sk]").forEach(t=>t.onclick=()=>{const k=t.dataset.sk;if(SK===k)DIR=-DIR;else{SK=k;DIR=(k==="n")?1:((k==="dd"||k==="m33"||k==="m38"||k==="m40")?1:-1);}paint();if(window.__fhKick)window.__fhKick();});
+  }
+  return function(){
+    if(D){paint();return;}
+    fetch("data/soxbear.json?v="+Date.now()).then(r=>r.json()).then(d=>{
+      D=d;
+      const a=document.getElementById("sxb-asof");if(a)a.textContent="快照 "+d.asof+" · 指数现跌幅 "+d.idx.dd+"%（52周高 "+d.idx.hi.toLocaleString("en-US")+"）· 权重=SOXX前25大（覆盖96.5%）· 快照不随行情更新";
+      const m=document.getElementById("sxb-more"),b=document.getElementById("sxb-method");
+      if(m&&b){b.innerHTML=esc(d.note).replace(/\n/g,"<br>");m.onclick=()=>{b.style.display=b.style.display==="none"?"block":"none";};}
+      paint();
+    }).catch(e=>{const el=document.getElementById("sxb-list");if(el)el.innerHTML='<div style="color:var(--text2);padding:20px">数据加载失败</div>';});
+  };
+})();
 
 /* 情景演绎表：名称悬停显示简介 —— 照抄数据面板/宇宙机制（150ms显示、280ms移开关闭、移到#stip不关） */
 (function(){
@@ -6172,7 +6231,7 @@ document.addEventListener("click", e=>{
      KB_VIEWS 下的任何页都算「学习笔记」页签高亮范围；新增栏目在 KB 数组加一项即全站生效。 */
   const KB = [["notes","📚 学习笔记"],["dict","📖 术语词典"],["history","📜 金融史"],["imap","🗺 产业地图"],
               ["universe","🌌 股票宇宙"],["events","📅 大事件"],["lev","⚖️ 杠杆率"],["margin","💳 融资余额"],["reads","📖 烟囱荐读"],
-              ["aicapex","💰 AI资金"],["scenarios","📊 情景演绎"],["attrib","📄 归因分析"]];
+              ["aicapex","💰 AI资金"],["scenarios","📊 情景演绎"],["attrib","📄 归因分析"],["soxbear","🐻 费半熊市推算"]];
   const KB_VIEWS = KB.map(x=>x[0]);
   document.querySelectorAll(".kbar[data-kbar]").forEach(k=>{
     k.innerHTML = KB.map(([v,l])=>`<button data-view="${v}"${v===k.dataset.kbar?' class="on"':''}>${l}</button>`).join("");
@@ -6180,7 +6239,7 @@ document.addEventListener("click", e=>{
   window.switchTab = function(v){
     document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",
       t.dataset.view===v || (v==="repread" && t.dataset.view==="reports") || (KB_VIEWS.includes(v) && v!=="notes" && t.dataset.view==="notes")));
-    ["dash","events","notes","dict","history","lev","margin","reads","aicapex","scenarios","attrib","reports","repread","imap","universe"].forEach(x=>{
+    ["dash","events","notes","dict","history","lev","margin","reads","aicapex","scenarios","attrib","soxbear","reports","repread","imap","universe"].forEach(x=>{
       const el = document.getElementById("view-"+x);
       if(el) el.classList.toggle("hidden", v!==x);
     });
@@ -6194,7 +6253,8 @@ document.addEventListener("click", e=>{
     if(v==="aicapex" && window.renderAicapex){ try{ renderAicapex(); }catch(e){} } /* AI资金底图：切入懒加载 */
     if(v==="reads" && window.renderReads){ try{ renderReads(); }catch(e){} }
     if(v==="scenarios" && window.renderScenarios){ try{ renderScenarios(); }catch(e){} }
-    if(v==="attrib" && window.renderAttrib){ try{ renderAttrib(); }catch(e){} }   /* 归因分析：切入懒加载 */
+    if(v==="attrib" && window.renderAttrib){ try{ renderAttrib(); }catch(e){} }
+    if(v==="soxbear" && window.renderSoxbear){ try{ renderSoxbear(); }catch(e){} }   /* 归因分析：切入懒加载 */
     const mb=document.getElementById("mbottom");
     if(mb) mb.style.display = v==="dash" ? "" : "none";
     document.body.classList.toggle("reading", v==="repread");   /* 阅读态白衣：顶栏与白纸统一 */
@@ -6256,7 +6316,7 @@ document.addEventListener("click", e=>{
   const wantView = new URLSearchParams(location.search).get("view")
                 || (function(){ try{ return localStorage.getItem("homeView"); }catch(e){ return null; } })()   /* 设为默认首页（宇宙页开关，2026-07-18） */
                 || (function(){ try{ return localStorage.getItem("lastView"); }catch(e){ return null; } })();
-  if(["notes","dict","history","events","lev","margin","reads","aicapex","scenarios","attrib","reports","imap","universe"].includes(wantView)){
+  if(["notes","dict","history","events","lev","margin","reads","aicapex","scenarios","attrib","soxbear","reports","imap","universe"].includes(wantView)){
     window.switchTab(wantView);
   }
 
