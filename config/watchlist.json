@@ -7993,6 +7993,20 @@
      "ath_floor": 255.24
     },
     {
+     "name": "老铺黄金",
+     "code": "06181",
+     "market": "港股",
+     "yahoo": "6181.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 618.6,
+      "approx": true
+     },
+     "mcap_base_price": 350.0,
+     "ath_floor": 0
+    },
+    {
      "name": "白银 / 美元",
      "code": "XAGUSD",
      "market": "外汇 / 商品",
@@ -8190,7 +8204,8 @@
       "IAU",
       "518880",
       "GDX",
-      "AEM"
+      "AEM",
+      "06181"
      ]
     },
     {
