@@ -1,12 +1,6 @@
 {
- "updated": "2026-07-30 03:55 北京时间",
+ "updated": "2026-07-30 04:03 北京时间",
  "earnings": [
-  {
-   "d": "2026-07-29",
-   "code": "NXPI",
-   "name": "恩智浦",
-   "est": true
-  },
   {
    "d": "2026-07-29",
    "code": "UMC",
@@ -15,21 +9,9 @@
   },
   {
    "d": "2026-07-29",
-   "code": "SKHY",
-   "name": "SK海力士(美股ADR)",
-   "est": false
-  },
-  {
-   "d": "2026-07-29",
    "code": "005930",
    "name": "三星电子",
    "est": false
-  },
-  {
-   "d": "2026-07-29",
-   "code": "STX",
-   "name": "希捷科技",
-   "est": true
   },
   {
    "d": "2026-07-29",
@@ -42,18 +24,6 @@
    "code": "VRT",
    "name": "Vertiv Holdings",
    "est": false
-  },
-  {
-   "d": "2026-07-29",
-   "code": "KLAC",
-   "name": "科磊",
-   "est": true
-  },
-  {
-   "d": "2026-07-29",
-   "code": "TER",
-   "name": "泰瑞达",
-   "est": true
   },
   {
    "d": "2026-07-29",
@@ -84,12 +54,6 @@
    "code": "2327",
    "name": "国巨",
    "est": false
-  },
-  {
-   "d": "2026-07-29",
-   "code": "BE",
-   "name": "Bloom Energy",
-   "est": true
   },
   {
    "d": "2026-07-29",
