@@ -1,53 +1,53 @@
 {
- "updated": "2026-07-30 18:00 北京时间",
+ "updated": "2026-07-30 18:15 北京时间",
  "earnings": [
   {
    "d": "2026-07-29",
    "code": "UMC",
    "name": "联电",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-29",
    "code": "APH",
    "name": "安费诺",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-29",
    "code": "VRT",
    "name": "Vertiv Holdings",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-29",
    "code": "FLEX",
    "name": "伟创力",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-29",
    "code": "GNRC",
    "name": "Generac",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-29",
    "code": "GEHC",
    "name": "GE医疗",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-30",
    "code": "MSFT",
    "name": "微软",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-30",
    "code": "META",
    "name": "Meta Platforms",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-30",
@@ -65,19 +65,19 @@
    "d": "2026-07-30",
    "code": "EQIX",
    "name": "易昆尼克斯（Equinix）",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-30",
    "code": "LRCX",
    "name": "泛林集团",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-30",
    "code": "FORM",
    "name": "FormFactor",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-30",
@@ -107,7 +107,7 @@
    "d": "2026-07-30",
    "code": "AEM",
    "name": "伊格尔矿业（Agnico Eagle）",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-30",
