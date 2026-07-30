@@ -7805,6 +7805,34 @@
      "ath_floor": 0
     },
     {
+     "name": "美的集团",
+     "code": "000333",
+     "market": "A股",
+     "yahoo": "000333.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 6842.0,
+      "approx": true
+     },
+     "mcap_base_price": 89.2,
+     "ath_floor": 0
+    },
+    {
+     "name": "美的集团",
+     "code": "00300",
+     "market": "港股",
+     "yahoo": "0300.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 7597.0,
+      "approx": true
+     },
+     "mcap_base_price": 99.05,
+     "ath_floor": 0
+    },
+    {
      "name": "标普全球",
      "code": "SPGI",
      "market": "美股",
@@ -7949,10 +7977,12 @@
      ]
     },
     {
-     "name": "消费（能量饮料）",
+     "name": "消费（能量饮料·白电）",
      "codes": [
       "605499",
-      "09980"
+      "09980",
+      "000333",
+      "00300"
      ]
     },
     {
