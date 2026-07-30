@@ -1,48 +1,6 @@
 {
- "updated": "2026-07-31 03:45 北京时间",
+ "updated": "2026-07-31 04:00 北京时间",
  "earnings": [
-  {
-   "d": "2026-07-30",
-   "code": "MSFT",
-   "name": "微软",
-   "est": true
-  },
-  {
-   "d": "2026-07-30",
-   "code": "META",
-   "name": "Meta Platforms",
-   "est": true
-  },
-  {
-   "d": "2026-07-30",
-   "code": "ARM",
-   "name": "Arm Holdings",
-   "est": false
-  },
-  {
-   "d": "2026-07-30",
-   "code": "QCOM",
-   "name": "高通",
-   "est": false
-  },
-  {
-   "d": "2026-07-30",
-   "code": "EQIX",
-   "name": "易昆尼克斯（Equinix）",
-   "est": true
-  },
-  {
-   "d": "2026-07-30",
-   "code": "LRCX",
-   "name": "泛林集团",
-   "est": true
-  },
-  {
-   "d": "2026-07-30",
-   "code": "FORM",
-   "name": "FormFactor",
-   "est": true
-  },
   {
    "d": "2026-07-30",
    "code": "WAF",
@@ -59,18 +17,6 @@
    "d": "2026-07-30",
    "code": "ASX",
    "name": "日月光半导体 ADR",
-   "est": false
-  },
-  {
-   "d": "2026-07-30",
-   "code": "FTNT",
-   "name": "飞塔信息（Fortinet）",
-   "est": false
-  },
-  {
-   "d": "2026-07-30",
-   "code": "HOOD",
-   "name": "Robinhood",
    "est": false
   },
   {
@@ -795,6 +741,12 @@
   },
   {
    "d": "2026-08-13",
+   "code": "CVV",
+   "name": "CVD设备",
+   "est": false
+  },
+  {
+   "d": "2026-08-13",
    "code": "ONDS",
    "name": "Ondas",
    "est": false
@@ -950,6 +902,12 @@
    "est": false
   },
   {
+   "d": "2026-09-03",
+   "code": "CRM",
+   "name": "赛富时（Salesforce）",
+   "est": false
+  },
+  {
    "d": "2026-09-04",
    "code": "DELL",
    "name": "戴尔科技",
@@ -962,6 +920,12 @@
    "est": false
   },
   {
+   "d": "2026-09-24",
+   "code": "MU",
+   "name": "美光科技",
+   "est": true
+  },
+  {
    "d": "2026-10-13",
    "code": "JNJ",
    "name": "强生",
@@ -971,6 +935,18 @@
    "d": "2026-10-14",
    "code": "ASML",
    "name": "阿斯麦",
+   "est": false
+  },
+  {
+   "d": "2026-10-14",
+   "code": "ABT",
+   "name": "雅培",
+   "est": false
+  },
+  {
+   "d": "2026-10-21",
+   "code": "EQT",
+   "name": "EQT（天然气）",
    "est": false
   },
   {
