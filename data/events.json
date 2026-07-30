@@ -1,42 +1,6 @@
 {
- "updated": "2026-07-30 20:19 北京时间",
+ "updated": "2026-07-30 20:30 北京时间",
  "earnings": [
-  {
-   "d": "2026-07-29",
-   "code": "UMC",
-   "name": "联电",
-   "est": true
-  },
-  {
-   "d": "2026-07-29",
-   "code": "APH",
-   "name": "安费诺",
-   "est": true
-  },
-  {
-   "d": "2026-07-29",
-   "code": "VRT",
-   "name": "Vertiv Holdings",
-   "est": true
-  },
-  {
-   "d": "2026-07-29",
-   "code": "FLEX",
-   "name": "伟创力",
-   "est": true
-  },
-  {
-   "d": "2026-07-29",
-   "code": "GNRC",
-   "name": "Generac",
-   "est": true
-  },
-  {
-   "d": "2026-07-29",
-   "code": "GEHC",
-   "name": "GE医疗",
-   "est": true
-  },
   {
    "d": "2026-07-30",
    "code": "MSFT",
@@ -914,6 +878,12 @@
    "est": false
   },
   {
+   "d": "2026-09-03",
+   "code": "CRM",
+   "name": "赛富时（Salesforce）",
+   "est": true
+  },
+  {
    "d": "2026-09-04",
    "code": "DELL",
    "name": "戴尔科技",
@@ -942,6 +912,12 @@
    "code": "ASML",
    "name": "阿斯麦",
    "est": false
+  },
+  {
+   "d": "2026-10-14",
+   "code": "ABT",
+   "name": "雅培",
+   "est": true
   },
   {
    "d": "2026-10-21",
