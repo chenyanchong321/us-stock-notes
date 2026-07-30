@@ -7401,6 +7401,20 @@
      "ath_floor": 0
     },
     {
+     "name": "富途控股",
+     "code": "FUTU",
+     "market": "美股 ADR",
+     "yahoo": "FUTU",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 142.8,
+      "approx": true
+     },
+     "mcap_base_price": 101.84,
+     "ath_floor": 0
+    },
+    {
      "name": "AI 人工智能 ETF",
      "code": "512930",
      "market": "A股 ETF",
@@ -7444,6 +7458,12 @@
       "02513",
       "00100",
       "09992"
+     ]
+    },
+    {
+     "name": "互联网券商",
+     "codes": [
+      "FUTU"
      ]
     },
     {
