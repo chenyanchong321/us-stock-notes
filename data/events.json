@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-31 18:01 北京时间",
+ "updated": "2026-07-31 18:30 北京时间",
  "earnings": [
   {
    "d": "2026-07-30",
@@ -11,25 +11,25 @@
    "d": "2026-07-30",
    "code": "ASX",
    "name": "日月光半导体 ADR",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-30",
    "code": "BMY",
    "name": "百时美施贵宝",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-31",
    "code": "AAPL",
    "name": "苹果",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-31",
    "code": "AMZN",
    "name": "亚马逊",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-31",
@@ -47,7 +47,7 @@
    "d": "2026-07-31",
    "code": "AXTI",
    "name": "AXT Inc",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-31",
@@ -59,7 +59,7 @@
    "d": "2026-07-31",
    "code": "COHU",
    "name": "科休半导体",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-31",
@@ -77,7 +77,7 @@
    "d": "2026-07-31",
    "code": "MPWR",
    "name": "Monolithic Power",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-31",
@@ -125,7 +125,7 @@
    "d": "2026-07-31",
    "code": "RDDT",
    "name": "Reddit",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-31",
@@ -149,19 +149,19 @@
    "d": "2026-07-31",
    "code": "SYK",
    "name": "史赛克",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-31",
    "code": "MSTR",
    "name": "Strategy",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-31",
    "code": "COIN",
    "name": "Coinbase",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-07-31",
