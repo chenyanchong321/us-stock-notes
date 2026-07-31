@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-31 16:30 北京时间",
+ "updated": "2026-07-31 16:46 北京时间",
  "earnings": [
   {
    "d": "2026-07-30",
@@ -729,12 +729,6 @@
   },
   {
    "d": "2026-08-13",
-   "code": "CVV",
-   "name": "CVD设备",
-   "est": false
-  },
-  {
-   "d": "2026-08-13",
    "code": "ONDS",
    "name": "Ondas",
    "est": false
@@ -890,12 +884,6 @@
    "est": false
   },
   {
-   "d": "2026-09-03",
-   "code": "CRM",
-   "name": "赛富时（Salesforce）",
-   "est": false
-  },
-  {
    "d": "2026-09-04",
    "code": "DELL",
    "name": "戴尔科技",
@@ -908,12 +896,6 @@
    "est": false
   },
   {
-   "d": "2026-09-24",
-   "code": "MU",
-   "name": "美光科技",
-   "est": true
-  },
-  {
    "d": "2026-10-13",
    "code": "JNJ",
    "name": "强生",
@@ -923,18 +905,6 @@
    "d": "2026-10-14",
    "code": "ASML",
    "name": "阿斯麦",
-   "est": false
-  },
-  {
-   "d": "2026-10-14",
-   "code": "ABT",
-   "name": "雅培",
-   "est": false
-  },
-  {
-   "d": "2026-10-21",
-   "code": "EQT",
-   "name": "EQT（天然气）",
    "est": false
   },
   {
