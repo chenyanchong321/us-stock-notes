@@ -445,6 +445,25 @@ def build_market_scale():
     line = " | ".join(f"{x['key']}{x['usd_t']}" for x in stocks + metals + crypto)
     print(f"市场规模：{line}（万亿美元）")
 
+def fetch_cg_hist(cg_id):
+    """CoinGecko 全精度日线（近365天）→ [(ts秒, price), ...] 升序。
+    用途：超低价币（lowp 守卫命中）的长周期涨跌幅——Yahoo 日线只有6位小数全是假数，
+    CG 给全精度（2026-07-31 主人要求补齐 SHIB/PEPE 空列）。失败返回 None，绝不抛错。"""
+    url = f"https://api.coingecko.com/api/v3/coins/{cg_id}/market_chart?vs_currency=usd&days=365&interval=daily"
+    for att in range(3):
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"})
+            with urllib.request.urlopen(req, timeout=25) as r:
+                j = json.loads(r.read().decode())
+            pts = [(int(ms / 1000), float(p)) for ms, p in j.get("prices", []) if p]
+            if len(pts) >= 8:
+                return pts
+        except Exception as e:
+            print(f"  ~~ CG {cg_id} 第{att+1}次失败: {e}", file=sys.stderr)
+            time.sleep(3 * (att + 1))
+    return None
+
+
 def main():
     watch = json.loads((ROOT / "config/watchlist.json").read_text(encoding="utf-8"))
     now = datetime.datetime.now(datetime.timezone.utc)
@@ -460,6 +479,18 @@ def main():
     all_syms = [it["yahoo"] for sec in watch["sections"] for it in sec["items"]
                 if not str(it.get("hist") or "").startswith("em:")]
     pe_map, earn_map, ext_map, fpe_map, mcap_map, so_map = fetch_pe_map(all_syms)
+
+    # 【失败沿用上一班｜2026-07-31 布伦特东财偶发超时后立规】上一班的旧数据远好于一排「获取失败」。
+    # 只沿用完整的24字段正常行；连旧行都没有（新标的首班失败）才落兜底行。永久性失败仍会每班打 warning，不会静默。
+    prev_map = {}
+    try:
+        _prev = json.loads((ROOT / "data/quotes.json").read_text(encoding="utf-8"))
+        for _ps in _prev.get("sections", []):
+            for _pr in _ps.get("rows", []):
+                if isinstance(_pr, list) and len(_pr) == 24 and _pr[3] != "获取失败":
+                    prev_map[_pr[1]] = _pr
+    except Exception:
+        pass
 
     cache = {}
     sections_out = []
@@ -479,9 +510,16 @@ def main():
                 # 兜底行必须与正常行等长（当前24字段）——个别标的抓取失败时以此行占位，
                 # 不阻断其它标的发布。字段升级时这里和正常行(575)、校验(591)三处必须同步改，
                 # 否则任何一只标的失败就会生成短行、触发校验、阻断全站发布（2026-07-23 罗氏欧股降级踩中）。
-                rows.append([it["name"], it["code"], it["market"], "获取失败",
-                             "-", "-", 0.0, "-", "-", "-", "-", "-", gmap.get(it["code"], ""),
-                             None, None, None, None, None, None, None, None, None, None, None])
+                _old = prev_map.get(it["code"])
+                if _old:
+                    print(f"::warning::{it['code']} {it['name']} 本班抓取失败，沿用上一班快照（数值可能滞后一班）")
+                    _row = list(_old)
+                    _row[12] = gmap.get(it["code"], _row[12])
+                    rows.append(_row)
+                else:
+                    rows.append([it["name"], it["code"], it["market"], "获取失败",
+                                 "-", "-", 0.0, "-", "-", "-", "-", "-", gmap.get(it["code"], ""),
+                                 None, None, None, None, None, None, None, None, None, None, None])
                 continue
             pairs, hist_max = fetched
             price = pairs[-1][1]
@@ -581,17 +619,39 @@ def main():
             ytd = window(ts_ytd, "ytd")
             y1 = window(ts_1y, "1y")
 
-            if lowp:   # 日线精度不足 → 涨跌幅一律作废，只保留现价/市值/回撤等高精度字段
-                m1 = m3 = m6 = ytd = y1 = w1 = None
+            day_val = (round(pct(pairs[-1][1], pairs[-2][1]), 2) if len(pairs) >= 2 else None)
+            l5_val = last5_daily()
+            if lowp:   # Yahoo 日线精度不足 → 作废，改用 CoinGecko 全精度历史线真实计算（watchlist 声明 "cg" 源）
+                m1 = m3 = m6 = ytd = y1 = w1 = day_val = l5_val = None
+                if it.get("cg"):
+                    cg = fetch_cg_hist(it["cg"])
+                    if cg:
+                        _cp = cg[-1][1]
+
+                        def _cgwin(tsb):
+                            b = price_at(cg, tsb)
+                            return round(pct(_cp, b), 1) if b else None
+                        w1, m1, m3 = _cgwin(ts_1w), _cgwin(ts_1m), _cgwin(ts_3m)
+                        m6, ytd, y1 = _cgwin(ts_6m), _cgwin(ts_ytd), _cgwin(ts_1y)
+                        day_val = round(pct(cg[-1][1], cg[-2][1]), 2)
+                        _l5 = []
+                        for _i in range(1, 6):
+                            if len(cg) < _i + 1:
+                                break
+                            _t, _c = cg[-_i]
+                            _d = int(datetime.datetime.fromtimestamp(_t, datetime.timezone.utc).strftime("%Y%m%d"))
+                            _l5.append([_d, round(pct(_c, cg[-_i - 1][1]), 2)])
+                        l5_val = _l5 or None
+                        print(f"  ++ {it['code']} 长周期已由 CoinGecko({it['cg']}) 全精度补齐")
             rows.append([it["name"], it["code"], it["market"],
                          fmt_mcap(it, price, mcap_map.get(sym)),
                          fmt_price(cur, ath), fmt_price(cur, price),
                          round(dd, 1), m1, m3, m6, ytd, y1, gmap.get(it["code"], ""),
                          pe_map.get(sym), *pos_52w(pairs, ts_1y, cur),
-                         None if lowp else (round(pct(pairs[-1][1], pairs[-2][1]), 2) if len(pairs) >= 2 else None),
+                         day_val,
                          ext_map.get(sym) if it["market"].startswith("美股") else None,
                          w1, fpe_map.get(sym), ma_list(), vol_info(),
-                         None if lowp else last5_daily(),
+                         l5_val,
                          beta_info()])
             print(f"  {it['code']:>10} {it['name'][:12]:<14} 现价 {price:,.2f}  回撤 {dd:.1f}%")
         sections_out.append({"sec": sec["name"], "rows": rows})

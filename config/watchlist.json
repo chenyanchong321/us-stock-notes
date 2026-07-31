@@ -8475,7 +8475,8 @@
       "approx": false
      },
      "mcap_base_price": 5.33e-06,
-     "ath_floor": 8e-05
+     "ath_floor": 8e-05,
+     "cg": "shiba-inu"
     },
     {
      "name": "Pepe",
@@ -8489,7 +8490,8 @@
       "approx": false
      },
      "mcap_base_price": 2.71e-06,
-     "ath_floor": 2.803e-05
+     "ath_floor": 2.803e-05,
+     "cg": "pepe"
     },
     {
      "name": "泰达币 USDT",
