@@ -630,16 +630,21 @@ def main():
 
                         def _cgwin(tsb):
                             b = price_at(cg, tsb)
+                            if b is None and 0 < cg[0][0] - tsb < 8 * 86400:
+                                b = cg[0][1]   # CG免费档正好365天，首点晚于基准几小时→就近取首点
                             return round(pct(_cp, b), 1) if b else None
                         w1, m1, m3 = _cgwin(ts_1w), _cgwin(ts_1m), _cgwin(ts_3m)
                         m6, ytd, y1 = _cgwin(ts_6m), _cgwin(ts_ytd), _cgwin(ts_1y)
                         day_val = round(pct(cg[-1][1], cg[-2][1]), 2)
-                        _l5 = []
-                        for _i in range(1, 6):
-                            if len(cg) < _i + 1:
+                        _l5, _seen = [], set()
+                        for _i in range(1, 8):
+                            if len(cg) < _i + 1 or len(_l5) >= 5:
                                 break
                             _t, _c = cg[-_i]
                             _d = int(datetime.datetime.fromtimestamp(_t, datetime.timezone.utc).strftime("%Y%m%d"))
+                            if _d in _seen:
+                                continue   # CG 末点=此刻、次末点=今日0点UTC，同日取最新的一条
+                            _seen.add(_d)
                             _l5.append([_d, round(pct(_c, cg[-_i - 1][1]), 2)])
                         l5_val = _l5 or None
                         print(f"  ++ {it['code']} 长周期已由 CoinGecko({it['cg']}) 全精度补齐")
