@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-01 21:29 北京时间",
+ "updated": "2026-08-01 22:27 北京时间",
  "earnings": [
   {
    "d": "2026-07-31",
@@ -29,6 +29,12 @@
    "d": "2026-08-04",
    "code": "CIFR",
    "name": "Cipher Mining",
+   "est": false
+  },
+  {
+   "d": "2026-08-04",
+   "code": "7729",
+   "name": "东京精密（Accretech）",
    "est": false
   },
   {
@@ -561,12 +567,6 @@
   },
   {
    "d": "2026-08-13",
-   "code": "CVV",
-   "name": "CVD设备",
-   "est": false
-  },
-  {
-   "d": "2026-08-13",
    "code": "09618",
    "name": "京东集团",
    "est": false
@@ -746,12 +746,6 @@
    "est": false
   },
   {
-   "d": "2026-09-03",
-   "code": "CRM",
-   "name": "赛富时（Salesforce）",
-   "est": false
-  },
-  {
    "d": "2026-09-04",
    "code": "DELL",
    "name": "戴尔科技",
@@ -762,12 +756,6 @@
    "code": "ADBE",
    "name": "Adobe",
    "est": false
-  },
-  {
-   "d": "2026-09-24",
-   "code": "MU",
-   "name": "美光科技",
-   "est": true
   },
   {
    "d": "2026-10-13",
@@ -782,21 +770,15 @@
    "est": false
   },
   {
-   "d": "2026-10-14",
-   "code": "ABT",
-   "name": "雅培",
-   "est": false
-  },
-  {
-   "d": "2026-10-21",
-   "code": "EQT",
-   "name": "EQT（天然气）",
+   "d": "2026-10-22",
+   "code": "NOK",
+   "name": "诺基亚",
    "est": false
   },
   {
    "d": "2026-10-22",
-   "code": "NOK",
-   "name": "诺基亚",
+   "code": "6146",
+   "name": "迪思科（DISCO）",
    "est": false
   },
   {
