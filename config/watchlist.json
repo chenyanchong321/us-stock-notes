@@ -711,6 +711,20 @@
      "ath_floor": 0
     },
     {
+     "name": "联发科",
+     "code": "2454",
+     "market": "台股",
+     "yahoo": "2454.TW",
+     "currency": "NT$",
+     "mcap_base": {
+      "prefix": "NT$",
+      "yi": 64100.0,
+      "approx": true
+     },
+     "mcap_base_price": 3995.0,
+     "ath_floor": 0
+    },
+    {
      "name": "恩智浦",
      "code": "NXPI",
      "market": "美股",
@@ -890,6 +904,7 @@
      "codes": [
       "ARM",
       "QCOM",
+      "2454",
       "NXPI",
       "TXN",
       "ADI",
