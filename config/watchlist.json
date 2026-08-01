@@ -2763,6 +2763,34 @@
      "ath_floor": 0
     },
     {
+     "name": "迪思科（DISCO）",
+     "code": "6146",
+     "market": "日股",
+     "yahoo": "6146.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 77900.0,
+      "approx": true
+     },
+     "mcap_base_price": 71900.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "东京精密（Accretech）",
+     "code": "7729",
+     "market": "日股",
+     "yahoo": "7729.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 8354.0,
+      "approx": true
+     },
+     "mcap_base_price": 20130.0,
+     "ath_floor": 0
+    },
+    {
      "name": "是德科技（Keysight）",
      "code": "KEYS",
      "market": "美股",
@@ -3078,6 +3106,8 @@
      "codes": [
       "TER",
       "6857",
+      "6146",
+      "7729",
       "KEYS",
       "COHU",
       "AEHR",
