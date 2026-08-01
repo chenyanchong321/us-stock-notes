@@ -2511,6 +2511,20 @@
      "ath_floor": 438.5
     },
     {
+     "name": "东京电子",
+     "code": "8035",
+     "market": "日股",
+     "yahoo": "8035.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 260000.0,
+      "approx": true
+     },
+     "mcap_base_price": 55500.0,
+     "ath_floor": 0
+    },
+    {
      "name": "Axcelis",
      "code": "ACLS",
      "market": "美股",
@@ -3036,6 +3050,7 @@
       "ASML",
       "AMAT",
       "LRCX",
+      "8035",
       "ACLS",
       "VECO",
       "ACMR",
