@@ -1674,8 +1674,9 @@ function usdPriceLine(r){
 }
 /* 美元市值换算浮窗：两行——①美元市值（不重复本币原值）②灰色汇率。非目标行返回 null */
 /* 市值悬停浮窗：PE 从表格挪到这里（看得少的退到浮窗）；非美元个股再附一行换算汇率。 */
+const FUND_TIP_ON = false;   /* 2026-08-02 主人：隐藏市值格的估值浮窗（fundamentals 管线照跑，改回 true 即恢复；非美元标的仅保留 PE+汇率小条 */
 function usdMcapTip(r){
-  const code=r[1], F=(window.FUND&&window.FUND[code])||null;
+  const code=r[1], F=FUND_TIP_ON ? ((window.FUND&&window.FUND[code])||null) : null;
   const mkt=String(r[2]||"");
   if(!F){
     let pe="";
