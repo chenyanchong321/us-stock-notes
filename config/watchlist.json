@@ -385,6 +385,20 @@
      "mcap_base": null,
      "mcap_base_price": 0.839,
      "ath_floor": 0
+    },
+    {
+     "name": "日经高股息50ETF（NF 1489）",
+     "code": "1489",
+     "market": "日股 ETF",
+     "yahoo": "1489.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 5360.0,
+      "approx": true
+     },
+     "mcap_base_price": 3436.0,
+     "ath_floor": 0
     }
    ],
    "groups": [
@@ -446,7 +460,8 @@
       "PGJ",
       "XBI",
       "513120",
-      "159992"
+      "159992",
+      "1489"
      ]
     }
    ]
