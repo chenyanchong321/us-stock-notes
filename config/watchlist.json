@@ -7762,6 +7762,20 @@
      "ath_floor": 0
     },
     {
+     "name": "华明装备",
+     "code": "002270",
+     "market": "A股",
+     "yahoo": "002270.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 180.5,
+      "approx": true
+     },
+     "mcap_base_price": 20.14,
+     "ath_floor": 0
+    },
+    {
      "name": "许继电气",
      "code": "000400",
      "market": "A股",
@@ -8084,6 +8098,7 @@
      "name": "电网设备（出海＞柔直＞网内）",
      "codes": [
       "002028",
+      "002270",
       "000400",
       "600406",
       "600089"
