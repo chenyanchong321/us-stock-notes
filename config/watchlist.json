@@ -399,6 +399,26 @@
      },
      "mcap_base_price": 3436.0,
      "ath_floor": 0
+    },
+    {
+     "name": "现金流ETF国泰",
+     "code": "159399",
+     "market": "A股 ETF",
+     "yahoo": "159399.SZ",
+     "currency": "¥",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "港股央企红利ETF华安",
+     "code": "513920",
+     "market": "A股 ETF",
+     "yahoo": "513920.SS",
+     "currency": "¥",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
     }
    ],
    "groups": [
@@ -461,7 +481,9 @@
       "XBI",
       "513120",
       "159992",
-      "1489"
+      "1489",
+      "159399",
+      "513920"
      ]
     }
    ]
