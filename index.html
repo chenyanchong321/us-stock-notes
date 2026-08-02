@@ -4683,7 +4683,9 @@ let PROFILES = {};
   }
   /* 均线支撑区块（2026-07-13 主人需求）：五条关键均线（数据r[20]，流水线日更），
      每条带白话身份说明；现价用实时价比较，绿=站稳/红=跌破/灰=数据不足，底部自动形态总结。 */
+  const MA_LADDER_ON = false;   /* 2026-08-02 主人：现价浮窗隐藏均线台阶（数据管线照算 r[20]，改回 true 即恢复） */
   function maBlock(r){
+    if(!MA_LADDER_ON) return "";
     const mas = r[20];
     if(!Array.isArray(mas)) return "";
     const px = parseFloat(String(r[5]).replace(/[^\d.]/g,""));
