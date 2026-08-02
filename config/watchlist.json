@@ -1156,6 +1156,20 @@
      "ath_floor": 0
     },
     {
+     "name": "南亚科技",
+     "code": "2408",
+     "market": "台股",
+     "yahoo": "2408.TW",
+     "currency": "NT$",
+     "mcap_base": {
+      "prefix": "NT$",
+      "yi": 11165.0,
+      "approx": true
+     },
+     "mcap_base_price": 360.5,
+     "ath_floor": 0
+    },
+    {
      "name": "南方两倍做多海力士",
      "code": "07709",
      "market": "港股 ETF",
@@ -1320,6 +1334,20 @@
      "ath_floor": 0
     },
     {
+     "name": "华邦电子",
+     "code": "2344",
+     "market": "台股",
+     "yahoo": "2344.TW",
+     "currency": "NT$",
+     "mcap_base": {
+      "prefix": "NT$",
+      "yi": 7738.0,
+      "approx": true
+     },
+     "mcap_base_price": 174.0,
+     "ath_floor": 0
+    },
+    {
      "name": "澜起科技",
      "code": "06809",
      "market": "港股",
@@ -1455,6 +1483,7 @@
       "MU",
       "005930",
       "688825",
+      "2408",
       "07709",
       "DRAM"
      ]
@@ -1487,6 +1516,7 @@
      "codes": [
       "603986",
       "03986",
+      "2344",
       "06809",
       "688008",
       "RMBS",
