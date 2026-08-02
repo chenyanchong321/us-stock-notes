@@ -1646,7 +1646,7 @@ window.FUND=null; window.FUND_ASOF="";
 fetch("data/fundamentals.json?v="+Date.now()).then(r=>r.ok?r.json():null).then(d=>{if(d){window.FUND=d.items;window.FUND_ASOF=d.asof;}}).catch(()=>{});
 /* 机构评级共识（2026-07-26）：独立文件，取不到就整块功能静默消失，不影响任何既有渲染。
    下架开关：把 RATINGS_ON 改成 false，全站徽标与浮窗立即消失（比 revert 还快）。 */
-const RATINGS_ON = true;
+const RATINGS_ON = false;   /* 2026-08-02 主人：实际帮助不大，先隐藏（数据管线照跑，改回 true 即恢复） */
 window.RATE = null; window.RATE_ASOF = "";
 if(RATINGS_ON) fetch("data/ratings.json?v="+Date.now()).then(r=>r.ok?r.json():null)
   .then(d=>{ if(d){ window.RATE=d.items; window.RATE_ASOF=d.asof; if(window.repaintRateBadges) repaintRateBadges(); } }).catch(()=>{});
