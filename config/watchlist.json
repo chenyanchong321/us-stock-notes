@@ -3055,20 +3055,6 @@
      "ath_floor": 0
     },
     {
-     "name": "CVD设备",
-     "code": "CVV",
-     "market": "美股",
-     "yahoo": "CVV",
-     "currency": "$",
-     "mcap_base": {
-      "prefix": "$",
-      "yi": 0.5,
-      "approx": false
-     },
-     "mcap_base_price": 7.74,
-     "ath_floor": 0
-    },
-    {
      "name": "富创精密",
      "code": "688409",
      "market": "A股",
@@ -3208,7 +3194,6 @@
       "MKSI",
       "BRKR",
       "NDSN",
-      "CVV",
       "688409",
       "300260",
       "300820",
