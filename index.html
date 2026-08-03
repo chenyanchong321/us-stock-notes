@@ -906,8 +906,9 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
       <div class="stat vc" data-view="focus"><div class="k">⭐ 重点清单</div><div class="v" id="st-focus">–</div></div>
       <div class="stat vc" data-view="gain"><div class="k">📈 涨幅榜 Top30</div><div class="v" id="st-gain">今日</div></div>
       <div class="stat vc" data-view="loss"><div class="k">📉 跌幅榜 Top30</div><div class="v" id="st-loss">今日</div></div>
-      <div class="stat vc" data-view="multimkt"><div class="k">🌐 多市场榜</div><div class="v" id="st-mm">今日</div></div>
-      <div class="stat vc" id="morecard"><div class="k">📦 其他</div><div class="v" id="st-more">▾ 8 个</div></div>
+      <div class="stat vc" id="ddvizcard"><div class="k">📊 涨跌可视化</div><div class="v" id="st-ddviz">回撤</div></div>
+      <div class="stat vc" id="morecard"><div class="k">📦 其他</div><div class="v" id="st-more">▾ 9 个</div></div>
+      <div class="stat vc xtra hidden" data-view="multimkt"><div class="k">🌐 多市场榜</div><div class="v" id="st-mm">今日</div></div>
       <div class="stat vc xtra hidden" data-view="dd"><div class="k">回撤榜（&gt;30%）</div><div class="v" id="st-deep">–</div></div>
       <div class="stat vc xtra hidden" data-view="hi"><div class="k">🚀 回撤榜（&lt;30%）</div><div class="v" id="st-hi">–</div></div>
       <div class="stat vc xtra hidden" data-view="mcap"><div class="k">💰 市值排行榜</div><div class="v" id="st-mcap">全表</div></div>
@@ -1209,7 +1210,7 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
   }
   </style>
   <div class="kbar" data-kbar="drawdown"></div>
-  <h2 style="font-size:18px;margin:6px 0 2px">📉 回撤与涨幅可视化</h2>
+  <h2 style="font-size:18px;margin:6px 0 2px">📊 涨跌可视化</h2>
   <div style="font-size:12px;color:var(--text2)" id="dw-asof"></div>
   <div class="dw-pills" id="dw-pills"></div>
   <div class="dw-card" id="dw-intro"></div>
@@ -2549,7 +2550,7 @@ function renderDash(quotes){
     }
     if(v==="multimkt") window.MM_W="d";   /* 周期每次点进重置「今日」；角标由 buildMultiMkt 统一维护（指标记忆） */
     window.updateMbottom && window.updateMbottom();
-    const inXtra = ["dd","hi","mcap","turn","fund","alpha","ladder","heat"].includes(v);   /* ①收纳（2026-07-18 主人定）：常驻只留5卡 */
+    const inXtra = ["multimkt","dd","hi","mcap","turn","fund","alpha","ladder","heat"].includes(v);   /* ①收纳（2026-07-18 主人定）：常驻只留5卡 */
     if(inXtra && window.ensureXtra) window.ensureXtra();
     const mc0 = document.getElementById("morecard");
     if(mc0) mc0.classList.toggle("on", inXtra);
@@ -2628,11 +2629,16 @@ function renderDash(quotes){
     function setX(open){
       window.XOPEN = open;
       document.querySelectorAll(".stat.xtra").forEach(c=>c.classList.toggle("hidden", !open));
-      sv.textContent = open ? "▴ 收起" : "▾ 8 个";
+      sv.textContent = open ? "▴ 收起" : "▾ 9 个";
     }
     window.ensureXtra = ()=>{ if(!window.XOPEN) setX(true); };
     mc.addEventListener("click", ()=>setX(!window.XOPEN));
     setX(false);
+  })();
+  /* 涨跌可视化入口卡（2026-08-03 主人定：顶级卡跳 KB 页，多市场榜让位入抽屉） */
+  (function(){
+    const c=document.getElementById("ddvizcard");
+    if(c) c.addEventListener("click", ()=>{ if(window.switchTab) switchTab("drawdown"); });
   })();
   /* ===== 悬浮市场快捷dock：桌面滚出即现，手机上滑浮现（2026-07-14 主人定，高频切换场景） ===== */
   (function(){
@@ -3794,6 +3800,8 @@ window.renderDrawdown=(function(){
     if(pl) pl.innerHTML=MODES.map(([k,l])=>'<button data-m="'+k+'"'+(k===DWM?' class="on"':'')+'>'+l+'</button>').join("");
     const tot=secs.reduce((n,s)=>n+s.list.length,0);
     const a=document.getElementById("dw-asof");
+    const stc=document.getElementById("st-ddviz");
+    if(stc) stc.textContent=(DWM==="dd"?"回撤":(DWM==="ytd"?"年初至今":"近1年"));
     if(a) a.textContent=(DWM==="dd"?"距 52 周高点 · 收盘价口径":(DWM==="ytd"?"年初至今涨跌":"近 1 年涨跌"))+" · "+secs.length+" 个板块 / "+tot+" 只 · 数据同数据面板，随行情自动更新";
     const it=document.getElementById("dw-intro");
     if(it) it.innerHTML=INTRO[DWM==="dd"?"dd":"g"];
@@ -6481,7 +6489,7 @@ document.addEventListener("click", e=>{
      KB_VIEWS 下的任何页都算「学习笔记」页签高亮范围；新增栏目在 KB 数组加一项即全站生效。 */
   const KB = [["notes","📚 学习笔记"],["dict","📖 术语词典"],["history","📜 金融史"],["imap","🗺 产业地图"],
               ["universe","🌌 股票宇宙"],["events","📅 大事件"],["lev","⚖️ 杠杆率"],["margin","💳 融资余额"],["reads","📖 烟囱荐读"],
-              ["aicapex","💰 AI资金"],["scenarios","📊 情景演绎"],["attrib","📄 归因分析"],["soxbear","🐻 费半熊市推算"],["drawdown","📉 回撤可视化"]];
+              ["aicapex","💰 AI资金"],["scenarios","📊 情景演绎"],["attrib","📄 归因分析"],["soxbear","🐻 费半熊市推算"],["drawdown","📊 涨跌可视化"]];
   const KB_VIEWS = KB.map(x=>x[0]);
   document.querySelectorAll(".kbar[data-kbar]").forEach(k=>{
     k.innerHTML = KB.map(([v,l])=>`<button data-view="${v}"${v===k.dataset.kbar?' class="on"':''}>${l}</button>`).join("");
