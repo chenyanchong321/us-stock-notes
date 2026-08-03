@@ -113,7 +113,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 
 /* ========== 顶部栏 ========== */
 #header{position:fixed;top:0;left:0;right:0;height:var(--header-h);background:var(--panel);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:28px;z-index:200}
-#header .logo{font-size:17px;font-weight:700;cursor:pointer;user-select:none}
+#header .logo{font-size:17px;font-weight:700;cursor:pointer;user-select:none;line-height:1.15}
+#header .logo .lgsub{display:block;font-style:normal;font-size:10px;font-weight:400;color:var(--text2);letter-spacing:1.5px;margin-top:1px;white-space:nowrap}
 #header .logo:hover span{filter:brightness(1.2)}
 #header .logo span{color:var(--accent)}
 .tabs{display:flex;gap:4px;height:100%}
@@ -483,7 +484,8 @@ tr.ev-flash td{animation:evflash 2.4s ease-out}
 @media(max-width:860px){
   :root{--header-h:94px}
   #header{padding:4px 10px 0;gap:8px;height:auto;min-height:var(--header-h);flex-wrap:wrap;align-content:flex-start}
-  #header .logo{font-size:14px;height:44px;display:flex;align-items:center}
+  #header .logo{font-size:14px;height:44px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center}
+  #header .logo .lgsub{font-size:9px;letter-spacing:1px}
   /* 旧规则藏的是「美股学习笔记」五字；改名「从心而富」后仅四字，手机端完整显示（2026-08-03） */
   .tabs{order:3;width:100%;height:42px;overflow-x:auto;-webkit-overflow-scrolling:touch;justify-content:space-around}
   .tab{padding:0 8px;font-size:13px;flex:0 0 auto}
@@ -851,7 +853,7 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
 <body>
 
 <header id="header">
-  <div class="logo" title="烟囱的美股学习笔记">📓 从心<span>而富</span></div>
+  <div class="logo" title="烟囱的美股学习笔记">📓 从心<span>而富</span><em class="lgsub">求富的路，是修心的路</em></div>
   <div class="tabs">
     <div class="tab active" data-view="dash">📊 数据面板</div>
     <div class="tab" data-view="reports">📑 投研报告</div>
@@ -861,7 +863,6 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
     <input id="search" type="search" enterkeyhint="search" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="🔍 搜索名称 / 代码，如 NVDA、紫金…">
     <span id="search-clear" title="清空">✕</span>
   </div>
-  <div class="slogan">求富的路，是修心的路</div>
   <button id="themebtn" title="切换深/浅色">🌓</button>
   <button id="authbtn">登录</button>
 </header>
