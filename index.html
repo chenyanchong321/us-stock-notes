@@ -3706,8 +3706,10 @@ window.renderDrawdown=(function(){
       +'<h3 style="font-size:15px;margin:4px 0 8px">'+esc(sc.sec)+'</h3>'+axis();
     sc.list.forEach(x=>{
       const w=pos(x.dd);
+      const ys = x.ytd==null ? "" : '<span class="dw-msub"> · 年初 <span style="color:'
+        +(x.ytd.ipo?"var(--text2)":(x.ytd.v>=0?"var(--up)":"var(--down)"))+'">'+fpc(x.ytd.v)+(x.ytd.ipo?"*":"")+'</span></span>';
       h+='<div class="dw-row"><div class="dw-nm"><b data-code="'+esc(x.r[1])+'">'+esc(x.r[0])+'</b>'
-        +'<span class="sub">'+esc(x.r[2])+'</span></div>'
+        +'<span class="sub">'+esc(x.r[2])+ys+'</span></div>'
         +'<div class="dw-track">'+grid()+'<span class="dw-bar '+cls(x.dd)+'" style="left:0;width:'+w+'%"></span></div>'
         +'<div class="dw-val" style="color:'+(x.dd<=-20?"var(--down)":"var(--text)")+'">'+x.dd.toFixed(1)+'%</div>'
         +'<div class="dw-ytd" style="color:'+(x.ytd==null?"var(--text2)":(x.ytd.ipo?"var(--text2)":(x.ytd.v>=0?"var(--up)":"var(--down)")))+'">'
