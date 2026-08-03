@@ -3663,8 +3663,8 @@ window.renderDrawdown=(function(){
   function axis(){
     return '<div class="dw-axis"><span style="flex:0 0 132px"></span><span class="dw-track" style="height:14px">'
       +'<span style="position:absolute;left:0;top:0">0%</span>'
-      +'<span style="position:absolute;left:'+pos(20)+'%;top:0;color:var(--down)">−20% 熊市线</span>'
-      +'<span style="position:absolute;left:'+pos(50)+'%;top:0;color:var(--down)">−50% 腰斩线</span>'
+      +'<span style="position:absolute;left:'+pos(20)+'%;top:0;color:var(--down);transform:translateX(-50%);white-space:nowrap">−20% 熊市线</span>'
+      +'<span style="position:absolute;left:'+pos(50)+'%;top:0;color:var(--down);transform:translateX(-50%);white-space:nowrap">−50% 腰斩线</span>'
       +'</span><span style="flex:0 0 62px;text-align:right">回撤</span>'
       +'<span class="dw-ytd">年初至今</span></div>';
   }
@@ -3722,7 +3722,7 @@ window.renderDrawdown=(function(){
       +'总览里<b>实心块＝板块中位数</b>，两端细线＝该板块最抗跌与最惨的那只，'
       +'<b>细线越长说明板块内部分化越大</b>。−20% 是熊市线、−50% 是腰斩线。'
       +'个股页右侧的<b>年初至今</b>是配套读数：同样跌一半，年内还赚 400% 和年内已亏 25%，处境完全不同。'
-      +'指数、ETF（含杠杆产品）、商品与外汇不参与排队。</div>';
+      +'带 <b>*</b> 的是上市不满一年，那一格为上市至今涨跌。指数、ETF（含杠杆产品）、商品与外汇不参与排队。</div>';
     if(SEC){
       const sc=secs.filter(s=>s.sec===SEC)[0];
       if(!sc){ SEC=null; el.innerHTML=overview(secs); }
