@@ -3659,9 +3659,9 @@ window.renderDrawdown=(function(){
   const med=a=>{const n=a.length; return n%2?a[(n-1)/2]:(a[n/2-1]+a[n/2])/2;};
   function mval(x,m){ if(m==="dd") return {v:x.dd,ipo:false}; return m==="ytd"?x.ytd:x.y1; }
   /* 涨幅刻度：正向封顶取展示值的90分位向上取整到 4*step，负向取最差值向上取整档 */
-  function capOf(vals){
+  function capOf(vals,useMax){
     const pos=vals.filter(v=>v>0).sort((a,b)=>a-b);
-    const p90=pos.length?pos[Math.min(pos.length-1,Math.floor(pos.length*0.9))]:50;
+    const p90=pos.length?(useMax?pos[pos.length-1]:pos[Math.min(pos.length-1,Math.floor(pos.length*0.9))]):50;
     const caps=[40,60,100,160,200,300,400,600,800,1200,2000,3000];
     let cap=caps[caps.length-1]; for(const c of caps){ if(c>=p90){cap=c;break;} }
     const worst=Math.min(0,...vals); const negs=[0,20,40,60,80];
@@ -3717,12 +3717,13 @@ window.renderDrawdown=(function(){
     }
     const end=x0+w;
     let labStyle;
-    if(end>74) labStyle='left:auto;right:'+(100-end)+'%;padding-right:7px;color:#fff';
+    const inside=end>74;
+    if(inside) labStyle='left:auto;right:'+(100-end)+'%;padding-right:7px;color:#fff';
     else labStyle='left:'+end+'%;padding-left:7px';
     if(m!=="dd"&&v<0&&end<=74) labStyle='left:'+g.z+'%;padding-left:7px';   /* 负涨幅标签放零轴右侧防撞名称列 */
     const labColor=end>74?"":('color:'+(m==="dd"?(v<=-20?"var(--down)":"var(--text)"):(ipo?"var(--text2)":(v>=0?"var(--up)":"var(--down)"))));
     return '<span class="dw-bar" style="left:'+x0+'%;width:'+Math.max(w,0.4)+'%;background:'+color+(v<0&&m!=="dd"?';border-radius:2px 0 0 2px':'')+'"></span>'
-      +'<span class="dw-lab" style="'+labStyle+';'+labColor+'">'+lab+(s2?'<span class="s2">'+s2+'</span>':'')+'</span>';
+      +'<span class="dw-lab" style="'+labStyle+';'+labColor+'">'+lab+(s2?'<span class="s2"'+(inside?' style="color:rgba(255,255,255,.78)"':'')+'>'+s2+'</span>':'')+'</span>';
   }
   function overview(secs,m){
     const rows=secs.map(s=>{
@@ -3732,7 +3733,7 @@ window.renderDrawdown=(function(){
       return {sec:s.sec,etf:s.etf,n:s.list.length,med:med(vs),lo:vs[0],hi:vs[vs.length-1],
               bear:dds.filter(v=>v<=-50).length};
     }).filter(Boolean).sort((a,b)=>b.med-a.med);
-    const sc=m==="dd"?null:capOf(rows.map(r=>r.med));
+    const sc=m==="dd"?null:capOf(rows.map(r=>r.med),true);   /* 总览是中位数，无妖股，封顶取最大值免箭头 */
     let h=axis(m,sc);
     rows.forEach(o=>{
       const sub=o.n+' 只'+(o.etf?' · 指数与 ETF':'')+' · 个股 '+fmt(o.lo)+' ~ '+fmt(o.hi)+(m==="dd"?' · '+o.bear+' 腰斩':'');
