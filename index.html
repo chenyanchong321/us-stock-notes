@@ -114,12 +114,11 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 /* ========== 顶部栏 ========== */
 #header{position:fixed;top:0;left:0;right:0;height:var(--header-h);background:var(--panel);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:28px;z-index:200}
 #header .logo{display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none;white-space:nowrap;flex:0 0 auto;line-height:1.15}
-#header .logo .lgico{width:34px;height:34px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-style:normal;font-family:"Songti SC","STSong","SimSun",serif;font-weight:700;font-size:21px;color:#221a06;background:linear-gradient(135deg,#ecc878,#c9962e);border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+#header .logo .lgico{width:34px;height:34px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-style:normal;background:#10151d;border:1px solid #2a3345;border-radius:8px}
 #header .logo .lgtx{display:flex;flex-direction:column}
-#header .logo .lg1{font-size:17px;font-weight:700}
-#header .logo .lg1 span{color:var(--accent)}
+#header .logo .lg1{font-size:17px;font-weight:700;letter-spacing:1px}
 #header .logo .lgsub{font-style:italic;font-size:11px;font-weight:500;color:var(--gold);letter-spacing:2px;margin-top:2px}
-#header .logo:hover .lg1 span{filter:brightness(1.2)}
+#header .logo:hover .lgsub{filter:brightness(1.15)}
 .tabs{display:flex;gap:4px;height:100%}
 .tab{display:flex;align-items:center;padding:0 18px;color:var(--text2);cursor:pointer;font-size:14px;border-bottom:2px solid transparent;transition:.15s}
 .tab:hover{color:var(--text)}
@@ -488,7 +487,8 @@ tr.ev-flash td{animation:evflash 2.4s ease-out}
   :root{--header-h:94px}
   #header{padding:4px 10px 0;gap:8px;height:auto;min-height:var(--header-h);flex-wrap:wrap;align-content:flex-start}
   #header .logo{height:44px;gap:7px}
-  #header .logo .lgico{width:28px;height:28px;font-size:17px;border-radius:7px}
+  #header .logo .lgico{width:28px;height:28px;border-radius:7px}
+  #header .logo .lgico svg{width:18px;height:18px}
   #header .logo .lg1{font-size:14px}
   #header .logo .lgsub{font-size:9px;letter-spacing:1px;margin-top:1px}
   /* 旧规则藏的是「美股学习笔记」五字；改名「从心而富」后仅四字，手机端完整显示（2026-08-03） */
@@ -858,7 +858,7 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
 <body>
 
 <header id="header">
-  <div class="logo" title="烟囱的美股学习笔记"><i class="lgico">富</i><div class="lgtx"><b class="lg1">从心<span>而富</span></b><em class="lgsub">求富的路，是修心的路</em></div></div>
+  <div class="logo" title="烟囱的美股学习笔记"><i class="lgico"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><line x1="4.5" y1="2" x2="4.5" y2="20" stroke="#2fbf71" stroke-width="1.2"/><rect x="2.5" y="7" width="4" height="9" rx="1" fill="#2fbf71"/><line x1="11" y1="1" x2="11" y2="19" stroke="#f04a4a" stroke-width="1.2"/><rect x="9" y="4" width="4" height="8" rx="1" fill="#f04a4a"/><line x1="17.5" y1="3" x2="17.5" y2="21" stroke="#2fbf71" stroke-width="1.2"/><rect x="15.5" y="9" width="4" height="9" rx="1" fill="#2fbf71"/></svg></i><div class="lgtx"><b class="lg1">从心而富</b><em class="lgsub">求富的路，是修心的路</em></div></div>
   <div class="tabs">
     <div class="tab active" data-view="dash">📊 数据面板</div>
     <div class="tab" data-view="reports">📑 投研报告</div>
