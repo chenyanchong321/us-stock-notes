@@ -5091,7 +5091,10 @@ let PROFILES = {};
       + `近250日 · 基准${blab||"—"}</div>`;
     return `<div style="${standalone?"font-size:12px":"margin-top:9px;border-top:1px solid var(--border);padding-top:8px;font-size:12px"}">${head}${body}${foot}</div>`;
   }
+  /* 2026-08-03 主人要求：回撤台阶与β归因浮窗暂时下线。恢复=把下面开关改回 true，代码全保留。 */
+  const ATH_BETA_TIP_ON = false;
   function betaTip(tr){   /* 2026-08-02 主人定：β 小字是独立热区（同市值梯队金标模式），归因单独弹，台阶浮窗不再叠加 */
+    if(!ATH_BETA_TIP_ON) return null;
     const code=tr && tr.dataset && tr.dataset.code; if(!code) return null;
     let r=null;
     for(const s of DATA){ for(const x of s.rows){ if(x[1]===code){ r=x; break; } } if(r) break; }
@@ -5100,6 +5103,7 @@ let PROFILES = {};
     return h || null;
   }
   function athTip(tr){   /* 历史高点悬停＝回撤台阶表（两列：跌幅+价格，现价插入档金色） */
+    if(!ATH_BETA_TIP_ON) return null;
     const code=tr.dataset.code; if(!code) return null;
     let r=null;
     for(const s of DATA){ for(const x of s.rows){ if(x[1]===code){ r=x; break; } } if(r) break; }
