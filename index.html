@@ -1178,6 +1178,46 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
   <div id="sxb-list"></div>
 </div>
 
+<div id="view-drawdown" class="hidden" style="max-width:1040px;margin:var(--header-h) auto 0;padding:18px 14px 60px">
+  <style>
+  #view-drawdown .dw-row{display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid var(--border)}
+  #view-drawdown .dw-row:last-child{border-bottom:none}
+  #view-drawdown .dw-nm{flex:0 0 132px;font-size:13px;line-height:1.35;word-break:break-word}
+  #view-drawdown .dw-nm .sub{display:block;font-size:10.5px;color:var(--text2);margin-top:1px}
+  #view-drawdown .dw-track{flex:1 1 auto;min-width:0;position:relative;height:26px}
+  #view-drawdown .dw-grid{position:absolute;inset:0;pointer-events:none}
+  #view-drawdown .dw-vl{position:absolute;top:0;bottom:0;width:0;border-left:1px dashed var(--down);opacity:.55}
+  #view-drawdown .dw-v0{position:absolute;top:0;bottom:0;width:0;border-left:1px solid var(--border)}
+  #view-drawdown .dw-bar{position:absolute;top:6px;height:14px;border-radius:2px;background:var(--down);opacity:.62}
+  #view-drawdown .dw-bar.sev{opacity:1}
+  #view-drawdown .dw-bar.mild{background:var(--text2);opacity:.42}
+  #view-drawdown .dw-whisk{position:absolute;top:12px;height:2px;background:var(--text2);opacity:.5}
+  #view-drawdown .dw-cap{position:absolute;top:7px;width:1px;height:12px;background:var(--text2);opacity:.75}
+  #view-drawdown .dw-med{position:absolute;top:4px;height:18px;border-radius:2px;background:var(--down)}
+  #view-drawdown .dw-val{flex:0 0 62px;text-align:right;font-size:13px;font-variant-numeric:tabular-nums}
+  #view-drawdown .dw-ytd{flex:0 0 74px;text-align:right;font-size:12px;font-variant-numeric:tabular-nums}
+  #view-drawdown .dw-cnt{flex:0 0 96px;text-align:right;font-size:11.5px;color:var(--text2)}
+  #view-drawdown .dw-sec{cursor:pointer}
+  #view-drawdown .dw-sec:hover{background:var(--panel2)}
+  #view-drawdown .dw-axis{display:flex;align-items:center;gap:10px;font-size:11px;color:var(--text2);padding-bottom:3px}
+  #view-drawdown .dw-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:12px 0}
+  #view-drawdown .dw-back{color:var(--accent);cursor:pointer;font-size:13px}
+  #view-drawdown .dw-nm b{font-weight:600;cursor:pointer}
+  @media(max-width:860px){
+    #view-drawdown .dw-nm{flex:0 0 96px;font-size:12px}
+    #view-drawdown .dw-val{flex:0 0 52px;font-size:12px}
+    #view-drawdown .dw-ytd{flex:0 0 56px;font-size:11px}
+    #view-drawdown .dw-cnt{flex:0 0 64px;font-size:10.5px}
+    #view-drawdown .dw-row{gap:6px}
+  }
+  </style>
+  <div class="kbar" data-kbar="drawdown"></div>
+  <h2 style="font-size:18px;margin:6px 0 2px">📉 回撤可视化</h2>
+  <div style="font-size:12px;color:var(--text2)" id="dw-asof"></div>
+  <div class="dw-card" id="dw-intro"></div>
+  <div id="dw-body"></div>
+</div>
+
 <div id="view-history" class="hidden">
   <div class="hist-main">
     <div class="kbar" data-kbar="history"></div>
@@ -3581,6 +3621,125 @@ window.renderSoxbear=(function(){
       if(m&&b){b.innerHTML=esc(d.note).replace(/\n/g,"<br>");m.onclick=()=>{b.style.display=b.style.display==="none"?"block":"none";};}
       paint();
     }).catch(e=>{const el=document.getElementById("sxb-list");if(el)el.innerHTML='<div style="color:var(--text2);padding:20px">数据加载失败</div>';});
+  };
+})();
+
+window.renderDrawdown=(function(){
+  let SEC=null;                     /* null=总览，否则=板块名 */
+  const SCALE=80;                   /* 标尺 0 ~ -80%，全站同尺才能跨板块比 */
+  const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const pos=v=>Math.min(100,Math.max(0,Math.abs(v)/SCALE*100));
+  /* 只留真公司/真资产：指数、ETF（含杠杆）、商品、外汇、宏观一律不参与回撤排队 */
+  const OUT=/指数|ETF|商品|外汇|宏观/;
+  function hiOf(r){
+    const s=r[15]; if(typeof s!=="string"||s.indexOf("–")<0) return null;
+    const n=parseFloat(s.split("–")[1].replace(/[^0-9.]/g,"")); return isFinite(n)&&n>0?n:null;
+  }
+  function pxOf(r){ const n=parseFloat(String(r[5]).replace(/[^0-9.]/g,"")); return isFinite(n)&&n>0?n:null; }
+  function ddOf(r){                 /* 距 52 周高点，避开远古 ATH 失真 */
+    const hi=hiOf(r), px=pxOf(r); if(hi==null||px==null) return null;
+    const v=(px/hi-1)*100; return v<=0.5&&v>-99.5?v:null;
+  }
+  function pick(){                  /* [{sec, list:[{r,dd,ytd}], etf}] */
+    if(!Array.isArray(DATA)) return [];
+    const out=[];
+    DATA.forEach(sc=>{
+      const seen=new Set(), all=[], pure=[];   /* 板块内去重；跨板块重复保留，否则 CPO 会被光连接吃光 */
+      (sc.rows||[]).forEach(r=>{
+        if(seen.has(r[1])) return; seen.add(r[1]);
+        const dd=ddOf(r); if(dd==null) return;
+        const o={r:r, dd:dd, ytd:(typeof r[10]==="number"?r[10]:null)};
+        all.push(o); if(!OUT.test(r[2]||"")) pure.push(o);
+      });
+      /* 个股板块剔掉指数/ETF/杠杆产品；本身就是指数ETF的板块（如 01）整体保留 */
+      const list = pure.length>=3 ? pure : all, etf = pure.length<3;
+      if(list.length>=3){ list.sort((a,b)=>b.dd-a.dd); out.push({sec:sc.sec, list:list, etf:etf}); }
+    });
+    return out;
+  }
+  function med(a){ const n=a.length; return n%2?a[(n-1)/2]:(a[n/2-1]+a[n/2])/2; }
+  function cls(dd){ return dd<=-50?"sev":(dd<=-20?"":"mild"); }
+  function fpc(v){ return (v>0?"+":"")+v.toFixed(1)+"%"; }
+  function axis(){
+    return '<div class="dw-axis"><span style="flex:0 0 132px"></span><span class="dw-track" style="height:14px">'
+      +'<span style="position:absolute;left:0;top:0">0%</span>'
+      +'<span style="position:absolute;left:'+pos(20)+'%;top:0;color:var(--down)">−20% 熊市线</span>'
+      +'<span style="position:absolute;left:'+pos(50)+'%;top:0;color:var(--down)">−50% 腰斩线</span>'
+      +'</span><span style="flex:0 0 62px;text-align:right">回撤</span>'
+      +'<span class="dw-ytd">年初至今</span></div>';
+  }
+  function grid(){
+    return '<span class="dw-grid"><span class="dw-v0" style="left:0"></span>'
+      +'<span class="dw-vl" style="left:'+pos(20)+'%"></span>'
+      +'<span class="dw-vl" style="left:'+pos(50)+'%"></span></span>';
+  }
+  function overview(secs){
+    const stat=secs.map(s=>{
+      const v=s.list.map(x=>x.dd).slice().sort((a,b)=>a-b);
+      return {sec:s.sec, etf:s.etf, n:s.list.length, med:med(v), lo:v[0], hi:v[v.length-1],
+              bear:s.list.filter(x=>x.dd<=-50).length};
+    }).sort((a,b)=>b.med-a.med);
+    let h=axis().replace('<span style="flex:0 0 62px;text-align:right">回撤</span><span class="dw-ytd">年初至今</span>',
+      '<span style="flex:0 0 62px;text-align:right">中位</span><span class="dw-cnt">已腰斩</span>');
+    stat.forEach(s=>{
+      const a=pos(s.hi), b=pos(s.lo);
+      h+='<div class="dw-row dw-sec" data-sec="'+esc(s.sec)+'"><div class="dw-nm">'+esc(s.sec)
+        +'<span class="sub">'+s.n+' 只'+(s.etf?' · 指数与 ETF':'')+' · 点开看个股</span></div>'
+        +'<div class="dw-track">'+grid()
+        +'<span class="dw-whisk" style="left:'+a+'%;width:'+Math.max(0,b-a)+'%"></span>'
+        +'<span class="dw-cap" style="left:'+a+'%"></span><span class="dw-cap" style="left:'+b+'%"></span>'
+        +'<span class="dw-med '+cls(s.med)+'" style="left:'+Math.max(0,pos(s.med)-1.1)+'%;width:2.2%;'
+        +(s.med>-20?'background:var(--text2)':'')+'"></span></div>'
+        +'<div class="dw-val" style="color:'+(s.med<=-20?"var(--down)":"var(--text)")+'">'+s.med.toFixed(1)+'%</div>'
+        +'<div class="dw-cnt">'+s.bear+' / '+s.n+'</div></div>';
+    });
+    return h;
+  }
+  function detail(sc){
+    let h='<div style="margin:10px 0 6px"><span class="dw-back" id="dw-back">← 返回板块总览</span></div>'
+      +'<h3 style="font-size:15px;margin:4px 0 8px">'+esc(sc.sec)+'</h3>'+axis();
+    sc.list.forEach(x=>{
+      const w=pos(x.dd);
+      h+='<div class="dw-row"><div class="dw-nm"><b data-code="'+esc(x.r[1])+'">'+esc(x.r[0])+'</b>'
+        +'<span class="sub">'+esc(x.r[2])+'</span></div>'
+        +'<div class="dw-track">'+grid()+'<span class="dw-bar '+cls(x.dd)+'" style="left:0;width:'+w+'%"></span></div>'
+        +'<div class="dw-val" style="color:'+(x.dd<=-20?"var(--down)":"var(--text)")+'">'+x.dd.toFixed(1)+'%</div>'
+        +'<div class="dw-ytd" style="color:'+(x.ytd==null?"var(--text2)":(x.ytd>=0?"var(--up)":"var(--down)"))+'">'
+        +(x.ytd==null?"–":fpc(x.ytd))+'</div></div>';
+    });
+    return h;
+  }
+  return function(){
+    const el=document.getElementById("dw-body"); if(!el) return;
+    const secs=pick();
+    if(!secs.length){ el.innerHTML='<div style="color:var(--text2);padding:20px">行情数据尚未就绪，稍候再试</div>'; return; }
+    const tot=secs.reduce((n,s)=>n+s.list.length,0);
+    const a=document.getElementById("dw-asof");
+    if(a) a.textContent="距 52 周高点 · 收盘价口径 · "+secs.length+" 个板块 / "+tot+" 只 · 数据同数据面板，随行情自动更新";
+    const it=document.getElementById("dw-intro");
+    if(it) it.innerHTML='<div style="font-size:12.5px;line-height:1.8;color:var(--text2)">'
+      +'每根条＝距<b>52 周最高收盘价</b>还差多少（不是历史最高价，避开借壳更名与远古泡沫高点失真）。'
+      +'总览里<b>实心块＝板块中位数</b>，两端细线＝该板块最抗跌与最惨的那只，'
+      +'<b>细线越长说明板块内部分化越大</b>。−20% 是熊市线、−50% 是腰斩线。'
+      +'个股页右侧的<b>年初至今</b>是配套读数：同样跌一半，年内还赚 400% 和年内已亏 25%，处境完全不同。'
+      +'指数、ETF（含杠杆产品）、商品与外汇不参与排队。</div>';
+    if(SEC){
+      const sc=secs.filter(s=>s.sec===SEC)[0];
+      if(!sc){ SEC=null; el.innerHTML=overview(secs); }
+      else{
+        el.innerHTML=detail(sc);
+        const b=document.getElementById("dw-back");
+        if(b) b.onclick=()=>{ SEC=null; renderDrawdown(); window.scrollTo(0,0); };
+        el.querySelectorAll(".dw-nm b[data-code]").forEach(n=>{ n.onclick=e=>{
+          const rc=n.getBoundingClientRect();
+          window.openStockCard && openStockCard(n.dataset.code, rc.left+20, rc.bottom-4);
+          e.stopPropagation();
+        };});
+      }
+    }else{
+      el.innerHTML=overview(secs);
+      el.querySelectorAll(".dw-sec").forEach(d=>{ d.onclick=()=>{ SEC=d.dataset.sec; renderDrawdown(); window.scrollTo(0,0); };});
+    }
   };
 })();
 
@@ -6247,7 +6406,7 @@ document.addEventListener("click", e=>{
      KB_VIEWS 下的任何页都算「学习笔记」页签高亮范围；新增栏目在 KB 数组加一项即全站生效。 */
   const KB = [["notes","📚 学习笔记"],["dict","📖 术语词典"],["history","📜 金融史"],["imap","🗺 产业地图"],
               ["universe","🌌 股票宇宙"],["events","📅 大事件"],["lev","⚖️ 杠杆率"],["margin","💳 融资余额"],["reads","📖 烟囱荐读"],
-              ["aicapex","💰 AI资金"],["scenarios","📊 情景演绎"],["attrib","📄 归因分析"],["soxbear","🐻 费半熊市推算"]];
+              ["aicapex","💰 AI资金"],["scenarios","📊 情景演绎"],["attrib","📄 归因分析"],["soxbear","🐻 费半熊市推算"],["drawdown","📉 回撤可视化"]];
   const KB_VIEWS = KB.map(x=>x[0]);
   document.querySelectorAll(".kbar[data-kbar]").forEach(k=>{
     k.innerHTML = KB.map(([v,l])=>`<button data-view="${v}"${v===k.dataset.kbar?' class="on"':''}>${l}</button>`).join("");
@@ -6255,7 +6414,7 @@ document.addEventListener("click", e=>{
   window.switchTab = function(v){
     document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",
       t.dataset.view===v || (v==="repread" && t.dataset.view==="reports") || (KB_VIEWS.includes(v) && v!=="notes" && t.dataset.view==="notes")));
-    ["dash","events","notes","dict","history","lev","margin","reads","aicapex","scenarios","attrib","soxbear","reports","repread","imap","universe"].forEach(x=>{
+    ["dash","events","notes","dict","history","lev","margin","reads","aicapex","scenarios","attrib","soxbear","drawdown","reports","repread","imap","universe"].forEach(x=>{
       const el = document.getElementById("view-"+x);
       if(el) el.classList.toggle("hidden", v!==x);
     });
@@ -6270,7 +6429,8 @@ document.addEventListener("click", e=>{
     if(v==="reads" && window.renderReads){ try{ renderReads(); }catch(e){} }
     if(v==="scenarios" && window.renderScenarios){ try{ renderScenarios(); }catch(e){} }
     if(v==="attrib" && window.renderAttrib){ try{ renderAttrib(); }catch(e){} }
-    if(v==="soxbear" && window.renderSoxbear){ try{ renderSoxbear(); }catch(e){} }   /* 归因分析：切入懒加载 */
+    if(v==="soxbear" && window.renderSoxbear){ try{ renderSoxbear(); }catch(e){} }
+    if(v==="drawdown" && window.renderDrawdown){ try{ renderDrawdown(); }catch(e){} }   /* 回撤可视化：切入即刷，跟随最新行情 */
     const mb=document.getElementById("mbottom");
     if(mb) mb.style.display = v==="dash" ? "" : "none";
     document.body.classList.toggle("reading", v==="repread");   /* 阅读态白衣：顶栏与白纸统一 */
@@ -6332,7 +6492,7 @@ document.addEventListener("click", e=>{
   const wantView = new URLSearchParams(location.search).get("view")
                 || (function(){ try{ return localStorage.getItem("homeView"); }catch(e){ return null; } })()   /* 设为默认首页（宇宙页开关，2026-07-18） */
                 || (function(){ try{ return localStorage.getItem("lastView"); }catch(e){ return null; } })();
-  if(["notes","dict","history","events","lev","margin","reads","aicapex","scenarios","attrib","soxbear","reports","imap","universe"].includes(wantView)){
+  if(["notes","dict","history","events","lev","margin","reads","aicapex","scenarios","attrib","soxbear","drawdown","reports","imap","universe"].includes(wantView)){
     window.switchTab(wantView);
   }
 
