@@ -3630,7 +3630,9 @@ window.renderSoxbear=(function(){
 
 window.renderDrawdown=(function(){
   let SEC=null, DWM="dd";           /* dd=回撤 ytd=年初至今 y1=近1年 */
-  const MODES=[["dd","回撤"],["ytd","年初至今"],["y1","近1年"]];
+  const MODES=[["dd","回撤"],["m1","近1月"],["m3","近3月"],["h1","近半年"],["ytd","年初至今"],["y1","近1年"]];
+  const GIDX={m1:7,m3:8,h1:9,ytd:10,y1:11};
+  const MLAB={dd:"距 52 周高点 · 收盘价口径",m1:"近 1 月涨跌",m3:"近 3 月涨跌",h1:"近半年涨跌",ytd:"年初至今涨跌",y1:"近 1 年涨跌"};
   const DD_SCALE=80;
   const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const OUT=/指数|ETF|商品|外汇|宏观/;
@@ -3654,7 +3656,7 @@ window.renderDrawdown=(function(){
       (sc.rows||[]).forEach(r=>{
         if(seen.has(r[1])) return; seen.add(r[1]);
         const dd=ddOf(r); if(dd==null) return;
-        const o={r:r, dd:dd, ytd:gOf(r,10), y1:gOf(r,11)};
+        const o={r:r, dd:dd};
         all.push(o); if(!OUT.test(r[2]||"")) pure.push(o);
       });
       const list = pure.length>=3 ? pure : all, etf = pure.length<3;
@@ -3663,7 +3665,7 @@ window.renderDrawdown=(function(){
     return out;
   }
   const med=a=>{const n=a.length; return n%2?a[(n-1)/2]:(a[n/2-1]+a[n/2])/2;};
-  function mval(x,m){ if(m==="dd") return {v:x.dd,ipo:false}; return m==="ytd"?x.ytd:x.y1; }
+  function mval(x,m){ if(m==="dd") return {v:x.dd,ipo:false}; return gOf(x.r,GIDX[m]); }
   /* 涨幅刻度：正向封顶取展示值的90分位向上取整到 4*step，负向取最差值向上取整档 */
   function capOf(vals,useMax){
     const pos=vals.filter(v=>v>0).sort((a,b)=>a-b);
@@ -3761,7 +3763,7 @@ window.renderDrawdown=(function(){
       const x=it.x;
       let inner;
       if(m==="dd"){
-        const y=x.ytd, s2=y?('年初 '+fmt(y.v)+(y.ipo?"*":"")):null;
+        const y=gOf(x.r,10), s2=y?('年初 '+fmt(y.v)+(y.ipo?"*":"")):null;
         inner=bar(m,sc,x.dd,false,s2,x.dd<=-50);
       }else{
         if(!it.g){ inner='<span class="dw-lab" style="left:0;padding-left:7px;color:var(--text2)">–</span>'; }
@@ -3801,8 +3803,8 @@ window.renderDrawdown=(function(){
     const tot=secs.reduce((n,s)=>n+s.list.length,0);
     const a=document.getElementById("dw-asof");
     const stc=document.getElementById("st-ddviz");
-    if(stc) stc.textContent=(DWM==="dd"?"回撤":(DWM==="ytd"?"年初至今":"近1年"));
-    if(a) a.textContent=(DWM==="dd"?"距 52 周高点 · 收盘价口径":(DWM==="ytd"?"年初至今涨跌":"近 1 年涨跌"))+" · "+secs.length+" 个板块 / "+tot+" 只 · 数据同数据面板，随行情自动更新";
+    if(stc){ const mm=MODES.filter(x=>x[0]===DWM)[0]; stc.textContent=mm?mm[1]:"回撤"; }
+    if(a) a.textContent=MLAB[DWM]+" · "+secs.length+" 个板块 / "+tot+" 只 · 数据同数据面板，随行情自动更新";
     const it=document.getElementById("dw-intro");
     if(it) it.innerHTML=INTRO[DWM==="dd"?"dd":"g"];
     if(SEC){
