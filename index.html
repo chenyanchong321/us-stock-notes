@@ -3635,6 +3635,12 @@ window.renderDrawdown=(function(){
     const s=r[15]; if(typeof s!=="string"||s.indexOf("–")<0) return null;
     const n=parseFloat(s.split("–")[1].replace(/[^0-9.]/g,"")); return isFinite(n)&&n>0?n:null;
   }
+  function ytdOf(r){                /* 数字＝正常年初至今；"上市后 +13.1%" 这类字符串提取数值并标 * */
+    const v=r[10];
+    if(typeof v==="number") return {v:v, ipo:false};
+    if(typeof v==="string"){ const m=v.match(/(-?\d+(\.\d+)?)%/); if(m) return {v:parseFloat(m[1]), ipo:true}; }
+    return null;
+  }
   function pxOf(r){ const n=parseFloat(String(r[5]).replace(/[^0-9.]/g,"")); return isFinite(n)&&n>0?n:null; }
   function ddOf(r){                 /* 距 52 周高点，避开远古 ATH 失真 */
     const hi=hiOf(r), px=pxOf(r); if(hi==null||px==null) return null;
@@ -3648,7 +3654,7 @@ window.renderDrawdown=(function(){
       (sc.rows||[]).forEach(r=>{
         if(seen.has(r[1])) return; seen.add(r[1]);
         const dd=ddOf(r); if(dd==null) return;
-        const o={r:r, dd:dd, ytd:(typeof r[10]==="number"?r[10]:null)};
+        const o={r:r, dd:dd, ytd:ytdOf(r)};
         all.push(o); if(!OUT.test(r[2]||"")) pure.push(o);
       });
       /* 个股板块剔掉指数/ETF/杠杆产品；本身就是指数ETF的板块（如 01）整体保留 */
@@ -3704,8 +3710,8 @@ window.renderDrawdown=(function(){
         +'<span class="sub">'+esc(x.r[2])+'</span></div>'
         +'<div class="dw-track">'+grid()+'<span class="dw-bar '+cls(x.dd)+'" style="left:0;width:'+w+'%"></span></div>'
         +'<div class="dw-val" style="color:'+(x.dd<=-20?"var(--down)":"var(--text)")+'">'+x.dd.toFixed(1)+'%</div>'
-        +'<div class="dw-ytd" style="color:'+(x.ytd==null?"var(--text2)":(x.ytd>=0?"var(--up)":"var(--down)"))+'">'
-        +(x.ytd==null?"–":fpc(x.ytd))+'</div></div>';
+        +'<div class="dw-ytd" style="color:'+(x.ytd==null?"var(--text2)":(x.ytd.ipo?"var(--text2)":(x.ytd.v>=0?"var(--up)":"var(--down)")))+'">'
+        +(x.ytd==null?"–":fpc(x.ytd.v)+(x.ytd.ipo?"*":""))+'</div></div>';
     });
     return h;
   }
