@@ -3401,16 +3401,36 @@ window.updateFresh = function(){
       const j=await r.json();
       if(!j || !j.q || !j.t || Date.now()/1000-j.t>240) return;   /* 只接受4分钟内的新鲜数据 */
       /* 防呆：2026-07-09 新浪源就是这样翻车的——时间戳很新，内容却是昨收。
-         若大批报价与收盘价一模一样，说明该源在盘前不返回盘前价，整批丢弃，退回 applyExt 的 Yahoo 值。 */
+         2026-08-03 改信标判定：原「>70% 等于昨收即整批丢弃」在早盘前误伤——
+         美东 4:00-6:30 多数票本就没有盘前成交（Nasdaq 正确返回昨收，占比常超70%），
+         守卫把少数有真实成交的活跃票（CRCL/NVDA等）也一并丢弃，实时时钟因此打不了点，
+         页面直到盘前中后段才切分钟档（烟囱 2026-08-03 实测抓包）。
+         改法：SPY/QQQ/NVDA 等信标票美东 4:00 起几乎必有盘前成交——
+         信标全部冻结在昨收 → 才判定源坏（新浪式整批昨收场景），整批丢弃；
+         任一信标有真实盘前价 → 源可信放行，无成交的票由下方逐只守卫过滤。
+         信标不足 2 只时退回旧的 70% 整批守卫兜底。 */
       const closes = window.CLOSEPX || {};
-      let eq=0, tot=0;
-      Object.entries(j.q).forEach(([code,v])=>{
-        const c = closes[code], p = v && Number(v.p);
-        if(c && isFinite(p) && p>0){ tot++; if(Math.abs(p-c) < Math.max(0.005, c*1e-5)) eq++; }
+      const BEACONS = ["SPY","QQQ","NVDA","TSLA","AAPL","MSFT"];
+      let bTot=0, bEq=0;
+      BEACONS.forEach(code=>{
+        const v=j.q[code], c=closes[code], p=v&&Number(v.p);
+        if(c && isFinite(p) && p>0){ bTot++; if(Math.abs(p-c) < Math.max(0.005, c*1e-5)) bEq++; }
       });
-      if(tot>=20 && eq/tot>0.7){
-        console.warn(`[applyLive] live.json 疑似昨收快照（${eq}/${tot} 与收盘价相同），已整批忽略`);
-        return;
+      if(bTot>=2){
+        if(bEq===bTot){
+          console.warn(`[applyLive] 信标票 ${bEq}/${bTot} 全部等于昨收，疑似昨收快照，已整批忽略`);
+          return;
+        }
+      }else{
+        let eq=0, tot=0;
+        Object.entries(j.q).forEach(([code,v])=>{
+          const c = closes[code], p = v && Number(v.p);
+          if(c && isFinite(p) && p>0){ tot++; if(Math.abs(p-c) < Math.max(0.005, c*1e-5)) eq++; }
+        });
+        if(tot>=20 && eq/tot>0.7){
+          console.warn(`[applyLive] live.json 疑似昨收快照（${eq}/${tot} 与收盘价相同），已整批忽略`);
+          return;
+        }
       }
       let got=0;
       Object.entries(j.q).forEach(([code,v])=>{
