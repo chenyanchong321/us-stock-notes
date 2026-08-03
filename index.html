@@ -3685,7 +3685,7 @@ window.renderDrawdown=(function(){
       tks+='<span class="tk" style="left:'+(50/DD_SCALE*100)+'%;transform:translateX(-50%)">−50 腰斩</span>';
     }else{
       const g=geo(m,sc), st=sc.cap/4;
-      if(sc.neg>0) tks+='<span class="tk" style="left:0">−'+sc.neg+'</span>';
+      if(sc.neg>0 && geo(m,sc).z>=6) tks+='<span class="tk" style="left:0">−'+sc.neg+'</span>';   /* 负区太窄时省标签防与0%叠 */
       [0,1,2,3,4].forEach(i=>{
         const v=st*i, l=g.x(v), tr=i===4?"transform:translateX(-100%)":(v===0&&sc.neg===0?"":"transform:translateX(-50%)");
         tks+='<span class="tk" style="left:'+l+'%;'+tr+'">'+(v===0?"0%":"+"+Math.round(v))+'</span>';
