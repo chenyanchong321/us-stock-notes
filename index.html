@@ -1204,6 +1204,7 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
   #view-drawdown .dw-back{color:var(--accent);cursor:pointer;font-size:13px}
   #view-drawdown .dw-nm b{font-weight:600;cursor:pointer}
   #view-drawdown .dw-msub{display:none}
+  @media(max-width:860px){#view-drawdown .dw-dsub{display:none}#view-drawdown .dw-axis{font-size:10px}}
   @media(max-width:860px){
     #view-drawdown .dw-nm{flex:0 0 92px;font-size:12px}
     #view-drawdown .dw-val{flex:0 0 50px;font-size:12px}
@@ -3670,8 +3671,8 @@ window.renderDrawdown=(function(){
   function axis(){
     return '<div class="dw-axis"><span style="flex:0 0 132px"></span><span class="dw-track" style="height:14px">'
       +'<span style="position:absolute;left:0;top:0">0%</span>'
-      +'<span style="position:absolute;left:'+pos(20)+'%;top:0;color:var(--down);transform:translateX(-50%);white-space:nowrap">−20% 熊市线</span>'
-      +'<span style="position:absolute;left:'+pos(50)+'%;top:0;color:var(--down);transform:translateX(-50%);white-space:nowrap">−50% 腰斩线</span>'
+      +'<span style="position:absolute;left:'+pos(20)+'%;top:0;color:var(--down);transform:translateX(-50%);white-space:nowrap">−20%<span class="dw-dsub"> 熊市线</span></span>'
+      +'<span style="position:absolute;left:'+pos(50)+'%;top:0;color:var(--down);transform:translateX(-50%);white-space:nowrap">−50%<span class="dw-dsub"> 腰斩线</span></span>'
       +'</span><span style="flex:0 0 62px;text-align:right">回撤</span>'
       +'<span class="dw-ytd">年初至今</span></div>';
   }
