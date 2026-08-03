@@ -5757,6 +5757,34 @@
      "ath_floor": 30.98
     },
     {
+     "name": "兖矿能源",
+     "code": "600188",
+     "market": "A股",
+     "yahoo": "600188.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2013.0,
+      "approx": true
+     },
+     "mcap_base_price": 20.27,
+     "ath_floor": 0
+    },
+    {
+     "name": "兖矿能源",
+     "code": "01171",
+     "market": "港股",
+     "yahoo": "1171.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 1178.0,
+      "approx": true
+     },
+     "mcap_base_price": 11.86,
+     "ath_floor": 0
+    },
+    {
      "name": "兖煤澳大利亚",
      "code": "03668",
      "market": "港股",
@@ -6087,6 +6115,8 @@
       "600027",
       "00836",
       "00883",
+      "600188",
+      "01171",
       "03668",
       "600089",
       "601179",
