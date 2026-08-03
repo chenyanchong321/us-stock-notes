@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-03 21:59 北京时间",
+ "updated": "2026-08-03 22:06 北京时间",
  "earnings": [
   {
    "d": "2026-08-03",
@@ -770,15 +770,39 @@
    "est": true
   },
   {
+   "d": "2026-08-28",
+   "code": "WDAY",
+   "name": "Workday",
+   "est": false
+  },
+  {
    "d": "2026-09-01",
    "code": "MDT",
    "name": "美敦力",
    "est": false
   },
   {
+   "d": "2026-09-02",
+   "code": "PANW",
+   "name": "Palo Alto Networks",
+   "est": false
+  },
+  {
+   "d": "2026-09-03",
+   "code": "AVGO",
+   "name": "博通",
+   "est": false
+  },
+  {
    "d": "2026-09-03",
    "code": "CRM",
    "name": "赛富时（Salesforce）",
+   "est": false
+  },
+  {
+   "d": "2026-09-03",
+   "code": "SNOW",
+   "name": "Snowflake",
    "est": false
   },
   {
