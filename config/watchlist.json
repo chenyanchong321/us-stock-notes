@@ -8091,6 +8091,20 @@
      },
      "mcap_base_price": 84.0,
      "ath_floor": 0
+    },
+    {
+     "name": "联合健康",
+     "code": "UNH",
+     "market": "美股",
+     "yahoo": "UNH",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3783,
+      "approx": true
+     },
+     "mcap_base_price": 416.52,
+     "ath_floor": 0
     }
    ],
    "groups": [
@@ -8170,7 +8184,8 @@
       "ABBV",
       "AXP",
       "SYK",
-      "KO"
+      "KO",
+      "UNH"
      ]
     }
    ]

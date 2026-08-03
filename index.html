@@ -1641,7 +1641,10 @@ function volCell(r){
   const sub = toTxt ? `<span style="display:block;font-size:11px;color:var(--text2);white-space:nowrap">${toTxt}</span>` : (dot?`<span style="display:block;font-size:11px">${dot}</span>`:"");
   return `<span style="display:block;white-space:nowrap">${fmtAmt(mkt,amt)}</span>${sub}`;
 }
+  /* 2026-08-03 主人要求：成交格量比/换手浮窗暂时下线。恢复=开关改回 true。 */
+  const VOL_TIP_ON = false;
 function volTip(tr){
+    if(!VOL_TIP_ON) return null;
   /* 量能浮窗（2026-07-15 主人二次定稿：只留数值+档位+高亮档位条，删一切解释性长文） */
   const code=tr && tr.dataset ? tr.dataset.code : null; if(!code) return null;
   const i = window.LBOF && window.LBOF[code]; if(!i) return null;
