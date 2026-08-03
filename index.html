@@ -3723,7 +3723,7 @@ window.renderDrawdown=(function(){
     if(m!=="dd"&&v<0&&end<=74) labStyle='left:'+g.z+'%;padding-left:7px';   /* 负涨幅标签放零轴右侧防撞名称列 */
     const labColor=end>74?"":('color:'+(m==="dd"?(v<=-20?"var(--down)":"var(--text)"):(ipo?"var(--text2)":(v>=0?"var(--up)":"var(--down)"))));
     return '<span class="dw-bar" style="left:'+x0+'%;width:'+Math.max(w,0.4)+'%;background:'+color+(v<0&&m!=="dd"?';border-radius:2px 0 0 2px':'')+'"></span>'
-      +'<span class="dw-lab" style="'+labStyle+';'+labColor+'">'+lab+(s2?'<span class="s2"'+(inside?' style="color:rgba(255,255,255,.78)"':'')+'>'+s2+'</span>':'')+'</span>';
+      +'<span class="dw-lab" data-end="'+end.toFixed(1)+'" style="'+labStyle+';'+labColor+'">'+lab+(s2?'<span class="s2"'+(inside?' style="color:rgba(255,255,255,.78)"':'')+'>'+s2+'</span>':'')+'</span>';
   }
   function overview(secs,m){
     const rows=secs.map(s=>{
@@ -3767,6 +3767,21 @@ window.renderDrawdown=(function(){
     });
     return h;
   }
+  function fixLabs(el){                /* 标签实测宽度回位：溢出轨道→柱够长翻进柱内，否则贴右缘加底片 */
+    el.querySelectorAll(".dw-track .dw-lab").forEach(lb=>{
+      const tk=lb.closest(".dw-track"); if(!tk) return;
+      const t=lb.getBoundingClientRect(), k=tk.getBoundingClientRect();
+      if(t.right<=k.right-1) return;
+      const end=parseFloat(lb.dataset.end||"0"), barPx=end/100*k.width;
+      if(barPx>=t.width+8){
+        lb.style.left="auto"; lb.style.right=(100-end)+"%"; lb.style.paddingLeft="0"; lb.style.paddingRight="7px";
+        lb.style.color="#fff"; const s2=lb.querySelector(".s2"); if(s2) s2.style.color="rgba(255,255,255,.78)";
+      }else{
+        lb.style.left="auto"; lb.style.right="0"; lb.style.paddingLeft="4px"; lb.style.paddingRight="4px";
+        lb.style.background="var(--bg)"; lb.style.borderRadius="3px";
+      }
+    });
+  }
   const INTRO={
     dd:'每根柱＝距<b>52 周最高收盘价</b>还差多少（不是历史最高价，避开借壳更名与远古泡沫高点失真）。红实心＝已腰斩（≤−50%），红半透＝已入熊（≤−20%），灰＝回调中。总览柱＝板块<b>中位数</b>，小字给板块内最浅~最深的分化区间。柱尾小字＝年初至今，同样跌一半，年内还赚 400% 和已亏 25% 处境完全不同。带 * 为上市不满一年（该格为上市至今）。指数、ETF、商品与外汇不参与个股排队。',
     g:'绿柱向右＝涨，红柱向左＝跌，深绿＝翻倍以上。刻度按当前名单自动定档并<b>封顶</b>：带 → 的表示真实涨幅超出刻度上限（保护大多数柱子的可读性，妖股用数字说话）。柱尾小字＝当前距 52 周高点的回撤，涨幅与回撤对照着看才完整。带 * 为上市不满一年。'
@@ -3784,9 +3799,9 @@ window.renderDrawdown=(function(){
     if(it) it.innerHTML=INTRO[DWM==="dd"?"dd":"g"];
     if(SEC){
       const sc0=secs.filter(x=>x.sec===SEC)[0];
-      if(!sc0){ SEC=null; el.innerHTML=overview(secs,DWM); }
+      if(!sc0){ SEC=null; el.innerHTML=overview(secs,DWM); fixLabs(el); }
       else{
-        el.innerHTML=detail(sc0,DWM);
+        el.innerHTML=detail(sc0,DWM); fixLabs(el);
         const b=document.getElementById("dw-back");
         if(b) b.onclick=()=>{ SEC=null; paint(); window.scrollTo(0,0); };
         el.querySelectorAll(".dw-nm b[data-code]").forEach(n=>{ n.onclick=e=>{
@@ -3795,7 +3810,7 @@ window.renderDrawdown=(function(){
           e.stopPropagation(); };});
       }
     }else{
-      el.innerHTML=overview(secs,DWM);
+      el.innerHTML=overview(secs,DWM); fixLabs(el);
       el.querySelectorAll(".dw-sec").forEach(d=>{ d.onclick=()=>{ SEC=d.dataset.sec; paint(); window.scrollTo(0,0); };});
     }
     if(pl) pl.querySelectorAll("button[data-m]").forEach(bt=>bt.onclick=()=>{ DWM=bt.dataset.m; paint(); });
