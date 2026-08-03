@@ -114,6 +114,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang 
 /* ========== 顶部栏 ========== */
 #header{position:fixed;top:0;left:0;right:0;height:var(--header-h);background:var(--panel);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:28px;z-index:200}
 #header .logo{font-size:17px;font-weight:700;cursor:pointer;user-select:none;line-height:1.15;white-space:nowrap;flex:0 0 auto}
+#header .logo .lg1{display:block;font-weight:700}
 #header .logo .lgsub{display:block;font-style:normal;font-size:10px;font-weight:400;color:var(--text2);letter-spacing:1.5px;margin-top:1px;white-space:nowrap}
 #header .logo:hover span{filter:brightness(1.2)}
 #header .logo span{color:var(--accent)}
@@ -853,7 +854,7 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
 <body>
 
 <header id="header">
-  <div class="logo" title="烟囱的美股学习笔记">📓 从心<span>而富</span><em class="lgsub">求富的路，是修心的路</em></div>
+  <div class="logo" title="烟囱的美股学习笔记"><b class="lg1">📓 从心<span>而富</span></b><em class="lgsub">求富的路，是修心的路</em></div>
   <div class="tabs">
     <div class="tab active" data-view="dash">📊 数据面板</div>
     <div class="tab" data-view="reports">📑 投研报告</div>
