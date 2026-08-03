@@ -1203,12 +1203,13 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
   #view-drawdown .dw-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:12px 0}
   #view-drawdown .dw-back{color:var(--accent);cursor:pointer;font-size:13px}
   #view-drawdown .dw-nm b{font-weight:600;cursor:pointer}
+  #view-drawdown .dw-msub{display:none}
   @media(max-width:860px){
-    #view-drawdown .dw-nm{flex:0 0 96px;font-size:12px}
-    #view-drawdown .dw-val{flex:0 0 52px;font-size:12px}
-    #view-drawdown .dw-ytd{flex:0 0 56px;font-size:11px}
-    #view-drawdown .dw-cnt{flex:0 0 64px;font-size:10.5px}
+    #view-drawdown .dw-nm{flex:0 0 92px;font-size:12px}
+    #view-drawdown .dw-val{flex:0 0 50px;font-size:12px}
     #view-drawdown .dw-row{gap:6px}
+    #view-drawdown .dw-ytd,#view-drawdown .dw-cnt{display:none}
+    #view-drawdown .dw-msub{display:inline}
   }
   </style>
   <div class="kbar" data-kbar="drawdown"></div>
@@ -3690,7 +3691,8 @@ window.renderDrawdown=(function(){
     stat.forEach(s=>{
       const a=pos(s.hi), b=pos(s.lo);
       h+='<div class="dw-row dw-sec" data-sec="'+esc(s.sec)+'"><div class="dw-nm">'+esc(s.sec)
-        +'<span class="sub">'+s.n+' 只'+(s.etf?' · 指数与 ETF':'')+' · 点开看个股</span></div>'
+        +'<span class="sub">'+s.n+' 只'+(s.etf?' · 指数与 ETF':'')+' · 点开看个股'
+        +'<span class="dw-msub"> · '+s.bear+' 只已腰斩</span></span></div>'
         +'<div class="dw-track">'+grid()
         +'<span class="dw-whisk" style="left:'+a+'%;width:'+Math.max(0,b-a)+'%"></span>'
         +'<span class="dw-cap" style="left:'+a+'%"></span><span class="dw-cap" style="left:'+b+'%"></span>'
