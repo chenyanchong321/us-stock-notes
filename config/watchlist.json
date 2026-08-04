@@ -1,0 +1,10227 @@
+{
+ "site": "烟囱的美股学习笔记",
+ "sections": [
+  {
+   "name": "01 指数与行业 ETF",
+   "items": [
+    {
+     "name": "标普500指数",
+     "code": "SPX",
+     "market": "美股 指数",
+     "yahoo": "^GSPC",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "道琼斯指数",
+     "code": "DJI",
+     "market": "美股 指数",
+     "yahoo": "^DJI",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "纳斯达克综合",
+     "code": "IXIC",
+     "market": "美股 指数",
+     "yahoo": "^IXIC",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "纳斯达克100",
+     "code": "NDX",
+     "market": "美股 指数",
+     "yahoo": "^NDX",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "费城半导体指数",
+     "code": "SOX",
+     "market": "美股 指数",
+     "yahoo": "^SOX",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "罗素2000",
+     "code": "RUT",
+     "market": "美股 指数",
+     "yahoo": "^RUT",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "标普500波动率VIX",
+     "code": "VIX",
+     "market": "美股 指数",
+     "yahoo": "^VIX",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "纳指100波动率VXN",
+     "code": "VXN",
+     "market": "美股 指数",
+     "yahoo": "^VXN",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "美债10年收益率",
+     "code": "US10Y",
+     "market": "宏观",
+     "yahoo": "^TNX",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "美元指数",
+     "code": "DXY",
+     "market": "宏观",
+     "yahoo": "DX-Y.NYB",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "上证指数",
+     "code": "SHCOMP",
+     "market": "A股 指数",
+     "yahoo": "000001.SS",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "深证成指",
+     "code": "399001",
+     "market": "A股 指数",
+     "yahoo": "399001.SZ",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "沪深300",
+     "code": "000300",
+     "market": "A股 指数",
+     "yahoo": "000300.SS",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "上证50",
+     "code": "000016",
+     "market": "A股 指数",
+     "yahoo": "000016.SS",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0,
+     "hist": "tx:sh000016"
+    },
+    {
+     "name": "科创50",
+     "code": "000688",
+     "market": "A股 指数",
+     "yahoo": "000688.SS",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0,
+     "hist": "tx:sh000688"
+    },
+    {
+     "name": "创业板指",
+     "code": "399006",
+     "market": "A股 指数",
+     "yahoo": "399006.SZ",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0,
+     "hist": "tx:sz399006"
+    },
+    {
+     "name": "中证500",
+     "code": "000905",
+     "market": "A股 指数",
+     "yahoo": "000905.SS",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0,
+     "hist": "tx:sh000905"
+    },
+    {
+     "name": "中证1000",
+     "code": "000852",
+     "market": "A股 指数",
+     "yahoo": "000852.SS",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0,
+     "hist": "tx:sh000852"
+    },
+    {
+     "name": "科创50ETF（华夏）",
+     "code": "588000",
+     "market": "A股 ETF",
+     "yahoo": "588000.SS",
+     "currency": "¥",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "创业板ETF（易方达）",
+     "code": "159915",
+     "market": "A股 ETF",
+     "yahoo": "159915.SZ",
+     "currency": "¥",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "恒生指数",
+     "code": "HSI",
+     "market": "港股 指数",
+     "yahoo": "^HSI",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "恒生科技指数",
+     "code": "HSTECH",
+     "market": "港股 指数",
+     "yahoo": "HSTECH.HK",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0,
+     "hist": "tx:hkHSTECH"
+    },
+    {
+     "name": "恒生国企指数",
+     "code": "HSCE",
+     "market": "港股 指数",
+     "yahoo": "^HSCE",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "恒生科技ETF（南方）",
+     "code": "3033",
+     "market": "港股 ETF",
+     "yahoo": "3033.HK",
+     "currency": "HK$",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "日经225",
+     "code": "N225",
+     "market": "日股 指数",
+     "yahoo": "^N225",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "韩国综合KOSPI",
+     "code": "KOSPI",
+     "market": "韩国 指数",
+     "yahoo": "^KS11",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "台湾加权指数",
+     "code": "TWII",
+     "market": "台股 指数",
+     "yahoo": "^TWII",
+     "currency": "",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "纳指100ETF（Invesco QQQ）",
+     "code": "QQQ",
+     "market": "美股 ETF",
+     "yahoo": "QQQ",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 4953.7,
+      "approx": false
+     },
+     "mcap_base_price": 712.6,
+     "ath_floor": 748.65
+    },
+    {
+     "name": "标普500ETF（SPDR SPY）",
+     "code": "SPY",
+     "market": "美股 ETF",
+     "yahoo": "SPY",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 7961.4,
+      "approx": false
+     },
+     "mcap_base_price": 744.78,
+     "ath_floor": 760.4
+    },
+    {
+     "name": "标普500动量ETF（Invesco SPMO）",
+     "code": "SPMO",
+     "market": "美股 ETF",
+     "yahoo": "SPMO",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 222.0,
+      "approx": true
+     },
+     "mcap_base_price": 143.89,
+     "ath_floor": 0
+    },
+    {
+     "name": "半导体ETF（iShares SOXX）",
+     "code": "SOXX",
+     "market": "美股 ETF",
+     "yahoo": "SOXX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 361.3,
+      "approx": false
+     },
+     "mcap_base_price": 566.32,
+     "ath_floor": 655.95
+    },
+    {
+     "name": "软件ETF（iShares IGV）",
+     "code": "IGV",
+     "market": "美股 ETF",
+     "yahoo": "IGV",
+     "currency": "$",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "中国金龙ETF（PGJ）",
+     "code": "PGJ",
+     "market": "美股 ETF",
+     "yahoo": "PGJ",
+     "currency": "$",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "标普生物科技ETF",
+     "code": "XBI",
+     "market": "美股 ETF",
+     "yahoo": "XBI",
+     "currency": "$",
+     "mcap_base": null,
+     "mcap_base_price": 150.48,
+     "ath_floor": 0
+    },
+    {
+     "name": "港股创新药ETF（广发）",
+     "code": "513120",
+     "market": "A股 ETF",
+     "yahoo": "513120.SS",
+     "currency": "¥",
+     "mcap_base": null,
+     "mcap_base_price": 1.169,
+     "ath_floor": 0
+    },
+    {
+     "name": "创新药ETF（银华）",
+     "code": "159992",
+     "market": "A股 ETF",
+     "yahoo": "159992.SZ",
+     "currency": "¥",
+     "mcap_base": null,
+     "mcap_base_price": 0.839,
+     "ath_floor": 0
+    },
+    {
+     "name": "日经高股息50ETF（NF 1489）",
+     "code": "1489",
+     "market": "日股 ETF",
+     "yahoo": "1489.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 5360.0,
+      "approx": true
+     },
+     "mcap_base_price": 3436.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "现金流ETF国泰",
+     "code": "159399",
+     "market": "A股 ETF",
+     "yahoo": "159399.SZ",
+     "currency": "¥",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "港股央企红利ETF华安",
+     "code": "513920",
+     "market": "A股 ETF",
+     "yahoo": "513920.SS",
+     "currency": "¥",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    }
+   ],
+   "groups": [
+    {
+     "name": "美股指数",
+     "codes": [
+      "SPX",
+      "DJI",
+      "IXIC",
+      "NDX",
+      "SOX",
+      "RUT"
+     ]
+    },
+    {
+     "name": "波动率（恐慌指数）",
+     "codes": [
+      "VIX",
+      "VXN"
+     ]
+    },
+    {
+     "name": "宏观锚（利率·美元·原油）",
+     "codes": [
+      "US10Y",
+      "DXY"
+     ]
+    },
+    {
+     "name": "中国与亚太指数",
+     "codes": [
+      "SHCOMP",
+      "399001",
+      "000300",
+      "000016",
+      "000688",
+      "399006",
+      "000905",
+      "000852",
+      "588000",
+      "159915",
+      "HSI",
+      "HSTECH",
+      "HSCE",
+      "3033",
+      "N225",
+      "KOSPI",
+      "TWII"
+     ]
+    },
+    {
+     "name": "宽基与行业 ETF",
+     "codes": [
+      "QQQ",
+      "SPY",
+      "SPMO",
+      "SOXX",
+      "IGV",
+      "PGJ",
+      "XBI",
+      "513120",
+      "159992",
+      "1489",
+      "159399",
+      "513920"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "02 美股七巨头",
+   "items": [
+    {
+     "name": "苹果",
+     "code": "AAPL",
+     "market": "美股",
+     "yahoo": "AAPL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 45300.0,
+      "approx": false
+     },
+     "mcap_base_price": 308.63,
+     "ath_floor": 317.4
+    },
+    {
+     "name": "微软",
+     "code": "MSFT",
+     "market": "美股",
+     "yahoo": "MSFT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 29000.0,
+      "approx": false
+     },
+     "mcap_base_price": 390.49,
+     "ath_floor": 555.45
+    },
+    {
+     "name": "谷歌（Alphabet）",
+     "code": "GOOGL",
+     "market": "美股",
+     "yahoo": "GOOGL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 43900.0,
+      "approx": false
+     },
+     "mcap_base_price": 359.91,
+     "ath_floor": 408.61
+    },
+    {
+     "name": "亚马逊",
+     "code": "AMZN",
+     "market": "美股",
+     "yahoo": "AMZN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 26100.0,
+      "approx": false
+     },
+     "mcap_base_price": 242.67,
+     "ath_floor": 278.56
+    },
+    {
+     "name": "Meta Platforms",
+     "code": "META",
+     "market": "美股",
+     "yahoo": "META",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 14800.0,
+      "approx": false
+     },
+     "mcap_base_price": 582.9,
+     "ath_floor": 796.25
+    },
+    {
+     "name": "英伟达",
+     "code": "NVDA",
+     "market": "美股",
+     "yahoo": "NVDA",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 47200.0,
+      "approx": false
+     },
+     "mcap_base_price": 194.83,
+     "ath_floor": 236.54
+    },
+    {
+     "name": "特斯拉",
+     "code": "TSLA",
+     "market": "美股",
+     "yahoo": "TSLA",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 14800.0,
+      "approx": false
+     },
+     "mcap_base_price": 393.45,
+     "ath_floor": 498.83
+    }
+   ]
+  },
+  {
+   "name": "03 半导体芯片（设计、制造与IP）",
+   "items": [
+    {
+     "name": "英伟达",
+     "code": "NVDA",
+     "market": "美股",
+     "yahoo": "NVDA",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 47200.0,
+      "approx": false
+     },
+     "mcap_base_price": 194.83,
+     "ath_floor": 236.54
+    },
+    {
+     "name": "AMD",
+     "code": "AMD",
+     "market": "美股",
+     "yahoo": "AMD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 8443.6,
+      "approx": false
+     },
+     "mcap_base_price": 517.82,
+     "ath_floor": 584.73
+    },
+    {
+     "name": "英特尔",
+     "code": "INTC",
+     "market": "美股",
+     "yahoo": "INTC",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 6048.8,
+      "approx": false
+     },
+     "mcap_base_price": 120.35,
+     "ath_floor": 142.35
+    },
+    {
+     "name": "Cerebras Systems",
+     "code": "CBRS",
+     "market": "美股",
+     "yahoo": "CBRS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 410,
+      "approx": true
+     },
+     "mcap_base_price": 204.86,
+     "ath_floor": 0
+    },
+    {
+     "name": "寒武纪",
+     "code": "688256",
+     "market": "A股",
+     "yahoo": "688256.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 10025.0,
+      "approx": true
+     },
+     "mcap_base_price": 1595.55
+    },
+    {
+     "name": "天数智芯",
+     "code": "09903",
+     "market": "港股",
+     "yahoo": "9903.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 3200,
+      "approx": true
+     },
+     "mcap_base_price": 641.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "博通",
+     "code": "AVGO",
+     "market": "美股",
+     "yahoo": "AVGO",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 17200.0,
+      "approx": false
+     },
+     "mcap_base_price": 360.45,
+     "ath_floor": 495.0
+    },
+    {
+     "name": "迈威尔科技",
+     "code": "MRVL",
+     "market": "美股",
+     "yahoo": "MRVL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2147.7,
+      "approx": false
+     },
+     "mcap_base_price": 245.29,
+     "ath_floor": 329.88
+    },
+    {
+     "name": "Credo Technology",
+     "code": "CRDO",
+     "market": "美股",
+     "yahoo": "CRDO",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 451.1,
+      "approx": false
+     },
+     "mcap_base_price": 241.91,
+     "ath_floor": 308.67
+    },
+    {
+     "name": "Arm Holdings",
+     "code": "ARM",
+     "market": "美股 ADR",
+     "yahoo": "ARM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3367.5,
+      "approx": false
+     },
+     "mcap_base_price": 315.28,
+     "ath_floor": 452.7
+    },
+    {
+     "name": "高通",
+     "code": "QCOM",
+     "market": "美股",
+     "yahoo": "QCOM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1904,
+      "approx": false
+     },
+     "mcap_base_price": 176.25,
+     "ath_floor": 0
+    },
+    {
+     "name": "联发科",
+     "code": "2454",
+     "market": "台股",
+     "yahoo": "2454.TW",
+     "currency": "NT$",
+     "mcap_base": {
+      "prefix": "NT$",
+      "yi": 64100.0,
+      "approx": true
+     },
+     "mcap_base_price": 3995.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "恩智浦",
+     "code": "NXPI",
+     "market": "美股",
+     "yahoo": "NXPI",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 683,
+      "approx": false
+     },
+     "mcap_base_price": 273.36,
+     "ath_floor": 0
+    },
+    {
+     "name": "德州仪器",
+     "code": "TXN",
+     "market": "美股",
+     "yahoo": "TXN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2667,
+      "approx": false
+     },
+     "mcap_base_price": 293.08,
+     "ath_floor": 0
+    },
+    {
+     "name": "亚德诺",
+     "code": "ADI",
+     "market": "美股",
+     "yahoo": "ADI",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1864.0,
+      "approx": true
+     },
+     "mcap_base_price": 382.81,
+     "ath_floor": 0
+    },
+    {
+     "name": "安森美半导体",
+     "code": "ON",
+     "market": "美股",
+     "yahoo": "ON",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 383,
+      "approx": false
+     },
+     "mcap_base_price": 91.22,
+     "ath_floor": 0
+    },
+    {
+     "name": "微芯科技",
+     "code": "MCHP",
+     "market": "美股",
+     "yahoo": "MCHP",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 5.4,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "台积电",
+     "code": "TSM",
+     "market": "美股 ADR",
+     "yahoo": "TSM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 22599.999999999996,
+      "approx": false
+     },
+     "mcap_base_price": 434.16,
+     "ath_floor": 479.0
+    },
+    {
+     "name": "联电",
+     "code": "UMC",
+     "market": "美股 ADR",
+     "yahoo": "UMC",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 530.0,
+      "approx": true
+     },
+     "mcap_base_price": 21.19,
+     "ath_floor": 0
+    },
+    {
+     "name": "中芯国际",
+     "code": "688981",
+     "market": "A股",
+     "yahoo": "688981.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 80.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "中芯国际",
+     "code": "00981",
+     "market": "港股",
+     "yahoo": "0981.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 80.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "华虹公司",
+     "code": "688347",
+     "market": "A股",
+     "yahoo": "688347.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 17.2,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "华虹半导体",
+     "code": "01347",
+     "market": "港股",
+     "yahoo": "1347.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 17.2,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    }
+   ],
+   "groups": [
+    {
+     "name": "算力芯片（GPU 与加速器）",
+     "codes": [
+      "NVDA",
+      "AMD",
+      "INTC",
+      "CBRS",
+      "688256",
+      "09903"
+     ]
+    },
+    {
+     "name": "连接与定制芯片",
+     "codes": [
+      "AVGO",
+      "MRVL",
+      "CRDO"
+     ]
+    },
+    {
+     "name": "IP · 移动 · 模拟",
+     "codes": [
+      "ARM",
+      "QCOM",
+      "2454",
+      "NXPI",
+      "TXN",
+      "ADI",
+      "ON",
+      "MCHP"
+     ]
+    },
+    {
+     "name": "晶圆代工",
+     "codes": [
+      "TSM",
+      "UMC",
+      "688981",
+      "00981",
+      "688347",
+      "01347"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "04 CPU 与服务器计算（小阳春）",
+   "items": [
+    {
+     "name": "英特尔",
+     "code": "INTC",
+     "market": "美股",
+     "yahoo": "INTC",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 6048.8,
+      "approx": false
+     },
+     "mcap_base_price": 120.35,
+     "ath_floor": 142.35
+    },
+    {
+     "name": "AMD",
+     "code": "AMD",
+     "market": "美股",
+     "yahoo": "AMD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 8443.6,
+      "approx": false
+     },
+     "mcap_base_price": 517.82,
+     "ath_floor": 584.73
+    },
+    {
+     "name": "Arm Holdings",
+     "code": "ARM",
+     "market": "美股 ADR",
+     "yahoo": "ARM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3367.5,
+      "approx": false
+     },
+     "mcap_base_price": 315.28,
+     "ath_floor": 452.7
+    },
+    {
+     "name": "英伟达",
+     "code": "NVDA",
+     "market": "美股",
+     "yahoo": "NVDA",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 47200.0,
+      "approx": false
+     },
+     "mcap_base_price": 194.83,
+     "ath_floor": 236.54
+    },
+    {
+     "name": "博通",
+     "code": "AVGO",
+     "market": "美股",
+     "yahoo": "AVGO",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 17200.0,
+      "approx": false
+     },
+     "mcap_base_price": 360.45,
+     "ath_floor": 495.0
+    },
+    {
+     "name": "迈威尔科技",
+     "code": "MRVL",
+     "market": "美股",
+     "yahoo": "MRVL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2147.7,
+      "approx": false
+     },
+     "mcap_base_price": 245.29,
+     "ath_floor": 329.88
+    },
+    {
+     "name": "澜起科技",
+     "code": "06809",
+     "market": "港股",
+     "yahoo": "6809.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 4385,
+      "approx": true
+     },
+     "mcap_base_price": 382.6,
+     "ath_floor": 0
+    },
+    {
+     "name": "澜起科技",
+     "code": "688008",
+     "market": "A股",
+     "yahoo": "688008.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2104,
+      "approx": true
+     },
+     "mcap_base_price": 183.6,
+     "ath_floor": 0
+    }
+   ],
+   "groups": [
+    {
+     "name": "x86 双雄",
+     "codes": [
+      "INTC",
+      "AMD"
+     ]
+    },
+    {
+     "name": "ARM 阵营与自研",
+     "codes": [
+      "ARM",
+      "NVDA"
+     ]
+    },
+    {
+     "name": "定制计算与互连配套",
+     "codes": [
+      "AVGO",
+      "MRVL",
+      "06809",
+      "688008"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "05 存储、硬盘与存储 ETF",
+   "items": [
+    {
+     "name": "SK海力士",
+     "code": "000660.KS",
+     "market": "韩国",
+     "yahoo": "000660.KS",
+     "currency": "₩",
+     "mcap_base": {
+      "prefix": "₩",
+      "yi": 17213600.0,
+      "approx": false
+     },
+     "mcap_base_price": 2425000.0,
+     "ath_floor": 2987000.0
+    },
+    {
+     "name": "SK海力士(美股ADR)",
+     "code": "SKHY",
+     "market": "美股",
+     "yahoo": "SKHY",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 13250,
+      "approx": true
+     },
+     "mcap_base_price": 186.66,
+     "ath_floor": 0
+    },
+    {
+     "name": "美光科技",
+     "code": "MU",
+     "market": "美股",
+     "yahoo": "MU",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 9420.3,
+      "approx": false
+     },
+     "mcap_base_price": 975.56,
+     "ath_floor": 1255.0
+    },
+    {
+     "name": "三星电子",
+     "code": "005930",
+     "market": "韩国",
+     "yahoo": "005930.KS",
+     "currency": "₩",
+     "mcap_base": {
+      "prefix": "₩",
+      "yi": 20027400,
+      "approx": false
+     },
+     "mcap_base_price": 335000,
+     "ath_floor": 0
+    },
+    {
+     "name": "长鑫科技",
+     "code": "688825",
+     "market": "A股",
+     "yahoo": "688825.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 33106.0,
+      "approx": true
+     },
+     "mcap_base_price": 49.5,
+     "ath_floor": 0
+    },
+    {
+     "name": "南亚科技",
+     "code": "2408",
+     "market": "台股",
+     "yahoo": "2408.TW",
+     "currency": "NT$",
+     "mcap_base": {
+      "prefix": "NT$",
+      "yi": 11165.0,
+      "approx": true
+     },
+     "mcap_base_price": 360.5,
+     "ath_floor": 0
+    },
+    {
+     "name": "南方两倍做多海力士",
+     "code": "07709",
+     "market": "港股 ETF",
+     "yahoo": "7709.HK",
+     "currency": "HK$",
+     "mcap_base": null,
+     "mcap_base_price": 116.8,
+     "ath_floor": 0
+    },
+    {
+     "name": "Roundhill Memory ETF",
+     "code": "DRAM",
+     "market": "美股 ETF",
+     "yahoo": "DRAM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 107.1,
+      "approx": false
+     },
+     "mcap_base_price": 60.63,
+     "ath_floor": 81.34
+    },
+    {
+     "name": "铠侠",
+     "code": "285A",
+     "market": "日股",
+     "yahoo": "285A.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 459200,
+      "approx": false
+     },
+     "mcap_base_price": 83300,
+     "ath_floor": 0
+    },
+    {
+     "name": "铠侠 ADR",
+     "code": "KXIAY",
+     "market": "美股 OTC",
+     "yahoo": "KXIAY",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2360,
+      "approx": false
+     },
+     "mcap_base_price": 45.07,
+     "ath_floor": 0
+    },
+    {
+     "name": "闪迪",
+     "code": "SNDK",
+     "market": "美股",
+     "yahoo": "SNDK",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2584.1,
+      "approx": false
+     },
+     "mcap_base_price": 1745.0,
+     "ath_floor": 2354.39
+    },
+    {
+     "name": "希捷科技",
+     "code": "STX",
+     "market": "美股",
+     "yahoo": "STX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1839.1,
+      "approx": false
+     },
+     "mcap_base_price": 820.16,
+     "ath_floor": 1145.0
+    },
+    {
+     "name": "西部数据",
+     "code": "WDC",
+     "market": "美股",
+     "yahoo": "WDC",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1870,
+      "approx": false
+     },
+     "mcap_base_price": 539,
+     "ath_floor": 0
+    },
+    {
+     "name": "江波龙",
+     "code": "301308",
+     "market": "A股",
+     "yahoo": "301308.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2854,
+      "approx": true
+     },
+     "mcap_base_price": 679.6,
+     "ath_floor": 0
+    },
+    {
+     "name": "佰维存储",
+     "code": "688525",
+     "market": "A股",
+     "yahoo": "688525.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1344,
+      "approx": true
+     },
+     "mcap_base_price": 285.41,
+     "ath_floor": 0
+    },
+    {
+     "name": "德明利",
+     "code": "001309",
+     "market": "A股",
+     "yahoo": "001309.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1352,
+      "approx": true
+     },
+     "mcap_base_price": 596.16,
+     "ath_floor": 0
+    },
+    {
+     "name": "兆易创新",
+     "code": "603986",
+     "market": "A股",
+     "yahoo": "603986.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 3117,
+      "approx": true
+     },
+     "mcap_base_price": 445.02,
+     "ath_floor": 0
+    },
+    {
+     "name": "兆易创新",
+     "code": "03986",
+     "market": "港股",
+     "yahoo": "3986.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 6120,
+      "approx": true
+     },
+     "mcap_base_price": 917.5,
+     "ath_floor": 0
+    },
+    {
+     "name": "华邦电子",
+     "code": "2344",
+     "market": "台股",
+     "yahoo": "2344.TW",
+     "currency": "NT$",
+     "mcap_base": {
+      "prefix": "NT$",
+      "yi": 7738.0,
+      "approx": true
+     },
+     "mcap_base_price": 174.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "澜起科技",
+     "code": "06809",
+     "market": "港股",
+     "yahoo": "6809.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 4385,
+      "approx": true
+     },
+     "mcap_base_price": 382.6,
+     "ath_floor": 0
+    },
+    {
+     "name": "澜起科技",
+     "code": "688008",
+     "market": "A股",
+     "yahoo": "688008.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2104,
+      "approx": true
+     },
+     "mcap_base_price": 183.6,
+     "ath_floor": 0
+    },
+    {
+     "name": "Rambus",
+     "code": "RMBS",
+     "market": "美股",
+     "yahoo": "RMBS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1.08,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "瑞萨电子",
+     "code": "6723",
+     "market": "日本",
+     "yahoo": "6723.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 18.5,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "聚辰股份",
+     "code": "688123",
+     "market": "A股",
+     "yahoo": "688123.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 210.0,
+      "approx": true
+     },
+     "mcap_base_price": 132.1,
+     "ath_floor": 0
+    },
+    {
+     "name": "北京君正",
+     "code": "300223",
+     "market": "A股",
+     "yahoo": "300223.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 744.0,
+      "approx": true
+     },
+     "mcap_base_price": 153.82,
+     "ath_floor": 0
+    },
+    {
+     "name": "东芯股份",
+     "code": "688110",
+     "market": "A股",
+     "yahoo": "688110.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 517.0,
+      "approx": true
+     },
+     "mcap_base_price": 116.83,
+     "ath_floor": 0
+    },
+    {
+     "name": "香农芯创",
+     "code": "300475",
+     "market": "A股",
+     "yahoo": "300475.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 817.0,
+      "approx": true
+     },
+     "mcap_base_price": 174.1,
+     "ath_floor": 0
+    },
+    {
+     "name": "深科技",
+     "code": "000021",
+     "market": "A股",
+     "yahoo": "000021.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 614.0,
+      "approx": true
+     },
+     "mcap_base_price": 39.01,
+     "ath_floor": 0
+    }
+   ],
+   "groups": [
+    {
+     "name": "DRAM 原厂（HBM/DRAM）",
+     "codes": [
+      "000660.KS",
+      "SKHY",
+      "MU",
+      "005930",
+      "688825",
+      "2408",
+      "07709",
+      "DRAM"
+     ]
+    },
+    {
+     "name": "NAND 与企业级 SSD（3D NAND）",
+     "codes": [
+      "285A",
+      "KXIAY",
+      "SNDK"
+     ]
+    },
+    {
+     "name": "HDD 近线硬盘",
+     "codes": [
+      "STX",
+      "WDC"
+     ]
+    },
+    {
+     "name": "存储模组（A股）",
+     "codes": [
+      "301308",
+      "688525",
+      "001309"
+     ]
+    },
+    {
+     "name": "利基存储与接口芯片",
+     "codes": [
+      "603986",
+      "03986",
+      "2344",
+      "06809",
+      "688008",
+      "RMBS",
+      "6723",
+      "688123",
+      "300223",
+      "688110"
+     ]
+    },
+    {
+     "name": "A股存储配套（分销·封测）",
+     "codes": [
+      "300475",
+      "000021"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "06 光连接与光模块（衬底→芯片→模块→CPO）",
+   "items": [
+    {
+     "name": "AXT Inc",
+     "code": "AXTI",
+     "market": "美股",
+     "yahoo": "AXTI",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 37.1,
+      "approx": false
+     },
+     "mcap_base_price": 56.62,
+     "ath_floor": 143.16
+    },
+    {
+     "name": "Sivers Semiconductors",
+     "code": "SIVEF",
+     "market": "美股 OTC",
+     "yahoo": "SIVEF",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 15.6,
+      "approx": false
+     },
+     "mcap_base_price": 5.28,
+     "ath_floor": 11.18
+    },
+    {
+     "name": "康宁",
+     "code": "GLW",
+     "market": "美股",
+     "yahoo": "GLW",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1685,
+      "approx": false
+     },
+     "mcap_base_price": 196.79,
+     "ath_floor": 0
+    },
+    {
+     "name": "Coherent",
+     "code": "COHR",
+     "market": "美股",
+     "yahoo": "COHR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 652.2,
+      "approx": false
+     },
+     "mcap_base_price": 333.36,
+     "ath_floor": 440.0
+    },
+    {
+     "name": "Lumentum",
+     "code": "LITE",
+     "market": "美股",
+     "yahoo": "LITE",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 566.6,
+      "approx": false
+     },
+     "mcap_base_price": 728.32,
+     "ath_floor": 1085.68
+    },
+    {
+     "name": "住友电气",
+     "code": "5802",
+     "market": "日股",
+     "yahoo": "5802.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 83108,
+      "approx": true
+     },
+     "mcap_base_price": 2664.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "古河电工",
+     "code": "5801",
+     "market": "日股",
+     "yahoo": "5801.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 63450,
+      "approx": true
+     },
+     "mcap_base_price": 9000.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "源杰科技",
+     "code": "688498",
+     "market": "A股",
+     "yahoo": "688498.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2066,
+      "approx": true
+     },
+     "mcap_base_price": 1659.23,
+     "ath_floor": 0
+    },
+    {
+     "name": "长光华芯",
+     "code": "688048",
+     "market": "A股",
+     "yahoo": "688048.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 723,
+      "approx": true
+     },
+     "mcap_base_price": 410.6,
+     "ath_floor": 0
+    },
+    {
+     "name": "仕佳光子",
+     "code": "688313",
+     "market": "A股",
+     "yahoo": "688313.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 723,
+      "approx": true
+     },
+     "mcap_base_price": 158.57,
+     "ath_floor": 0
+    },
+    {
+     "name": "华工科技",
+     "code": "000988",
+     "market": "A股",
+     "yahoo": "000988.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1508,
+      "approx": true
+     },
+     "mcap_base_price": 150.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "永鼎股份",
+     "code": "600105",
+     "market": "A股",
+     "yahoo": "600105.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 758,
+      "approx": true
+     },
+     "mcap_base_price": 54.53,
+     "ath_floor": 0
+    },
+    {
+     "name": "Applied Optoelectronics",
+     "code": "AAOI",
+     "market": "美股",
+     "yahoo": "AAOI",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 97.0,
+      "approx": false
+     },
+     "mcap_base_price": 120.95,
+     "ath_floor": 233.67
+    },
+    {
+     "name": "Fabrinet",
+     "code": "FN",
+     "market": "美股",
+     "yahoo": "FN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 180,
+      "approx": false
+     },
+     "mcap_base_price": 499.61,
+     "ath_floor": 0
+    },
+    {
+     "name": "MACOM",
+     "code": "MTSI",
+     "market": "美股",
+     "yahoo": "MTSI",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 235,
+      "approx": false
+     },
+     "mcap_base_price": 322.26,
+     "ath_floor": 0
+    },
+    {
+     "name": "Ciena",
+     "code": "CIEN",
+     "market": "美股",
+     "yahoo": "CIEN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 613,
+      "approx": false
+     },
+     "mcap_base_price": 422.46,
+     "ath_floor": 0
+    },
+    {
+     "name": "Viavi Solutions",
+     "code": "VIAV",
+     "market": "美股",
+     "yahoo": "VIAV",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 94,
+      "approx": false
+     },
+     "mcap_base_price": 41.66,
+     "ath_floor": 0
+    },
+    {
+     "name": "POET Technologies",
+     "code": "POET",
+     "market": "美股",
+     "yahoo": "POET",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 15,
+      "approx": false
+     },
+     "mcap_base_price": 8.76,
+     "ath_floor": 0
+    },
+    {
+     "name": "中际旭创",
+     "code": "300308",
+     "market": "A股",
+     "yahoo": "300308.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 12500,
+      "approx": true
+     },
+     "mcap_base_price": 1116.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "新易盛",
+     "code": "300502",
+     "market": "A股",
+     "yahoo": "300502.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 7334,
+      "approx": true
+     },
+     "mcap_base_price": 526.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "天孚通信",
+     "code": "300394",
+     "market": "A股",
+     "yahoo": "300394.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2728,
+      "approx": true
+     },
+     "mcap_base_price": 250.1,
+     "ath_floor": 0
+    },
+    {
+     "name": "光迅科技",
+     "code": "002281",
+     "market": "A股",
+     "yahoo": "002281.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1717,
+      "approx": true
+     },
+     "mcap_base_price": 217.33,
+     "ath_floor": 0
+    },
+    {
+     "name": "光库科技",
+     "code": "300620",
+     "market": "A股",
+     "yahoo": "300620.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 781,
+      "approx": true
+     },
+     "mcap_base_price": 312.25,
+     "ath_floor": 0
+    },
+    {
+     "name": "长芯博创",
+     "code": "300548",
+     "market": "A股",
+     "yahoo": "300548.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 508,
+      "approx": true
+     },
+     "mcap_base_price": 221.01,
+     "ath_floor": 0
+    },
+    {
+     "name": "太辰光",
+     "code": "300570",
+     "market": "A股",
+     "yahoo": "300570.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 545,
+      "approx": true
+     },
+     "mcap_base_price": 237.12,
+     "ath_floor": 0
+    },
+    {
+     "name": "剑桥科技",
+     "code": "603083",
+     "market": "A股",
+     "yahoo": "603083.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 649.0,
+      "approx": true
+     },
+     "mcap_base_price": 176.13,
+     "ath_floor": 0
+    },
+    {
+     "name": "联特科技",
+     "code": "301205",
+     "market": "A股",
+     "yahoo": "301205.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 262.0,
+      "approx": true
+     },
+     "mcap_base_price": 201.5,
+     "ath_floor": 0
+    },
+    {
+     "name": "德科立",
+     "code": "688205",
+     "market": "A股",
+     "yahoo": "688205.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 215.0,
+      "approx": true
+     },
+     "mcap_base_price": 134.88,
+     "ath_floor": 0
+    },
+    {
+     "name": "奇景光电",
+     "code": "HIMX",
+     "market": "美股 ADR",
+     "yahoo": "HIMX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 22.9,
+      "approx": false
+     },
+     "mcap_base_price": 13.15,
+     "ath_floor": 25.09
+    },
+    {
+     "name": "曦智科技",
+     "code": "01879",
+     "market": "港股",
+     "yahoo": "1879.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 4500,
+      "approx": true
+     },
+     "mcap_base_price": 351.8,
+     "ath_floor": 0
+    },
+    {
+     "name": "Arista Networks",
+     "code": "ANET",
+     "market": "美股",
+     "yahoo": "ANET",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2016,
+      "approx": false
+     },
+     "mcap_base_price": 159.99,
+     "ath_floor": 0
+    },
+    {
+     "name": "Astera Labs",
+     "code": "ALAB",
+     "market": "美股",
+     "yahoo": "ALAB",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 671,
+      "approx": false
+     },
+     "mcap_base_price": 406.42,
+     "ath_floor": 0
+    },
+    {
+     "name": "Credo Technology",
+     "code": "CRDO",
+     "market": "美股",
+     "yahoo": "CRDO",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 451.1,
+      "approx": false
+     },
+     "mcap_base_price": 241.91,
+     "ath_floor": 308.67
+    },
+    {
+     "name": "迈威尔科技",
+     "code": "MRVL",
+     "market": "美股",
+     "yahoo": "MRVL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2147.7,
+      "approx": false
+     },
+     "mcap_base_price": 245.29,
+     "ath_floor": 329.88
+    },
+    {
+     "name": "安费诺",
+     "code": "APH",
+     "market": "美股",
+     "yahoo": "APH",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1992,
+      "approx": false
+     },
+     "mcap_base_price": 164.59,
+     "ath_floor": 0
+    },
+    {
+     "name": "诺基亚",
+     "code": "NOK",
+     "market": "美股 ADR",
+     "yahoo": "NOK",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 673.8,
+      "approx": false
+     },
+     "mcap_base_price": 12.07,
+     "ath_floor": 62.5
+    },
+    {
+     "name": "光模块2x ETF（Tuttle）",
+     "code": "FOTO",
+     "market": "美股 ETF",
+     "yahoo": "FOTO",
+     "currency": "$",
+     "mcap_base": null,
+     "mcap_base_price": 20.84,
+     "ath_floor": 0
+    },
+    {
+     "name": "立讯精密",
+     "code": "002475",
+     "market": "A股",
+     "yahoo": "002475.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 4800.5,
+      "approx": false
+     },
+     "mcap_base_price": 62.14,
+     "ath_floor": 80.15
+    },
+    {
+     "name": "歌尔股份",
+     "code": "002241",
+     "market": "A股",
+     "yahoo": "002241.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 34.5,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "立讯精密",
+     "code": "02475",
+     "market": "港股",
+     "yahoo": "2475.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 4866.9,
+      "approx": false
+     },
+     "mcap_base_price": 63.0,
+     "ath_floor": 63.28
+    }
+   ],
+   "groups": [
+    {
+     "name": "上游衬底与材料",
+     "codes": [
+      "AXTI",
+      "SIVEF",
+      "GLW"
+     ]
+    },
+    {
+     "name": "光芯片与激光器 · 国际巨头",
+     "codes": [
+      "COHR",
+      "LITE",
+      "5802",
+      "5801"
+     ]
+    },
+    {
+     "name": "光芯片与激光器 · A股",
+     "codes": [
+      "688498",
+      "688048",
+      "688313",
+      "000988",
+      "600105"
+     ]
+    },
+    {
+     "name": "光模块与光器件 · 海外",
+     "codes": [
+      "AAOI",
+      "FN",
+      "MTSI",
+      "CIEN",
+      "VIAV",
+      "POET"
+     ]
+    },
+    {
+     "name": "A股光模块军团",
+     "codes": [
+      "300308",
+      "300502",
+      "300394",
+      "002281",
+      "300620",
+      "300548",
+      "300570",
+      "603083",
+      "301205",
+      "688205"
+     ]
+    },
+    {
+     "name": "CPO 与硅光",
+     "codes": [
+      "HIMX",
+      "01879"
+     ]
+    },
+    {
+     "name": "交换与连接芯片",
+     "codes": [
+      "ANET",
+      "ALAB",
+      "CRDO",
+      "MRVL",
+      "APH",
+      "NOK"
+     ]
+    },
+    {
+     "name": "杠杆 ETF",
+     "codes": [
+      "FOTO"
+     ]
+    },
+    {
+     "name": "连接器与 AI 互连组装",
+     "codes": [
+      "002475",
+      "002241",
+      "02475"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "07 云与 AI 算力数据中心",
+   "items": [
+    {
+     "name": "微软",
+     "code": "MSFT",
+     "market": "美股",
+     "yahoo": "MSFT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 29000.0,
+      "approx": false
+     },
+     "mcap_base_price": 390.49,
+     "ath_floor": 555.45
+    },
+    {
+     "name": "亚马逊",
+     "code": "AMZN",
+     "market": "美股",
+     "yahoo": "AMZN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 26100.0,
+      "approx": false
+     },
+     "mcap_base_price": 242.67,
+     "ath_floor": 278.56
+    },
+    {
+     "name": "谷歌（Alphabet）",
+     "code": "GOOGL",
+     "market": "美股",
+     "yahoo": "GOOGL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 43900.0,
+      "approx": false
+     },
+     "mcap_base_price": 359.91,
+     "ath_floor": 408.61
+    },
+    {
+     "name": "甲骨文",
+     "code": "ORCL",
+     "market": "美股",
+     "yahoo": "ORCL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3928,
+      "approx": false
+     },
+     "mcap_base_price": 140.27,
+     "ath_floor": 0
+    },
+    {
+     "name": "Nebius",
+     "code": "NBIS",
+     "market": "美股",
+     "yahoo": "NBIS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 547.5,
+      "approx": false
+     },
+     "mcap_base_price": 215.62,
+     "ath_floor": 299.86
+    },
+    {
+     "name": "CoreWeave",
+     "code": "CRWV",
+     "market": "美股",
+     "yahoo": "CRWV",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 446.0,
+      "approx": false
+     },
+     "mcap_base_price": 81.75,
+     "ath_floor": 187.0
+    },
+    {
+     "name": "IREN Ltd",
+     "code": "IREN",
+     "market": "美股",
+     "yahoo": "IREN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 186,
+      "approx": false
+     },
+     "mcap_base_price": 38.82,
+     "ath_floor": 0
+    },
+    {
+     "name": "Cipher Mining",
+     "code": "CIFR",
+     "market": "美股",
+     "yahoo": "CIFR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 76,
+      "approx": false
+     },
+     "mcap_base_price": 20.04,
+     "ath_floor": 0
+    },
+    {
+     "name": "Applied Digital",
+     "code": "APLD",
+     "market": "美股",
+     "yahoo": "APLD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 99,
+      "approx": false
+     },
+     "mcap_base_price": 33.06,
+     "ath_floor": 0
+    },
+    {
+     "name": "戴尔科技",
+     "code": "DELL",
+     "market": "美股",
+     "yahoo": "DELL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2760,
+      "approx": false
+     },
+     "mcap_base_price": 394.32,
+     "ath_floor": 0
+    },
+    {
+     "name": "慧与科技（HPE）",
+     "code": "HPE",
+     "market": "美股",
+     "yahoo": "HPE",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 544,
+      "approx": false
+     },
+     "mcap_base_price": 41.23,
+     "ath_floor": 0
+    },
+    {
+     "name": "联想集团",
+     "code": "00992",
+     "market": "港股",
+     "yahoo": "0992.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 2641,
+      "approx": false
+     },
+     "mcap_base_price": 21.3,
+     "ath_floor": 0
+    },
+    {
+     "name": "浪潮信息",
+     "code": "000977",
+     "market": "A股",
+     "yahoo": "000977.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 970,
+      "approx": true
+     },
+     "mcap_base_price": 66,
+     "ath_floor": 0
+    },
+    {
+     "name": "超微电脑",
+     "code": "SMCI",
+     "market": "美股",
+     "yahoo": "SMCI",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 5.9,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "鸿海精密",
+     "code": "2317",
+     "market": "台股",
+     "yahoo": "2317.TW",
+     "currency": "NT$",
+     "mcap_base": {
+      "prefix": "NT$",
+      "yi": 138.6,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "工业富联",
+     "code": "601138",
+     "market": "A股",
+     "yahoo": "601138.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 13797.6,
+      "approx": false
+     },
+     "mcap_base_price": 69.53,
+     "ath_floor": 0
+    },
+    {
+     "name": "广达电脑",
+     "code": "2382",
+     "market": "台股",
+     "yahoo": "2382.TW",
+     "currency": "NT$",
+     "mcap_base": {
+      "prefix": "NT$",
+      "yi": 38.6,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "纬创资通",
+     "code": "3231",
+     "market": "台股",
+     "yahoo": "3231.TW",
+     "currency": "NT$",
+     "mcap_base": {
+      "prefix": "NT$",
+      "yi": 29.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "易昆尼克斯（Equinix）",
+     "code": "EQIX",
+     "market": "美股",
+     "yahoo": "EQIX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 972,
+      "approx": false
+     },
+     "mcap_base_price": 1002.02,
+     "ath_floor": 0
+    },
+    {
+     "name": "万国数据",
+     "code": "GDS",
+     "market": "美股",
+     "yahoo": "GDS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 57,
+      "approx": false
+     },
+     "mcap_base_price": 29.82,
+     "ath_floor": 0
+    },
+    {
+     "name": "Vertiv Holdings",
+     "code": "VRT",
+     "market": "美股",
+     "yahoo": "VRT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1154.3,
+      "approx": false
+     },
+     "mcap_base_price": 300.53,
+     "ath_floor": 379.93
+    }
+   ],
+   "groups": [
+    {
+     "name": "云大厂",
+     "codes": [
+      "MSFT",
+      "AMZN",
+      "GOOGL",
+      "ORCL"
+     ]
+    },
+    {
+     "name": "算力云与矿商转型",
+     "codes": [
+      "NBIS",
+      "CRWV",
+      "IREN",
+      "CIFR",
+      "APLD"
+     ]
+    },
+    {
+     "name": "服务器整机与 ODM",
+     "codes": [
+      "DELL",
+      "HPE",
+      "00992",
+      "000977",
+      "SMCI",
+      "2317",
+      "601138",
+      "2382",
+      "3231"
+     ]
+    },
+    {
+     "name": "数据中心运营与配套",
+     "codes": [
+      "EQIX",
+      "GDS",
+      "VRT"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "08 半导体设备",
+   "items": [
+    {
+     "name": "阿斯麦",
+     "code": "ASML",
+     "market": "美股 ADR",
+     "yahoo": "ASML",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 6819.2,
+      "approx": false
+     },
+     "mcap_base_price": 1769.32,
+     "ath_floor": 1999.96
+    },
+    {
+     "name": "应用材料",
+     "code": "AMAT",
+     "market": "美股",
+     "yahoo": "AMAT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 4787.9,
+      "approx": false
+     },
+     "mcap_base_price": 603.04,
+     "ath_floor": 739.67
+    },
+    {
+     "name": "泛林集团",
+     "code": "LRCX",
+     "market": "美股",
+     "yahoo": "LRCX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 4394.6,
+      "approx": false
+     },
+     "mcap_base_price": 351.41,
+     "ath_floor": 438.5
+    },
+    {
+     "name": "东京电子",
+     "code": "8035",
+     "market": "日股",
+     "yahoo": "8035.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 260000.0,
+      "approx": true
+     },
+     "mcap_base_price": 55500.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "Axcelis",
+     "code": "ACLS",
+     "market": "美股",
+     "yahoo": "ACLS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 46,
+      "approx": false
+     },
+     "mcap_base_price": 144.5,
+     "ath_floor": 0
+    },
+    {
+     "name": "维易科精密（Veeco）",
+     "code": "VECO",
+     "market": "美股",
+     "yahoo": "VECO",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 33,
+      "approx": false
+     },
+     "mcap_base_price": 57.49,
+     "ath_floor": 0
+    },
+    {
+     "name": "ACM Research",
+     "code": "ACMR",
+     "market": "美股",
+     "yahoo": "ACMR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 62,
+      "approx": false
+     },
+     "mcap_base_price": 97.77,
+     "ath_floor": 0
+    },
+    {
+     "name": "拓荆科技",
+     "code": "688072",
+     "market": "A股",
+     "yahoo": "688072.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2032.0,
+      "approx": true
+     },
+     "mcap_base_price": 699.08,
+     "ath_floor": 0
+    },
+    {
+     "name": "芯源微",
+     "code": "688037",
+     "market": "A股",
+     "yahoo": "688037.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 626.0,
+      "approx": true
+     },
+     "mcap_base_price": 310.59,
+     "ath_floor": 0
+    },
+    {
+     "name": "华海清科",
+     "code": "688120",
+     "market": "A股",
+     "yahoo": "688120.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1196.0,
+      "approx": true
+     },
+     "mcap_base_price": 241.67,
+     "ath_floor": 0
+    },
+    {
+     "name": "盛美上海",
+     "code": "688082",
+     "market": "A股",
+     "yahoo": "688082.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1450.0,
+      "approx": true
+     },
+     "mcap_base_price": 300.5,
+     "ath_floor": 0
+    },
+    {
+     "name": "至纯科技",
+     "code": "603690",
+     "market": "A股",
+     "yahoo": "603690.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 92.0,
+      "approx": true
+     },
+     "mcap_base_price": 24.02,
+     "ath_floor": 0
+    },
+    {
+     "name": "科磊",
+     "code": "KLAC",
+     "market": "美股",
+     "yahoo": "KLAC",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3076.9,
+      "approx": false
+     },
+     "mcap_base_price": 235.55,
+     "ath_floor": 307.37
+    },
+    {
+     "name": "Onto Innovation",
+     "code": "ONTO",
+     "market": "美股",
+     "yahoo": "ONTO",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 151,
+      "approx": false
+     },
+     "mcap_base_price": 307.58,
+     "ath_floor": 0
+    },
+    {
+     "name": "Nova",
+     "code": "NVMI",
+     "market": "美股",
+     "yahoo": "NVMI",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 136,
+      "approx": false
+     },
+     "mcap_base_price": 470.14,
+     "ath_floor": 0
+    },
+    {
+     "name": "康特科技",
+     "code": "CAMT",
+     "market": "美股",
+     "yahoo": "CAMT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 64,
+      "approx": false
+     },
+     "mcap_base_price": 142.5,
+     "ath_floor": 0
+    },
+    {
+     "name": "FormFactor",
+     "code": "FORM",
+     "market": "美股",
+     "yahoo": "FORM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 95,
+      "approx": false
+     },
+     "mcap_base_price": 123.59,
+     "ath_floor": 0
+    },
+    {
+     "name": "中科飞测",
+     "code": "688361",
+     "market": "A股",
+     "yahoo": "688361.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1096.0,
+      "approx": true
+     },
+     "mcap_base_price": 311.19,
+     "ath_floor": 0
+    },
+    {
+     "name": "天准科技",
+     "code": "688003",
+     "market": "A股",
+     "yahoo": "688003.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 144.5,
+      "approx": true
+     },
+     "mcap_base_price": 74.19,
+     "ath_floor": 0
+    },
+    {
+     "name": "泰瑞达",
+     "code": "TER",
+     "market": "美股",
+     "yahoo": "TER",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 591,
+      "approx": false
+     },
+     "mcap_base_price": 369.09,
+     "ath_floor": 0
+    },
+    {
+     "name": "爱德万测试",
+     "code": "6857",
+     "market": "日股",
+     "yahoo": "6857.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 214200,
+      "approx": true
+     },
+     "mcap_base_price": 29345.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "迪思科（DISCO）",
+     "code": "6146",
+     "market": "日股",
+     "yahoo": "6146.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 77900.0,
+      "approx": true
+     },
+     "mcap_base_price": 71900.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "东京精密（Accretech）",
+     "code": "7729",
+     "market": "日股",
+     "yahoo": "7729.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 8354.0,
+      "approx": true
+     },
+     "mcap_base_price": 20130.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "是德科技（Keysight）",
+     "code": "KEYS",
+     "market": "美股",
+     "yahoo": "KEYS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 540,
+      "approx": false
+     },
+     "mcap_base_price": 313.86,
+     "ath_floor": 0
+    },
+    {
+     "name": "科休半导体",
+     "code": "COHU",
+     "market": "美股",
+     "yahoo": "COHU",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 28,
+      "approx": false
+     },
+     "mcap_base_price": 59.27,
+     "ath_floor": 0
+    },
+    {
+     "name": "Aehr Test",
+     "code": "AEHR",
+     "market": "美股",
+     "yahoo": "AEHR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 21,
+      "approx": false
+     },
+     "mcap_base_price": 69.96,
+     "ath_floor": 0
+    },
+    {
+     "name": "库力索法",
+     "code": "KLIC",
+     "market": "美股",
+     "yahoo": "KLIC",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 64,
+      "approx": false
+     },
+     "mcap_base_price": 121.33,
+     "ath_floor": 0
+    },
+    {
+     "name": "ASMPT",
+     "code": "00522",
+     "market": "港股",
+     "yahoo": "0522.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 852,
+      "approx": true
+     },
+     "mcap_base_price": 204.8,
+     "ath_floor": 0
+    },
+    {
+     "name": "韩美半导体",
+     "code": "042700",
+     "market": "韩国",
+     "yahoo": "042700.KS",
+     "currency": "₩",
+     "mcap_base": {
+      "prefix": "₩",
+      "yi": 265000,
+      "approx": true
+     },
+     "mcap_base_price": 273000.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "长川科技",
+     "code": "300604",
+     "market": "A股",
+     "yahoo": "300604.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1769.0,
+      "approx": true
+     },
+     "mcap_base_price": 278.76,
+     "ath_floor": 0
+    },
+    {
+     "name": "华峰测控",
+     "code": "688200",
+     "market": "A股",
+     "yahoo": "688200.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 748.0,
+      "approx": true
+     },
+     "mcap_base_price": 372.91,
+     "ath_floor": 0
+    },
+    {
+     "name": "精智达",
+     "code": "688627",
+     "market": "A股",
+     "yahoo": "688627.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 482.0,
+      "approx": true
+     },
+     "mcap_base_price": 511.98,
+     "ath_floor": 0
+    },
+    {
+     "name": "罗博特科",
+     "code": "300757",
+     "market": "A股",
+     "yahoo": "300757.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 690.5,
+      "approx": true
+     },
+     "mcap_base_price": 411.96,
+     "ath_floor": 0
+    },
+    {
+     "name": "MKS仪器",
+     "code": "MKSI",
+     "market": "美股",
+     "yahoo": "MKSI",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 245,
+      "approx": false
+     },
+     "mcap_base_price": 365.56,
+     "ath_floor": 0
+    },
+    {
+     "name": "布鲁克",
+     "code": "BRKR",
+     "market": "美股",
+     "yahoo": "BRKR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 93,
+      "approx": false
+     },
+     "mcap_base_price": 61.64,
+     "ath_floor": 0
+    },
+    {
+     "name": "Nordson",
+     "code": "NDSN",
+     "market": "美股",
+     "yahoo": "NDSN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 166,
+      "approx": false
+     },
+     "mcap_base_price": 290.38,
+     "ath_floor": 0
+    },
+    {
+     "name": "富创精密",
+     "code": "688409",
+     "market": "A股",
+     "yahoo": "688409.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 594.0,
+      "approx": true
+     },
+     "mcap_base_price": 193.99,
+     "ath_floor": 0
+    },
+    {
+     "name": "新莱应材",
+     "code": "300260",
+     "market": "A股",
+     "yahoo": "300260.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 255.0,
+      "approx": true
+     },
+     "mcap_base_price": 62.51,
+     "ath_floor": 0
+    },
+    {
+     "name": "英杰电气",
+     "code": "300820",
+     "market": "A股",
+     "yahoo": "300820.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 118.0,
+      "approx": true
+     },
+     "mcap_base_price": 53.32,
+     "ath_floor": 0
+    },
+    {
+     "name": "正帆科技",
+     "code": "688596",
+     "market": "A股",
+     "yahoo": "688596.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 140.0,
+      "approx": true
+     },
+     "mcap_base_price": 48.18,
+     "ath_floor": 0
+    },
+    {
+     "name": "北方华创",
+     "code": "002371",
+     "market": "A股",
+     "yahoo": "002371.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 4325,
+      "approx": true
+     },
+     "mcap_base_price": 816.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "中微公司",
+     "code": "688012",
+     "market": "A股",
+     "yahoo": "688012.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 3962,
+      "approx": true
+     },
+     "mcap_base_price": 413.69,
+     "ath_floor": 0
+    }
+   ],
+   "groups": [
+    {
+     "name": "前道主设备（光刻·沉积·刻蚀）",
+     "codes": [
+      "ASML",
+      "AMAT",
+      "LRCX",
+      "8035",
+      "ACLS",
+      "VECO",
+      "ACMR",
+      "688072",
+      "688037",
+      "688120",
+      "688082",
+      "603690"
+     ]
+    },
+    {
+     "name": "量测与检测",
+     "codes": [
+      "KLAC",
+      "ONTO",
+      "NVMI",
+      "CAMT",
+      "FORM",
+      "688361",
+      "688003"
+     ]
+    },
+    {
+     "name": "后道测试与键合",
+     "codes": [
+      "TER",
+      "6857",
+      "6146",
+      "7729",
+      "KEYS",
+      "COHU",
+      "AEHR",
+      "KLIC",
+      "00522",
+      "042700",
+      "300604",
+      "688200",
+      "688627",
+      "300757"
+     ]
+    },
+    {
+     "name": "零部件与科学仪器",
+     "codes": [
+      "MKSI",
+      "BRKR",
+      "NDSN",
+      "688409",
+      "300260",
+      "300820",
+      "688596"
+     ]
+    },
+    {
+     "name": "中国设备双雄",
+     "codes": [
+      "002371",
+      "688012"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "09 半导体材料",
+   "items": [
+    {
+     "name": "信越化学",
+     "code": "4063",
+     "market": "日股",
+     "yahoo": "4063.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 129400.0,
+      "approx": false
+     },
+     "mcap_base_price": 6958.0,
+     "ath_floor": 7930.0
+    },
+    {
+     "name": "信越化学",
+     "code": "SHECY",
+     "market": "美股 OTC",
+     "yahoo": "SHECY",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 775.6,
+      "approx": false
+     },
+     "mcap_base_price": 22.76,
+     "ath_floor": 24.74
+    },
+    {
+     "name": "胜高（SUMCO）",
+     "code": "3436",
+     "market": "日股",
+     "yahoo": "3436.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 17800,
+      "approx": true
+     },
+     "mcap_base_price": 5094.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "环球晶圆",
+     "code": "6488",
+     "market": "台股",
+     "yahoo": "6488.TWO",
+     "currency": "NT$",
+     "mcap_base": {
+      "prefix": "NT$",
+      "yi": 5248.0,
+      "approx": true
+     },
+     "mcap_base_price": 1205.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "世创（Siltronic）",
+     "code": "WAF",
+     "market": "欧股",
+     "yahoo": "WAF.DE",
+     "currency": "€",
+     "mcap_base": {
+      "prefix": "€",
+      "yi": 25.6,
+      "approx": true
+     },
+     "mcap_base_price": 84.55,
+     "ath_floor": 0
+    },
+    {
+     "name": "沪硅产业",
+     "code": "688126",
+     "market": "A股",
+     "yahoo": "688126.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 914.8,
+      "approx": true
+     },
+     "mcap_base_price": 27.68,
+     "ath_floor": 0
+    },
+    {
+     "name": "TCL中环",
+     "code": "002129",
+     "market": "A股",
+     "yahoo": "002129.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 367.9,
+      "approx": true
+     },
+     "mcap_base_price": 9.1,
+     "ath_floor": 0
+    },
+    {
+     "name": "东京应化",
+     "code": "4186",
+     "market": "日股",
+     "yahoo": "4186.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 11900,
+      "approx": true
+     },
+     "mcap_base_price": 10855.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "Stella Chemifa",
+     "code": "4109",
+     "market": "日股",
+     "yahoo": "4109.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 851,
+      "approx": true
+     },
+     "mcap_base_price": 6300.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "雅克科技",
+     "code": "002409",
+     "market": "A股",
+     "yahoo": "002409.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 690.0,
+      "approx": true
+     },
+     "mcap_base_price": 145.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "中船特气",
+     "code": "688146",
+     "market": "A股",
+     "yahoo": "688146.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1750,
+      "approx": true
+     },
+     "mcap_base_price": 330.14,
+     "ath_floor": 0
+    },
+    {
+     "name": "昊华科技",
+     "code": "600378",
+     "market": "A股",
+     "yahoo": "600378.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 563.7,
+      "approx": true
+     },
+     "mcap_base_price": 43.7,
+     "ath_floor": 0
+    },
+    {
+     "name": "广钢气体",
+     "code": "688548",
+     "market": "A股",
+     "yahoo": "688548.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 507.3,
+      "approx": true
+     },
+     "mcap_base_price": 38.45,
+     "ath_floor": 0
+    },
+    {
+     "name": "华特气体",
+     "code": "688268",
+     "market": "A股",
+     "yahoo": "688268.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 190.3,
+      "approx": true
+     },
+     "mcap_base_price": 149.01,
+     "ath_floor": 0
+    },
+    {
+     "name": "金宏气体",
+     "code": "688106",
+     "market": "A股",
+     "yahoo": "688106.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 161.2,
+      "approx": true
+     },
+     "mcap_base_price": 30.1,
+     "ath_floor": 0
+    },
+    {
+     "name": "和远气体",
+     "code": "002971",
+     "market": "A股",
+     "yahoo": "002971.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 78.8,
+      "approx": true
+     },
+     "mcap_base_price": 37.43,
+     "ath_floor": 0
+    },
+    {
+     "name": "揖斐电（IBIDEN）",
+     "code": "4062",
+     "market": "日股",
+     "yahoo": "4062.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 65190,
+      "approx": true
+     },
+     "mcap_base_price": 23345.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "太阳控股",
+     "code": "4626",
+     "market": "日股",
+     "yahoo": "4626.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 5553,
+      "approx": true
+     },
+     "mcap_base_price": 4990.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "住友电木",
+     "code": "4203",
+     "market": "日股",
+     "yahoo": "4203.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 14000,
+      "approx": true
+     },
+     "mcap_base_price": 7506.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "Qnity Electronics",
+     "code": "Q",
+     "market": "美股",
+     "yahoo": "Q",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 593,
+      "approx": false
+     },
+     "mcap_base_price": 141.75,
+     "ath_floor": 0
+    },
+    {
+     "name": "英特格（Entegris）",
+     "code": "ENTG",
+     "market": "美股",
+     "yahoo": "ENTG",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 221,
+      "approx": false
+     },
+     "mcap_base_price": 146.66,
+     "ath_floor": 0
+    },
+    {
+     "name": "JX金属",
+     "code": "5016",
+     "market": "日股",
+     "yahoo": "5016.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 37900,
+      "approx": true
+     },
+     "mcap_base_price": 4085.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "保谷光学（HOYA）",
+     "code": "7741",
+     "market": "日股",
+     "yahoo": "7741.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 85600,
+      "approx": true
+     },
+     "mcap_base_price": 25930.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "福尼克斯（Photronics）",
+     "code": "PLAB",
+     "market": "美股",
+     "yahoo": "PLAB",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 18,
+      "approx": false
+     },
+     "mcap_base_price": 28.86,
+     "ath_floor": 0
+    },
+    {
+     "name": "江丰电子",
+     "code": "300666",
+     "market": "A股",
+     "yahoo": "300666.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 602.0,
+      "approx": true
+     },
+     "mcap_base_price": 218.04,
+     "ath_floor": 0
+    },
+    {
+     "name": "三星电机",
+     "code": "009150",
+     "market": "韩国",
+     "yahoo": "009150.KS",
+     "currency": "₩",
+     "mcap_base": {
+      "prefix": "₩",
+      "yi": 187000,
+      "approx": true
+     },
+     "mcap_base_price": 250000.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "LG Innotek",
+     "code": "011070",
+     "market": "韩国",
+     "yahoo": "011070.KS",
+     "currency": "₩",
+     "mcap_base": {
+      "prefix": "₩",
+      "yi": 95000,
+      "approx": true
+     },
+     "mcap_base_price": 400000.0,
+     "ath_floor": 0
+    }
+   ],
+   "groups": [
+    {
+     "name": "硅片",
+     "codes": [
+      "4063",
+      "SHECY",
+      "3436",
+      "6488",
+      "WAF",
+      "688126",
+      "002129"
+     ]
+    },
+    {
+     "name": "光刻胶与化学品",
+     "codes": [
+      "4186",
+      "4109",
+      "002409"
+     ]
+    },
+    {
+     "name": "电子特气",
+     "codes": [
+      "688146",
+      "600378",
+      "688548",
+      "688268",
+      "688106",
+      "002971"
+     ]
+    },
+    {
+     "name": "封装与基板材料",
+     "codes": [
+      "4062",
+      "4626",
+      "4203",
+      "Q"
+     ]
+    },
+    {
+     "name": "过滤·靶材·光罩",
+     "codes": [
+      "ENTG",
+      "5016",
+      "7741",
+      "PLAB",
+      "300666"
+     ]
+    },
+    {
+     "name": "玻璃基板双雄",
+     "codes": [
+      "009150",
+      "011070"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "10 封装测试（OSAT与测试设备）",
+   "items": [
+    {
+     "name": "台积电",
+     "code": "TSM",
+     "market": "美股 ADR",
+     "yahoo": "TSM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 22599.999999999996,
+      "approx": false
+     },
+     "mcap_base_price": 434.16,
+     "ath_floor": 479.0
+    },
+    {
+     "name": "日月光半导体 ADR",
+     "code": "ASX",
+     "market": "美股",
+     "yahoo": "ASX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 900,
+      "approx": true
+     },
+     "mcap_base_price": 41.87,
+     "ath_floor": 0
+    },
+    {
+     "name": "艾马克技术（Amkor）",
+     "code": "AMKR",
+     "market": "美股",
+     "yahoo": "AMKR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 171,
+      "approx": false
+     },
+     "mcap_base_price": 69.65,
+     "ath_floor": 0
+    },
+    {
+     "name": "长电科技",
+     "code": "600584",
+     "market": "A股",
+     "yahoo": "600584.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1627,
+      "approx": true
+     },
+     "mcap_base_price": 90.88,
+     "ath_floor": 0
+    },
+    {
+     "name": "通富微电",
+     "code": "002156",
+     "market": "A股",
+     "yahoo": "002156.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 985,
+      "approx": true
+     },
+     "mcap_base_price": 64.8,
+     "ath_floor": 0
+    },
+    {
+     "name": "华天科技",
+     "code": "002185",
+     "market": "A股",
+     "yahoo": "002185.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 624,
+      "approx": true
+     },
+     "mcap_base_price": 19.51,
+     "ath_floor": 0
+    },
+    {
+     "name": "泰瑞达",
+     "code": "TER",
+     "market": "美股",
+     "yahoo": "TER",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 591,
+      "approx": false
+     },
+     "mcap_base_price": 369.09,
+     "ath_floor": 0
+    },
+    {
+     "name": "爱德万测试",
+     "code": "6857",
+     "market": "日股",
+     "yahoo": "6857.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 214200,
+      "approx": true
+     },
+     "mcap_base_price": 29345.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "是德科技（Keysight）",
+     "code": "KEYS",
+     "market": "美股",
+     "yahoo": "KEYS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 540,
+      "approx": false
+     },
+     "mcap_base_price": 313.86,
+     "ath_floor": 0
+    },
+    {
+     "name": "科休半导体",
+     "code": "COHU",
+     "market": "美股",
+     "yahoo": "COHU",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 28,
+      "approx": false
+     },
+     "mcap_base_price": 59.27,
+     "ath_floor": 0
+    },
+    {
+     "name": "Aehr Test",
+     "code": "AEHR",
+     "market": "美股",
+     "yahoo": "AEHR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 21,
+      "approx": false
+     },
+     "mcap_base_price": 69.96,
+     "ath_floor": 0
+    },
+    {
+     "name": "康特科技",
+     "code": "CAMT",
+     "market": "美股",
+     "yahoo": "CAMT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 64,
+      "approx": false
+     },
+     "mcap_base_price": 142.5,
+     "ath_floor": 0
+    },
+    {
+     "name": "FormFactor",
+     "code": "FORM",
+     "market": "美股",
+     "yahoo": "FORM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 95,
+      "approx": false
+     },
+     "mcap_base_price": 123.59,
+     "ath_floor": 0
+    },
+    {
+     "name": "Nova",
+     "code": "NVMI",
+     "market": "美股",
+     "yahoo": "NVMI",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 136,
+      "approx": false
+     },
+     "mcap_base_price": 470.14,
+     "ath_floor": 0
+    },
+    {
+     "name": "Onto Innovation",
+     "code": "ONTO",
+     "market": "美股",
+     "yahoo": "ONTO",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 151,
+      "approx": false
+     },
+     "mcap_base_price": 307.58,
+     "ath_floor": 0
+    },
+    {
+     "name": "科磊",
+     "code": "KLAC",
+     "market": "美股",
+     "yahoo": "KLAC",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3076.9,
+      "approx": false
+     },
+     "mcap_base_price": 235.55,
+     "ath_floor": 307.37
+    },
+    {
+     "name": "Axcelis",
+     "code": "ACLS",
+     "market": "美股",
+     "yahoo": "ACLS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 46,
+      "approx": false
+     },
+     "mcap_base_price": 144.5,
+     "ath_floor": 0
+    },
+    {
+     "name": "ACM Research",
+     "code": "ACMR",
+     "market": "美股",
+     "yahoo": "ACMR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 62,
+      "approx": false
+     },
+     "mcap_base_price": 97.77,
+     "ath_floor": 0
+    },
+    {
+     "name": "库力索法",
+     "code": "KLIC",
+     "market": "美股",
+     "yahoo": "KLIC",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 64,
+      "approx": false
+     },
+     "mcap_base_price": 121.33,
+     "ath_floor": 0
+    },
+    {
+     "name": "Nordson",
+     "code": "NDSN",
+     "market": "美股",
+     "yahoo": "NDSN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 166,
+      "approx": false
+     },
+     "mcap_base_price": 290.38,
+     "ath_floor": 0
+    },
+    {
+     "name": "布鲁克",
+     "code": "BRKR",
+     "market": "美股",
+     "yahoo": "BRKR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 93,
+      "approx": false
+     },
+     "mcap_base_price": 61.64,
+     "ath_floor": 0
+    },
+    {
+     "name": "ASMPT",
+     "code": "00522",
+     "market": "港股",
+     "yahoo": "0522.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 852,
+      "approx": true
+     },
+     "mcap_base_price": 204.8,
+     "ath_floor": 0
+    },
+    {
+     "name": "日东纺织",
+     "code": "3110",
+     "market": "日股",
+     "yahoo": "3110.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 6598,
+      "approx": true
+     },
+     "mcap_base_price": 3625.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "SKC",
+     "code": "011790",
+     "market": "韩国",
+     "yahoo": "011790.KS",
+     "currency": "₩",
+     "mcap_base": {
+      "prefix": "₩",
+      "yi": 76000,
+      "approx": true
+     },
+     "mcap_base_price": 200000.0,
+     "ath_floor": 0
+    }
+   ],
+   "groups": [
+    {
+     "name": "代工与 OSAT 封测厂",
+     "codes": [
+      "TSM",
+      "ASX",
+      "AMKR",
+      "600584",
+      "002156",
+      "002185"
+     ]
+    },
+    {
+     "name": "测试与键合设备（交叉）",
+     "codes": [
+      "TER",
+      "6857",
+      "KEYS",
+      "COHU",
+      "AEHR",
+      "CAMT",
+      "FORM",
+      "NVMI",
+      "ONTO",
+      "KLAC",
+      "ACLS",
+      "ACMR",
+      "KLIC",
+      "NDSN",
+      "BRKR",
+      "00522"
+     ]
+    },
+    {
+     "name": "封装材料",
+     "codes": [
+      "3110",
+      "011790"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "11 800VDC 功率半导体（SiC · GaN）",
+   "items": [
+    {
+     "name": "天岳先进",
+     "code": "688234",
+     "market": "A股",
+     "yahoo": "688234.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 626,
+      "approx": true
+     },
+     "mcap_base_price": 145.6,
+     "ath_floor": 0
+    },
+    {
+     "name": "瀚天天成",
+     "code": "02726",
+     "market": "港股",
+     "yahoo": "2726.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 439.6,
+      "approx": false
+     },
+     "mcap_base_price": 103.3,
+     "ath_floor": 0
+    },
+    {
+     "name": "晶升股份",
+     "code": "688478",
+     "market": "A股",
+     "yahoo": "688478.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 97,
+      "approx": true
+     },
+     "mcap_base_price": 72.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "露笑科技",
+     "code": "002617",
+     "market": "A股",
+     "yahoo": "002617.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 146,
+      "approx": true
+     },
+     "mcap_base_price": 9.15,
+     "ath_floor": 0
+    },
+    {
+     "name": "晶盛机电",
+     "code": "300316",
+     "market": "A股",
+     "yahoo": "300316.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 664,
+      "approx": true
+     },
+     "mcap_base_price": 51.08,
+     "ath_floor": 0
+    },
+    {
+     "name": "Coherent",
+     "code": "COHR",
+     "market": "美股",
+     "yahoo": "COHR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 652.2,
+      "approx": false
+     },
+     "mcap_base_price": 333.36,
+     "ath_floor": 440.0
+    },
+    {
+     "name": "Aehr Test",
+     "code": "AEHR",
+     "market": "美股",
+     "yahoo": "AEHR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 21,
+      "approx": false
+     },
+     "mcap_base_price": 69.96,
+     "ath_floor": 0
+    },
+    {
+     "name": "意法半导体",
+     "code": "STM",
+     "market": "美股",
+     "yahoo": "STM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 615,
+      "approx": false
+     },
+     "mcap_base_price": 68.35,
+     "ath_floor": 0
+    },
+    {
+     "name": "英飞凌 ADR",
+     "code": "IFNNY",
+     "market": "美股 OTC",
+     "yahoo": "IFNNY",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1120,
+      "approx": false
+     },
+     "mcap_base_price": 86.175,
+     "ath_floor": 0
+    },
+    {
+     "name": "安森美半导体",
+     "code": "ON",
+     "market": "美股",
+     "yahoo": "ON",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 383,
+      "approx": false
+     },
+     "mcap_base_price": 91.22,
+     "ath_floor": 0
+    },
+    {
+     "name": "罗姆半导体",
+     "code": "6963",
+     "market": "日股",
+     "yahoo": "6963.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 22600,
+      "approx": true
+     },
+     "mcap_base_price": 5950.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "Wolfspeed",
+     "code": "WOLF",
+     "market": "美股",
+     "yahoo": "WOLF",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 28,
+      "approx": true
+     },
+     "mcap_base_price": 40.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "华润微",
+     "code": "688396",
+     "market": "A股",
+     "yahoo": "688396.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 13.2,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "士兰微",
+     "code": "600460",
+     "market": "A股",
+     "yahoo": "600460.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 14.1,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "扬杰科技",
+     "code": "300373",
+     "market": "A股",
+     "yahoo": "300373.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 5.4,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "斯达半导",
+     "code": "603290",
+     "market": "A股",
+     "yahoo": "603290.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 310,
+      "approx": true
+     },
+     "mcap_base_price": 129.35,
+     "ath_floor": 0
+    },
+    {
+     "name": "时代电气",
+     "code": "688187",
+     "market": "A股",
+     "yahoo": "688187.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 780.4,
+      "approx": false
+     },
+     "mcap_base_price": 57.49,
+     "ath_floor": 92.6
+    },
+    {
+     "name": "时代电气",
+     "code": "03898",
+     "market": "港股",
+     "yahoo": "3898.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 499.6,
+      "approx": false
+     },
+     "mcap_base_price": 37.54,
+     "ath_floor": 75.0
+    },
+    {
+     "name": "纳微半导体",
+     "code": "NVTS",
+     "market": "美股",
+     "yahoo": "NVTS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 35.2,
+      "approx": false
+     },
+     "mcap_base_price": 14.46,
+     "ath_floor": 34.17
+    },
+    {
+     "name": "英诺赛科",
+     "code": "02577",
+     "market": "港股",
+     "yahoo": "2577.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 534,
+      "approx": false
+     },
+     "mcap_base_price": 60.65,
+     "ath_floor": 0
+    },
+    {
+     "name": "三安光电",
+     "code": "600703",
+     "market": "A股",
+     "yahoo": "600703.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 912,
+      "approx": true
+     },
+     "mcap_base_price": 18.23,
+     "ath_floor": 0
+    },
+    {
+     "name": "德州仪器",
+     "code": "TXN",
+     "market": "美股",
+     "yahoo": "TXN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2667,
+      "approx": false
+     },
+     "mcap_base_price": 293.08,
+     "ath_floor": 0
+    },
+    {
+     "name": "Monolithic Power",
+     "code": "MPWR",
+     "market": "美股",
+     "yahoo": "MPWR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 631,
+      "approx": false
+     },
+     "mcap_base_price": 1288.16,
+     "ath_floor": 0
+    },
+    {
+     "name": "Vicor",
+     "code": "VICR",
+     "market": "美股",
+     "yahoo": "VICR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 0.45,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "伊顿",
+     "code": "ETN",
+     "market": "美股",
+     "yahoo": "ETN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1562,
+      "approx": false
+     },
+     "mcap_base_price": 398.52,
+     "ath_floor": 0
+    },
+    {
+     "name": "Vertiv Holdings",
+     "code": "VRT",
+     "market": "美股",
+     "yahoo": "VRT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1154.3,
+      "approx": false
+     },
+     "mcap_base_price": 300.53,
+     "ath_floor": 379.93
+    },
+    {
+     "name": "伟创力",
+     "code": "FLEX",
+     "market": "美股",
+     "yahoo": "FLEX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 513,
+      "approx": false
+     },
+     "mcap_base_price": 136.855,
+     "ath_floor": 0
+    }
+   ],
+   "groups": [
+    {
+     "name": "SiC 衬底 · 外延 · 设备 · 测试",
+     "codes": [
+      "688234",
+      "02726",
+      "688478",
+      "002617",
+      "300316",
+      "COHR",
+      "AEHR"
+     ]
+    },
+    {
+     "name": "SiC 功率器件（IDM 与模块）",
+     "codes": [
+      "STM",
+      "IFNNY",
+      "ON",
+      "6963",
+      "WOLF"
+     ]
+    },
+    {
+     "name": "A股功率 IDM（涨价周期）",
+     "codes": [
+      "688396",
+      "600460",
+      "300373",
+      "603290",
+      "688187",
+      "03898"
+     ]
+    },
+    {
+     "name": "GaN 阵营",
+     "codes": [
+      "NVTS",
+      "02577",
+      "600703"
+     ]
+    },
+    {
+     "name": "电源管理芯片",
+     "codes": [
+      "TXN",
+      "MPWR",
+      "VICR"
+     ]
+    },
+    {
+     "name": "电力设备与整机集成",
+     "codes": [
+      "ETN",
+      "VRT",
+      "FLEX"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "12 光纤与光缆",
+   "items": [
+    {
+     "name": "康宁",
+     "code": "GLW",
+     "market": "美股",
+     "yahoo": "GLW",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1685,
+      "approx": false
+     },
+     "mcap_base_price": 196.79,
+     "ath_floor": 0
+    },
+    {
+     "name": "住友电气",
+     "code": "5802",
+     "market": "日股",
+     "yahoo": "5802.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 83108,
+      "approx": true
+     },
+     "mcap_base_price": 2664.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "藤仓（Fujikura）",
+     "code": "5803",
+     "market": "日股",
+     "yahoo": "5803.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 88710,
+      "approx": true
+     },
+     "mcap_base_price": 5358.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "住友化学 ADR",
+     "code": "SOMMY",
+     "market": "美股 OTC",
+     "yahoo": "SOMMY",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 180,
+      "approx": true
+     },
+     "mcap_base_price": 16.505,
+     "ath_floor": 0
+    },
+    {
+     "name": "长飞光纤",
+     "code": "601869",
+     "market": "A股",
+     "yahoo": "601869.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 3601,
+      "approx": true
+     },
+     "mcap_base_price": 475.08,
+     "ath_floor": 0
+    },
+    {
+     "name": "长飞光纤",
+     "code": "06869",
+     "market": "港股",
+     "yahoo": "6869.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 1525,
+      "approx": true
+     },
+     "mcap_base_price": 201.2,
+     "ath_floor": 0
+    },
+    {
+     "name": "亨通光电",
+     "code": "600487",
+     "market": "A股",
+     "yahoo": "600487.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2200,
+      "approx": true
+     },
+     "mcap_base_price": 89.42,
+     "ath_floor": 0
+    },
+    {
+     "name": "中天科技",
+     "code": "600522",
+     "market": "A股",
+     "yahoo": "600522.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1707,
+      "approx": true
+     },
+     "mcap_base_price": 50.22,
+     "ath_floor": 0
+    },
+    {
+     "name": "烽火通信",
+     "code": "600498",
+     "market": "A股",
+     "yahoo": "600498.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 731,
+      "approx": true
+     },
+     "mcap_base_price": 61.91,
+     "ath_floor": 0
+    },
+    {
+     "name": "富通科技",
+     "code": "00465",
+     "market": "港股",
+     "yahoo": "0465.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 25,
+      "approx": true
+     },
+     "mcap_base_price": 3.72,
+     "ath_floor": 0
+    },
+    {
+     "name": "杭电股份",
+     "code": "603618",
+     "market": "A股",
+     "yahoo": "603618.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 6.9,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "大族激光",
+     "code": "002008",
+     "market": "A股",
+     "yahoo": "002008.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 10.5,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "合盛硅业",
+     "code": "603260",
+     "market": "A股",
+     "yahoo": "603260.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 11.8,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "信越化学",
+     "code": "4063",
+     "market": "日股",
+     "yahoo": "4063.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 129400.0,
+      "approx": false
+     },
+     "mcap_base_price": 6958.0,
+     "ath_floor": 7930.0
+    },
+    {
+     "name": "信越化学",
+     "code": "SHECY",
+     "market": "美股 OTC",
+     "yahoo": "SHECY",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 775.6,
+      "approx": false
+     },
+     "mcap_base_price": 22.76,
+     "ath_floor": 24.74
+    }
+   ],
+   "groups": [
+    {
+     "name": "海外巨头",
+     "codes": [
+      "GLW",
+      "5802",
+      "5803",
+      "SOMMY"
+     ]
+    },
+    {
+     "name": "A股光纤光缆",
+     "codes": [
+      "601869",
+      "06869",
+      "600487",
+      "600522",
+      "600498",
+      "00465",
+      "603618"
+     ]
+    },
+    {
+     "name": "跨界新玩家（供给观察）",
+     "codes": [
+      "002008",
+      "603260"
+     ]
+    },
+    {
+     "name": "材料交叉（信越）",
+     "codes": [
+      "4063",
+      "SHECY"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "13 PCB 与覆铜板（CCL）",
+   "items": [
+    {
+     "name": "胜宏科技",
+     "code": "300476",
+     "market": "A股",
+     "yahoo": "300476.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2649,
+      "approx": true
+     },
+     "mcap_base_price": 308.07,
+     "ath_floor": 0
+    },
+    {
+     "name": "胜宏科技",
+     "code": "02476",
+     "market": "港股",
+     "yahoo": "2476.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 2554,
+      "approx": true
+     },
+     "mcap_base_price": 297.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "沪电股份",
+     "code": "002463",
+     "market": "A股",
+     "yahoo": "002463.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2572,
+      "approx": true
+     },
+     "mcap_base_price": 135.35,
+     "ath_floor": 0
+    },
+    {
+     "name": "东山精密",
+     "code": "002384",
+     "market": "A股",
+     "yahoo": "002384.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 3980,
+      "approx": true
+     },
+     "mcap_base_price": 232.73,
+     "ath_floor": 0
+    },
+    {
+     "name": "深南电路",
+     "code": "002916",
+     "market": "A股",
+     "yahoo": "002916.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2318,
+      "approx": true
+     },
+     "mcap_base_price": 454.48,
+     "ath_floor": 0
+    },
+    {
+     "name": "生益电子",
+     "code": "688183",
+     "market": "A股",
+     "yahoo": "688183.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1079.4,
+      "approx": false
+     },
+     "mcap_base_price": 128.87,
+     "ath_floor": 0
+    },
+    {
+     "name": "广合科技",
+     "code": "001389",
+     "market": "A股",
+     "yahoo": "001389.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 928.87,
+      "approx": false
+     },
+     "mcap_base_price": 196.5,
+     "ath_floor": 0
+    },
+    {
+     "name": "方正科技",
+     "code": "600601",
+     "market": "A股",
+     "yahoo": "600601.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 500.46,
+      "approx": false
+     },
+     "mcap_base_price": 11.71,
+     "ath_floor": 0
+    },
+    {
+     "name": "金像电",
+     "code": "2368",
+     "market": "台股",
+     "yahoo": "2368.TW",
+     "currency": "NT$",
+     "mcap_base": {
+      "prefix": "NT$",
+      "yi": 5.42,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "TTM Technologies",
+     "code": "TTMI",
+     "market": "美股",
+     "yahoo": "TTMI",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1.03,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "景旺电子",
+     "code": "603228",
+     "market": "A股",
+     "yahoo": "603228.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 707.0,
+      "approx": true
+     },
+     "mcap_base_price": 71.7,
+     "ath_floor": 0
+    },
+    {
+     "name": "鹏鼎控股",
+     "code": "002938",
+     "market": "A股",
+     "yahoo": "002938.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2176.0,
+      "approx": true
+     },
+     "mcap_base_price": 93.89,
+     "ath_floor": 0
+    },
+    {
+     "name": "崇达技术",
+     "code": "002815",
+     "market": "A股",
+     "yahoo": "002815.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 169.0,
+      "approx": true
+     },
+     "mcap_base_price": 13.72,
+     "ath_floor": 0
+    },
+    {
+     "name": "兴森科技",
+     "code": "002436",
+     "market": "A股",
+     "yahoo": "002436.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 579.0,
+      "approx": true
+     },
+     "mcap_base_price": 34.06,
+     "ath_floor": 0
+    },
+    {
+     "name": "奥士康",
+     "code": "002913",
+     "market": "A股",
+     "yahoo": "002913.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 137.0,
+      "approx": true
+     },
+     "mcap_base_price": 43.02,
+     "ath_floor": 0
+    },
+    {
+     "name": "世运电路",
+     "code": "603920",
+     "market": "A股",
+     "yahoo": "603920.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 246.0,
+      "approx": true
+     },
+     "mcap_base_price": 34.2,
+     "ath_floor": 0
+    },
+    {
+     "name": "台光电子",
+     "code": "2383",
+     "market": "台股",
+     "yahoo": "2383.TW",
+     "currency": "NT$",
+     "mcap_base": {
+      "prefix": "NT$",
+      "yi": 3.35,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "生益科技",
+     "code": "600183",
+     "market": "A股",
+     "yahoo": "600183.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 24.3,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "南亚新材",
+     "code": "688519",
+     "market": "A股",
+     "yahoo": "688519.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 830.19,
+      "approx": false
+     },
+     "mcap_base_price": 353.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "建滔积层板",
+     "code": "01888",
+     "market": "港股",
+     "yahoo": "1888.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 31.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "华正新材",
+     "code": "603186",
+     "market": "A股",
+     "yahoo": "603186.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 250.0,
+      "approx": true
+     },
+     "mcap_base_price": 159.3,
+     "ath_floor": 0
+    },
+    {
+     "name": "日东纺织",
+     "code": "3110",
+     "market": "日股",
+     "yahoo": "3110.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 6598,
+      "approx": true
+     },
+     "mcap_base_price": 3625.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "日本电气硝子NEG",
+     "code": "5214",
+     "market": "日本",
+     "yahoo": "5214.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 0.94,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "旭化成",
+     "code": "3407",
+     "market": "日本",
+     "yahoo": "3407.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 13.6,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "宏和科技",
+     "code": "603256",
+     "market": "A股",
+     "yahoo": "603256.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 8.7,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "菲利华",
+     "code": "300395",
+     "market": "A股",
+     "yahoo": "300395.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 5.2,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "国际复材",
+     "code": "301526",
+     "market": "A股",
+     "yahoo": "301526.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1191.0,
+      "approx": true
+     },
+     "mcap_base_price": 31.59,
+     "ath_floor": 0
+    },
+    {
+     "name": "铜冠铜箔",
+     "code": "301217",
+     "market": "A股",
+     "yahoo": "301217.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1070.0,
+      "approx": true
+     },
+     "mcap_base_price": 129.05,
+     "ath_floor": 0
+    },
+    {
+     "name": "德福科技",
+     "code": "301511",
+     "market": "A股",
+     "yahoo": "301511.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 607.0,
+      "approx": true
+     },
+     "mcap_base_price": 96.22,
+     "ath_floor": 0
+    }
+   ],
+   "groups": [
+    {
+     "name": "AI PCB",
+     "codes": [
+      "300476",
+      "02476",
+      "002463",
+      "002384",
+      "002916",
+      "688183",
+      "001389",
+      "600601",
+      "2368",
+      "TTMI",
+      "603228",
+      "002938",
+      "002815",
+      "002436",
+      "002913",
+      "603920"
+     ]
+    },
+    {
+     "name": "CCL 覆铜板",
+     "codes": [
+      "2383",
+      "600183",
+      "688519",
+      "01888",
+      "603186"
+     ]
+    },
+    {
+     "name": "上游玻纤与石英",
+     "codes": [
+      "3110",
+      "5214",
+      "3407",
+      "603256",
+      "300395",
+      "301526"
+     ]
+    },
+    {
+     "name": "上游铜箔（HVLP）",
+     "codes": [
+      "301217",
+      "301511"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "14 被动元件（MLCC · 超级电容）",
+   "items": [
+    {
+     "name": "村田制作所",
+     "code": "6981",
+     "market": "日股",
+     "yahoo": "6981.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 19.63,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "三星电机",
+     "code": "009150",
+     "market": "韩国",
+     "yahoo": "009150.KS",
+     "currency": "₩",
+     "mcap_base": {
+      "prefix": "₩",
+      "yi": 187000,
+      "approx": true
+     },
+     "mcap_base_price": 250000.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "太阳诱电",
+     "code": "6976",
+     "market": "日股",
+     "yahoo": "6976.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1.3,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "TDK",
+     "code": "6762",
+     "market": "日股",
+     "yahoo": "6762.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 18.98,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "国巨",
+     "code": "2327",
+     "market": "台股",
+     "yahoo": "2327.TW",
+     "currency": "NT$",
+     "mcap_base": {
+      "prefix": "NT$",
+      "yi": 21,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "三环集团",
+     "code": "300408",
+     "market": "A股",
+     "yahoo": "300408.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 19.2,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "风华高科",
+     "code": "000636",
+     "market": "A股",
+     "yahoo": "000636.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 11.6,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "国瓷材料",
+     "code": "300285",
+     "market": "A股",
+     "yahoo": "300285.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 10.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "博迁新材",
+     "code": "605376",
+     "market": "A股",
+     "yahoo": "605376.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2.6,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "洁美科技",
+     "code": "002859",
+     "market": "A股",
+     "yahoo": "002859.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 4.3,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "江海股份",
+     "code": "002484",
+     "market": "A股",
+     "yahoo": "002484.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 8.5,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    }
+   ],
+   "groups": [
+    {
+     "name": "MLCC 国际五强",
+     "codes": [
+      "6981",
+      "009150",
+      "6976",
+      "6762",
+      "2327"
+     ]
+    },
+    {
+     "name": "MLCC A股双雄",
+     "codes": [
+      "300408",
+      "000636"
+     ]
+    },
+    {
+     "name": "上游材料（粉·膜）",
+     "codes": [
+      "300285",
+      "605376",
+      "002859"
+     ]
+    },
+    {
+     "name": "超级电容",
+     "codes": [
+      "002484"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "15 能源、电力与资源现金流",
+   "items": [
+    {
+     "name": "WTI 原油",
+     "code": "CLUSD",
+     "market": "外汇 / 商品",
+     "yahoo": "CL=F",
+     "currency": "$",
+     "mcap_base": null,
+     "mcap_base_price": 65.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "布伦特原油",
+     "code": "BRENT",
+     "market": "外汇 / 商品",
+     "yahoo": "BZ.EM",
+     "currency": "$",
+     "mcap_base": null,
+     "mcap_base_price": 94.0,
+     "ath_floor": 0,
+     "hist": "em:112.B00Y"
+    },
+    {
+     "name": "Constellation Energy",
+     "code": "CEG",
+     "market": "美股",
+     "yahoo": "CEG",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 854.3,
+      "approx": false
+     },
+     "mcap_base_price": 239.25,
+     "ath_floor": 412.7
+    },
+    {
+     "name": "Vistra Energy",
+     "code": "VST",
+     "market": "美股",
+     "yahoo": "VST",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 509.3,
+      "approx": false
+     },
+     "mcap_base_price": 151.05,
+     "ath_floor": 219.82
+    },
+    {
+     "name": "Talen Energy",
+     "code": "TLN",
+     "market": "美股",
+     "yahoo": "TLN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 168,
+      "approx": false
+     },
+     "mcap_base_price": 364.67,
+     "ath_floor": 0
+    },
+    {
+     "name": "GE Vernova",
+     "code": "GEV",
+     "market": "美股",
+     "yahoo": "GEV",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3028,
+      "approx": false
+     },
+     "mcap_base_price": 1113.11,
+     "ath_floor": 0
+    },
+    {
+     "name": "西门子能源",
+     "code": "ENR",
+     "market": "欧股",
+     "yahoo": "ENR.DE",
+     "currency": "€",
+     "mcap_base": {
+      "prefix": "€",
+      "yi": 1193.5,
+      "approx": true
+     },
+     "mcap_base_price": 149.28,
+     "ath_floor": 0
+    },
+    {
+     "name": "三菱重工",
+     "code": "7011",
+     "market": "日股",
+     "yahoo": "7011.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 33.7,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "川崎重工",
+     "code": "7012",
+     "market": "日股",
+     "yahoo": "7012.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 24886.0,
+      "approx": true
+     },
+     "mcap_base_price": 2964.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "IHI",
+     "code": "7013",
+     "market": "日股",
+     "yahoo": "7013.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 30090.0,
+      "approx": true
+     },
+     "mcap_base_price": 2779.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "Bloom Energy",
+     "code": "BE",
+     "market": "美股",
+     "yahoo": "BE",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 623,
+      "approx": false
+     },
+     "mcap_base_price": 270.89,
+     "ath_floor": 0
+    },
+    {
+     "name": "Generac",
+     "code": "GNRC",
+     "market": "美股",
+     "yahoo": "GNRC",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 152,
+      "approx": false
+     },
+     "mcap_base_price": 252.66,
+     "ath_floor": 0
+    },
+    {
+     "name": "nVent Electric",
+     "code": "NVT",
+     "market": "美股",
+     "yahoo": "NVT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 251,
+      "approx": false
+     },
+     "mcap_base_price": 152.15,
+     "ath_floor": 0
+    },
+    {
+     "name": "天弘科技（Celestica）",
+     "code": "CLS",
+     "market": "美股",
+     "yahoo": "CLS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 390,
+      "approx": false
+     },
+     "mcap_base_price": 336.21,
+     "ath_floor": 0
+    },
+    {
+     "name": "艺康集团（Ecolab）",
+     "code": "ECL",
+     "market": "美股",
+     "yahoo": "ECL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 808,
+      "approx": false
+     },
+     "mcap_base_price": 283.36,
+     "ath_floor": 0
+    },
+    {
+     "name": "Cameco",
+     "code": "CCJ",
+     "market": "美股",
+     "yahoo": "CCJ",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 420,
+      "approx": false
+     },
+     "mcap_base_price": 96.54,
+     "ath_floor": 0
+    },
+    {
+     "name": "Williams Companies",
+     "code": "WMB",
+     "market": "美股",
+     "yahoo": "WMB",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 894.5,
+      "approx": false
+     },
+     "mcap_base_price": 73.14,
+     "ath_floor": 80.08
+    },
+    {
+     "name": "EQT（天然气）",
+     "code": "EQT",
+     "market": "美股",
+     "yahoo": "EQT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 340,
+      "approx": true
+     },
+     "mcap_base_price": 56.61,
+     "ath_floor": 0
+    },
+    {
+     "name": "华能国际",
+     "code": "600011",
+     "market": "A股",
+     "yahoo": "600011.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 980.0,
+      "approx": false
+     },
+     "mcap_base_price": 7.1,
+     "ath_floor": 19.25
+    },
+    {
+     "name": "华能国际",
+     "code": "00902",
+     "market": "港股",
+     "yahoo": "0902.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 1242.4,
+      "approx": false
+     },
+     "mcap_base_price": 5.57,
+     "ath_floor": 11.9
+    },
+    {
+     "name": "大唐发电",
+     "code": "601991",
+     "market": "A股",
+     "yahoo": "601991.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1419,
+      "approx": true
+     },
+     "mcap_base_price": 7.67,
+     "ath_floor": 0
+    },
+    {
+     "name": "大唐发电",
+     "code": "00991",
+     "market": "港股",
+     "yahoo": "0991.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 577.0,
+      "approx": true
+     },
+     "mcap_base_price": 3.12,
+     "ath_floor": 0
+    },
+    {
+     "name": "华电能源",
+     "code": "600726",
+     "market": "A股",
+     "yahoo": "600726.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1260,
+      "approx": true
+     },
+     "mcap_base_price": 6.43,
+     "ath_floor": 0
+    },
+    {
+     "name": "华电国际",
+     "code": "600027",
+     "market": "A股",
+     "yahoo": "600027.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 613,
+      "approx": true
+     },
+     "mcap_base_price": 6.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "华润电力",
+     "code": "00836",
+     "market": "港股",
+     "yahoo": "0836.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 838,
+      "approx": true
+     },
+     "mcap_base_price": 17.45,
+     "ath_floor": 0
+    },
+    {
+     "name": "中国海洋石油",
+     "code": "00883",
+     "market": "港股",
+     "yahoo": "0883.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 10100.0,
+      "approx": false
+     },
+     "mcap_base_price": 21.18,
+     "ath_floor": 30.98
+    },
+    {
+     "name": "兖矿能源",
+     "code": "600188",
+     "market": "A股",
+     "yahoo": "600188.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2013.0,
+      "approx": true
+     },
+     "mcap_base_price": 20.27,
+     "ath_floor": 0
+    },
+    {
+     "name": "兖矿能源",
+     "code": "01171",
+     "market": "港股",
+     "yahoo": "1171.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 1178.0,
+      "approx": true
+     },
+     "mcap_base_price": 11.86,
+     "ath_floor": 0
+    },
+    {
+     "name": "兖煤澳大利亚",
+     "code": "03668",
+     "market": "港股",
+     "yahoo": "3668.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 396.2,
+      "approx": false
+     },
+     "mcap_base_price": 30.0,
+     "ath_floor": 49.4
+    },
+    {
+     "name": "特变电工",
+     "code": "600089",
+     "market": "A股",
+     "yahoo": "600089.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1100,
+      "approx": true
+     },
+     "mcap_base_price": 22.01,
+     "ath_floor": 0
+    },
+    {
+     "name": "中国西电",
+     "code": "601179",
+     "market": "A股",
+     "yahoo": "601179.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 729,
+      "approx": true
+     },
+     "mcap_base_price": 14.29,
+     "ath_floor": 0
+    },
+    {
+     "name": "大金重工",
+     "code": "002487",
+     "market": "A股",
+     "yahoo": "002487.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 384.3,
+      "approx": true
+     },
+     "mcap_base_price": 52.14,
+     "ath_floor": 0
+    },
+    {
+     "name": "大金重工",
+     "code": "01081",
+     "market": "港股",
+     "yahoo": "1081.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 251.0,
+      "approx": true
+     },
+     "mcap_base_price": 34.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "电力ETF广发",
+     "code": "159611",
+     "market": "A股 ETF",
+     "yahoo": "159611.SZ",
+     "currency": "¥",
+     "mcap_base": null,
+     "mcap_base_price": 1.04,
+     "ath_floor": 0
+    },
+    {
+     "name": "东方电气",
+     "code": "01072",
+     "market": "港股",
+     "yahoo": "1072.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 773.98,
+      "approx": true
+     },
+     "mcap_base_price": 22.38,
+     "ath_floor": 0
+    },
+    {
+     "name": "哈尔滨电气",
+     "code": "01133",
+     "market": "港股",
+     "yahoo": "1133.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 359.59,
+      "approx": true
+     },
+     "mcap_base_price": 16.08,
+     "ath_floor": 0
+    },
+    {
+     "name": "杰瑞股份",
+     "code": "002353",
+     "market": "A股",
+     "yahoo": "002353.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1290.16,
+      "approx": true
+     },
+     "mcap_base_price": 126.01,
+     "ath_floor": 0
+    },
+    {
+     "name": "豪迈科技",
+     "code": "002595",
+     "market": "A股",
+     "yahoo": "002595.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 562.6,
+      "approx": true
+     },
+     "mcap_base_price": 48.5,
+     "ath_floor": 0
+    },
+    {
+     "name": "潍柴动力",
+     "code": "000338",
+     "market": "A股",
+     "yahoo": "000338.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2262,
+      "approx": true
+     },
+     "mcap_base_price": 26.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "潍柴动力",
+     "code": "02338",
+     "market": "港股",
+     "yahoo": "2338.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 3089,
+      "approx": true
+     },
+     "mcap_base_price": 35.5,
+     "ath_floor": 0
+    },
+    {
+     "name": "重庆机电",
+     "code": "02722",
+     "market": "港股",
+     "yahoo": "2722.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 70.01,
+      "approx": true
+     },
+     "mcap_base_price": 1.9,
+     "ath_floor": 0
+    },
+    {
+     "name": "康明斯",
+     "code": "CMI",
+     "market": "美股",
+     "yahoo": "CMI",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 882.3,
+      "approx": true
+     },
+     "mcap_base_price": 639.43,
+     "ath_floor": 0
+    },
+    {
+     "name": "卡特彼勒",
+     "code": "CAT",
+     "market": "美股",
+     "yahoo": "CAT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3980.9,
+      "approx": true
+     },
+     "mcap_base_price": 864.3,
+     "ath_floor": 0
+    },
+    {
+     "name": "英维克",
+     "code": "002837",
+     "market": "A股",
+     "yahoo": "002837.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 700,
+      "approx": true
+     },
+     "mcap_base_price": 71.43,
+     "ath_floor": 0
+    },
+    {
+     "name": "高澜股份",
+     "code": "300499",
+     "market": "A股",
+     "yahoo": "300499.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 99,
+      "approx": true
+     },
+     "mcap_base_price": 36.6,
+     "ath_floor": 0
+    },
+    {
+     "name": "申菱环境",
+     "code": "301018",
+     "market": "A股",
+     "yahoo": "301018.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 441,
+      "approx": true
+     },
+     "mcap_base_price": 117.78,
+     "ath_floor": 0
+    },
+    {
+     "name": "沪电股份",
+     "code": "002463",
+     "market": "A股",
+     "yahoo": "002463.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2572,
+      "approx": true
+     },
+     "mcap_base_price": 135.35,
+     "ath_floor": 0
+    },
+    {
+     "name": "现代电气",
+     "code": "267260",
+     "market": "韩国",
+     "yahoo": "267260.KS",
+     "currency": "₩",
+     "mcap_base": {
+      "prefix": "₩",
+      "yi": 338000,
+      "approx": true
+     },
+     "mcap_base_price": 938000.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "效星重工",
+     "code": "298040",
+     "market": "韩国",
+     "yahoo": "298040.KS",
+     "currency": "₩",
+     "mcap_base": {
+      "prefix": "₩",
+      "yi": 140000,
+      "approx": true
+     },
+     "mcap_base_price": 1500000.0,
+     "ath_floor": 0
+    }
+   ],
+   "groups": [
+    {
+     "name": "能源价格锚",
+     "codes": [
+      "CLUSD",
+      "BRENT"
+     ]
+    },
+    {
+     "name": "电力与核能设备（美·日·欧）",
+     "codes": [
+      "CEG",
+      "VST",
+      "TLN",
+      "GEV",
+      "ENR",
+      "7011",
+      "7012",
+      "7013",
+      "BE",
+      "GNRC",
+      "NVT",
+      "CLS",
+      "ECL",
+      "CCJ",
+      "WMB",
+      "EQT"
+     ]
+    },
+    {
+     "name": "中国电力与能源",
+     "codes": [
+      "600011",
+      "00902",
+      "601991",
+      "00991",
+      "600726",
+      "600027",
+      "00836",
+      "00883",
+      "600188",
+      "01171",
+      "03668",
+      "600089",
+      "601179",
+      "002487",
+      "01081",
+      "159611"
+     ]
+    },
+    {
+     "name": "燃气轮机与备用电源（中·美对照）",
+     "codes": [
+      "01072",
+      "01133",
+      "002353",
+      "002595",
+      "000338",
+      "02338",
+      "02722",
+      "CMI",
+      "CAT"
+     ]
+    },
+    {
+     "name": "散热与数据中心配套",
+     "codes": [
+      "002837",
+      "300499",
+      "301018",
+      "002463"
+     ]
+    },
+    {
+     "name": "变压器双雄",
+     "codes": [
+      "267260",
+      "298040"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "16 软件与 SaaS",
+   "items": [
+    {
+     "name": "微软",
+     "code": "MSFT",
+     "market": "美股",
+     "yahoo": "MSFT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 29000.0,
+      "approx": false
+     },
+     "mcap_base_price": 390.49,
+     "ath_floor": 555.45
+    },
+    {
+     "name": "甲骨文",
+     "code": "ORCL",
+     "market": "美股",
+     "yahoo": "ORCL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3928,
+      "approx": false
+     },
+     "mcap_base_price": 140.27,
+     "ath_floor": 0
+    },
+    {
+     "name": "IBM",
+     "code": "IBM",
+     "market": "美股",
+     "yahoo": "IBM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2060,
+      "approx": false
+     },
+     "mcap_base_price": 219.16,
+     "ath_floor": 0
+    },
+    {
+     "name": "Adobe",
+     "code": "ADBE",
+     "market": "美股",
+     "yahoo": "ADBE",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 945,
+      "approx": false
+     },
+     "mcap_base_price": 219.72,
+     "ath_floor": 0
+    },
+    {
+     "name": "赛富时（Salesforce）",
+     "code": "CRM",
+     "market": "美股",
+     "yahoo": "CRM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1595,
+      "approx": false
+     },
+     "mcap_base_price": 166.11,
+     "ath_floor": 0
+    },
+    {
+     "name": "戴尔科技",
+     "code": "DELL",
+     "market": "美股",
+     "yahoo": "DELL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2760,
+      "approx": false
+     },
+     "mcap_base_price": 394.32,
+     "ath_floor": 0
+    },
+    {
+     "name": "Palantir",
+     "code": "PLTR",
+     "market": "美股",
+     "yahoo": "PLTR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3103,
+      "approx": false
+     },
+     "mcap_base_price": 129.3,
+     "ath_floor": 0
+    },
+    {
+     "name": "Snowflake",
+     "code": "SNOW",
+     "market": "美股",
+     "yahoo": "SNOW",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 872,
+      "approx": false
+     },
+     "mcap_base_price": 260.15,
+     "ath_floor": 0
+    },
+    {
+     "name": "Datadog",
+     "code": "DDOG",
+     "market": "美股",
+     "yahoo": "DDOG",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 911,
+      "approx": false
+     },
+     "mcap_base_price": 260.36,
+     "ath_floor": 0
+    },
+    {
+     "name": "MongoDB",
+     "code": "MDB",
+     "market": "美股",
+     "yahoo": "MDB",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 263,
+      "approx": false
+     },
+     "mcap_base_price": 354.88,
+     "ath_floor": 0
+    },
+    {
+     "name": "Elastic",
+     "code": "ESTC",
+     "market": "美股",
+     "yahoo": "ESTC",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 60,
+      "approx": false
+     },
+     "mcap_base_price": 58.04,
+     "ath_floor": 0
+    },
+    {
+     "name": "Applovin",
+     "code": "APP",
+     "market": "美股",
+     "yahoo": "APP",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1792,
+      "approx": false
+     },
+     "mcap_base_price": 527.06,
+     "ath_floor": 0
+    },
+    {
+     "name": "CrowdStrike",
+     "code": "CRWD",
+     "market": "美股",
+     "yahoo": "CRWD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1975,
+      "approx": false
+     },
+     "mcap_base_price": 193.98,
+     "ath_floor": 0
+    },
+    {
+     "name": "Palo Alto Networks",
+     "code": "PANW",
+     "market": "美股",
+     "yahoo": "PANW",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2837,
+      "approx": false
+     },
+     "mcap_base_price": 348.06,
+     "ath_floor": 0
+    },
+    {
+     "name": "飞塔信息（Fortinet）",
+     "code": "FTNT",
+     "market": "美股",
+     "yahoo": "FTNT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1195,
+      "approx": false
+     },
+     "mcap_base_price": 156.25,
+     "ath_floor": 0
+    },
+    {
+     "name": "Zscaler",
+     "code": "ZS",
+     "market": "美股",
+     "yahoo": "ZS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 228,
+      "approx": false
+     },
+     "mcap_base_price": 147.33,
+     "ath_floor": 0
+    },
+    {
+     "name": "Okta",
+     "code": "OKTA",
+     "market": "美股",
+     "yahoo": "OKTA",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 247,
+      "approx": false
+     },
+     "mcap_base_price": 141.42,
+     "ath_floor": 0
+    },
+    {
+     "name": "Rubrik",
+     "code": "RBRK",
+     "market": "美股",
+     "yahoo": "RBRK",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 167,
+      "approx": false
+     },
+     "mcap_base_price": 83.64,
+     "ath_floor": 0
+    },
+    {
+     "name": "Cloudflare",
+     "code": "NET",
+     "market": "美股",
+     "yahoo": "NET",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 836,
+      "approx": false
+     },
+     "mcap_base_price": 242.41,
+     "ath_floor": 0
+    },
+    {
+     "name": "ServiceNow",
+     "code": "NOW",
+     "market": "美股",
+     "yahoo": "NOW",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1095,
+      "approx": false
+     },
+     "mcap_base_price": 106.32,
+     "ath_floor": 0
+    },
+    {
+     "name": "Twilio",
+     "code": "TWLO",
+     "market": "美股",
+     "yahoo": "TWLO",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 324,
+      "approx": false
+     },
+     "mcap_base_price": 209.31,
+     "ath_floor": 0
+    },
+    {
+     "name": "Atlassian",
+     "code": "TEAM",
+     "market": "美股",
+     "yahoo": "TEAM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 220,
+      "approx": false
+     },
+     "mcap_base_price": 83.84,
+     "ath_floor": 0
+    },
+    {
+     "name": "JFrog",
+     "code": "FROG",
+     "market": "美股",
+     "yahoo": "FROG",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 109,
+      "approx": false
+     },
+     "mcap_base_price": 94.81,
+     "ath_floor": 0
+    },
+    {
+     "name": "monday.com",
+     "code": "MNDY",
+     "market": "美股",
+     "yahoo": "MNDY",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 40,
+      "approx": false
+     },
+     "mcap_base_price": 79.77,
+     "ath_floor": 0
+    },
+    {
+     "name": "Workday",
+     "code": "WDAY",
+     "market": "美股",
+     "yahoo": "WDAY",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 363,
+      "approx": false
+     },
+     "mcap_base_price": 135.4,
+     "ath_floor": 0
+    },
+    {
+     "name": "HubSpot",
+     "code": "HUBS",
+     "market": "美股",
+     "yahoo": "HUBS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 100,
+      "approx": false
+     },
+     "mcap_base_price": 192.12,
+     "ath_floor": 0
+    },
+    {
+     "name": "Asana",
+     "code": "ASAN",
+     "market": "美股",
+     "yahoo": "ASAN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 17,
+      "approx": false
+     },
+     "mcap_base_price": 7.34,
+     "ath_floor": 0
+    },
+    {
+     "name": "Klaviyo",
+     "code": "KVYO",
+     "market": "美股",
+     "yahoo": "KVYO",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 47,
+      "approx": false
+     },
+     "mcap_base_price": 16.9,
+     "ath_floor": 0
+    },
+    {
+     "name": "Shopify",
+     "code": "SHOP",
+     "market": "美股",
+     "yahoo": "SHOP",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1553,
+      "approx": false
+     },
+     "mcap_base_price": 119.46,
+     "ath_floor": 0
+    },
+    {
+     "name": "Toast",
+     "code": "TOST",
+     "market": "美股",
+     "yahoo": "TOST",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 164,
+      "approx": false
+     },
+     "mcap_base_price": 28.82,
+     "ath_floor": 0
+    },
+    {
+     "name": "Zoom通讯",
+     "code": "ZM",
+     "market": "美股",
+     "yahoo": "ZM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 266,
+      "approx": false
+     },
+     "mcap_base_price": 87.145,
+     "ath_floor": 0
+    },
+    {
+     "name": "Zeta Global",
+     "code": "ZETA",
+     "market": "美股",
+     "yahoo": "ZETA",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 50,
+      "approx": false
+     },
+     "mcap_base_price": 20.7,
+     "ath_floor": 0
+    },
+    {
+     "name": "奈飞",
+     "code": "NFLX",
+     "market": "美股",
+     "yahoo": "NFLX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2903.0,
+      "approx": true
+     },
+     "mcap_base_price": 68.95,
+     "ath_floor": 0
+    },
+    {
+     "name": "Reddit",
+     "code": "RDDT",
+     "market": "美股",
+     "yahoo": "RDDT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3248.0,
+      "approx": false
+     },
+     "mcap_base_price": 168.73,
+     "ath_floor": 0
+    }
+   ],
+   "groups": [
+    {
+     "name": "平台巨头",
+     "codes": [
+      "MSFT",
+      "ORCL",
+      "IBM",
+      "ADBE",
+      "CRM",
+      "DELL"
+     ]
+    },
+    {
+     "name": "数据与 AI 应用",
+     "codes": [
+      "PLTR",
+      "SNOW",
+      "DDOG",
+      "MDB",
+      "ESTC",
+      "APP"
+     ]
+    },
+    {
+     "name": "网络安全",
+     "codes": [
+      "CRWD",
+      "PANW",
+      "FTNT",
+      "ZS",
+      "OKTA",
+      "RBRK"
+     ]
+    },
+    {
+     "name": "云基础与开发者",
+     "codes": [
+      "NET",
+      "NOW",
+      "TWLO",
+      "TEAM",
+      "FROG",
+      "MNDY",
+      "WDAY",
+      "HUBS",
+      "ASAN",
+      "KVYO"
+     ]
+    },
+    {
+     "name": "商业与消费软件",
+     "codes": [
+      "SHOP",
+      "TOST",
+      "ZM",
+      "ZETA",
+      "NFLX",
+      "RDDT"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "17 机器人与 Physical AI",
+   "items": [
+    {
+     "name": "优必选",
+     "code": "09880",
+     "market": "港股",
+     "yahoo": "9880.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 4.5,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "小鹏汽车",
+     "code": "09868",
+     "market": "港股",
+     "yahoo": "9868.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 19.1,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "蓝思科技",
+     "code": "300433",
+     "market": "A股",
+     "yahoo": "300433.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 50.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "哈默纳科机电",
+     "code": "6324",
+     "market": "日本",
+     "yahoo": "6324.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 8368.6,
+      "approx": false
+     },
+     "mcap_base_price": 8840.0,
+     "ath_floor": 9510.0
+    },
+    {
+     "name": "纳博特斯克",
+     "code": "6268",
+     "market": "日本",
+     "yahoo": "6268.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1.17,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "绿的谐波",
+     "code": "688017",
+     "market": "A股",
+     "yahoo": "688017.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1.7,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "双环传动",
+     "code": "002472",
+     "market": "A股",
+     "yahoo": "002472.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 8.5,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "发那科",
+     "code": "6954",
+     "market": "日股",
+     "yahoo": "6954.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 64136,
+      "approx": true
+     },
+     "mcap_base_price": 6873,
+     "ath_floor": 0
+    },
+    {
+     "name": "安川电机",
+     "code": "6506",
+     "market": "日股",
+     "yahoo": "6506.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 13521,
+      "approx": true
+     },
+     "mcap_base_price": 5213,
+     "ath_floor": 0
+    },
+    {
+     "name": "三花智控",
+     "code": "002050",
+     "market": "A股",
+     "yahoo": "002050.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2061.5,
+      "approx": false
+     },
+     "mcap_base_price": 48.99,
+     "ath_floor": 60.77
+    },
+    {
+     "name": "三花智控",
+     "code": "02050",
+     "market": "港股",
+     "yahoo": "2050.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 1275.9,
+      "approx": false
+     },
+     "mcap_base_price": 30.32,
+     "ath_floor": 46.48
+    },
+    {
+     "name": "拓普集团",
+     "code": "601689",
+     "market": "A股",
+     "yahoo": "601689.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1085.0,
+      "approx": false
+     },
+     "mcap_base_price": 62.43,
+     "ath_floor": 86.88
+    },
+    {
+     "name": "汇川技术",
+     "code": "300124",
+     "market": "A股",
+     "yahoo": "300124.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 26.8,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "埃斯顿",
+     "code": "002747",
+     "market": "A股",
+     "yahoo": "002747.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 8.7,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "恒立液压",
+     "code": "601100",
+     "market": "A股",
+     "yahoo": "601100.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1631.3,
+      "approx": false
+     },
+     "mcap_base_price": 121.66,
+     "ath_floor": 137.66
+    },
+    {
+     "name": "THK",
+     "code": "6481",
+     "market": "日本",
+     "yahoo": "6481.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1.12,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "华辰装备",
+     "code": "300809",
+     "market": "A股",
+     "yahoo": "300809.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2.54,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "秦川机床",
+     "code": "000837",
+     "market": "A股",
+     "yahoo": "000837.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 10.2,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "五洲新春",
+     "code": "603667",
+     "market": "A股",
+     "yahoo": "603667.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 3.7,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "鸣志电器",
+     "code": "603728",
+     "market": "A股",
+     "yahoo": "603728.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 284.9,
+      "approx": false
+     },
+     "mcap_base_price": 68.02,
+     "ath_floor": 92.5
+    },
+    {
+     "name": "金力永磁",
+     "code": "300748",
+     "market": "A股",
+     "yahoo": "300748.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 13.75,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "金力永磁",
+     "code": "06680",
+     "market": "港股",
+     "yahoo": "6680.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 13.75,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "正海磁材",
+     "code": "300224",
+     "market": "A股",
+     "yahoo": "300224.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 9.3,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "兆威机电",
+     "code": "003021",
+     "market": "A股",
+     "yahoo": "003021.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2.4,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "兆威机电",
+     "code": "02692",
+     "market": "港股",
+     "yahoo": "2692.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 2.4,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "柯力传感",
+     "code": "603662",
+     "market": "A股",
+     "yahoo": "603662.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2.81,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "速腾聚创",
+     "code": "02498",
+     "market": "港股",
+     "yahoo": "2498.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 4.62,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "禾赛",
+     "code": "02525",
+     "market": "港股",
+     "yahoo": "2525.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 10.4,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "Novanta",
+     "code": "NOVT",
+     "market": "美股",
+     "yahoo": "NOVT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 0.356,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "奥比中光",
+     "code": "688322",
+     "market": "A股",
+     "yahoo": "688322.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 4.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "芯动联科",
+     "code": "688582",
+     "market": "A股",
+     "yahoo": "688582.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 4.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "直觉外科",
+     "code": "ISRG",
+     "market": "美股",
+     "yahoo": "ISRG",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3.54,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "Symbotic",
+     "code": "SYM",
+     "market": "美股",
+     "yahoo": "SYM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 5.8,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "石头科技",
+     "code": "688169",
+     "market": "A股",
+     "yahoo": "688169.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 257.11,
+      "approx": false
+     },
+     "mcap_base_price": 99.17
+    },
+    {
+     "name": "科沃斯",
+     "code": "603486",
+     "market": "A股",
+     "yahoo": "603486.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 308.39,
+      "approx": false
+     },
+     "mcap_base_price": 53.3
+    },
+    {
+     "name": "九号公司",
+     "code": "689009",
+     "market": "A股",
+     "yahoo": "689009.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 280.95,
+      "approx": false
+     },
+     "mcap_base_price": 38.18
+    },
+    {
+     "name": "群核科技",
+     "code": "00068",
+     "market": "港股",
+     "yahoo": "0068.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 17.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "地平线机器人",
+     "code": "09660",
+     "market": "港股",
+     "yahoo": "9660.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 131.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "瑞芯微",
+     "code": "603893",
+     "market": "A股",
+     "yahoo": "603893.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 4.2,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "AeroVironment",
+     "code": "AVAV",
+     "market": "美股",
+     "yahoo": "AVAV",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 96.7,
+      "approx": false
+     },
+     "mcap_base_price": 190.89,
+     "ath_floor": 417.86
+    }
+   ],
+   "groups": [
+    {
+     "name": "整机与代工",
+     "codes": [
+      "09880",
+      "09868",
+      "300433"
+     ]
+    },
+    {
+     "name": "谐波与RV减速器",
+     "codes": [
+      "6324",
+      "6268",
+      "688017",
+      "002472"
+     ]
+    },
+    {
+     "name": "执行器·运动控制与Tier1",
+     "codes": [
+      "6954",
+      "6506",
+      "002050",
+      "02050",
+      "601689",
+      "300124",
+      "002747"
+     ]
+    },
+    {
+     "name": "丝杠·导轨·设备",
+     "codes": [
+      "601100",
+      "6481",
+      "300809",
+      "000837",
+      "603667"
+     ]
+    },
+    {
+     "name": "电机与磁材",
+     "codes": [
+      "603728",
+      "300748",
+      "06680",
+      "300224"
+     ]
+    },
+    {
+     "name": "灵巧手与微传动",
+     "codes": [
+      "003021",
+      "02692"
+     ]
+    },
+    {
+     "name": "传感器与感知",
+     "codes": [
+      "603662",
+      "02498",
+      "02525",
+      "NOVT",
+      "688322",
+      "688582"
+     ]
+    },
+    {
+     "name": "应用场景整机",
+     "codes": [
+      "ISRG",
+      "SYM",
+      "688169",
+      "603486",
+      "689009"
+     ]
+    },
+    {
+     "name": "仿真与场景资产",
+     "codes": [
+      "00068"
+     ]
+    },
+    {
+     "name": "端侧芯片与计算",
+     "codes": [
+      "09660",
+      "603893"
+     ]
+    },
+    {
+     "name": "无人系统",
+     "codes": [
+      "AVAV"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "18 中国互联网、AI 应用与主题 ETF",
+   "items": [
+    {
+     "name": "腾讯控股",
+     "code": "00700",
+     "market": "港股",
+     "yahoo": "0700.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 38900.0,
+      "approx": false
+     },
+     "mcap_base_price": 431.2,
+     "ath_floor": 714.9
+    },
+    {
+     "name": "阿里巴巴",
+     "code": "09988",
+     "market": "港股",
+     "yahoo": "9988.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 28500,
+      "approx": true
+     },
+     "mcap_base_price": 150.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "拼多多",
+     "code": "PDD",
+     "market": "美股",
+     "yahoo": "PDD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1680,
+      "approx": true
+     },
+     "mcap_base_price": 120.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "美团",
+     "code": "03690",
+     "market": "港股",
+     "yahoo": "3690.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 4859.5,
+      "approx": false
+     },
+     "mcap_base_price": 78.7,
+     "ath_floor": 80.9
+    },
+    {
+     "name": "京东集团",
+     "code": "09618",
+     "market": "港股",
+     "yahoo": "9618.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 3010.3,
+      "approx": false
+     },
+     "mcap_base_price": 110.2,
+     "ath_floor": 112.6
+    },
+    {
+     "name": "网易",
+     "code": "09999",
+     "market": "港股",
+     "yahoo": "9999.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 6598.2,
+      "approx": false
+     },
+     "mcap_base_price": 206.8,
+     "ath_floor": 213.8
+    },
+    {
+     "name": "快手",
+     "code": "01024",
+     "market": "港股",
+     "yahoo": "1024.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 1868.5,
+      "approx": false
+     },
+     "mcap_base_price": 43.04,
+     "ath_floor": 47.7
+    },
+    {
+     "name": "小米集团",
+     "code": "01810",
+     "market": "港股",
+     "yahoo": "1810.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 6662.9,
+      "approx": false
+     },
+     "mcap_base_price": 25.84,
+     "ath_floor": 26.3
+    },
+    {
+     "name": "百度集团",
+     "code": "09888",
+     "market": "港股",
+     "yahoo": "9888.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 3141.2,
+      "approx": false
+     },
+     "mcap_base_price": 115.4,
+     "ath_floor": 117.6
+    },
+    {
+     "name": "携程集团",
+     "code": "09961",
+     "market": "港股",
+     "yahoo": "9961.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 2074.2,
+      "approx": false
+     },
+     "mcap_base_price": 329.4,
+     "ath_floor": 377.4
+    },
+    {
+     "name": "哔哩哔哩",
+     "code": "09626",
+     "market": "港股",
+     "yahoo": "9626.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 582.6,
+      "approx": false
+     },
+     "mcap_base_price": 139.2,
+     "ath_floor": 143.9
+    },
+    {
+     "name": "智谱",
+     "code": "02513",
+     "market": "港股",
+     "yahoo": "2513.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 8011.3,
+      "approx": false
+     },
+     "mcap_base_price": 1793.0,
+     "ath_floor": 2980.0
+    },
+    {
+     "name": "MiniMax",
+     "code": "00100",
+     "market": "港股",
+     "yahoo": "0100.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 2.8,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "泡泡玛特",
+     "code": "09992",
+     "market": "港股",
+     "yahoo": "9992.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 3350,
+      "approx": true
+     },
+     "mcap_base_price": 250.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "富途控股",
+     "code": "FUTU",
+     "market": "美股 ADR",
+     "yahoo": "FUTU",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 142.8,
+      "approx": true
+     },
+     "mcap_base_price": 101.84,
+     "ath_floor": 0
+    },
+    {
+     "name": "AI 人工智能 ETF",
+     "code": "512930",
+     "market": "A股 ETF",
+     "yahoo": "512930.SS",
+     "currency": "¥",
+     "mcap_base": null,
+     "mcap_base_price": 0.727,
+     "ath_floor": 2.953
+    },
+    {
+     "name": "人工智能 ETF",
+     "code": "159819",
+     "market": "A股 ETF",
+     "yahoo": "159819.SZ",
+     "currency": "¥",
+     "mcap_base": null,
+     "mcap_base_price": 2.04,
+     "ath_floor": 2.266
+    }
+   ],
+   "groups": [
+    {
+     "name": "平台巨头",
+     "codes": [
+      "00700",
+      "09988",
+      "PDD",
+      "03690",
+      "09618",
+      "09999",
+      "01024",
+      "01810",
+      "09888",
+      "09961",
+      "09626"
+     ]
+    },
+    {
+     "name": "AI 应用与新消费",
+     "codes": [
+      "02513",
+      "00100",
+      "09992"
+     ]
+    },
+    {
+     "name": "互联网券商",
+     "codes": [
+      "FUTU"
+     ]
+    },
+    {
+     "name": "主题 ETF",
+     "codes": [
+      "512930",
+      "159819"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "19 价值老登（非 AI · 七大板块）",
+   "items": [
+    {
+     "name": "三一重工",
+     "code": "600031",
+     "market": "A股",
+     "yahoo": "600031.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 84.8,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "恒立液压",
+     "code": "601100",
+     "market": "A股",
+     "yahoo": "601100.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1631.3,
+      "approx": false
+     },
+     "mcap_base_price": 121.66,
+     "ath_floor": 137.66
+    },
+    {
+     "name": "港股通创新药ETF",
+     "code": "159570",
+     "market": "A股 ETF",
+     "yahoo": "159570.SZ",
+     "currency": "¥",
+     "mcap_base": null,
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "洛阳钼业",
+     "code": "603993",
+     "market": "A股",
+     "yahoo": "603993.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 216.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "紫金矿业",
+     "code": "601899",
+     "market": "A股",
+     "yahoo": "601899.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 7397.5,
+      "approx": false
+     },
+     "mcap_base_price": 27.82,
+     "ath_floor": 44.94
+    },
+    {
+     "name": "新华保险",
+     "code": "601336",
+     "market": "A股",
+     "yahoo": "601336.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 31.2,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "中国平安",
+     "code": "601318",
+     "market": "A股",
+     "yahoo": "601318.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 182.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "中国财险",
+     "code": "02328",
+     "market": "港股",
+     "yahoo": "2328.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 222.4,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "大唐发电",
+     "code": "601991",
+     "market": "A股",
+     "yahoo": "601991.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1419,
+      "approx": true
+     },
+     "mcap_base_price": 7.67,
+     "ath_floor": 0
+    },
+    {
+     "name": "大唐发电",
+     "code": "00991",
+     "market": "港股",
+     "yahoo": "0991.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 577.0,
+      "approx": true
+     },
+     "mcap_base_price": 3.12,
+     "ath_floor": 0
+    },
+    {
+     "name": "华能国际",
+     "code": "00902",
+     "market": "港股",
+     "yahoo": "0902.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 1242.4,
+      "approx": false
+     },
+     "mcap_base_price": 5.57,
+     "ath_floor": 11.9
+    },
+    {
+     "name": "长江电力",
+     "code": "600900",
+     "market": "A股",
+     "yahoo": "600900.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 244.7,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "思源电气",
+     "code": "002028",
+     "market": "A股",
+     "yahoo": "002028.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 7.8,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "华明装备",
+     "code": "002270",
+     "market": "A股",
+     "yahoo": "002270.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 180.5,
+      "approx": true
+     },
+     "mcap_base_price": 20.14,
+     "ath_floor": 0
+    },
+    {
+     "name": "许继电气",
+     "code": "000400",
+     "market": "A股",
+     "yahoo": "000400.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 10.1,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "国电南瑞",
+     "code": "600406",
+     "market": "A股",
+     "yahoo": "600406.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 80.3,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "特变电工",
+     "code": "600089",
+     "market": "A股",
+     "yahoo": "600089.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1100,
+      "approx": true
+     },
+     "mcap_base_price": 22.01,
+     "ath_floor": 0
+    },
+    {
+     "name": "宁德时代",
+     "code": "300750",
+     "market": "A股",
+     "yahoo": "300750.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 44.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "宁德时代",
+     "code": "03750",
+     "market": "港股",
+     "yahoo": "3750.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 45.8,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 794.5
+    },
+    {
+     "name": "比亚迪",
+     "code": "002594",
+     "market": "A股",
+     "yahoo": "002594.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 91.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "阳光电源",
+     "code": "300274",
+     "market": "A股",
+     "yahoo": "300274.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 20.7,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "德业股份",
+     "code": "605117",
+     "market": "A股",
+     "yahoo": "605117.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 13,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "赣锋锂业",
+     "code": "002460",
+     "market": "A股",
+     "yahoo": "002460.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1259,
+      "approx": true
+     },
+     "mcap_base_price": 62.97,
+     "ath_floor": 0
+    },
+    {
+     "name": "天齐锂业",
+     "code": "002466",
+     "market": "A股",
+     "yahoo": "002466.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 16.4,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "东鹏饮料",
+     "code": "605499",
+     "market": "A股",
+     "yahoo": "605499.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 935.88,
+      "approx": true
+     },
+     "mcap_base_price": 127.47,
+     "ath_floor": 0
+    },
+    {
+     "name": "东鹏饮料",
+     "code": "09980",
+     "market": "港股",
+     "yahoo": "9980.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 853.14,
+      "approx": true
+     },
+     "mcap_base_price": 116.2,
+     "ath_floor": 0
+    },
+    {
+     "name": "美的集团",
+     "code": "000333",
+     "market": "A股",
+     "yahoo": "000333.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 6842.0,
+      "approx": true
+     },
+     "mcap_base_price": 89.2,
+     "ath_floor": 0
+    },
+    {
+     "name": "美的集团",
+     "code": "00300",
+     "market": "港股",
+     "yahoo": "0300.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 7597.0,
+      "approx": true
+     },
+     "mcap_base_price": 99.05,
+     "ath_floor": 0
+    },
+    {
+     "name": "标普全球",
+     "code": "SPGI",
+     "market": "美股",
+     "yahoo": "SPGI",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1334.0,
+      "approx": true
+     },
+     "mcap_base_price": 450.84,
+     "ath_floor": 0
+    },
+    {
+     "name": "麦当劳",
+     "code": "MCD",
+     "market": "美股",
+     "yahoo": "MCD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1902.0,
+      "approx": true
+     },
+     "mcap_base_price": 267.71,
+     "ath_floor": 0
+    },
+    {
+     "name": "艾伯维",
+     "code": "ABBV",
+     "market": "美股",
+     "yahoo": "ABBV",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 4496.0,
+      "approx": true
+     },
+     "mcap_base_price": 254.49,
+     "ath_floor": 0
+    },
+    {
+     "name": "美国运通",
+     "code": "AXP",
+     "market": "美股",
+     "yahoo": "AXP",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2425.0,
+      "approx": true
+     },
+     "mcap_base_price": 355.35,
+     "ath_floor": 0
+    },
+    {
+     "name": "史赛克",
+     "code": "SYK",
+     "market": "美股",
+     "yahoo": "SYK",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1226.0,
+      "approx": true
+     },
+     "mcap_base_price": 319.87,
+     "ath_floor": 0
+    },
+    {
+     "name": "可口可乐",
+     "code": "KO",
+     "market": "美股",
+     "yahoo": "KO",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3612.0,
+      "approx": true
+     },
+     "mcap_base_price": 84.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "联合健康",
+     "code": "UNH",
+     "market": "美股",
+     "yahoo": "UNH",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3783,
+      "approx": true
+     },
+     "mcap_base_price": 416.52,
+     "ath_floor": 0
+    }
+   ],
+   "groups": [
+    {
+     "name": "工程机械（量＋涨价）",
+     "codes": [
+      "600031",
+      "601100"
+     ]
+    },
+    {
+     "name": "创新药（产业重估）",
+     "codes": [
+      "159570"
+     ]
+    },
+    {
+     "name": "有色·铜（价格杠杆）",
+     "codes": [
+      "603993",
+      "601899"
+     ]
+    },
+    {
+     "name": "保险（权益杠杆）",
+     "codes": [
+      "601336",
+      "601318",
+      "02328"
+     ]
+    },
+    {
+     "name": "电力（煤电剪刀差）",
+     "codes": [
+      "601991",
+      "00991",
+      "00902",
+      "600900"
+     ]
+    },
+    {
+     "name": "电网设备（出海＞柔直＞网内）",
+     "codes": [
+      "002028",
+      "002270",
+      "000400",
+      "600406",
+      "600089"
+     ]
+    },
+    {
+     "name": "储能与锂（量／价分开）",
+     "codes": [
+      "300750",
+      "03750",
+      "002594",
+      "300274",
+      "605117",
+      "002460",
+      "002466"
+     ]
+    },
+    {
+     "name": "消费（能量饮料·白电）",
+     "codes": [
+      "605499",
+      "09980",
+      "000333",
+      "00300"
+     ]
+    },
+    {
+     "name": "美股现金流（防御与质量）",
+     "codes": [
+      "SPGI",
+      "MCD",
+      "ABBV",
+      "AXP",
+      "SYK",
+      "KO",
+      "UNH"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "20 贵金属与有色金属",
+   "items": [
+    {
+     "name": "黄金 / 美元",
+     "code": "XAUUSD",
+     "market": "外汇 / 商品",
+     "yahoo": "GC=F",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "约 $",
+      "yi": 289300.0,
+      "approx": true
+     },
+     "mcap_base_price": 4176.3,
+     "ath_floor": 5586.2
+    },
+    {
+     "name": "iShares Gold Trust",
+     "code": "IAU",
+     "market": "美股 ETF",
+     "yahoo": "IAU",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 722.7,
+      "approx": false
+     },
+     "mcap_base_price": 77.51,
+     "ath_floor": 104.4
+    },
+    {
+     "name": "黄金 ETF 华安",
+     "code": "518880",
+     "market": "A股 ETF",
+     "yahoo": "518880.SS",
+     "currency": "¥",
+     "mcap_base": null,
+     "mcap_base_price": 8.672,
+     "ath_floor": 11.977
+    },
+    {
+     "name": "VanEck Gold Miners ETF",
+     "code": "GDX",
+     "market": "美股 ETF",
+     "yahoo": "GDX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 285.3,
+      "approx": false
+     },
+     "mcap_base_price": 78.43,
+     "ath_floor": 117.18
+    },
+    {
+     "name": "伊格尔矿业（Agnico Eagle）",
+     "code": "AEM",
+     "market": "美股",
+     "yahoo": "AEM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 769.4,
+      "approx": false
+     },
+     "mcap_base_price": 153.86,
+     "ath_floor": 255.24
+    },
+    {
+     "name": "老铺黄金",
+     "code": "06181",
+     "market": "港股",
+     "yahoo": "6181.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 618.6,
+      "approx": true
+     },
+     "mcap_base_price": 350.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "白银 / 美元",
+     "code": "XAGUSD",
+     "market": "外汇 / 商品",
+     "yahoo": "SI=F",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "约 $",
+      "yi": 35200.0,
+      "approx": true
+     },
+     "mcap_base_price": 62.71,
+     "ath_floor": 121.3
+    },
+    {
+     "name": "白银 ETF-iShares Silver Trust",
+     "code": "SLV",
+     "market": "美股 ETF",
+     "yahoo": "SLV",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 391.2,
+      "approx": false
+     },
+     "mcap_base_price": 55.02,
+     "ath_floor": 109.83
+    },
+    {
+     "name": "赫克拉矿业（Hecla Mining）",
+     "code": "HL",
+     "market": "美股",
+     "yahoo": "HL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 109.5,
+      "approx": false
+     },
+     "mcap_base_price": 16.33,
+     "ath_floor": 34.17
+    },
+    {
+     "name": "COMEX 铜",
+     "code": "HGUSD",
+     "market": "外汇 / 商品",
+     "yahoo": "HG=F",
+     "currency": "$",
+     "mcap_base": null,
+     "mcap_base_price": 5.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "紫金矿业",
+     "code": "601899",
+     "market": "A股",
+     "yahoo": "601899.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 7397.5,
+      "approx": false
+     },
+     "mcap_base_price": 27.82,
+     "ath_floor": 44.94
+    },
+    {
+     "name": "紫金矿业",
+     "code": "02899",
+     "market": "港股",
+     "yahoo": "2899.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 8168.6,
+      "approx": false
+     },
+     "mcap_base_price": 30.72,
+     "ath_floor": 46.98
+    },
+    {
+     "name": "碳酸锂 主连",
+     "code": "LC0",
+     "market": "外汇 / 商品",
+     "yahoo": "LC.EM",
+     "currency": "¥",
+     "hist": "em:225.lcm",
+     "mcap_base": null,
+     "mcap_base_price": 143900,
+     "ath_floor": 0
+    },
+    {
+     "name": "赣锋锂业",
+     "code": "002460",
+     "market": "A股",
+     "yahoo": "002460.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1259,
+      "approx": true
+     },
+     "mcap_base_price": 62.97,
+     "ath_floor": 0
+    },
+    {
+     "name": "赣锋锂业",
+     "code": "01772",
+     "market": "港股",
+     "yahoo": "1772.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 994,
+      "approx": true
+     },
+     "mcap_base_price": 49.7,
+     "ath_floor": 0
+    },
+    {
+     "name": "天齐锂业",
+     "code": "002466",
+     "market": "A股",
+     "yahoo": "002466.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 16.4,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "华友钴业",
+     "code": "603799",
+     "market": "A股",
+     "yahoo": "603799.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 795,
+      "approx": true
+     },
+     "mcap_base_price": 46.76,
+     "ath_floor": 0
+    },
+    {
+     "name": "中矿资源",
+     "code": "002738",
+     "market": "A股",
+     "yahoo": "002738.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 365.29,
+      "approx": true
+     },
+     "mcap_base_price": 50.63,
+     "ath_floor": 0
+    },
+    {
+     "name": "永兴材料",
+     "code": "002756",
+     "market": "A股",
+     "yahoo": "002756.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 245.88,
+      "approx": true
+     },
+     "mcap_base_price": 45.61,
+     "ath_floor": 0
+    },
+    {
+     "name": "雅化集团",
+     "code": "002497",
+     "market": "A股",
+     "yahoo": "002497.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 204.58,
+      "approx": true
+     },
+     "mcap_base_price": 17.75,
+     "ath_floor": 0
+    }
+   ],
+   "groups": [
+    {
+     "name": "黄金",
+     "codes": [
+      "XAUUSD",
+      "IAU",
+      "518880",
+      "GDX",
+      "AEM",
+      "06181"
+     ]
+    },
+    {
+     "name": "白银",
+     "codes": [
+      "XAGUSD",
+      "SLV",
+      "HL"
+     ]
+    },
+    {
+     "name": "铜金双击（紫金）",
+     "codes": [
+      "HGUSD",
+      "601899",
+      "02899"
+     ]
+    },
+    {
+     "name": "锂与钴",
+     "codes": [
+      "LC0",
+      "002460",
+      "01772",
+      "002466",
+      "603799",
+      "002738",
+      "002756",
+      "002497"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "21 加密资产",
+   "items": [
+    {
+     "name": "比特币",
+     "code": "BTC",
+     "market": "加密资产",
+     "yahoo": "BTC-USD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 12400.0,
+      "approx": false
+     },
+     "mcap_base_price": 61750.92,
+     "ath_floor": 126198.07
+    },
+    {
+     "name": "Hyperliquid",
+     "code": "HYPE",
+     "market": "加密资产",
+     "yahoo": "HYPE32196-USD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 154.5,
+      "approx": false
+     },
+     "mcap_base_price": 69.42,
+     "ath_floor": 76.85
+    },
+    {
+     "name": "Circle",
+     "code": "CRCL",
+     "market": "美股",
+     "yahoo": "CRCL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 172.7,
+      "approx": false
+     },
+     "mcap_base_price": 64.62,
+     "ath_floor": 298.99
+    },
+    {
+     "name": "Strategy",
+     "code": "MSTR",
+     "market": "美股",
+     "yahoo": "MSTR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 360.6,
+      "approx": false
+     },
+     "mcap_base_price": 100.77,
+     "ath_floor": 543.0
+    },
+    {
+     "name": "Coinbase",
+     "code": "COIN",
+     "market": "美股",
+     "yahoo": "COIN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 463.3,
+      "approx": true
+     },
+     "mcap_base_price": 175.85,
+     "ath_floor": 0
+    },
+    {
+     "name": "以太坊",
+     "code": "ETH",
+     "market": "加密资产",
+     "yahoo": "ETH-USD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2170.3,
+      "approx": false
+     },
+     "mcap_base_price": 1798.7,
+     "ath_floor": 4946.05
+    },
+    {
+     "name": "币安币",
+     "code": "BNB",
+     "market": "加密资产",
+     "yahoo": "BNB-USD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 777.3,
+      "approx": false
+     },
+     "mcap_base_price": 576.72,
+     "ath_floor": 1369.99
+    },
+    {
+     "name": "索拉纳",
+     "code": "SOL",
+     "market": "加密资产",
+     "yahoo": "SOL-USD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 462.4,
+      "approx": false
+     },
+     "mcap_base_price": 79.48,
+     "ath_floor": 293.31
+    },
+    {
+     "name": "狗狗币",
+     "code": "DOGE",
+     "market": "加密资产",
+     "yahoo": "DOGE-USD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 115.5,
+      "approx": false
+     },
+     "mcap_base_price": 0.074515,
+     "ath_floor": 0.731578
+    },
+    {
+     "name": "柴犬币",
+     "code": "SHIB",
+     "market": "加密资产",
+     "yahoo": "SHIB-USD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 31.41,
+      "approx": false
+     },
+     "mcap_base_price": 5.33e-06,
+     "ath_floor": 8e-05,
+     "cg": "shiba-inu"
+    },
+    {
+     "name": "Pepe",
+     "code": "PEPE",
+     "market": "加密资产",
+     "yahoo": "PEPE24478-USD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 11.4,
+      "approx": false
+     },
+     "mcap_base_price": 2.71e-06,
+     "ath_floor": 2.803e-05,
+     "cg": "pepe"
+    },
+    {
+     "name": "泰达币 USDT",
+     "code": "USDT",
+     "market": "加密资产",
+     "yahoo": "USDT-USD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1841.7,
+      "approx": false
+     },
+     "mcap_base_price": 0.999229,
+     "ath_floor": 1.32,
+     "mcap_live": true
+    },
+    {
+     "name": "USD Coin",
+     "code": "USDC",
+     "market": "加密资产",
+     "yahoo": "USDC-USD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 732.3,
+      "approx": false
+     },
+     "mcap_base_price": 0.999793,
+     "ath_floor": 1.043,
+     "mcap_live": true
+    },
+    {
+     "name": "Robinhood",
+     "code": "HOOD",
+     "market": "美股",
+     "yahoo": "HOOD",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1036.6,
+      "approx": false
+     },
+     "mcap_base_price": 115.11,
+     "ath_floor": 0
+    }
+   ]
+  },
+  {
+   "name": "22 无人机与国防航天",
+   "items": [
+    {
+     "name": "AeroVironment",
+     "code": "AVAV",
+     "market": "美股",
+     "yahoo": "AVAV",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 71.7,
+      "approx": true
+     },
+     "mcap_base_price": 142.2,
+     "ath_floor": 0
+    },
+    {
+     "name": "Kratos",
+     "code": "KTOS",
+     "market": "美股",
+     "yahoo": "KTOS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 86.2,
+      "approx": true
+     },
+     "mcap_base_price": 46.03,
+     "ath_floor": 0,
+     "ath_since": "2007-09-12"
+    },
+    {
+     "name": "Red Cat",
+     "code": "RCAT",
+     "market": "美股",
+     "yahoo": "RCAT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 11.8,
+      "approx": true
+     },
+     "mcap_base_price": 7.76,
+     "ath_floor": 0,
+     "ath_since": "2019-06-01"
+    },
+    {
+     "name": "Ondas",
+     "code": "ONDS",
+     "market": "美股",
+     "yahoo": "ONDS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 39.1,
+      "approx": true
+     },
+     "mcap_base_price": 6.87,
+     "ath_floor": 0
+    },
+    {
+     "name": "SpaceX",
+     "code": "SPCX",
+     "market": "美股",
+     "yahoo": "SPCX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 17720.0,
+      "approx": true
+     },
+     "mcap_base_price": 135.27
+    }
+   ],
+   "groups": [
+    {
+     "name": "无人机与反无人机",
+     "codes": [
+      "AVAV",
+      "KTOS",
+      "RCAT",
+      "ONDS"
+     ]
+    },
+    {
+     "name": "商业航天",
+     "codes": [
+      "SPCX"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "23 AI 制药（AIDD 计算驱动药物发现）",
+   "items": [
+    {
+     "name": "薛定谔",
+     "code": "SDGR",
+     "market": "美股",
+     "yahoo": "SDGR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 12.6,
+      "approx": true
+     },
+     "mcap_base_price": 17.3,
+     "ath_floor": 0
+    },
+    {
+     "name": "英矽智能",
+     "code": "03696",
+     "market": "港股",
+     "yahoo": "3696.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 286.0,
+      "approx": true
+     },
+     "mcap_base_price": 51.2,
+     "ath_floor": 0
+    },
+    {
+     "name": "晶泰控股",
+     "code": "02228",
+     "market": "港股",
+     "yahoo": "2228.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 230.0,
+      "approx": true
+     },
+     "mcap_base_price": 6.57,
+     "ath_floor": 0
+    },
+    {
+     "name": "Recursion",
+     "code": "RXRX",
+     "market": "美股",
+     "yahoo": "RXRX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 19.6,
+      "approx": true
+     },
+     "mcap_base_price": 4.6,
+     "ath_floor": 0
+    },
+    {
+     "name": "Tempus AI",
+     "code": "TEM",
+     "market": "美股",
+     "yahoo": "TEM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 105.0,
+      "approx": true
+     },
+     "mcap_base_price": 62.0,
+     "ath_floor": 0
+    }
+   ]
+  },
+  {
+   "name": "24 医疗器械与诊断",
+   "items": [
+    {
+     "name": "美敦力",
+     "code": "MDT",
+     "market": "美股",
+     "yahoo": "MDT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1048.2,
+      "approx": true
+     },
+     "mcap_base_price": 81.89,
+     "ath_floor": 0
+    },
+    {
+     "name": "强生",
+     "code": "JNJ",
+     "market": "美股",
+     "yahoo": "JNJ",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 6153.6,
+      "approx": true
+     },
+     "mcap_base_price": 255.63,
+     "ath_floor": 0
+    },
+    {
+     "name": "雅培",
+     "code": "ABT",
+     "market": "美股",
+     "yahoo": "ABT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1751.7,
+      "approx": true
+     },
+     "mcap_base_price": 100.57,
+     "ath_floor": 0
+    },
+    {
+     "name": "GE医疗",
+     "code": "GEHC",
+     "market": "美股",
+     "yahoo": "GEHC",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 279.3,
+      "approx": true
+     },
+     "mcap_base_price": 61.41,
+     "ath_floor": 0
+    },
+    {
+     "name": "飞利浦",
+     "code": "PHG",
+     "market": "美股 ADR",
+     "yahoo": "PHG",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 256.9,
+      "approx": true
+     },
+     "mcap_base_price": 26.27,
+     "ath_floor": 0
+    },
+    {
+     "name": "罗氏",
+     "code": "ROG",
+     "market": "瑞股",
+     "yahoo": "ROP.SW",
+     "currency": "CHF ",
+     "mcap_base": {
+      "prefix": "CHF ",
+      "yi": 2900.0,
+      "approx": true
+     },
+     "mcap_base_price": 362.4,
+     "ath_floor": 0
+    },
+    {
+     "name": "西门子医疗",
+     "code": "SHL",
+     "market": "欧股",
+     "yahoo": "SHL.DE",
+     "currency": "€",
+     "mcap_base": {
+      "prefix": "€",
+      "yi": 525.0,
+      "approx": true
+     },
+     "mcap_base_price": 47.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "丹纳赫",
+     "code": "DHR",
+     "market": "美股",
+     "yahoo": "DHR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1259.3,
+      "approx": true
+     },
+     "mcap_base_price": 179.14,
+     "ath_floor": 0
+    },
+    {
+     "name": "迈瑞医疗",
+     "code": "300760",
+     "market": "A股",
+     "yahoo": "300760.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1832.48,
+      "approx": true
+     },
+     "mcap_base_price": 151.14,
+     "ath_floor": 0
+    },
+    {
+     "name": "联影医疗",
+     "code": "688271",
+     "market": "A股",
+     "yahoo": "688271.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 938.3,
+      "approx": true
+     },
+     "mcap_base_price": 113.85,
+     "ath_floor": 0
+    },
+    {
+     "name": "新产业",
+     "code": "300832",
+     "market": "A股",
+     "yahoo": "300832.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 374.47,
+      "approx": true
+     },
+     "mcap_base_price": 47.66,
+     "ath_floor": 0
+    },
+    {
+     "name": "迈克生物",
+     "code": "300463",
+     "market": "A股",
+     "yahoo": "300463.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 53.15,
+      "approx": true
+     },
+     "mcap_base_price": 8.79,
+     "ath_floor": 0
+    },
+    {
+     "name": "鱼跃医疗",
+     "code": "002223",
+     "market": "A股",
+     "yahoo": "002223.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 274.48,
+      "approx": true
+     },
+     "mcap_base_price": 27.38,
+     "ath_floor": 0
+    }
+   ],
+   "groups": [
+    {
+     "name": "全球巨头",
+     "codes": [
+      "MDT",
+      "JNJ",
+      "ABT",
+      "GEHC",
+      "PHG",
+      "ROG",
+      "SHL",
+      "DHR"
+     ]
+    },
+    {
+     "name": "中国龙头",
+     "codes": [
+      "300760",
+      "688271",
+      "300832",
+      "300463",
+      "002223"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "25 创新药与生物科技（BD出海·商业化兑现）",
+   "items": [
+    {
+     "name": "百济神州",
+     "code": "06160",
+     "market": "港股",
+     "yahoo": "6160.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 3070.5,
+      "approx": true
+     },
+     "mcap_base_price": 199.2,
+     "ath_floor": 0
+    },
+    {
+     "name": "百济神州A",
+     "code": "688235",
+     "market": "A股",
+     "yahoo": "688235.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 4177.2,
+      "approx": true
+     },
+     "mcap_base_price": 271.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "百济神州US",
+     "code": "ONC",
+     "market": "美股 ADR",
+     "yahoo": "ONC",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 362.3,
+      "approx": true
+     },
+     "mcap_base_price": 325.9,
+     "ath_floor": 0
+    },
+    {
+     "name": "恒瑞医药H",
+     "code": "01276",
+     "market": "港股",
+     "yahoo": "1276.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 3760.0,
+      "approx": true
+     },
+     "mcap_base_price": 56.65,
+     "ath_floor": 0
+    },
+    {
+     "name": "恒瑞医药",
+     "code": "600276",
+     "market": "A股",
+     "yahoo": "600276.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 3547.6,
+      "approx": true
+     },
+     "mcap_base_price": 53.45,
+     "ath_floor": 0
+    },
+    {
+     "name": "信达生物",
+     "code": "01801",
+     "market": "港股",
+     "yahoo": "1801.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 1566.0,
+      "approx": true
+     },
+     "mcap_base_price": 89.95,
+     "ath_floor": 0
+    },
+    {
+     "name": "石药集团",
+     "code": "01093",
+     "market": "港股",
+     "yahoo": "1093.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 985.2,
+      "approx": true
+     },
+     "mcap_base_price": 8.55,
+     "ath_floor": 0
+    },
+    {
+     "name": "中国生物制药",
+     "code": "01177",
+     "market": "港股",
+     "yahoo": "1177.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 962.2,
+      "approx": true
+     },
+     "mcap_base_price": 5.15,
+     "ath_floor": 0
+    },
+    {
+     "name": "翰森制药",
+     "code": "03692",
+     "market": "港股",
+     "yahoo": "3692.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 1955.1,
+      "approx": true
+     },
+     "mcap_base_price": 32.24,
+     "ath_floor": 0
+    },
+    {
+     "name": "先声药业",
+     "code": "02096",
+     "market": "港股",
+     "yahoo": "2096.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 326.9,
+      "approx": true
+     },
+     "mcap_base_price": 12.73,
+     "ath_floor": 0
+    },
+    {
+     "name": "康方生物",
+     "code": "09926",
+     "market": "港股",
+     "yahoo": "9926.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 916.5,
+      "approx": true
+     },
+     "mcap_base_price": 99.5,
+     "ath_floor": 0
+    },
+    {
+     "name": "科伦博泰",
+     "code": "06990",
+     "market": "港股",
+     "yahoo": "6990.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 1228.6,
+      "approx": true
+     },
+     "mcap_base_price": 514.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "荣昌生物",
+     "code": "09995",
+     "market": "港股",
+     "yahoo": "9995.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 469.6,
+      "approx": true
+     },
+     "mcap_base_price": 83.2,
+     "ath_floor": 0
+    },
+    {
+     "name": "三生制药",
+     "code": "01530",
+     "market": "港股",
+     "yahoo": "1530.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 437.1,
+      "approx": true
+     },
+     "mcap_base_price": 17.28,
+     "ath_floor": 0
+    },
+    {
+     "name": "康诺亚",
+     "code": "02162",
+     "market": "港股",
+     "yahoo": "2162.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 247.4,
+      "approx": true
+     },
+     "mcap_base_price": 82.8,
+     "ath_floor": 0
+    },
+    {
+     "name": "科济药业",
+     "code": "02171",
+     "market": "港股",
+     "yahoo": "2171.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 87.8,
+      "approx": true
+     },
+     "mcap_base_price": 14.77,
+     "ath_floor": 0
+    },
+    {
+     "name": "再鼎医药H",
+     "code": "09688",
+     "market": "港股",
+     "yahoo": "9688.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 175.0,
+      "approx": true
+     },
+     "mcap_base_price": 15.38,
+     "ath_floor": 0
+    },
+    {
+     "name": "再鼎医药US",
+     "code": "ZLAB",
+     "market": "美股 ADR",
+     "yahoo": "ZLAB",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 21.9,
+      "approx": true
+     },
+     "mcap_base_price": 19.22,
+     "ath_floor": 0
+    },
+    {
+     "name": "和黄医药",
+     "code": "00013",
+     "market": "港股",
+     "yahoo": "0013.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 153.0,
+      "approx": true
+     },
+     "mcap_base_price": 17.54,
+     "ath_floor": 0
+    },
+    {
+     "name": "百利天恒",
+     "code": "688506",
+     "market": "A股",
+     "yahoo": "688506.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1284.0,
+      "approx": true
+     },
+     "mcap_base_price": 311.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "迪哲医药",
+     "code": "688192",
+     "market": "A股",
+     "yahoo": "688192.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 258.6,
+      "approx": true
+     },
+     "mcap_base_price": 55.6,
+     "ath_floor": 0
+    },
+    {
+     "name": "君实生物",
+     "code": "688180",
+     "market": "A股",
+     "yahoo": "688180.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 368.4,
+      "approx": true
+     },
+     "mcap_base_price": 35.88,
+     "ath_floor": 0
+    },
+    {
+     "name": "泽璟制药",
+     "code": "688266",
+     "market": "A股",
+     "yahoo": "688266.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 359.9,
+      "approx": true
+     },
+     "mcap_base_price": 135.95,
+     "ath_floor": 0
+    },
+    {
+     "name": "迈威生物",
+     "code": "688062",
+     "market": "A股",
+     "yahoo": "688062.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 138.9,
+      "approx": true
+     },
+     "mcap_base_price": 31.09,
+     "ath_floor": 0
+    },
+    {
+     "name": "艾力斯",
+     "code": "688578",
+     "market": "A股",
+     "yahoo": "688578.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 536.6,
+      "approx": true
+     },
+     "mcap_base_price": 119.24,
+     "ath_floor": 0
+    },
+    {
+     "name": "药明生物",
+     "code": "02269",
+     "market": "港股",
+     "yahoo": "2269.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 1620.1,
+      "approx": true
+     },
+     "mcap_base_price": 39.1,
+     "ath_floor": 0
+    },
+    {
+     "name": "药明康德H",
+     "code": "02359",
+     "market": "港股",
+     "yahoo": "2359.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 4664.7,
+      "approx": true
+     },
+     "mcap_base_price": 157.4,
+     "ath_floor": 0
+    },
+    {
+     "name": "药明康德",
+     "code": "603259",
+     "market": "A股",
+     "yahoo": "603259.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 3729.7,
+      "approx": true
+     },
+     "mcap_base_price": 125.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "康龙化成",
+     "code": "300759",
+     "market": "A股",
+     "yahoo": "300759.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 707.9,
+      "approx": true
+     },
+     "mcap_base_price": 38.53,
+     "ath_floor": 0
+    },
+    {
+     "name": "凯莱英",
+     "code": "002821",
+     "market": "A股",
+     "yahoo": "002821.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 570.8,
+      "approx": true
+     },
+     "mcap_base_price": 158.22,
+     "ath_floor": 0
+    },
+    {
+     "name": "泰格医药",
+     "code": "300347",
+     "market": "A股",
+     "yahoo": "300347.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 404.3,
+      "approx": true
+     },
+     "mcap_base_price": 46.95,
+     "ath_floor": 0
+    },
+    {
+     "name": "礼来",
+     "code": "LLY",
+     "market": "美股",
+     "yahoo": "LLY",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 11263.5,
+      "approx": true
+     },
+     "mcap_base_price": 1196.03,
+     "ath_floor": 0
+    },
+    {
+     "name": "默沙东",
+     "code": "MRK",
+     "market": "美股",
+     "yahoo": "MRK",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3237.2,
+      "approx": true
+     },
+     "mcap_base_price": 131.07,
+     "ath_floor": 0
+    },
+    {
+     "name": "辉瑞",
+     "code": "PFE",
+     "market": "美股",
+     "yahoo": "PFE",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1398.6,
+      "approx": true
+     },
+     "mcap_base_price": 24.54,
+     "ath_floor": 0
+    },
+    {
+     "name": "艾伯维",
+     "code": "ABBV",
+     "market": "美股",
+     "yahoo": "ABBV",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 4496.0,
+      "approx": true
+     },
+     "mcap_base_price": 254.49,
+     "ath_floor": 0
+    },
+    {
+     "name": "强生",
+     "code": "JNJ",
+     "market": "美股",
+     "yahoo": "JNJ",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 6153.6,
+      "approx": true
+     },
+     "mcap_base_price": 255.63,
+     "ath_floor": 0
+    },
+    {
+     "name": "诺和诺德",
+     "code": "NVO",
+     "market": "美股 ADR",
+     "yahoo": "NVO",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2157.0,
+      "approx": true
+     },
+     "mcap_base_price": 48.77,
+     "ath_floor": 0
+    },
+    {
+     "name": "阿斯利康",
+     "code": "AZN",
+     "market": "美股 ADR",
+     "yahoo": "AZN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2625.3,
+      "approx": true
+     },
+     "mcap_base_price": 169.26,
+     "ath_floor": 0
+    },
+    {
+     "name": "百时美施贵宝",
+     "code": "BMY",
+     "market": "美股",
+     "yahoo": "BMY",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1267.9,
+      "approx": true
+     },
+     "mcap_base_price": 62.09,
+     "ath_floor": 0
+    },
+    {
+     "name": "Summit Therapeutics",
+     "code": "SMMT",
+     "market": "美股",
+     "yahoo": "SMMT",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 109.0,
+      "approx": true
+     },
+     "mcap_base_price": 13.66,
+     "ath_floor": 0
+    },
+    {
+     "name": "传奇生物",
+     "code": "LEGN",
+     "market": "美股 ADR",
+     "yahoo": "LEGN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 43.0,
+      "approx": true
+     },
+     "mcap_base_price": 22.22,
+     "ath_floor": 0
+    },
+    {
+     "name": "港股创新药ETF（广发）",
+     "code": "513120",
+     "market": "A股 ETF",
+     "yahoo": "513120.SS",
+     "currency": "¥",
+     "mcap_base": null,
+     "mcap_base_price": 1.169,
+     "ath_floor": 0
+    },
+    {
+     "name": "创新药ETF（银华）",
+     "code": "159992",
+     "market": "A股 ETF",
+     "yahoo": "159992.SZ",
+     "currency": "¥",
+     "mcap_base": null,
+     "mcap_base_price": 0.839,
+     "ath_floor": 0
+    },
+    {
+     "name": "标普生物科技ETF",
+     "code": "XBI",
+     "market": "美股 ETF",
+     "yahoo": "XBI",
+     "currency": "$",
+     "mcap_base": null,
+     "mcap_base_price": 150.48,
+     "ath_floor": 0
+    }
+   ],
+   "groups": [
+    {
+     "name": "中国创新药 · 大市值平台",
+     "codes": [
+      "06160",
+      "688235",
+      "ONC",
+      "01276",
+      "600276",
+      "01801",
+      "01093",
+      "01177",
+      "03692",
+      "02096"
+     ]
+    },
+    {
+     "name": "港股 Biotech · 弹性档",
+     "codes": [
+      "09926",
+      "06990",
+      "09995",
+      "01530",
+      "02162",
+      "02171",
+      "09688",
+      "ZLAB",
+      "00013"
+     ]
+    },
+    {
+     "name": "A股创新药 · 科创板",
+     "codes": [
+      "688506",
+      "688192",
+      "688180",
+      "688266",
+      "688062",
+      "688578"
+     ]
+    },
+    {
+     "name": "CXO · 卖铲子",
+     "codes": [
+      "02269",
+      "02359",
+      "603259",
+      "300759",
+      "002821",
+      "300347"
+     ]
+    },
+    {
+     "name": "全球大药企 · 估值坐标",
+     "codes": [
+      "LLY",
+      "MRK",
+      "PFE",
+      "ABBV",
+      "JNJ",
+      "NVO",
+      "AZN",
+      "BMY",
+      "SMMT",
+      "LEGN"
+     ]
+    },
+    {
+     "name": "工具 · 板块 ETF",
+     "codes": [
+      "513120",
+      "159992",
+      "XBI"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "26 CPO 共封装光学（价值量迁移视角）",
+   "items": [
+    {
+     "name": "博通",
+     "code": "AVGO",
+     "market": "美股",
+     "yahoo": "AVGO",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 17200.0,
+      "approx": false
+     },
+     "mcap_base_price": 360.45,
+     "ath_floor": 495.0
+    },
+    {
+     "name": "英伟达",
+     "code": "NVDA",
+     "market": "美股",
+     "yahoo": "NVDA",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 47200.0,
+      "approx": false
+     },
+     "mcap_base_price": 194.83,
+     "ath_floor": 236.54
+    },
+    {
+     "name": "迈威尔科技",
+     "code": "MRVL",
+     "market": "美股",
+     "yahoo": "MRVL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2147.7,
+      "approx": false
+     },
+     "mcap_base_price": 245.29,
+     "ath_floor": 329.88
+    },
+    {
+     "name": "Arista Networks",
+     "code": "ANET",
+     "market": "美股",
+     "yahoo": "ANET",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 2016,
+      "approx": false
+     },
+     "mcap_base_price": 159.99,
+     "ath_floor": 0
+    },
+    {
+     "name": "台积电",
+     "code": "TSM",
+     "market": "美股 ADR",
+     "yahoo": "TSM",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 22599.999999999996,
+      "approx": false
+     },
+     "mcap_base_price": 434.16,
+     "ath_floor": 479.0
+    },
+    {
+     "name": "日月光半导体 ADR",
+     "code": "ASX",
+     "market": "美股",
+     "yahoo": "ASX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 900,
+      "approx": true
+     },
+     "mcap_base_price": 41.87,
+     "ath_floor": 0
+    },
+    {
+     "name": "Coherent",
+     "code": "COHR",
+     "market": "美股",
+     "yahoo": "COHR",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 652.2,
+      "approx": false
+     },
+     "mcap_base_price": 333.36,
+     "ath_floor": 440.0
+    },
+    {
+     "name": "Lumentum",
+     "code": "LITE",
+     "market": "美股",
+     "yahoo": "LITE",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 566.6,
+      "approx": false
+     },
+     "mcap_base_price": 728.32,
+     "ath_floor": 1085.68
+    },
+    {
+     "name": "源杰科技",
+     "code": "688498",
+     "market": "A股",
+     "yahoo": "688498.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2066,
+      "approx": true
+     },
+     "mcap_base_price": 1659.23,
+     "ath_floor": 0
+    },
+    {
+     "name": "长光华芯",
+     "code": "688048",
+     "market": "A股",
+     "yahoo": "688048.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 723,
+      "approx": true
+     },
+     "mcap_base_price": 410.6,
+     "ath_floor": 0
+    },
+    {
+     "name": "奇景光电",
+     "code": "HIMX",
+     "market": "美股 ADR",
+     "yahoo": "HIMX",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 22.9,
+      "approx": false
+     },
+     "mcap_base_price": 13.15,
+     "ath_floor": 25.09
+    },
+    {
+     "name": "曦智科技",
+     "code": "01879",
+     "market": "港股",
+     "yahoo": "1879.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 4500,
+      "approx": true
+     },
+     "mcap_base_price": 351.8,
+     "ath_floor": 0
+    },
+    {
+     "name": "天孚通信",
+     "code": "300394",
+     "market": "A股",
+     "yahoo": "300394.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 2728,
+      "approx": true
+     },
+     "mcap_base_price": 250.1,
+     "ath_floor": 0
+    },
+    {
+     "name": "太辰光",
+     "code": "300570",
+     "market": "A股",
+     "yahoo": "300570.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 545,
+      "approx": true
+     },
+     "mcap_base_price": 237.12,
+     "ath_floor": 0
+    },
+    {
+     "name": "仕佳光子",
+     "code": "688313",
+     "market": "A股",
+     "yahoo": "688313.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 723,
+      "approx": true
+     },
+     "mcap_base_price": 158.57,
+     "ath_floor": 0
+    },
+    {
+     "name": "光库科技",
+     "code": "300620",
+     "market": "A股",
+     "yahoo": "300620.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 781,
+      "approx": true
+     },
+     "mcap_base_price": 312.25,
+     "ath_floor": 0
+    },
+    {
+     "name": "中际旭创",
+     "code": "300308",
+     "market": "A股",
+     "yahoo": "300308.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 12500,
+      "approx": true
+     },
+     "mcap_base_price": 1116.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "新易盛",
+     "code": "300502",
+     "market": "A股",
+     "yahoo": "300502.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 7334,
+      "approx": true
+     },
+     "mcap_base_price": 526.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "光迅科技",
+     "code": "002281",
+     "market": "A股",
+     "yahoo": "002281.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1717,
+      "approx": true
+     },
+     "mcap_base_price": 217.33,
+     "ath_floor": 0
+    },
+    {
+     "name": "德科立",
+     "code": "688205",
+     "market": "A股",
+     "yahoo": "688205.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 215.0,
+      "approx": true
+     },
+     "mcap_base_price": 134.88,
+     "ath_floor": 0
+    },
+    {
+     "name": "Applied Optoelectronics",
+     "code": "AAOI",
+     "market": "美股",
+     "yahoo": "AAOI",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 97.0,
+      "approx": false
+     },
+     "mcap_base_price": 120.95,
+     "ath_floor": 233.67
+    },
+    {
+     "name": "Fabrinet",
+     "code": "FN",
+     "market": "美股",
+     "yahoo": "FN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 180,
+      "approx": false
+     },
+     "mcap_base_price": 499.61,
+     "ath_floor": 0
+    },
+    {
+     "name": "Ciena",
+     "code": "CIEN",
+     "market": "美股",
+     "yahoo": "CIEN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 613,
+      "approx": false
+     },
+     "mcap_base_price": 422.46,
+     "ath_floor": 0
+    },
+    {
+     "name": "罗博特科",
+     "code": "300757",
+     "market": "A股",
+     "yahoo": "300757.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 690.5,
+      "approx": true
+     },
+     "mcap_base_price": 411.96,
+     "ath_floor": 0
+    },
+    {
+     "name": "天准科技",
+     "code": "688003",
+     "market": "A股",
+     "yahoo": "688003.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 144.5,
+      "approx": true
+     },
+     "mcap_base_price": 74.19,
+     "ath_floor": 0
+    },
+    {
+     "name": "Credo Technology",
+     "code": "CRDO",
+     "market": "美股",
+     "yahoo": "CRDO",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 451.1,
+      "approx": false
+     },
+     "mcap_base_price": 241.91,
+     "ath_floor": 308.67
+    },
+    {
+     "name": "Astera Labs",
+     "code": "ALAB",
+     "market": "美股",
+     "yahoo": "ALAB",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 671,
+      "approx": false
+     },
+     "mcap_base_price": 406.42,
+     "ath_floor": 0
+    }
+   ],
+   "groups": [
+    {
+     "name": "① 交换芯片 · 价值量大增",
+     "codes": [
+      "AVGO",
+      "NVDA",
+      "MRVL",
+      "ANET"
+     ]
+    },
+    {
+     "name": "② 先进封装 · 从0到1",
+     "codes": [
+      "TSM",
+      "ASX"
+     ]
+    },
+    {
+     "name": "③ 光引擎与光源 · 从0到1",
+     "codes": [
+      "COHR",
+      "LITE",
+      "688498",
+      "688048",
+      "HIMX",
+      "01879"
+     ]
+    },
+    {
+     "name": "④ FAU与精密光器件 · 量价齐升",
+     "codes": [
+      "300394",
+      "300570",
+      "688313",
+      "300620"
+     ]
+    },
+    {
+     "name": "⑤ 模块组装 · 价值量流失",
+     "codes": [
+      "300308",
+      "300502",
+      "002281",
+      "688205",
+      "AAOI",
+      "FN",
+      "CIEN"
+     ]
+    },
+    {
+     "name": "⑥ CPO设备与测试 · 从0到1",
+     "codes": [
+      "300757",
+      "688003"
+     ]
+    },
+    {
+     "name": "⑦ 替代路线 · 对照组",
+     "codes": [
+      "CRDO",
+      "ALAB"
+     ]
+    }
+   ]
+  }
+ ]
+}

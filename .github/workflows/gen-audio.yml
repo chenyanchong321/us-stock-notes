@@ -1,0 +1,36 @@
+# 文章音频自动生成（2026-07-19）：推送涉及文章/笔记目录时，自动为缺音频的文章生成MP3（云扬+ffmpeg补头）。
+# mp3 提交不匹配触发路径，不会自我循环。手动补跑：Actions 页 Run workflow。
+name: 生成文章音频
+on:
+  push:
+    branches: [main]
+    paths: ["articles/**.html", "config/notes.json"]
+  workflow_dispatch:
+concurrency:
+  group: gen-audio
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  gen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: 依赖
+        run: |
+          pip install edge-tts
+          sudo apt-get update -q && sudo apt-get install -y -q ffmpeg
+      - name: 生成缺失音频
+        run: python scripts/gen_missing_audio.py
+      - name: 提交
+        run: |
+          git config user.name "audio-bot"
+          git config user.email "audio-bot@users.noreply.github.com"
+          git add notes/audio/ || true
+          if git diff --cached --quiet; then echo "无新增音频"; exit 0; fi
+          git commit -m "audio: 自动生成缺失文章音频"
+          git pull --rebase origin main
+          git push origin main

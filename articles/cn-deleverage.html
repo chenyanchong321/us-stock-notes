@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>从融资余额到宽基ETF：读懂2026年7月A股这场去杠杆 · 烟囱的美股学习笔记</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<style>
+:root{--bg:#ffffff;--panel:#f6f8fa;--panel2:#eef1f4;--border:#e2e5e9;--text:#1f2328;--text2:#6b7280;--accent:#2563eb;--gold:#b8860b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:16px;line-height:1.85}
+#bar{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);z-index:10}
+#bar .in{max-width:760px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px}
+#bar a{color:var(--text2);text-decoration:none;font-size:14px}
+#bar a:hover{color:var(--accent)}
+#bar .site{margin-left:auto;font-size:13px;color:var(--text2)}
+#bar .site b{color:var(--accent);font-weight:600}
+main{max-width:760px;margin:0 auto;padding:28px 20px 90px}
+.head h1{font-size:26px;line-height:1.4;margin-bottom:12px}
+.meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.meta .date{font-size:13px;color:var(--text2)}
+.meta .tag{font-size:12px;color:var(--accent);background:rgba(74,140,240,.12);border-radius:4px;padding:2px 8px}
+.meta .pdf{font-size:13px;color:var(--text2);text-decoration:none;border:1px solid var(--border);border-radius:6px;padding:3px 10px}
+.meta .pdf:hover{color:var(--text);border-color:var(--text2)}
+.head{border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:26px}
+article h1{font-size:22px;margin:38px 0 14px;line-height:1.4}
+article h2{font-size:20px;margin:34px 0 12px;padding-left:10px;border-left:3px solid var(--accent);line-height:1.4}
+article h3{font-size:17px;margin:26px 0 10px}
+article p{margin:0 0 16px}
+article ul,article ol{margin:0 0 16px 1.4em}
+article li{margin-bottom:6px}
+article img,article svg{max-width:100%;height:auto;border-radius:10px;display:block;margin:18px auto;background:#fff;border:1px solid var(--border)}
+article blockquote{border-left:3px solid var(--gold);background:var(--panel);border-radius:0 8px 8px 0;padding:12px 16px;margin:0 0 16px;color:var(--text2)}
+article table{border-collapse:collapse;width:100%;margin:0 0 18px;font-size:14px;word-break:break-word}
+article th,article td{border:1px solid var(--border);padding:8px 12px;text-align:left}
+article th{background:var(--panel);color:var(--text2)}
+article tr:nth-child(even) td{background:rgba(246,248,250,.7)}
+article code{background:var(--panel2);border-radius:4px;padding:1px 6px;font-size:14px}
+article pre{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:14px;overflow-x:auto;margin:0 0 16px}
+article pre code{background:none;padding:0}
+article a{color:var(--accent)}
+article hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+.disclaim{margin-top:50px;padding:14px 18px;background:var(--panel);border:1px solid var(--border);border-radius:10px;font-size:13px;color:var(--text2)}
+
+</style>
+</head>
+<body>
+<div id="bar"><div class="in">
+  <a href="../index.html?view=notes">← 返回笔记库</a>
+  <span class="site">📓 <b>烟囱</b>的美股学习笔记</span>
+</div></div>
+<main>
+  <div class="head">
+    <h1>从融资余额到宽基ETF：读懂2026年7月A股这场去杠杆</h1>
+    <div class="meta"><span class="date">2026-07-20</span><span class="tag">融资余额</span><span class="tag">去杠杆</span><span class="tag">宽基ETF</span><span class="tag">国家队</span><a class="pdf" href="../notes/杠杆与托市学习笔记.pdf" download>⬇ 下载 PDF</a></div>
+  </div>
+  <article>
+<blockquote>
+<p>阅读提示：本笔记由一次关于彭博社报道《中国交易员以2016年以来最快速度解除杠杆押注》的问答整理而成。组织顺序不按聊天时间线，而是按"概念工具箱 → 判断标准 → 机制陷阱 → 对冲力量 → 全景复盘"排列。全文涉及股票市场内容，仅供学习理解，不构成任何投资建议。</p>
+</blockquote>
+<h2>第一章 概念工具箱：融资余额到底是什么</h2>
+<blockquote>
+<p>你当时的问题：文章说"上海和深圳市场为购买股票而借入的未偿还债务余额下降2.8%"，意思是我借钱买股票，本来借了100万，现在只剩90万，相当于还了10万，所以叫"解除了杠杆头寸"，可以这么理解吗？</p>
+</blockquote>
+<p><strong>一句话定义：融资余额（margin financing balance）是全市场投资者借钱买股后、尚未偿还的欠款总额。</strong></p>
+<p>这个理解方向完全正确，但要补两个关键细节。</p>
+<p><strong>第一，它是全市场的净额，不是某一个人的账。</strong> 融资余额统计的是沪深两市所有人的欠款总和。每一天既有人新借钱买入（融资买入），也有人卖股还钱（融资偿还）。余额下降2.8%，准确含义是"那一天还的钱比借的钱多出了2.8%"，而不是所有人都在还钱。</p>
+<p><strong>第二，"解除杠杆"不全是主动行为。</strong> 余额下降有两条截然不同的路径：</p>
+<ul>
+<li>主动路径：投资者判断风险变大，自己卖股还钱撤退。</li>
+<li>被动路径：股票跌太多，账户保证金不够，券商发出追加保证金通知（margin call）；补不上钱，就被<strong>强制平仓</strong>。</li>
+</ul>
+<p>2026年7月17日科创50指数单日下跌逾7%，这两条路径大概率同时发生，且被动成分不小。</p>
+<p><strong>抛压是会外溢的。</strong> 这正是彭博文章末尾那段的重点：存储芯片是当年最热门、融资盘最扎堆的板块之一。该板块急跌后，投资者为了凑出保证金，只能<strong>卖掉账户里其他并没有问题的股票</strong>。于是抛压从一个板块渗透到全市场，这就是去杠杆的连锁反应。</p>
+<p><strong>记忆卡：融资余额是全市场"借钱炒股"的欠款总和；它下降既可能是主动撤退，也可能是被动强平，而被动强平会逼人卖掉无关的好股票，把一个板块的跌变成全市场的跌。</strong></p>
+<hr />
+<h2>第二章 判断标准：杠杆高不高，看什么数</h2>
+<blockquote>
+<p>你当时的问题：融资余额被视为风险偏好的关键晴雨表，有没有相应的标准？比如大于多少、少于多少？</p>
+</blockquote>
+<p><strong>绝对值几乎没有参考意义。</strong> 说"2.75万亿"比"2万亿"高，等于说今年的工资比十年前高——股市总盘子本身在膨胀，绝对值天然会往上走。业内真正看的是三个比值。</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>算法</th>
+<th>常态区间</th>
+<th>警戒线</th>
+<th>参考值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>融资余额占流通市值比</td>
+<td>融资余额除以A股流通总市值</td>
+<td>2%至3%</td>
+<td>高于4%危险</td>
+<td>约2.7%（2026年5月底）</td>
+</tr>
+<tr>
+<td>两融交易额占成交额比</td>
+<td>两融买卖额除以全市场成交额</td>
+<td>8%至10%</td>
+<td>高于15%过热</td>
+<td>约10.9%（2026年5月底）</td>
+</tr>
+<tr>
+<td>维持担保比例</td>
+<td>账户总资产除以负债</td>
+<td>高于200%安全</td>
+<td>低于130%触发强平</td>
+<td>券商逐户监控</td>
+</tr>
+</tbody>
+</table>
+<p>历史坐标很重要。据证券时报、财联社梳理的数据，占流通市值比这一指标的历史峰值出现在2015年7月3日，达到<strong>4.72%</strong>；两融交易额占成交额比的历史峰值出现在2015年2月，一度超过<strong>22%</strong>。</p>
+<p>对照之下，2026年5月底"2.7%加10.9%"这个组合的定性是：<strong>偏高但尚未疯狂</strong>。杠杆确实加得不少，但离2015年那种极端状态还有明确距离。</p>
+<p>一个口径上的小提醒：彭博文章里说的2.75万亿是"<strong>融资</strong>余额"，国内媒体常报的2.8万亿是"<strong>两融</strong>余额"（融资融券，margin trading and securities lending，即融资加融券）。融券占比通常不到3%，所以两个数字接近，看趋势不影响，但精确计算时要注意分子口径。</p>
+<p><strong>记忆卡：判断杠杆水平永远看比值不看绝对值；2%到3%是常态、4%以上是2015年级别的危险区，现在处在区间上沿。</strong></p>
+<hr />
+<h2>第三章 最容易搞反的方向：余额涨了是更安全还是更危险</h2>
+<blockquote>
+<p>你当时的问题：融资余额越多，是不是代表杠杆越低？融资余额很少就代表杠杆很高，因为都被借完了？</p>
+</blockquote>
+<p>这里方向反了，值得单独立一章记牢。</p>
+<p>搞反的根源在于把融资余额想成了"<strong>银行金库里还剩多少钱可以借</strong>"。它不是剩余额度池，<strong>它是已经借出去、还没还的欠条总和</strong>。</p>
+<p>沿用全篇的主类比——<strong>信用卡账单</strong>：</p>
+<ul>
+<li>融资余额相当于你信用卡的<strong>已用未还金额</strong>。</li>
+<li>账单从1万涨到10万，说明你欠得更多，<strong>杠杆更高、风险更大</strong>。</li>
+<li>账单从10万降到1万，说明你在还钱，<strong>杠杆降低、更趋安全</strong>。</li>
+</ul>
+<p>所以正确的对应关系是：</p>
+<ul>
+<li>融资余额上升 等于 杠杆上升 等于 借钱下注的人增多 等于 风险偏好高涨、市场情绪亢奋。</li>
+<li>融资余额下降 等于 杠杆下降 等于 资金在还钱撤退 等于 风险偏好降温、市场情绪转冷。</li>
+</ul>
+<p>这也解释了"关键晴雨表"这个说法的分量：它测的不是资金的充裕程度，而是<strong>市场的赌性</strong>。愿意借钱下注的，是市场里最激进、也最敏感的一批人；他们撤退时，往往比大盘指数先动。</p>
+<p><strong>记忆卡：融资余额是全市场炒股的信用卡账单，账单涨得快说明胆子肥、杠杆高；账单突然大幅回落，说明胆子最大的那批人在还钱跑路，所以它跌通常不是好消息，而是风险偏好熄火的信号。</strong></p>
+<hr />
+<h2>第四章 分子分母陷阱：还了钱，杠杆率反而升了</h2>
+<blockquote>
+<p>你当时的问题：有人说上周五融资余额虽然降了800亿，但市值跌得更猛，所以两融占全A流通市值的比例反而升高了，可以理解为杠杆率升高了。这是什么意思？</p>
+</blockquote>
+<p>这是本次学习里最反直觉、也最重要的一点：<strong>杠杆率是个分数，分子降了不代表分数降了。</strong></p>
+<h3>把数字对上</h3>
+<p>某财经数据终端的两融数据（单位：亿元）：</p>
+<table>
+<thead>
+<tr>
+<th>日期</th>
+<th>融资余额</th>
+<th>两融余额占全A流通市值比重</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-07-17</td>
+<td>27,575.44</td>
+<td>2.82%</td>
+</tr>
+<tr>
+<td>2026-07-16</td>
+<td>28,376.23</td>
+<td>2.79%</td>
+</tr>
+<tr>
+<td>2026-07-15</td>
+<td>28,663.33</td>
+<td>2.77%</td>
+</tr>
+<tr>
+<td>2026-07-14</td>
+<td>28,780.98</td>
+<td>2.77%</td>
+</tr>
+<tr>
+<td>2026-07-13</td>
+<td>28,891.14</td>
+<td>2.83%</td>
+</tr>
+<tr>
+<td>2026-07-10</td>
+<td>29,227.87</td>
+<td>2.78%</td>
+</tr>
+<tr>
+<td>2026-07-09</td>
+<td>29,341.49</td>
+<td>2.76%</td>
+</tr>
+<tr>
+<td>2026-07-08</td>
+<td>29,381.00</td>
+<td>2.82%</td>
+</tr>
+<tr>
+<td>2026-07-07</td>
+<td>29,570.23</td>
+<td>2.81%</td>
+</tr>
+<tr>
+<td>2026-07-06</td>
+<td>29,701.41</td>
+<td>2.78%</td>
+</tr>
+</tbody>
+</table>
+<p>7月16日到17日，分子确实降了800.79亿，降幅正好是<strong>2.82%</strong>，与彭博文章里"下降2.8%"是同一组数据。</p>
+<p>但比重却从2.79%升到了2.82%。反推分母可知：<strong>当天流通市值缩水约3.9%</strong>。这与公开报道的"7月17日A股总市值约106.09万亿元、单日蒸发约4.52万亿元"完全吻合。</p>
+<p>分子降2.8%，分母降3.9%，<strong>分母跑得更快，所以分数变大了。</strong></p>
+<p>继续用信用卡类比：你还了800块账单，但同时公司降薪，收入掉得比还款还多——你的<strong>负债率反而升高了</strong>。你没有变得更安全，你变得更危险了。</p>
+<h3>为什么这很危险：负反馈螺旋</h3>
+<pre><code>股价下跌
+  → 抵押品（手里的股票）缩水
+  → 维持担保比例下降，逼近平仓线
+  → 被迫卖股还钱
+  → 股价再跌
+  → 回到第一步
+</code></pre>
+<p>关键在于：<strong>主动还钱是线性的，被动缩水是同步的。</strong> 你还钱的速度，永远追不上抵押品贬值的速度。这就是为什么杠杆一旦开始崩塌，往往要跌好几轮才停得下来。</p>
+<h3>"这杠杆还得慢慢降"是什么意思</h3>
+<p>看7月6日到17日这10个交易日：融资余额从29,701亿一路降到27,575亿，<strong>掉了2,126亿</strong>。可是比重呢？从2.78%到2.82%，基本原地踏步，甚至还略升。<strong>十天的去杠杆，在比例上等于白干</strong>，因为指数也在同步往下走。</p>
+<p>粗算一下：若想在指数不动的前提下把比重从2.82%压回2.5%，融资余额还得再掉约3,000亿。7月17日那种恐慌日一天能掉800亿，但平常日子一天也就一两百亿。所以说"慢慢降"。</p>
+<p>真正的出路只有两条，方向相反：</p>
+<ul>
+<li><strong>分子降</strong>：继续还钱、继续平仓。伴随阴跌，痛苦但扎实。</li>
+<li><strong>分母升</strong>：指数涨回去，比重自动下来。这正是宽基ETF托市想干的事。</li>
+</ul>
+<p>一个数据口径的提醒：上表左列是"两融余额"（融资加融券）占比，右列是"融资余额"（只含融资），两者分子口径不完全一致，看趋势没问题，精算时要注意。另外比重数字在2.76%至2.83%之间来回跳动（7月13日2.83%，7月9日2.76%），<strong>单日波动不代表趋势</strong>，判断方向要拉长到周和月。</p>
+<p><strong>记忆卡：杠杆率等于借的钱除以市场市值。熊市里分子和分母一起缩，而分母缩得更快，所以"我还钱了"和"我杠杆降了"是两回事；去杠杆一旦开始，往往要靠指数涨回来才能真正结束。</strong></p>
+<hr />
+<h2>第五章 硬币的另一面：宽基ETF与国家队托市</h2>
+<blockquote>
+<p>你当时的问题：有说法称宽基ETF近期会持续流入托市。什么叫宽基ETF？</p>
+</blockquote>
+<p><strong>一句话定义：宽基ETF是追踪"一大篮子、跨行业"指数的交易所基金。</strong></p>
+<p>拆开两个词：</p>
+<p><strong>ETF（Exchange-Traded Fund，交易所交易基金）</strong>，是一种能像股票一样在交易所随时买卖的基金。买入一手，等于间接持有它篮子里的全部股票。</p>
+<p><strong>宽基（broad-based）</strong>，指这个篮子不挑行业、覆盖面广，代表的是"整个市场"或"市场里的大盘核心"，而不是某一条赛道。</p>
+<h3>宽基与窄基对照</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>宽基ETF</th>
+<th>窄基ETF（行业/主题）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>人设</td>
+<td>全市场的综合体检报告</td>
+<td>单科成绩单</td>
+</tr>
+<tr>
+<td>篮子内容</td>
+<td>跨行业几十到上千只股票</td>
+<td>集中在一个行业或主题</td>
+</tr>
+<tr>
+<td>代表</td>
+<td>沪深300、上证50、中证500、中证1000、创业板指、科创50</td>
+<td>半导体ETF、白酒ETF、医药ETF、AI主题ETF</td>
+</tr>
+<tr>
+<td>波动</td>
+<td>较小，行业之间互相对冲</td>
+<td>较大，成分股同涨同跌</td>
+</tr>
+<tr>
+<td>美股对应</td>
+<td>标普500（SPY）、纳斯达克100（QQQ）</td>
+<td>费城半导体（SOXX）、ARKK</td>
+</tr>
+</tbody>
+</table>
+<p>判断标准很朴素：<strong>看它的涨跌能不能代表"大盘怎么样"</strong>。沪深300涨1%，你会说"今天A股不错"；半导体ETF涨1%，你只会说"今天芯片不错"。前者是宽基，后者是窄基。</p>
+<h3>为什么托市专挑宽基ETF</h3>
+<p><strong>第一，一键买入全市场，效率最高。</strong> 想托住大盘，逐只去买300家公司太慢；买入沪深300ETF，一笔钱自动按权重分配到300只成分股，几百亿资金几分钟就能落地。</p>
+<p><strong>第二，不选股等于不偏袒。</strong> 买单只股票会引来"为什么救它不救我"的质疑，也容易被人抢跑套利。买宽基是雨露均沾，政策上保持中性。</p>
+<p><strong>第三，信号最响。</strong> 宽基ETF的份额与申购数据是公开可查的，份额突然暴增，全市场立刻读懂"国家队来了"。<strong>护盘一半靠钱，一半靠信号。</strong></p>
+<p>中央汇金历史上多次公告增持ETF并明确表态"未来将继续增持，坚决维护资本市场平稳运行"（2025年4月7日公告）。反过来，当市场过热时，汇金系也会<strong>赎回宽基ETF</strong>悄然退出——据新浪财经、每日经济新闻报道，2026年1月商业航天、AI应用等主题炒作升温之际，汇金系就出现过对多只宽基ETF的明显减持。这种"市场冷了买、热了卖"的做法，叫<strong>逆周期调节</strong>。</p>
+<p><strong>记忆卡：宽基ETF就是打包整个大盘的基金，不挑行业只买核心一篮子；正因为它买得广、买得快、还能被全市场看见，它才是国家队护盘时唯一顺手的工具。</strong></p>
+<hr />
+<h2>第六章 全景复盘：2026年7月这条完整逻辑链</h2>
+<p>把前五章的零件装回同一台机器，2026年7月这场波动的完整链条是这样的：</p>
+<p><strong>第一步，杠杆先堆起来。</strong> 2026年上半年AI叙事驱动行情不断走高，融资盘持续涌入，两融余额一度达到2.8万亿以上的历史新高水平，其中存储芯片是当年最热门、融资盘最密集的板块之一。占流通市值比升至约2.7%，处于常态区间上沿。</p>
+<p><strong>第二步，热门板块先崩。</strong> 7月中旬市场担心AI驱动的上涨已过度扩张。7月17日，科创50单日跌逾7%，沪深300跌3.6%，超5000只个股下跌，A股总市值单日蒸发约4.52万亿元。长鑫存储技术有限公司大规模上市在即，也可能加剧了投资者的谨慎情绪。</p>
+<p><strong>第三步，强平引发外溢。</strong> 融资盘保证金告急，投资者为凑保证金卖出其他持仓，抛压从存储芯片扩散到全市场。当日融资余额单日减少800.79亿元，降幅2.82%，为2016年1月以来最快收缩速度。</p>
+<p><strong>第四步，去杠杆陷入螺旋。</strong> 由于市值跌得比欠款还快，两融占流通市值比重不降反升，从2.79%升到2.82%。10个交易日累计还了2,126亿，比重却纹丝不动——这就是"这杠杆还得慢慢降"的由来。</p>
+<p><strong>第五步，从分母那头救火。</strong> 7月20日周一市场出现反弹，因一批国有基金表示已增持国内股票，监管机构也计划与主要行业参与者会面。买宽基ETF本质上是<strong>撑住分母</strong>：让流通市值别继续崩，杠杆率就不会被动飙升，融资盘也就有了从容还钱的时间窗，避免踩踏。</p>
+<p>一句话概括这条链：<strong>一边是被动去杠杆在抛，一边是主动托底在接。</strong> 融资余额告诉你恐慌到了哪一步，宽基ETF份额告诉你救援到了哪一步——读这两个数，就读懂了这场博弈的双方。</p>
+<hr />
+<h2>附录 一句话记忆卡速查表</h2>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>一句话</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>融资余额</td>
+<td>全市场"借钱炒股"的欠款总和；下降既可能是主动撤退，也可能是被动强平，而被动强平会逼人卖掉无关的好股票</td>
+</tr>
+<tr>
+<td>杠杆判断标准</td>
+<td>永远看比值不看绝对值；2%到3%是常态、4%以上是2015年级别的危险区</td>
+</tr>
+<tr>
+<td>余额与杠杆的方向</td>
+<td>融资余额是市场的信用卡账单，账单涨说明胆子肥杠杆高，账单大幅回落说明最激进的资金在跑路</td>
+</tr>
+<tr>
+<td>分子分母陷阱</td>
+<td>熊市里分子分母一起缩而分母更快，所以"还钱了"不等于"杠杆降了"</td>
+</tr>
+<tr>
+<td>负反馈螺旋</td>
+<td>股价跌到抵押品缩水到被迫平仓到股价再跌；主动还钱是线性的，被动缩水是同步的</td>
+</tr>
+<tr>
+<td>宽基ETF</td>
+<td>打包整个大盘的基金，买得广、买得快、还能被全市场看见，所以是护盘的顺手工具</td>
+</tr>
+<tr>
+<td>逆周期调节</td>
+<td>国家队市场冷了买、热了卖，方向与散户情绪相反</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>信息时点说明：本笔记数据截至2026年7月17日收盘，占比类历史参考值来自证券时报、财联社等公开报道，两融口径以各来源标注为准。所有内容仅供学习与概念理解，不构成任何投资建议；市场有风险，决策请以持牌机构信息与个人独立判断为准。</em></p>
+  </article>
+  <div class="disclaim">本文为个人学习笔记，由对话探讨整理而成，仅作知识分享，不构成任何投资建议。</div>
+</main>
+<script defer src="toc.js?v=7"></script>
+</body>
+</html>
