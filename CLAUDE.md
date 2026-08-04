@@ -830,3 +830,15 @@ json.dump(d,open("data/scenarios.json","w"),ensure_ascii=False,indent=1)
 - **修法**：整批守卫改**信标判定**——BEACONS=[SPY,QQQ,NVDA,TSLA,AAPL,MSFT]（美东 4:00 起几乎必有盘前成交）：信标全部等于昨收才判源坏整批丢弃（新浪式翻车场景依然拦得住）；任一信标有真实盘前价即放行，无成交的票由既有逐只守卫过滤。信标可比数 <2 时退回旧 70% 守卫兜底。新增/更换信标只改 index.html applyLive 里的 BEACONS 数组，信标必须是关注池里盘前极活跃的美股。
 - **预期节奏**：北京 16:00 起活跃美股即为分钟级盘前价、实时时钟打点「分钟档」；无盘前成交的票停在昨收（与券商一致）。15 分钟档 Yahoo r[17] 仍是兜底层。
 - 教训：守卫的拒收动作要有**可见的降级标识**，纯静默会让"按设计工作"看起来像"坏了"；以及判数据源好坏要用"必然活跃的信标"，不能用全池占比。
+
+## ECS 站点同步改逐文件增量（2026-08-04 深夜，静态数据停摆92分钟事故后重构）
+- **旧方案死因**：us-stock-sync.sh 每2分钟整包 curl codeload tarball，仓库带音频/PDF后归档超500MB，ECS↔GitHub 链路仅几百KB/s，`--max-time 300` 班班超时——不是抖动，是方案与仓库体量的结构性不匹配。git clone 同样在 460MB 处被掐断（单流不可恢复）。
+- **新方案**＝`/root/us-sync-api.py`（源码在仓库 scripts/ecs_us_sync_api.py）：GitHub tree API 拉全量文件清单 → 与 /root/us-sync-manifest.json 比对 → 只逐文件下载变化的 blob，**每文件落盘即记账＝断点续传**。实测常态一班只传几个数据 JSON（10秒内）。cron 入口 /root/us-stock-sync.sh 不变（旧 tarball 版备份为 .bak-tarball）。
+- **依赖警示**：站点同步现依赖 `/root/.gh_token`（PAT）。**token 续期（下次2026-10-06）时不止行情触发，站点同步也会一起断**；续期后同一文件两处共用，无需其他操作。
+- 排障：/root/us-sync.log 看 SYNC_OK/GET/SYNC_ERR；怀疑漂移 `rm /root/us-sync-manifest.json`，下一班用磁盘文件反推 sha 重新对账（幂等，不重下未变文件）。
+- 附带坑：`git/trees/{分支名}?recursive=1` 可能只回顶层——先解析 commit 拿 tree sha 再递归（脚本已实现）。
+
+## 铁律：沙盒推送禁用 --no-checkout / 稀疏克隆（2026-08-04 血案）
+- 事故：`git clone --no-checkout` + `git checkout main -- 部分路径` 后 commit——**--no-checkout 起步索引是空的**，提交出的树只含那几个文件，push 后 main 只剩 18 个文件（Pages 当场只剩骨架；ECS 站点因逐文件同步记账保护未损）。
+- 恢复姿势（本次实操，零大流量）：远端对象都在——GitHub API `POST /git/trees`(base_tree=好树+补文件) → `POST /git/commits` → `PATCH /git/refs/heads/main` 三个 KB 级请求完成全树恢复。
+- **规矩：凡要 commit+push，一律完整 clone（--depth N 可以，--no-checkout/稀疏不行）；push 前 `git ls-tree -r HEAD --name-only | wc -l` 与上一提交同量级才许推。**
