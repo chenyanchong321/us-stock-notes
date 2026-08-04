@@ -1,11 +1,11 @@
 {
- "updated": "2026-08-04 18:00 北京时间",
+ "updated": "2026-08-04 18:15 北京时间",
  "earnings": [
   {
    "d": "2026-08-04",
    "code": "ON",
    "name": "安森美半导体",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-04",
@@ -53,7 +53,7 @@
    "d": "2026-08-04",
    "code": "WMB",
    "name": "Williams Companies",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-04",
@@ -71,7 +71,7 @@
    "d": "2026-08-04",
    "code": "PLTR",
    "name": "Palantir",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-04",
@@ -789,12 +789,6 @@
   },
   {
    "d": "2026-09-03",
-   "code": "CRM",
-   "name": "赛富时（Salesforce）",
-   "est": false
-  },
-  {
-   "d": "2026-09-03",
    "code": "SNOW",
    "name": "Snowflake",
    "est": false
@@ -818,12 +812,6 @@
    "est": false
   },
   {
-   "d": "2026-09-24",
-   "code": "MU",
-   "name": "美光科技",
-   "est": true
-  },
-  {
    "d": "2026-10-13",
    "code": "JNJ",
    "name": "强生",
@@ -833,18 +821,6 @@
    "d": "2026-10-14",
    "code": "ASML",
    "name": "阿斯麦",
-   "est": false
-  },
-  {
-   "d": "2026-10-14",
-   "code": "ABT",
-   "name": "雅培",
-   "est": false
-  },
-  {
-   "d": "2026-10-21",
-   "code": "EQT",
-   "name": "EQT（天然气）",
    "est": false
   },
   {
