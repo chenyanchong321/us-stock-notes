@@ -748,6 +748,20 @@
      "ath_floor": 0
     },
     {
+     "name": "楷登电子",
+     "code": "CDNS",
+     "market": "美股",
+     "yahoo": "CDNS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 936,
+      "approx": true
+     },
+     "mcap_base_price": 344.24,
+     "ath_floor": 0
+    },
+    {
      "name": "高通",
      "code": "QCOM",
      "market": "美股",
@@ -955,6 +969,7 @@
      "codes": [
       "ARM",
       "SNPS",
+      "CDNS",
       "QCOM",
       "2454",
       "NXPI",
@@ -3368,6 +3383,20 @@
      "ath_floor": 0
     },
     {
+     "name": "安集科技",
+     "code": "688019",
+     "market": "A股",
+     "yahoo": "688019.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 772,
+      "approx": true
+     },
+     "mcap_base_price": 339.46,
+     "ath_floor": 0
+    },
+    {
      "name": "中船特气",
      "code": "688146",
      "market": "A股",
@@ -3463,6 +3492,20 @@
       "approx": true
      },
      "mcap_base_price": 23345.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "欣兴电子",
+     "code": "3037",
+     "market": "台股",
+     "yahoo": "3037.TW",
+     "currency": "NT$",
+     "mcap_base": {
+      "prefix": "NT$",
+      "yi": 15390,
+      "approx": true
+     },
+     "mcap_base_price": 969.0,
      "ath_floor": 0
     },
     {
@@ -3624,7 +3667,8 @@
      "codes": [
       "4186",
       "4109",
-      "002409"
+      "002409",
+      "688019"
      ]
     },
     {
@@ -3642,6 +3686,7 @@
      "name": "封装与基板材料",
      "codes": [
       "4062",
+      "3037",
       "4626",
       "4203",
       "Q"
