@@ -734,6 +734,20 @@
      "ath_floor": 452.7
     },
     {
+     "name": "新思科技",
+     "code": "SNPS",
+     "market": "美股",
+     "yahoo": "SNPS",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 771,
+      "approx": true
+     },
+     "mcap_base_price": 405.74,
+     "ath_floor": 0
+    },
+    {
      "name": "高通",
      "code": "QCOM",
      "market": "美股",
@@ -940,6 +954,7 @@
      "name": "IP · 移动 · 模拟",
      "codes": [
       "ARM",
+      "SNPS",
       "QCOM",
       "2454",
       "NXPI",
