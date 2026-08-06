@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-06 18:00 北京时间",
+ "updated": "2026-08-06 18:15 北京时间",
  "earnings": [
   {
    "d": "2026-08-05",
@@ -17,13 +17,13 @@
    "d": "2026-08-05",
    "code": "SHOP",
    "name": "Shopify",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-05",
    "code": "NOVT",
    "name": "Novanta",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-05",
@@ -35,25 +35,25 @@
    "d": "2026-08-05",
    "code": "RXRX",
    "name": "Recursion",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-05",
    "code": "ONC",
    "name": "百济神州US",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-05",
    "code": "LLY",
    "name": "礼来",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-05",
    "code": "NVO",
    "name": "诺和诺德",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-06",
@@ -65,7 +65,7 @@
    "d": "2026-08-06",
    "code": "WDC",
    "name": "西部数据",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-06",
@@ -89,7 +89,7 @@
    "d": "2026-08-06",
    "code": "VIAV",
    "name": "Viavi Solutions",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-06",
@@ -107,7 +107,7 @@
    "d": "2026-08-06",
    "code": "VECO",
    "name": "维易科精密（Veeco）",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-06",
@@ -125,7 +125,7 @@
    "d": "2026-08-06",
    "code": "MKSI",
    "name": "MKS仪器",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-06",
@@ -155,7 +155,7 @@
    "d": "2026-08-06",
    "code": "TTMI",
    "name": "TTM Technologies",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-06",
@@ -167,7 +167,7 @@
    "d": "2026-08-06",
    "code": "TLN",
    "name": "Talen Energy",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-06",
@@ -179,19 +179,19 @@
    "d": "2026-08-06",
    "code": "APP",
    "name": "Applovin",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-06",
    "code": "HUBS",
    "name": "HubSpot",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-06",
    "code": "KVYO",
    "name": "Klaviyo",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-06",
@@ -203,7 +203,7 @@
    "d": "2026-08-06",
    "code": "SDGR",
    "name": "薛定谔",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-06",
@@ -686,6 +686,12 @@
    "est": false
   },
   {
+   "d": "2026-09-24",
+   "code": "MU",
+   "name": "美光科技",
+   "est": true
+  },
+  {
    "d": "2026-10-13",
    "code": "JNJ",
    "name": "强生",
@@ -695,6 +701,18 @@
    "d": "2026-10-14",
    "code": "ASML",
    "name": "阿斯麦",
+   "est": false
+  },
+  {
+   "d": "2026-10-14",
+   "code": "ABT",
+   "name": "雅培",
+   "est": false
+  },
+  {
+   "d": "2026-10-21",
+   "code": "EQT",
+   "name": "EQT（天然气）",
    "est": false
   },
   {
