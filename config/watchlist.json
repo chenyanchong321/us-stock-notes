@@ -6119,48 +6119,6 @@
      },
      "mcap_base_price": 135.35,
      "ath_floor": 0
-    },
-    {
-     "name": "现代电气",
-     "code": "267260",
-     "market": "韩国",
-     "yahoo": "267260.KS",
-     "currency": "₩",
-     "mcap_base": {
-      "prefix": "₩",
-      "yi": 338000,
-      "approx": true
-     },
-     "mcap_base_price": 938000.0,
-     "ath_floor": 0
-    },
-    {
-     "name": "效星重工",
-     "code": "298040",
-     "market": "韩国",
-     "yahoo": "298040.KS",
-     "currency": "₩",
-     "mcap_base": {
-      "prefix": "₩",
-      "yi": 140000,
-      "approx": true
-     },
-     "mcap_base_price": 1500000.0,
-     "ath_floor": 0
-    },
-    {
-     "name": "LS产电",
-     "code": "010120",
-     "market": "韩国",
-     "yahoo": "010120.KS",
-     "currency": "₩",
-     "mcap_base": {
-      "prefix": "₩",
-      "yi": 437200,
-      "approx": true
-     },
-     "mcap_base_price": 293800.0,
-     "ath_floor": 0
     }
    ],
    "groups": [
@@ -6235,14 +6193,6 @@
       "300499",
       "301018",
       "002463"
-     ]
-    },
-    {
-     "name": "变压器三雄",
-     "codes": [
-      "267260",
-      "298040",
-      "010120"
      ]
     }
    ]
@@ -10327,6 +10277,298 @@
       "CRDO",
       "ALAB"
      ]
+    }
+   ]
+  },
+  {
+   "name": "27 变压器与电网设备（交期与窗口期）",
+   "groups": [
+    {
+     "name": "欧美系（综合电气·扩产者）",
+     "codes": [
+      "GEV",
+      "ENR",
+      "6501",
+      "ETN",
+      "HUBB",
+      "POWL"
+     ]
+    },
+    {
+     "name": "韩系出口军团",
+     "codes": [
+      "298040",
+      "267260",
+      "010120",
+      "103590",
+      "033100"
+     ]
+    },
+    {
+     "name": "中系（国内电网·特高压）",
+     "codes": [
+      "600089",
+      "601179",
+      "002028",
+      "601126",
+      "688676",
+      "600312",
+      "000400"
+     ]
+    }
+   ],
+   "items": [
+    {
+     "name": "GE Vernova",
+     "code": "GEV",
+     "market": "美股",
+     "yahoo": "GEV",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 3028,
+      "approx": false
+     },
+     "mcap_base_price": 1113.11,
+     "ath_floor": 0
+    },
+    {
+     "name": "西门子能源",
+     "code": "ENR",
+     "market": "欧股",
+     "yahoo": "ENR.DE",
+     "currency": "€",
+     "mcap_base": {
+      "prefix": "€",
+      "yi": 1193.5,
+      "approx": true
+     },
+     "mcap_base_price": 149.28,
+     "ath_floor": 0
+    },
+    {
+     "name": "日立制作所",
+     "code": "6501",
+     "market": "日股",
+     "yahoo": "6501.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 248400,
+      "approx": true
+     },
+     "mcap_base_price": 5476.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "伊顿",
+     "code": "ETN",
+     "market": "美股",
+     "yahoo": "ETN",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 1562,
+      "approx": false
+     },
+     "mcap_base_price": 398.52,
+     "ath_floor": 0
+    },
+    {
+     "name": "哈勃集团",
+     "code": "HUBB",
+     "market": "美股",
+     "yahoo": "HUBB",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 271,
+      "approx": true
+     },
+     "mcap_base_price": 505.6,
+     "ath_floor": 0
+    },
+    {
+     "name": "Powell Industries",
+     "code": "POWL",
+     "market": "美股",
+     "yahoo": "POWL",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 76,
+      "approx": true
+     },
+     "mcap_base_price": 630.7,
+     "ath_floor": 0
+    },
+    {
+     "name": "效星重工",
+     "code": "298040",
+     "market": "韩国",
+     "yahoo": "298040.KS",
+     "currency": "₩",
+     "mcap_base": {
+      "prefix": "₩",
+      "yi": 140000,
+      "approx": true
+     },
+     "mcap_base_price": 1500000.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "现代电气",
+     "code": "267260",
+     "market": "韩国",
+     "yahoo": "267260.KS",
+     "currency": "₩",
+     "mcap_base": {
+      "prefix": "₩",
+      "yi": 338000,
+      "approx": true
+     },
+     "mcap_base_price": 938000.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "LS产电",
+     "code": "010120",
+     "market": "韩国",
+     "yahoo": "010120.KS",
+     "currency": "₩",
+     "mcap_base": {
+      "prefix": "₩",
+      "yi": 437200,
+      "approx": true
+     },
+     "mcap_base_price": 293800.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "一进电气",
+     "code": "103590",
+     "market": "韩国",
+     "yahoo": "103590.KS",
+     "currency": "₩",
+     "mcap_base": {
+      "prefix": "₩",
+      "yi": 28300,
+      "approx": true
+     },
+     "mcap_base_price": 58900.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "济龙电气",
+     "code": "033100",
+     "market": "韩国",
+     "yahoo": "033100.KQ",
+     "currency": "₩",
+     "mcap_base": {
+      "prefix": "₩",
+      "yi": 7400,
+      "approx": true
+     },
+     "mcap_base_price": 44990.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "特变电工",
+     "code": "600089",
+     "market": "A股",
+     "yahoo": "600089.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1100,
+      "approx": true
+     },
+     "mcap_base_price": 22.01,
+     "ath_floor": 0
+    },
+    {
+     "name": "中国西电",
+     "code": "601179",
+     "market": "A股",
+     "yahoo": "601179.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 729,
+      "approx": true
+     },
+     "mcap_base_price": 14.29,
+     "ath_floor": 0
+    },
+    {
+     "name": "思源电气",
+     "code": "002028",
+     "market": "A股",
+     "yahoo": "002028.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 7.8,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "四方股份",
+     "code": "601126",
+     "market": "A股",
+     "yahoo": "601126.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 369,
+      "approx": true
+     },
+     "mcap_base_price": 44.67,
+     "ath_floor": 0
+    },
+    {
+     "name": "金盘科技",
+     "code": "688676",
+     "market": "A股",
+     "yahoo": "688676.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 313,
+      "approx": true
+     },
+     "mcap_base_price": 68.36,
+     "ath_floor": 0
+    },
+    {
+     "name": "平高电气",
+     "code": "600312",
+     "market": "A股",
+     "yahoo": "600312.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 277,
+      "approx": true
+     },
+     "mcap_base_price": 20.46,
+     "ath_floor": 0
+    },
+    {
+     "name": "许继电气",
+     "code": "000400",
+     "market": "A股",
+     "yahoo": "000400.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 10.1,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
     }
    ]
   }
