@@ -848,3 +848,8 @@ json.dump(d,open("data/scenarios.json","w"),ensure_ascii=False,indent=1)
 - **Yahoo 没有现货金银代码**：XAUUSD=X / XAGUSD=X / XAU=X 全部 404（GitHub runner 探针实测），勿再尝试。
 - **教训：换数据源后必须核对数值真的变了**——update_quotes.py 的「失败沿用上一班」防呆（483行）会把抓取失败静默兜成旧值，第一次换成 XAUUSD=X 后连跑 5 班数据纹丝不动才发现是 404。换源验证标准=新值与旧值明显不同（如期货→现货价差消失）。
 - **自助探针法（沙箱连不上行情源/api.github.com 时的标准姿势）**：往仓库推一个 on:push 触发的临时 workflow，让 runner 代跑网络探测、把结果 JSON commit 回 data/，本地 git pull 读结果；用完删探针文件。东财 secid 不确定时问 `searchapi.eastmoney.com/api/suggest/get?input=中文名&type=14`，比瞎猜市场码快得多。
+
+## 🧩 板块拆解栏目（2026-08-06 上线，与归因分析同款公开存档）
+- 入口＝知识库切换条 KB 数组（view=sector，紧挨归因分析）；页面克隆归因分析：说明卡+搜索(#sect-q)+卡片列表(.attr-card 复用)，渲染器 window.renderSector，数据 `config/sectors.json`（{id,t,date,cat,pdf,pdf_one}，按 date 倒序），PDF 存仓库 `sector/` 目录（ascii 文件名）。
+- **挂新报告 SOP（主人说"挂到板块拆解"即执行）**：手机版 PDF → `sector/<slug>_<yymmdd>.pdf` ＋ config/sectors.json 顶部加条目（cat 从：板块拆解/质量地图/温度地图/竞争格局/简报/学习笔记/专题）→ push 即生效，无管线依赖。
+- 内容源＝主人桌面「投研报告/00_板块与专题」文件夹（sector-teardown 等 skill 的产物）；「功率半导体」文件夹是券商研报资料不上架；个股/商品的"涨幅归因"类报告去归因分析页（attrib/ + data/scenarios.json，商品类 mkt 用"其他"，如 XAUUSD）。
