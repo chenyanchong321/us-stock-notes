@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-06 23:35 北京时间",
+ "updated": "2026-08-07 01:34 北京时间",
  "earnings": [
   {
    "d": "2026-08-06",
@@ -615,6 +615,12 @@
   },
   {
    "d": "2026-09-03",
+   "code": "CIEN",
+   "name": "Ciena",
+   "est": false
+  },
+  {
+   "d": "2026-09-03",
    "code": "SNOW",
    "name": "Snowflake",
    "est": false
@@ -747,6 +753,12 @@
   },
   {
    "d": "2026-10-29",
+   "code": "LLY",
+   "name": "礼来",
+   "est": false
+  },
+  {
+   "d": "2026-10-29",
    "code": "MRK",
    "name": "默沙东",
    "est": false
@@ -791,6 +803,12 @@
    "d": "2026-11-05",
    "code": "ARM",
    "name": "Arm Holdings",
+   "est": false
+  },
+  {
+   "d": "2026-11-05",
+   "code": "6963",
+   "name": "罗姆半导体",
    "est": false
   }
  ]
