@@ -1,59 +1,11 @@
 {
- "updated": "2026-08-06 20:15 北京时间",
+ "updated": "2026-08-06 20:30 北京时间",
  "earnings": [
-  {
-   "d": "2026-08-05",
-   "code": "IFNNY",
-   "name": "英飞凌 ADR",
-   "est": false
-  },
   {
    "d": "2026-08-05",
    "code": "ENR",
    "name": "西门子能源",
    "est": false
-  },
-  {
-   "d": "2026-08-05",
-   "code": "SHOP",
-   "name": "Shopify",
-   "est": true
-  },
-  {
-   "d": "2026-08-05",
-   "code": "NOVT",
-   "name": "Novanta",
-   "est": true
-  },
-  {
-   "d": "2026-08-05",
-   "code": "CRCL",
-   "name": "Circle",
-   "est": false
-  },
-  {
-   "d": "2026-08-05",
-   "code": "RXRX",
-   "name": "Recursion",
-   "est": true
-  },
-  {
-   "d": "2026-08-05",
-   "code": "ONC",
-   "name": "百济神州US",
-   "est": true
-  },
-  {
-   "d": "2026-08-05",
-   "code": "LLY",
-   "name": "礼来",
-   "est": true
-  },
-  {
-   "d": "2026-08-05",
-   "code": "NVO",
-   "name": "诺和诺德",
-   "est": true
   },
   {
    "d": "2026-08-06",
