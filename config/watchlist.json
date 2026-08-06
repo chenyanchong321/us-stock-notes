@@ -8272,7 +8272,7 @@
      "name": "黄金 / 美元",
      "code": "XAUUSD",
      "market": "外汇 / 商品",
-     "yahoo": "XAUUSD=X",
+     "yahoo": "XAU.EM",
      "currency": "$",
      "mcap_base": {
       "prefix": "约 $",
@@ -8280,7 +8280,8 @@
       "approx": true
      },
      "mcap_base_price": 4176.3,
-     "ath_floor": 5586.2
+     "ath_floor": 5586.2,
+     "hist": "em:122.XAU"
     },
     {
      "name": "iShares Gold Trust",
@@ -8352,7 +8353,7 @@
      "name": "白银 / 美元",
      "code": "XAGUSD",
      "market": "外汇 / 商品",
-     "yahoo": "XAGUSD=X",
+     "yahoo": "XAG.EM",
      "currency": "$",
      "mcap_base": {
       "prefix": "约 $",
@@ -8360,7 +8361,8 @@
       "approx": true
      },
      "mcap_base_price": 62.71,
-     "ath_floor": 121.3
+     "ath_floor": 121.3,
+     "hist": "em:122.XAG"
     },
     {
      "name": "白银 ETF-iShares Silver Trust",
