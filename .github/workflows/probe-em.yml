@@ -1,0 +1,52 @@
+name: probe-em-spot
+on:
+  push:
+    paths: [".github/workflows/probe-em.yml"]
+permissions:
+  contents: write
+concurrency:
+  group: probe-em
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: probe
+        run: |
+          python3 - <<'EOF'
+          import urllib.request, json
+          out={}
+          for sid in ["119.XAU","119.XAG","133.XAUUSD","133.XAGUSD","101.GC00Y"]:
+              url=("https://push2his.eastmoney.com/api/qt/stock/kline/get?secid="+sid+
+                   "&klt=101&fqt=0&fields1=f1,f2,f3&fields2=f51,f52,f53&beg=20260720&end=20500101&lmt=10000")
+              try:
+                  req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0","Referer":"https://quote.eastmoney.com/"})
+                  d=json.load(urllib.request.urlopen(req,timeout=20))
+                  k=(d.get("data") or {}).get("klines") or []
+                  out["em:"+sid]={"n":len(k),"name":(d.get("data") or {}).get("name"),"last3":k[-3:]}
+              except Exception as e:
+                  out["em:"+sid]={"err":str(e)[:120]}
+          for sym in ["XAUUSD%3DX","XAGUSD%3DX","XAU%3DX"]:
+              url="https://query1.finance.yahoo.com/v8/finance/chart/"+sym+"?range=7d&interval=1d"
+              try:
+                  req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0"})
+                  d=json.load(urllib.request.urlopen(req,timeout=20))
+                  r=(d.get("chart") or {}).get("result")
+                  if r:
+                      ts=r[0].get("timestamp") or []
+                      cl=(r[0]["indicators"]["quote"][0].get("close") or [])
+                      out["yh:"+sym]={"n":len(ts),"last_close":cl[-1] if cl else None}
+                  else:
+                      out["yh:"+sym]={"err":str((d.get("chart") or {}).get("error"))[:120]}
+              except Exception as e:
+                  out["yh:"+sym]={"err":str(e)[:120]}
+          open("data/probe_em.json","w").write(json.dumps(out,ensure_ascii=False,indent=1))
+          print(json.dumps(out,ensure_ascii=False))
+          EOF
+      - name: commit
+        run: |
+          git config user.name probe && git config user.email probe@users.noreply.github.com
+          git add data/probe_em.json
+          git commit -m "probe: 现货金银数据源探针结果" || exit 0
+          git pull --rebase origin main
+          git push
