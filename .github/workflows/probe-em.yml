@@ -33,16 +33,16 @@ jobs:
                   out["sg:"+q]=[{"n":x.get("Name"),"sec":str(x.get("MktNum"))+"."+str(x.get("Code")),"typ":x.get("SecurityTypeName")} for x in items]
               except Exception as e:
                   out["sg:"+q]={"raw":t[:200]}
-          for sid in ["119.XAU","119.XAG","133.XAUUSD","133.XAGUSD","101.GC00Y"]:
+          for sid in ["122.XAU","122.XAG"]:
               url=("https://push2his.eastmoney.com/api/qt/stock/kline/get?secid="+sid+
                    "&klt=101&fqt=0&fields1=f1,f2,f3&fields2=f51,f52,f53&beg=20260720&end=20500101&lmt=10000")
+              t=get(url,{"User-Agent":"Mozilla/5.0","Referer":"https://quote.eastmoney.com/"})
               try:
-                  req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0","Referer":"https://quote.eastmoney.com/"})
-                  d=json.load(urllib.request.urlopen(req,timeout=20))
+                  d=json.loads(t)
                   k=(d.get("data") or {}).get("klines") or []
                   out["em:"+sid]={"n":len(k),"name":(d.get("data") or {}).get("name"),"last3":k[-3:]}
-              except Exception as e:
-                  out["em:"+sid]={"err":str(e)[:120]}
+              except Exception:
+                  out["em:"+sid]={"raw":t[:150]}
           for sym in ["XAUUSD%3DX","XAGUSD%3DX","XAU%3DX"]:
               url="https://query1.finance.yahoo.com/v8/finance/chart/"+sym+"?range=7d&interval=1d"
               try:
