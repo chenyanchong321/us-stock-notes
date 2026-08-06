@@ -8257,7 +8257,7 @@
      "name": "黄金 / 美元",
      "code": "XAUUSD",
      "market": "外汇 / 商品",
-     "yahoo": "GC=F",
+     "yahoo": "XAUUSD=X",
      "currency": "$",
      "mcap_base": {
       "prefix": "约 $",
@@ -8337,7 +8337,7 @@
      "name": "白银 / 美元",
      "code": "XAGUSD",
      "market": "外汇 / 商品",
-     "yahoo": "SI=F",
+     "yahoo": "XAGUSD=X",
      "currency": "$",
      "mcap_base": {
       "prefix": "约 $",
