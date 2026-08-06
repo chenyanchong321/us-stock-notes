@@ -5593,6 +5593,20 @@
      "ath_floor": 0
     },
     {
+     "name": "日立制作所",
+     "code": "6501",
+     "market": "日股",
+     "yahoo": "6501.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 248400,
+      "approx": true
+     },
+     "mcap_base_price": 5476.0,
+     "ath_floor": 0
+    },
+    {
      "name": "Bloom Energy",
      "code": "BE",
      "market": "美股",
@@ -6133,6 +6147,20 @@
      },
      "mcap_base_price": 1500000.0,
      "ath_floor": 0
+    },
+    {
+     "name": "LS产电",
+     "code": "010120",
+     "market": "韩国",
+     "yahoo": "010120.KS",
+     "currency": "₩",
+     "mcap_base": {
+      "prefix": "₩",
+      "yi": 437200,
+      "approx": true
+     },
+     "mcap_base_price": 293800.0,
+     "ath_floor": 0
     }
    ],
    "groups": [
@@ -6154,6 +6182,7 @@
       "7011",
       "7012",
       "7013",
+      "6501",
       "BE",
       "GNRC",
       "NVT",
@@ -6209,10 +6238,11 @@
      ]
     },
     {
-     "name": "变压器双雄",
+     "name": "变压器三雄",
      "codes": [
       "267260",
-      "298040"
+      "298040",
+      "010120"
      ]
     }
    ]
