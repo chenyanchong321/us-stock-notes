@@ -1,0 +1,30 @@
+{
+ "em:119.XAU": {
+  "n": 0,
+  "name": null,
+  "last3": []
+ },
+ "em:119.XAG": {
+  "n": 0,
+  "name": null,
+  "last3": []
+ },
+ "em:133.XAUUSD": {
+  "err": "Remote end closed connection without response"
+ },
+ "em:133.XAGUSD": {
+  "err": "Remote end closed connection without response"
+ },
+ "em:101.GC00Y": {
+  "err": "Remote end closed connection without response"
+ },
+ "yh:XAUUSD%3DX": {
+  "err": "HTTP Error 404: Not Found"
+ },
+ "yh:XAGUSD%3DX": {
+  "err": "HTTP Error 404: Not Found"
+ },
+ "yh:XAU%3DX": {
+  "err": "HTTP Error 404: Not Found"
+ }
+}
