@@ -14,8 +14,25 @@ jobs:
       - name: probe
         run: |
           python3 - <<'EOF'
-          import urllib.request, json
+          import urllib.request, json, time
           out={}
+          def get(url,hdr):
+              for i in range(3):
+                  try:
+                      req=urllib.request.Request(url,headers=hdr)
+                      return urllib.request.urlopen(req,timeout=20).read().decode("utf-8","ignore")
+                  except Exception as e:
+                      err=str(e)[:120]; time.sleep(2)
+              return "ERR:"+err
+          for q in ["伦敦金","现货黄金","现货白银","XAU","XAG"]:
+              u="https://searchapi.eastmoney.com/api/suggest/get?input="+urllib.parse.quote(q)+"&type=14&count=10"
+              t=get(u,{"User-Agent":"Mozilla/5.0","Referer":"https://www.eastmoney.com/"})
+              try:
+                  d=json.loads(t)
+                  items=(d.get("QuotationCodeTable") or {}).get("Data") or []
+                  out["sg:"+q]=[{"n":x.get("Name"),"sec":str(x.get("MktNum"))+"."+str(x.get("Code")),"typ":x.get("SecurityTypeName")} for x in items]
+              except Exception as e:
+                  out["sg:"+q]={"raw":t[:200]}
           for sid in ["119.XAU","119.XAG","133.XAUUSD","133.XAGUSD","101.GC00Y"]:
               url=("https://push2his.eastmoney.com/api/qt/stock/kline/get?secid="+sid+
                    "&klt=101&fqt=0&fields1=f1,f2,f3&fields2=f51,f52,f53&beg=20260720&end=20500101&lmt=10000")
