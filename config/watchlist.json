@@ -3509,6 +3509,20 @@
      "ath_floor": 0
     },
     {
+     "name": "味之素",
+     "code": "2802",
+     "market": "日股",
+     "yahoo": "2802.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 46980,
+      "approx": true
+     },
+     "mcap_base_price": 4921.0,
+     "ath_floor": 0
+    },
+    {
      "name": "太阳控股",
      "code": "4626",
      "market": "日股",
@@ -3687,6 +3701,7 @@
      "codes": [
       "4062",
       "3037",
+      "2802",
       "4626",
       "4203",
       "Q"
