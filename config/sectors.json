@@ -1,0 +1,181 @@
+{
+ "updated": "2026-08-06",
+ "items": [
+  {
+   "id": "transformer_260806",
+   "t": "变压器板块拆解",
+   "date": "2026-08-06",
+   "cat": "板块拆解",
+   "pdf": "transformer_260806.pdf",
+   "pdf_one": null
+  },
+  {
+   "id": "mlcc_260806",
+   "t": "MLCC 板块拆解",
+   "date": "2026-08-06",
+   "cat": "板块拆解",
+   "pdf": "mlcc_260806.pdf",
+   "pdf_one": null
+  },
+  {
+   "id": "memory-attrib_260806",
+   "t": "存储板块归因与拆解",
+   "date": "2026-08-06",
+   "cat": "板块拆解",
+   "pdf": "memory-attrib_260806.pdf",
+   "pdf_one": null
+  },
+  {
+   "id": "asic-design-duo_260806",
+   "t": "ASIC 设计服务双寡头拆解",
+   "date": "2026-08-06",
+   "cat": "板块拆解",
+   "pdf": "asic-design-duo_260806.pdf",
+   "pdf_one": null
+  },
+  {
+   "id": "asic-memory-asym_260806",
+   "t": "自研 ASIC 与存储不对称",
+   "date": "2026-08-06",
+   "cat": "专题",
+   "pdf": "asic-memory-asym_260806.pdf",
+   "pdf_one": null
+  },
+  {
+   "id": "abf-substrate_260806",
+   "t": "AI 载板与基板材料链拆解",
+   "date": "2026-08-06",
+   "cat": "板块拆解",
+   "pdf": "abf-substrate_260806.pdf",
+   "pdf_one": null
+  },
+  {
+   "id": "semi-materials_260806",
+   "t": "半导体材料全景拆解",
+   "date": "2026-08-06",
+   "cat": "板块拆解",
+   "pdf": "semi-materials_260806.pdf",
+   "pdf_one": null
+  },
+  {
+   "id": "semi-materials-crowns_260806",
+   "t": "半导体材料三皇冠简报",
+   "date": "2026-08-06",
+   "cat": "简报",
+   "pdf": "semi-materials-crowns_260806.pdf",
+   "pdf_one": null
+  },
+  {
+   "id": "semi-chain-quality_260805",
+   "t": "半导体全链生意质量地图",
+   "date": "2026-08-05",
+   "cat": "质量地图",
+   "pdf": "semi-chain-quality_260805.pdf",
+   "pdf_one": null
+  },
+  {
+   "id": "ai-power-quality_260805",
+   "t": "AI 电力链生意质量地图",
+   "date": "2026-08-05",
+   "cat": "质量地图",
+   "pdf": "ai-power-quality_260805.pdf",
+   "pdf_one": null
+  },
+  {
+   "id": "humanoid_260804",
+   "t": "人形机器人板块拆解",
+   "date": "2026-08-04",
+   "cat": "板块拆解",
+   "pdf": "humanoid_260804.pdf",
+   "pdf_one": null
+  },
+  {
+   "id": "cybersec_260804",
+   "t": "网络安全板块拆解",
+   "date": "2026-08-04",
+   "cat": "板块拆解",
+   "pdf": "cybersec_260804.pdf",
+   "pdf_one": null
+  },
+  {
+   "id": "temperature-map_260804",
+   "t": "全板块温度地图",
+   "date": "2026-08-04",
+   "cat": "温度地图",
+   "pdf": "temperature-map_260804.pdf",
+   "pdf_one": null
+  },
+  {
+   "id": "llm-deflation_260804",
+   "t": "大模型廉价化与 AI 泡沫",
+   "date": "2026-08-04",
+   "cat": "学习笔记",
+   "pdf": "llm-deflation_260804.pdf",
+   "pdf_one": null
+  },
+  {
+   "id": "sector-opportunity_260804",
+   "t": "板块级机会学习笔记",
+   "date": "2026-08-04",
+   "cat": "学习笔记",
+   "pdf": "sector-opportunity_260804.pdf",
+   "pdf_one": null
+  },
+  {
+   "id": "china-internet_260803",
+   "t": "中概互联板块拆解",
+   "date": "2026-08-03",
+   "cat": "板块拆解",
+   "pdf": "china-internet_260803.pdf",
+   "pdf_one": null
+  },
+  {
+   "id": "memory_260802",
+   "t": "存储板块拆解",
+   "date": "2026-08-02",
+   "cat": "板块拆解",
+   "pdf": "memory_260802.pdf",
+   "pdf_one": null
+  },
+  {
+   "id": "software_260802",
+   "t": "软件板块拆解",
+   "date": "2026-08-02",
+   "cat": "板块拆解",
+   "pdf": "software_260802.pdf",
+   "pdf_one": null
+  },
+  {
+   "id": "semi-nations_260731",
+   "t": "全球半导体国别竞争格局",
+   "date": "2026-07-31",
+   "cat": "竞争格局",
+   "pdf": "semi-nations_260731.pdf",
+   "pdf_one": null
+  },
+  {
+   "id": "ai-chain-landscape_260731",
+   "t": "AI 产业链竞争格局全景",
+   "date": "2026-07-31",
+   "cat": "竞争格局",
+   "pdf": "ai-chain-landscape_260731.pdf",
+   "pdf_one": null
+  },
+  {
+   "id": "biotech_260726",
+   "t": "创新药板块拆解",
+   "date": "2026-07-26",
+   "cat": "板块拆解",
+   "pdf": "biotech_260726.pdf",
+   "pdf_one": null
+  },
+  {
+   "id": "cpo_260726",
+   "t": "CPO 板块拆解",
+   "date": "2026-07-26",
+   "cat": "板块拆解",
+   "pdf": "cpo_260726.pdf",
+   "pdf_one": null
+  }
+ ]
+}

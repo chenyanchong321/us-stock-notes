@@ -1513,6 +1513,35 @@
    "ev": 193,
    "ev_est": false,
    "ev_pct": -27.2
+  },
+  {
+   "code": "XAUUSD",
+   "name": "黄金 / 美元",
+   "mkt": "其他",
+   "sym": "$",
+   "sector": "贵金属·商品现货",
+   "px": 4300,
+   "bear": 3975,
+   "mid": 4550,
+   "bull": 5250,
+   "prob": [
+    25,
+    45,
+    30
+   ],
+   "tag": "下行被垫、上行有坑的不对称",
+   "folder": "黄金 涨幅归因（2026.8.6）",
+   "pdf_full": "XAUUSD_full.pdf",
+   "pdf_one": null,
+   "bear_pct": -7.6,
+   "mid_pct": 5.8,
+   "bull_pct": 22.1,
+   "up": 22.1,
+   "down": -7.6,
+   "odds": 2.92,
+   "ev": 4616,
+   "ev_est": false,
+   "ev_pct": 7.3
   }
  ]
 }
