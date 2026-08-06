@@ -842,3 +842,9 @@ json.dump(d,open("data/scenarios.json","w"),ensure_ascii=False,indent=1)
 - 事故：`git clone --no-checkout` + `git checkout main -- 部分路径` 后 commit——**--no-checkout 起步索引是空的**，提交出的树只含那几个文件，push 后 main 只剩 18 个文件（Pages 当场只剩骨架；ECS 站点因逐文件同步记账保护未损）。
 - 恢复姿势（本次实操，零大流量）：远端对象都在——GitHub API `POST /git/trees`(base_tree=好树+补文件) → `POST /git/commits` → `PATCH /git/refs/heads/main` 三个 KB 级请求完成全树恢复。
 - **规矩：凡要 commit+push，一律完整 clone（--depth N 可以，--no-checkout/稀疏不行）；push 前 `git ls-tree -r HEAD --name-only | wc -l` 与上一提交同量级才许推。**
+
+## 现货金银数据源（2026-08-06 定稿，Hazel 反馈"XAUUSD 有延时"排查后换源）
+- **黄金/白银现货 = 东财 `em:122.XAU` / `em:122.XAG`**（秒搜接口证实：122 市场码=国际现货贵金属，名字就叫"黄金/美元""白银/美元"）。此前用 COMEX 期货主连 GC=F/SI=F，存在两个问题：①期货升水 ~1% 被用户当成"数据延时"；②Yahoo 期货日线偶发丢 bar（8/5 缺失实测），把两天涨幅并成一个"当日 +6.05%"。铜（HGUSD）与 WTI 原油保留期货口径（名称自明，无误导）。
+- **Yahoo 没有现货金银代码**：XAUUSD=X / XAGUSD=X / XAU=X 全部 404（GitHub runner 探针实测），勿再尝试。
+- **教训：换数据源后必须核对数值真的变了**——update_quotes.py 的「失败沿用上一班」防呆（483行）会把抓取失败静默兜成旧值，第一次换成 XAUUSD=X 后连跑 5 班数据纹丝不动才发现是 404。换源验证标准=新值与旧值明显不同（如期货→现货价差消失）。
+- **自助探针法（沙箱连不上行情源/api.github.com 时的标准姿势）**：往仓库推一个 on:push 触发的临时 workflow，让 runner 代跑网络探测、把结果 JSON commit 回 data/，本地 git pull 读结果；用完删探针文件。东财 secid 不确定时问 `searchapi.eastmoney.com/api/suggest/get?input=中文名&type=14`，比瞎猜市场码快得多。
