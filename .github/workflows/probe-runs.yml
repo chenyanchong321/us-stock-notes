@@ -1,0 +1,39 @@
+name: probe-runs
+on:
+  push:
+    paths: [".github/workflows/probe-runs.yml"]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: query
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'EOF'
+          import urllib.request, json, os
+          def api(p):
+              req=urllib.request.Request("https://api.github.com"+p,
+                  headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Accept":"application/vnd.github+json"})
+              return json.load(urllib.request.urlopen(req,timeout=20))
+          out={}
+          runs=api("/repos/chenyanchong321/us-stock-notes/actions/workflows/update-data.yml/runs?per_page=6")
+          out["runs"]=[{"id":r["id"],"created":r["created_at"],"status":r["status"],"conclusion":r["conclusion"],"sha":r["head_sha"][:7]} for r in runs["workflow_runs"]]
+          bad=[r for r in runs["workflow_runs"] if r["conclusion"]=="failure"]
+          if bad:
+              jobs=api(f"/repos/chenyanchong321/us-stock-notes/actions/runs/{bad[0]['id']}/jobs")
+              for j in jobs["jobs"]:
+                  out["fail_job"]={"name":j["name"],"steps":[{"n":s["name"],"c":s["conclusion"]} for s in j["steps"]]}
+          open("data/probe_runs.json","w").write(json.dumps(out,ensure_ascii=False,indent=1))
+          EOF
+      - name: commit
+        run: |
+          git config user.name probe && git config user.email probe@users.noreply.github.com
+          git add data/probe_runs.json
+          git commit -m "probe: update-data 运行状态" || exit 0
+          git pull --rebase origin main
+          git push
