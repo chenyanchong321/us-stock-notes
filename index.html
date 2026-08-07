@@ -803,13 +803,21 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 
 /* 侧边栏拖拽手柄 */
 #resizer{position:fixed;top:var(--header-h);bottom:0;left:calc(var(--sidebar-w) - 3px);width:6px;cursor:col-resize;z-index:150;background:transparent;transition:background .15s}
-/* 板块目录收起（2026-08-07 主人定：目录不该常年占屏；左边缘不留贴条，开关放顶栏） */
-#navtoggle{background:var(--panel2);border:1px solid var(--border);color:var(--text2);border-radius:7px;width:30px;height:30px;flex:0 0 auto;cursor:pointer;font-size:14px;line-height:1;padding:0}
-#navtoggle:hover{color:var(--accent);border-color:var(--accent)}
-#nm-collapse{flex:0 0 30px!important}
+/* 板块目录收起（2026-08-07 主人定稿）：开关贴着目录边界走——展开时在目录右缘、收起后滑到最左缘，
+   永远在"被它控制的那块东西"旁边（放顶栏找不到，实测被主人打回）。不是通高贴条，只是 22×44 小箭头。 */
+#navedge{position:fixed;top:calc(var(--header-h) + 16px);left:calc(var(--sidebar-w) - 11px);width:22px;height:44px;
+  background:var(--panel2);border:1px solid var(--border);border-radius:6px;color:var(--text2);font-size:13px;line-height:1;
+  cursor:pointer;z-index:160;opacity:.45;transition:left .18s ease,opacity .15s,color .15s,border-color .15s;padding:0}
+#navedge:hover{opacity:1;color:var(--accent);border-color:var(--accent)}
+body.navhide #navedge{left:3px}
 body.navhide .sidebar,body.navhide #resizer{display:none}
 body.navhide .main,body.navhide #footer{margin-left:0}
-@media(max-width:860px){#navtoggle{display:none}}
+/* 收起后把腾出的 --sidebar-w 在左右对半分：表格不会因容器变宽而多显示列（填充列会吃掉），
+   所以多出的宽度一律换成对称留白，页面居中而非左靠。窄屏无富余空白，规则不参与。 */
+@media(min-width:861px){
+  body.navhide .main,body.navhide #footer{max-width:calc(100% - var(--sidebar-w));margin-left:auto;margin-right:auto}
+}
+@media(max-width:860px){#navedge{display:none}}
 #resizer:hover,#resizer.on{background:var(--accent)}
 body.resizing{user-select:none;cursor:col-resize}
 @media(max-width:860px){#resizer{display:none}}
@@ -868,7 +876,6 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
 
 <header id="header">
   <div class="logo" title="烟囱的美股学习笔记"><i class="lgico"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><line x1="4.5" y1="2" x2="4.5" y2="20" stroke="#2fbf71" stroke-width="1.2"/><rect x="2.5" y="7" width="4" height="9" rx="1" fill="#2fbf71"/><line x1="11" y1="1" x2="11" y2="19" stroke="#f04a4a" stroke-width="1.2"/><rect x="9" y="4" width="4" height="8" rx="1" fill="#f04a4a"/><line x1="17.5" y1="3" x2="17.5" y2="21" stroke="#2fbf71" stroke-width="1.2"/><rect x="15.5" y="9" width="4" height="9" rx="1" fill="#2fbf71"/></svg></i><div class="lgtx"><b class="lg1">从心而富</b><em class="lgsub">求富的路，是修心的路</em></div></div>
-  <button id="navtoggle" title="收起板块目录">«</button>
   <div class="tabs">
     <div class="tab active" data-view="dash">📊 数据面板</div>
     <div class="tab" data-view="reports">📑 投研报告</div>
@@ -907,6 +914,7 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
 
 <div id="loading">数据加载中…</div>
 <div id="resizer" title="拖拽调整目录宽度"></div>
+<button id="navedge" title="收起板块目录">«</button>
 
 <!-- ================= 视图一：数据面板 ================= -->
 <div id="view-dash" class="hidden">
@@ -915,7 +923,6 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
     <div id="nav-mode">
       <button id="nm-top">仅板块</button>
       <button id="nm-full">全部</button>
-      <button id="nm-collapse" title="收起目录">«</button>
     </div>
     <div id="nav-links"></div>
   </nav>
@@ -2879,7 +2886,7 @@ function renderDash(quotes){
      故收起只需一个 body.navhide 类；顶栏按钮常驻负责两个方向，目录内 « 负责就地收起。
      切换后派发 resize，让悬浮表头与锚点偏移重新测量。 */
   (function(){
-    const b=document.getElementById("navtoggle"), b2=document.getElementById("nm-collapse");
+    const b=document.getElementById("navedge");
     if(!b) return;
     function set(hide){
       document.body.classList.toggle("navhide", hide);
@@ -2889,7 +2896,6 @@ function renderDash(quotes){
       window.dispatchEvent(new Event("resize"));
     }
     b.addEventListener("click", ()=>set(!document.body.classList.contains("navhide")));
-    b2 && b2.addEventListener("click", ()=>set(true));
     let h=false; try{ h=localStorage.getItem("navHide")==="1"; }catch(e){}
     set(h);
   })();
