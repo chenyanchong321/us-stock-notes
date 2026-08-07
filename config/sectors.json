@@ -1,6 +1,14 @@
 {
- "updated": "2026-08-06",
+ "updated": "2026-08-07",
  "items": [
+  {
+   "id": "btc-cycle-odds_260807",
+   "t": "BTC 周期赔率演绎",
+   "date": "2026-08-07",
+   "cat": "专题",
+   "pdf": "btc-cycle-odds_260807.pdf",
+   "pdf_one": null
+  },
   {
    "id": "transformer_260806",
    "t": "变压器板块拆解",
