@@ -2173,26 +2173,33 @@ function renderDash(quotes){
   /* athFirst=true：把「回撤/ATH」列提到名称之后（回撤榜/新高榜专用——主人原则：
      用户点进哪个榜，排序依据就该紧跟名称，与市值排行榜把市值放第二列同理） */
   /* skipRi：市值后的周期列里跳过某个字段号（该周期已被前置到第三列，避免重复展示） */
-  function fvRow(x, extraTd, mode, athFirst, skipRi){
+  /* mcapFirst=true：把「市值」提到名称之后（市值排行榜专用，同 athFirst 的道理）
+     rankNo：榜单序号列（市值榜的 #）。2026-08-07 补齐昨日/前日两列——主表有、榜单漏了，
+     违反站规「榜单表头与主页完全一致、不得省列」，在公共表头补一次，全部榜单一起修好。 */
+  function fvRow(x, extraTd, mode, athFirst, skipRi, mcapFirst, rankNo){
     const r = x.r;
     const ath = `<td class="athc">${athCell(r)}</td>`;
+    const mcap = `<td class="mcapc">${mcapCell(r)}</td>`;
     const pers = [18,7,8,9,10,11].filter(i=>i!==skipRi).map(i=>`<td>${fmtPct(r[i])}</td>`).join("");
     return `<tr class="${BUYCODES.has(r[1])?"buy":""}" data-grp="${r[12]||""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
+      ${rankNo ? `<td style="color:var(--text2)">${rankNo}</td>` : ""}
       <td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}${earnBadge(r[1])}${rateBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
       ${athFirst ? ath : ""}
+      ${mcapFirst ? mcap : ""}
       <td class="pxc">${priceCell(r, mode)}</td>${extraTd||""}
       <td>${dayWeekCell(r)}</td>
       ${athFirst ? "" : ath}
-      <td class="mcapc">${mcapCell(r)}</td>
+      ${mcapFirst ? "" : mcap}
       <td class="volc">${volCell(r)}</td>
+      <td>${fmtPct(dayN(r,1))}</td><td>${fmtPct(dayN(r,2))}</td>
       ${pers}<td class="fill"></td>
     </tr>`;
   }
-  const FV_HEAD = (extra, pxLabel, athFirst, skipRi)=>{
-    const ath = `<th>回撤</th>`;
+  const FV_HEAD = (extra, pxLabel, athFirst, skipRi, mcapFirst, rank)=>{
+    const ath = `<th>回撤</th>`, mcap = `<th>市值</th>`;
     const PLBL = {18:"1周",7:"1月",8:"3月",9:"半年",10:"年初至今",11:"1年"};
     const pers = [18,7,8,9,10,11].filter(i=>i!==skipRi).map(i=>`<th>${PLBL[i]}</th>`).join("");
-    return `<thead><tr><th style="text-align:left">名称</th>${athFirst?ath:""}<th>${pxLabel||"现价 / 1年"}</th>${extra||""}<th>当日</th>${athFirst?"":ath}<th>市值</th><th>成交</th>${pers}<th class="fill"></th></tr></thead>`;
+    return `<thead><tr>${rank?`<th style="width:34px">#</th>`:""}<th style="text-align:left">名称</th>${athFirst?ath:""}${mcapFirst?mcap:""}<th>${pxLabel||"现价 / 1年"}</th>${extra||""}<th>当日</th>${athFirst?"":ath}${mcapFirst?"":mcap}<th>成交</th><th>昨日</th><th>前日</th>${pers}<th class="fill"></th></tr></thead>`;
   };
   /* 🌐 多市场榜（2026-07-18 主人需求）：四列并排——①美股 ②A股 ③港股 ④日韩（日+韩合并）。
      每列=该市场今日 Top30，一格一行=排名/名称/今日涨跌%。涨=今日降序，跌=今日升序（方向存 localStorage）。
@@ -2436,19 +2443,11 @@ function renderDash(quotes){
       const mktLab = window.CURMKT || "全市场";
       title=`💰 市值排行榜 · ${mktLab}（共${top.length}）`;
       tip=`按市值从高到低一列到底 · 跨币种按美元折算排序（汇率为粗略口径，只影响排名）· 指数/ETF/商品不参与 · A/H 两地上市在全市场视图下各按上市地市值分别出现`;
-      head=`<thead><tr><th style="width:34px">#</th><th style="text-align:left">名称</th><th>市值</th><th>现价 / 1年</th><th>当日</th><th>回撤</th><th>年初至今</th><th>近1年</th><th class="fill"></th></tr></thead>`;
-      body=top.map((x,i)=>{
-        const r=x.r;
-        return `<tr class="${BUYCODES.has(r[1])?"buy":""}" data-code="${r[1]}" data-key="${(r[0]+r[1]).toLowerCase()}">
-          <td style="color:var(--text2)">${i+1}</td>
-          <td class="name"><span class="cn">${r[0]}</span>${repBadge(r[1])}${earnBadge(r[1])}${rateBadge(r[1])}<span class="sub">${r[1]}<span class="mkt">${r[2]}</span></span></td>
-          <td class="mcapc">${mcapCell(r)}</td>
-          <td class="pxc">${priceCell(r)}</td>
-          <td>${dayWeekCell(r)}</td>
-          <td class="athc">${athCell(r)}</td>
-          <td>${fmtPct(r[10])}</td><td>${fmtPct(r[11])}</td><td class="fill"></td>
-        </tr>`;
-      }).join("");
+      /* 列序与主表完全一致，唯一差别＝市值提到名称之后（本榜排序依据紧跟名称）＋ 首列序号。
+         2026-08-07 改用公共 FV_HEAD/fvRow：原来这里自建 HTML，主表加了昨日/前日它没跟上，
+         两处渲染必然漂移——同一张表只留一处渲染逻辑。 */
+      head=FV_HEAD(null, null, false, null, true, true);
+      body=top.map((x,i)=>fvRow(x, null, null, false, null, true, i+1)).join("");
     }else if(v==="gain"||v==="loss"){
       /* 涨幅榜/跌幅榜（2026-07-12 三合二定稿）：方向由卡片决定（想换方向点另一张卡），
          榜内只切周期+市场。列序原则：名称/现价锚定前两列，选中周期列第三；
