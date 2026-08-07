@@ -1,29 +1,11 @@
 {
- "updated": "2026-08-08 03:49 北京时间",
+ "updated": "2026-08-08 04:00 北京时间",
  "earnings": [
-  {
-   "d": "2026-08-07",
-   "code": "MCHP",
-   "name": "微芯科技",
-   "est": true
-  },
-  {
-   "d": "2026-08-07",
-   "code": "AAOI",
-   "name": "Applied Optoelectronics",
-   "est": true
-  },
   {
    "d": "2026-08-07",
    "code": "ACMR",
    "name": "ACM Research",
    "est": false
-  },
-  {
-   "d": "2026-08-07",
-   "code": "ONTO",
-   "name": "Onto Innovation",
-   "est": true
   },
   {
    "d": "2026-08-07",
@@ -45,38 +27,8 @@
   },
   {
    "d": "2026-08-07",
-   "code": "NET",
-   "name": "Cloudflare",
-   "est": true
-  },
-  {
-   "d": "2026-08-07",
-   "code": "TWLO",
-   "name": "Twilio",
-   "est": true
-  },
-  {
-   "d": "2026-08-07",
-   "code": "TEAM",
-   "name": "Atlassian",
-   "est": true
-  },
-  {
-   "d": "2026-08-07",
-   "code": "FROG",
-   "name": "JFrog",
-   "est": true
-  },
-  {
-   "d": "2026-08-07",
    "code": "6324",
    "name": "哈默纳科机电",
-   "est": false
-  },
-  {
-   "d": "2026-08-07",
-   "code": "RCAT",
-   "name": "Red Cat",
    "est": false
   },
   {
@@ -426,6 +378,12 @@
    "code": "MRVL",
    "name": "迈威尔科技",
    "est": false
+  },
+  {
+   "d": "2026-08-28",
+   "code": "IREN",
+   "name": "IREN Ltd",
+   "est": true
   },
   {
    "d": "2026-08-28",
