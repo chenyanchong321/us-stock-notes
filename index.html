@@ -916,12 +916,12 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
       <div class="stat vc" data-view="focus"><div class="k">⭐ 重点清单</div><div class="v" id="st-focus">–</div></div>
       <div class="stat vc" data-view="gain"><div class="k">📈 涨幅榜 Top30</div><div class="v" id="st-gain">今日</div></div>
       <div class="stat vc" data-view="loss"><div class="k">📉 跌幅榜 Top30</div><div class="v" id="st-loss">今日</div></div>
-      <div class="stat vc" id="ddvizcard"><div class="k">📊 涨跌可视化</div><div class="v" id="st-ddviz">回撤</div></div>
+      <div class="stat vc" data-view="mcap"><div class="k">💰 市值排行榜</div><div class="v" id="st-mcap">全表</div></div>
       <div class="stat vc" id="morecard"><div class="k">📦 其他</div><div class="v" id="st-more">▾ 9 个</div></div>
       <div class="stat vc xtra hidden" data-view="multimkt"><div class="k">🌐 多市场榜</div><div class="v" id="st-mm">今日</div></div>
       <div class="stat vc xtra hidden" data-view="dd"><div class="k">回撤榜（&gt;30%）</div><div class="v" id="st-deep">–</div></div>
       <div class="stat vc xtra hidden" data-view="hi"><div class="k">🚀 回撤榜（&lt;30%）</div><div class="v" id="st-hi">–</div></div>
-      <div class="stat vc xtra hidden" data-view="mcap"><div class="k">💰 市值排行榜</div><div class="v" id="st-mcap">全表</div></div>
+      <div class="stat vc xtra hidden" id="ddvizcard"><div class="k">📊 涨跌可视化</div><div class="v" id="st-ddviz">回撤</div></div>
       <div class="stat vc xtra hidden" data-view="turn"><div class="k">🔥 成交榜</div><div class="v" id="st-turn">–</div></div>
       <div class="stat vc xtra hidden" data-view="fund"><div class="k">🧬 基本面榜</div><div class="v" id="st-fund">全表</div></div>
       <div class="stat vc xtra hidden" data-view="alpha"><div class="k">超额榜</div><div class="v">Top30</div></div>
@@ -2573,7 +2573,7 @@ function renderDash(quotes){
     }
     if(v==="multimkt") window.MM_W="d";   /* 周期每次点进重置「今日」；角标由 buildMultiMkt 统一维护（指标记忆） */
     window.updateMbottom && window.updateMbottom();
-    const inXtra = ["multimkt","dd","hi","mcap","turn","fund","alpha","ladder","heat"].includes(v);   /* ①收纳（2026-07-18 主人定）：常驻只留5卡 */
+    const inXtra = ["multimkt","dd","hi","turn","fund","alpha","ladder","heat"].includes(v);   /* 收纳：常驻5卡（2026-08-07 主人定：市值排行榜升常驻、涨跌可视化入抽屉，二者对调） */
     if(inXtra && window.ensureXtra) window.ensureXtra();
     const mc0 = document.getElementById("morecard");
     if(mc0) mc0.classList.toggle("on", inXtra);
@@ -2652,7 +2652,7 @@ function renderDash(quotes){
     function setX(open){
       window.XOPEN = open;
       document.querySelectorAll(".stat.xtra").forEach(c=>c.classList.toggle("hidden", !open));
-      sv.textContent = open ? "▴ 收起" : "▾ 9 个";
+      sv.textContent = open ? "▴ 收起" : "▾ "+document.querySelectorAll(".stat.xtra").length+" 个";   /* 动态计数：增减抽屉卡不用再手改数字（原写死"9 个"，实为10张） */
     }
     window.ensureXtra = ()=>{ if(!window.XOPEN) setX(true); };
     mc.addEventListener("click", ()=>setX(!window.XOPEN));
