@@ -805,12 +805,14 @@ tr.grp td{background:rgba(74,140,240,.10);color:var(--accent);font-size:13.5px;f
 #resizer{position:fixed;top:var(--header-h);bottom:0;left:calc(var(--sidebar-w) - 3px);width:6px;cursor:col-resize;z-index:150;background:transparent;transition:background .15s}
 /* 板块目录收起（2026-08-07 主人定稿）：开关贴着目录边界走——展开时在目录右缘、收起后滑到最左缘，
    永远在"被它控制的那块东西"旁边（放顶栏找不到，实测被主人打回）。不是通高贴条，只是 22×44 小箭头。 */
-/* 铁坑（2026-08-07 实测）：transition 不能挂在 left 上——两端一个是 calc(var(--sidebar-w) - 11px)、
-   一个是纯 3px，Chrome 对 calc↔px 的插值会卡死，动画永远停在起点、left 连 !important 都盖不动。
-   位移一律走 transform（GPU 属性，插值可靠）；left 只保留静态值。 */
+/* 铁坑（2026-08-07 连踩两次实测）：这个按钮上的位移**一律不要做 transition 动画**——
+   无论挂 left 还是 transform，只要终值含 calc(var(--sidebar-w)...)，Chrome 就把动画卡死在起点
+   （computed 值纹丝不动，left 连 !important 都盖不住；手动 style 设同一个值却立刻生效）。
+   位置切换做成瞬时（面板本身就是 display:none 瞬时消失，视觉上反而更干脆），
+   只给 opacity/颜色留过渡。以后凡"终值含 var 的位移动画"都别做。 */
 #navedge{position:fixed;top:calc(var(--header-h) + 16px);left:calc(var(--sidebar-w) - 11px);width:22px;height:44px;
   background:var(--panel2);border:1px solid var(--border);border-radius:6px;color:var(--text2);font-size:13px;line-height:1;
-  cursor:pointer;z-index:160;opacity:.45;transition:transform .18s ease,opacity .15s,color .15s,border-color .15s;padding:0}
+  cursor:pointer;z-index:160;opacity:.45;transition:opacity .15s,color .15s,border-color .15s;padding:0}
 #navedge:hover{opacity:1;color:var(--accent);border-color:var(--accent)}
 body.navhide #navedge{transform:translateX(calc(14px - var(--sidebar-w)))}
 body.navhide .sidebar,body.navhide #resizer{display:none}
