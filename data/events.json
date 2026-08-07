@@ -1,23 +1,23 @@
 {
- "updated": "2026-08-07 18:01 北京时间",
+ "updated": "2026-08-07 18:15 北京时间",
  "earnings": [
   {
    "d": "2026-08-06",
    "code": "MTSI",
    "name": "MACOM",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-06",
    "code": "HIMX",
    "name": "奇景光电",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-06",
    "code": "ACLS",
    "name": "Axcelis",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-06",
@@ -35,25 +35,25 @@
    "d": "2026-08-06",
    "code": "DDOG",
    "name": "Datadog",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-06",
    "code": "ZLAB",
    "name": "再鼎医药US",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-07",
    "code": "MCHP",
    "name": "微芯科技",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-07",
    "code": "AAOI",
    "name": "Applied Optoelectronics",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-07",
@@ -65,7 +65,7 @@
    "d": "2026-08-07",
    "code": "ONTO",
    "name": "Onto Innovation",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-07",
@@ -89,25 +89,25 @@
    "d": "2026-08-07",
    "code": "NET",
    "name": "Cloudflare",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-07",
    "code": "TWLO",
    "name": "Twilio",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-07",
    "code": "TEAM",
    "name": "Atlassian",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-07",
    "code": "FROG",
    "name": "JFrog",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-07",
