@@ -1,48 +1,6 @@
 {
- "updated": "2026-08-07 20:26 北京时间",
+ "updated": "2026-08-07 20:34 北京时间",
  "earnings": [
-  {
-   "d": "2026-08-06",
-   "code": "MTSI",
-   "name": "MACOM",
-   "est": true
-  },
-  {
-   "d": "2026-08-06",
-   "code": "HIMX",
-   "name": "奇景光电",
-   "est": true
-  },
-  {
-   "d": "2026-08-06",
-   "code": "ACLS",
-   "name": "Axcelis",
-   "est": true
-  },
-  {
-   "d": "2026-08-06",
-   "code": "NVMI",
-   "name": "Nova",
-   "est": false
-  },
-  {
-   "d": "2026-08-06",
-   "code": "CEG",
-   "name": "Constellation Energy",
-   "est": false
-  },
-  {
-   "d": "2026-08-06",
-   "code": "DDOG",
-   "name": "Datadog",
-   "est": true
-  },
-  {
-   "d": "2026-08-06",
-   "code": "ZLAB",
-   "name": "再鼎医药US",
-   "est": true
-  },
   {
    "d": "2026-08-07",
    "code": "MCHP",
@@ -536,12 +494,6 @@
    "est": false
   },
   {
-   "d": "2026-09-24",
-   "code": "MU",
-   "name": "美光科技",
-   "est": true
-  },
-  {
    "d": "2026-10-13",
    "code": "JNJ",
    "name": "强生",
@@ -551,18 +503,6 @@
    "d": "2026-10-14",
    "code": "ASML",
    "name": "阿斯麦",
-   "est": false
-  },
-  {
-   "d": "2026-10-14",
-   "code": "ABT",
-   "name": "雅培",
-   "est": false
-  },
-  {
-   "d": "2026-10-21",
-   "code": "EQT",
-   "name": "EQT（天然气）",
    "est": false
   },
   {
