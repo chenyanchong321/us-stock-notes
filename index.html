@@ -477,7 +477,7 @@ tr.buy .buyline.hit{color:var(--up)!important;font-weight:600}
 #freshbar a:hover{text-decoration:underline}
 #freshbar .fsep{color:var(--text2);margin:0 10px}
 html[data-theme="light"] #freshbar{background:rgba(110,70,220,.07);border-color:rgba(110,70,220,.35)}
-@media(max-width:860px){#freshbar{display:none !important}}   /* 手机隐藏（主人终定：桌面显示引导阅读，手机省首屏） */
+#freshbar{display:none !important}   /* 全端隐藏（2026-08-06 主人定：手机省首屏，桌面同样不需要；渲染逻辑保留，改回只需删这行） */
 html[data-theme="light"] #freshbar .fresh-h{color:#6b46c1}
 html[data-theme="light"] #freshbar a{color:#6b46c1}
 tr.ev-flash td{animation:evflash 2.4s ease-out}
