@@ -8478,6 +8478,62 @@
      "ath_floor": 0
     },
     {
+     "name": "洛阳钼业",
+     "code": "603993",
+     "market": "A股",
+     "yahoo": "603993.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 216.0,
+      "approx": true
+     },
+     "mcap_base_price": 1.0,
+     "ath_floor": 0
+    },
+    {
+     "name": "格林美",
+     "code": "002340",
+     "market": "A股",
+     "yahoo": "002340.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 345.43,
+      "approx": true
+     },
+     "mcap_base_price": 6.77,
+     "ath_floor": 0
+    },
+    {
+     "name": "中伟股份",
+     "code": "300919",
+     "market": "A股",
+     "yahoo": "300919.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 430.84,
+      "approx": true
+     },
+     "mcap_base_price": 41.25,
+     "ath_floor": 0
+    },
+    {
+     "name": "腾远钴业",
+     "code": "301219",
+     "market": "A股",
+     "yahoo": "301219.SZ",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 191.26,
+      "approx": true
+     },
+     "mcap_base_price": 49.96,
+     "ath_floor": 0
+    },
+    {
      "name": "中矿资源",
      "code": "002738",
      "market": "A股",
@@ -8549,13 +8605,17 @@
      ]
     },
     {
-     "name": "锂与钴",
+     "name": "锂钴镍",
      "codes": [
       "LC0",
       "002460",
       "01772",
       "002466",
       "603799",
+      "603993",
+      "002340",
+      "300919",
+      "301219",
       "002738",
       "002756",
       "002497"
