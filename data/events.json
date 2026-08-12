@@ -1,29 +1,11 @@
 {
- "updated": "2026-08-13 03:48 北京时间",
+ "updated": "2026-08-13 04:00 北京时间",
  "earnings": [
-  {
-   "d": "2026-08-12",
-   "code": "LITE",
-   "name": "Lumentum",
-   "est": true
-  },
   {
    "d": "2026-08-12",
    "code": "NBIS",
    "name": "Nebius",
    "est": false
-  },
-  {
-   "d": "2026-08-12",
-   "code": "CRWV",
-   "name": "CoreWeave",
-   "est": true
-  },
-  {
-   "d": "2026-08-12",
-   "code": "SMCI",
-   "name": "超微电脑",
-   "est": true
   },
   {
    "d": "2026-08-12",
@@ -446,12 +428,6 @@
    "est": false
   },
   {
-   "d": "2026-09-24",
-   "code": "MU",
-   "name": "美光科技",
-   "est": true
-  },
-  {
    "d": "2026-10-13",
    "code": "JNJ",
    "name": "强生",
@@ -461,18 +437,6 @@
    "d": "2026-10-14",
    "code": "ASML",
    "name": "阿斯麦",
-   "est": false
-  },
-  {
-   "d": "2026-10-14",
-   "code": "ABT",
-   "name": "雅培",
-   "est": false
-  },
-  {
-   "d": "2026-10-21",
-   "code": "EQT",
-   "name": "EQT（天然气）",
    "est": false
   },
   {
