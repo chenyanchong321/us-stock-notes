@@ -8574,6 +8574,20 @@
      },
      "mcap_base_price": 17.75,
      "ath_floor": 0
+    },
+    {
+     "name": "中国宏桥",
+     "code": "01378",
+     "market": "港股",
+     "yahoo": "1378.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 2113,
+      "approx": true
+     },
+     "mcap_base_price": 21.52,
+     "ath_floor": 0
     }
    ],
    "groups": [
@@ -8619,6 +8633,12 @@
       "002738",
       "002756",
       "002497"
+     ]
+    },
+    {
+     "name": "铝（电解铝·氧化铝）",
+     "codes": [
+      "01378"
      ]
     }
    ]
