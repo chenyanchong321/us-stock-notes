@@ -16,7 +16,7 @@
       "key": "A股",
       "flag": "🇨🇳",
       "index": "000300.SS",
-      "cap_usd_t": 16.76,
+      "cap_usd_t": 17.0,
       "index_anchor": 4529.10009765625,
       "anchor_date": "2026-07-17",
       "anchor_source": "ECS哨站(沪深交易所官方)"
@@ -34,9 +34,9 @@
       "key": "港股",
       "flag": "🇭🇰",
       "index": "^HSI",
-      "cap_usd_t": 5.52,
-      "index_anchor": 22881.02,
-      "anchor_date": "2026-06-30",
+      "cap_usd_t": 5.97,
+      "index_anchor": 25884.43,
+      "anchor_date": "2026-07-31",
       "anchor_source": "HKMA月报(市值+恒指官方配对)"
     },
     {
