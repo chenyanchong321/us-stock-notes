@@ -1,15 +1,10 @@
 {
- "run": "2026-08-17 06:43 北京时间",
+ "run": "2026-08-17 13:01 北京时间",
  "markets": {
   "港股": {
-   "ok": true,
-   "cap_usd_t": 5.97,
-   "index_anchor": 25884.43,
-   "anchor_date": "2026-07-31",
-   "anchor_source": "HKMA月报(市值+恒指官方配对)",
-   "diag": [
-    "HKMA 2026-07: 46,838,930 百万港元 × 0.1274 = 5.97T"
-   ]
+   "ok": false,
+   "error": "The read operation timed out",
+   "diag": []
   },
   "日本": {
    "ok": true,
@@ -25,13 +20,16 @@
    ]
   },
   "A股": {
-   "ok": true,
-   "cap_usd_t": 17.0,
-   "index_anchor": 4529.10009765625,
-   "anchor_date": "2026-07-17",
-   "anchor_source": "ECS哨站(沪深交易所官方)",
+   "ok": false,
+   "error": "上交所三轮重试均失败（海外IP大概率被拒，考虑ECS路线）: HTTP Error 403: Forbidden",
    "diag": [
-    "ECS哨站 2026-08-13: 沪+深 1,144,188 亿元 × 0.1485 = 17.00T；沪深300@2026-07-17=4529.10009765625"
+    "ECS哨站数据读取失败: Yahoo 000300.SS 在 2026-08-13 前无交易日数据，转直抓",
+    "上交所 https 第1次失败: HTTP Error 403: Forbidden",
+    "上交所 http 第1次失败: HTTP Error 403: Forbidden",
+    "上交所 https 第2次失败: HTTP Error 403: Forbidden",
+    "上交所 http 第2次失败: HTTP Error 403: Forbidden",
+    "上交所 https 第3次失败: HTTP Error 403: Forbidden",
+    "上交所 http 第3次失败: HTTP Error 403: Forbidden"
    ]
   },
   "韩国": {
