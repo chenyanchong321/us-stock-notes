@@ -1218,7 +1218,9 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
   #odds-tbl .sc-bear{color:var(--down)} #odds-tbl .sc-base{color:var(--accent)} #odds-tbl .sc-bull{color:var(--up)}
   #odds-tbl tr.solo td{border-bottom:1px solid var(--border)}
   #odds-tbl tr.rep-row td{border-bottom:1px solid var(--border);padding:0;text-align:left}
-  #odds-tbl .rep-in{display:inline-block;padding:0 8px 10px;white-space:normal;will-change:transform}   /* 整行注释豁免 nowrap：胶囊要换行堆叠，否则把表撑爆（2026-08-18 桌面事故） */
+  /* 报告行终版（2026-08-18 三改定稿）：sticky 钉左（与首列同族，合成器驱动零抖动——JS transform 跟随慢半拍会震荡，已废弃）
+     + 豁免 nowrap 按可视宽度换行堆叠（nowrap 连坐曾把表撑爆只剩两列）。JS 只算宽度上限不再参与位移。 */
+  #odds-tbl .rep-in{display:inline-block;position:sticky;left:8px;padding:0 8px 10px;white-space:normal}
   #odds-tbl tr.rep-row a{display:inline-block;margin:0 8px 4px 0;padding:2px 10px;border:1px solid var(--border);border-radius:6px;color:var(--gold);font-size:11px;text-decoration:none;white-space:nowrap}
   #odds-tbl tr.rep-row a:hover{border-color:var(--gold)}
   #odds-tbl tbody tr:not(.rep-row):hover td{background:var(--panel2)}
@@ -3853,14 +3855,11 @@ window.renderOdds = (function(){
     });
     h+='</tbody></table>';
     box.innerHTML='<div class="tbl-wrap">'+h+'</div>';
-    /* 报告行=整行注释，不属于列结构：横滑时 JS 反向平移钉在可视区左缘。
-       不用 position:sticky——iOS 对表格单元格内部的 sticky 不可靠（2026-08-18 真机实测被切出屏）。 */
+    /* 报告行宽度上限=可视区宽（放几个放几个、放不下换行）；位移交给 sticky，JS 不掺和 */
     const wrap=box.querySelector(".tbl-wrap");
     if(wrap){
-      const pin=()=>{ const x=wrap.scrollLeft, cap=(wrap.clientWidth-18)+"px";
-        wrap.querySelectorAll(".rep-in").forEach(el=>{ el.style.maxWidth=cap; el.style.transform="translateX("+x+"px)"; }); };
-      wrap.addEventListener("scroll",pin,{passive:true});
-      pin();
+      const cap=(wrap.clientWidth-18)+"px";
+      wrap.querySelectorAll(".rep-in").forEach(el=>{ el.style.maxWidth=cap; });
     }
   }
   let timer=null;
