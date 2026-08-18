@@ -3725,7 +3725,7 @@ window.loadOdds = (function(){
   return function(force){
     if(P && !force) return P;
     const tk=localStorage.getItem("atk");
-    P = fetch(AUTH_API+"/api/odds",{headers: tk?{Authorization:"Bearer "+tk}:{}, cache:"no-store"})
+    P = fetch(AUTH_API+"/odds",{headers: tk?{Authorization:"Bearer "+tk}:{}, cache:"no-store"})
       .then(r=>{ if(r.status===401||r.status===403) return {locked:true}; if(!r.ok) throw 0; return r.json(); })
       .catch(()=>({err:true}));
     return P;
