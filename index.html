@@ -1202,6 +1202,7 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
 <div id="view-odds" class="hidden" style="max-width:1020px;margin:var(--header-h) auto 0;padding:18px 14px 60px">
   <style>
   /* v5（2026-08-18 主人定稿）：横滑+首列冻结+JS吸顶（floatHead），单元格永不折行，区间百分比保持完整不简化 */
+  #odds-q::-webkit-search-cancel-button{display:none}   /* 防双钮：原生清空钮屏蔽，只留自绘✕（搜索框铁律） */
   #odds-tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;font-variant-numeric:tabular-nums}
   #odds-tbl th{background:var(--panel);padding:9px 8px;font-size:11.5px;font-weight:400;color:var(--text2);text-align:right;white-space:nowrap;border-bottom:1px solid var(--border)}
   #odds-tbl th:first-child{text-align:left}
