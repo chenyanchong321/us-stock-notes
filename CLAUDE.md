@@ -853,3 +853,10 @@ json.dump(d,open("data/scenarios.json","w"),ensure_ascii=False,indent=1)
 - 入口＝知识库切换条 KB 数组（view=sector，紧挨归因分析）；页面克隆归因分析：说明卡+搜索(#sect-q)+卡片列表(.attr-card 复用)，渲染器 window.renderSector，数据 `config/sectors.json`（{id,t,date,cat,pdf,pdf_one}，按 date 倒序），PDF 存仓库 `sector/` 目录（ascii 文件名）。
 - **挂新报告 SOP（主人说"挂到板块拆解"即执行）**：手机版 PDF → `sector/<slug>_<yymmdd>.pdf` ＋ config/sectors.json 顶部加条目（cat 从：板块拆解/质量地图/温度地图/竞争格局/简报/学习笔记/专题）→ push 即生效，无管线依赖。
 - 内容源＝主人桌面「投研报告/00_板块与专题」文件夹（sector-teardown 等 skill 的产物）；「功率半导体」文件夹是券商研报资料不上架；个股/商品的"涨幅归因"类报告去归因分析页（attrib/ + data/scenarios.json，商品类 mkt 用"其他"，如 XAUUSD）。
+
+## 🧰 烟囱自用 + 📄 个股分析（2026-08-16/18 上线，买卖点体系上网）
+- **权限=会员**（与观察位/研报同级；主人拍板：观察位类点位数据会员本就可见，级别一致架构才干净）。**点位绝不进公开仓库**：数据 `odds.json` 存**私有仓库 us-stock-member 根目录**，ECS 每10分钟同步，`/api/odds` 验 token 吐数据（匿名401）。
+- **烟囱自用（view=odds，KB卡）**＝买卖点赔率汇总的**实时活版本**：点位静态存库，现价取站内 DATA 实时层，距一批/熊基牛百分比前端实时算、按「谁先到第一批」自动重排——**MD/PDF 是存档，这页永远最新，不再需要手工出十八版十九版**。游客=🔒锁定卡（服务端不下发真数据）。说明文案固定强调「烟囱个人学习笔记、纯个人分析、不构成投资建议」（主人明确要求，因会员是财多多社群的朋友，此内容是分享非售卖）。
+- **个股分析（view=attrib，原「归因分析」改名）**＝以标的为索引的聚合页：归因PDF公开照旧；会员另见①**买卖点价格轴**（oddsAxisHTML：熊—三批带—二批带—一批带—▲现价—基准—牛，现价实时）②**该标的全部研究入口**（REPORTS 按 codes 聚合，🔐按钮走 goReport）。
+- **挂新买卖点笔记 SOP（主人交付一份笔记后）**：①私有仓库 `odds.json` 加/更新该标的条目 `{code,name,mkt,ccy,b1:[lo,hi],b2:[lo,hi],b3?,bear,base,bull,note}`（现价不入库！前端实时）；②笔记 PDF 照研报三件套挂 reports.json（dn- 前缀），个股分析页自动聚合。push 私有仓库≤10分钟生效，前端零改动。
+- **坑**：①`AUTH_API` 已含 `/api` 前缀，端点拼接是 `AUTH_API+"/odds"` 不是 `AUTH_API+"/api/odds"`（拼成 /api/api/* 得404，已踩）；②server.py 生产版在私有仓库 `deploy/server.py`（377行含音频端点），**公开副本 scripts/stockauth/ 曾滞后90行，改服务端以 deploy/ 为基准**（本次已同步）；③decorate 渲染现价标记必须容忍 DATA 异步未到（限次重试），渲染时快照异步数据的老坑。
