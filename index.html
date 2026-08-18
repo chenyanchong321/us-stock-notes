@@ -3661,7 +3661,10 @@ window.renderAttrib = (function(){
   }
   /* 会员装饰层（2026-08-16 个股分析升级）：买卖点价格轴（/api/odds）+ 该标的全部研究入口（REPORTS 按 codes 聚合）。
      游客两者都不渲染，页面与旧版归因分析完全一致。 */
+  let decoTry=0;
   function decorate(){
+    /* DATA 是异步到货的（深链冷启动时 decorate 可能先跑）——现价标记取不到就过几秒重试，最多5次（渲染时快照异步数据的老坑） */
+    if(typeof DATA==="undefined"||!DATA){ if(decoTry++<5) setTimeout(decorate,2500); }
     if(window.loadOdds) loadOdds().then(d=>{
       if(!d||!d.items) return;
       const map={}; d.items.forEach(o=>map[o.code]=o);
@@ -3671,6 +3674,7 @@ window.renderAttrib = (function(){
         try{ if(typeof DATA!=="undefined"&&DATA) for(const s of DATA) for(const r of s.rows) if(r[1]===o.code){ const v=parseNum(r[5]); if(v>0){px=v;break;} } }catch(e){}
         const slot=card.querySelector('.attr-odds');
         if(slot&&window.oddsAxisHTML) slot.innerHTML=window.oddsAxisHTML(o,px);
+        if(px==null&&decoTry<5){ decoTry++; setTimeout(decorate,2500); }
       });
     });
     try{
