@@ -6813,7 +6813,7 @@ document.addEventListener("click", e=>{
      KB_VIEWS 下的任何页都算「学习笔记」页签高亮范围；新增栏目在 KB 数组加一项即全站生效。 */
   const KB = [["notes","📚 学习笔记"],["dict","📖 术语词典"],["history","📜 金融史"],["imap","🗺 产业地图"],
               ["universe","🌌 股票宇宙"],["events","📅 大事件"],["lev","⚖️ 杠杆率"],["margin","💳 融资余额"],["reads","📖 烟囱荐读"],
-              ["aicapex","💰 AI资金"],["scenarios","📊 情景演绎"],["attrib","📄 个股分析"],["sector","🧩 板块拆解"],["odds","🎯 烟囱自用"],["soxbear","🐻 费半熊市推算"]];
+              ["aicapex","💰 AI资金"],["scenarios","📊 情景演绎"],/* ["attrib","📄 个股分析"],  2026-08-18 主人定：烟囱自用已兼顾（价格轴+报告聚合），入口收起；视图与深链保留，恢复=取消本注释 */["sector","🧩 板块拆解"],["odds","🎯 烟囱自用"],["soxbear","🐻 费半熊市推算"]];
   const KB_VIEWS = KB.map(x=>x[0]);
   document.querySelectorAll(".kbar[data-kbar]").forEach(k=>{
     k.innerHTML = KB.map(([v,l])=>`<button data-view="${v}"${v===k.dataset.kbar?' class="on"':''}>${l}</button>`).join("");
