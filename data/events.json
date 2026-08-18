@@ -1,11 +1,11 @@
 {
- "updated": "2026-08-18 18:02 北京时间",
+ "updated": "2026-08-18 18:17 北京时间",
  "earnings": [
   {
    "d": "2026-08-18",
    "code": "FN",
    "name": "Fabrinet",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-08-18",
