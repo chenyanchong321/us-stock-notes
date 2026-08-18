@@ -193,6 +193,89 @@ class H(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(data)
             return
+        if p == "/api/report-audio":
+            u = self._user()
+            if not u:
+                return self._json(401, {"ok": False, "err": "研报音频为会员专属，请先登录"})
+            rid = (parse_qs(urlparse(self.path).query).get("id") or [""])[-1]
+            rec = next((r for r in load_reports() if r.get("id") == rid), None)
+            if not rec:
+                return self._json(404, {"ok": False, "err": "报告不存在"})
+            fp = os.path.join(MEMBER, "audio", os.path.basename(rid) + ".mp3")
+            if not os.path.isfile(fp):
+                return self._json(404, {"ok": False, "err": "该报告暂无音频"})
+            with open(fp, "rb") as f:
+                data = f.read()
+            self.send_response(200)
+            self.send_header("Content-Type", "audio/mpeg")
+            self.send_header("Content-Length", str(len(data)))
+            self.send_header("Cache-Control", "no-store")
+            self._cors()
+            self.end_headers()
+            self.wfile.write(data)
+            return
+        if p == "/api/report-audio-stream":
+            # 票据直链流式（2026-07-19）：短时效签名票据替代Bearer头，浏览器媒体栈可直连→即点即播+Range拖拽。
+            q = parse_qs(urlparse(self.path).query)
+            rid = (q.get("id") or [""])[-1]
+            tkt = (q.get("t") or [""])[-1]
+            c = db()
+            c.execute("CREATE TABLE IF NOT EXISTS audio_tickets(th TEXT PRIMARY KEY, rid TEXT, created REAL)")
+            row = c.execute("SELECT rid, created FROM audio_tickets WHERE th=?", (thash(tkt),)).fetchone()
+            c.close()
+            if not row or row[0] != rid or time.time() - row[1] > 21600:
+                return self._json(403, {"ok": False, "err": "播放票据无效或已过期，请刷新页面"})
+            fp = os.path.join(MEMBER, "audio", os.path.basename(rid) + ".mp3")
+            if not os.path.isfile(fp):
+                return self._json(404, {"ok": False, "err": "该报告暂无音频"})
+            size = os.path.getsize(fp)
+            rng = self.headers.get("Range", "")
+            start, end = 0, size - 1
+            partial = False
+            if rng.startswith("bytes="):
+                m = re.match(r"bytes=(\d*)-(\d*)", rng)
+                if m:
+                    if m.group(1): start = int(m.group(1))
+                    if m.group(2): end = min(int(m.group(2)), size - 1)
+                    if not m.group(1) and m.group(2):   # bytes=-N 尾部
+                        start = max(0, size - int(m.group(2))); end = size - 1
+                    partial = True
+            if start > end or start >= size:
+                self.send_response(416)
+                self.send_header("Content-Range", f"bytes */{size}")
+                self._cors(); self.end_headers(); return
+            length = end - start + 1
+            self.send_response(206 if partial else 200)
+            if partial:
+                self.send_header("Content-Range", f"bytes {start}-{end}/{size}")
+            self.send_header("Accept-Ranges", "bytes")
+            self.send_header("Content-Type", "audio/mpeg")
+            self.send_header("Content-Length", str(length))
+            self.send_header("Cache-Control", "no-store")
+            self._cors()
+            self.end_headers()
+            with open(fp, "rb") as f:
+                f.seek(start)
+                remain = length
+                while remain > 0:
+                    chunk = f.read(min(65536, remain))
+                    if not chunk: break
+                    try:
+                        self.wfile.write(chunk)
+                    except Exception:
+                        break   # 客户端拖进度条会中断连接，正常现象
+                    remain -= len(chunk)
+            return
+        if p == "/api/odds":
+            # 烟囱自用·买卖点赔率汇总（2026-08-16）：会员专属，数据 member/odds.json（私有仓库同步）
+            u = self._user()
+            if not u:
+                return self._json(401, {"ok": False, "err": "会员专属，请先登录"})
+            op = os.path.join(MEMBER, "odds.json")
+            if not os.path.isfile(op):
+                return self._json(200, {"ok": True, "items": []})
+            with open(op, encoding="utf-8") as f:
+                return self._json(200, {"ok": True, **json.load(f)})
         if p == "/api/points":
             u = self._user()
             if not u:
@@ -210,6 +293,23 @@ class H(BaseHTTPRequestHandler):
         b = self._body()
         if b is None:
             return self._json(400, {"ok": False, "err": "bad request"})
+
+        if p == "/api/audio-ticket":
+            # 签发播放票据（2026-07-19）：会员验票后发短时效票（6小时·仅该报告·与登录token无关），供媒体栈直链流式。
+            u = self._user()
+            if not u:
+                return self._json(401, {"ok": False, "err": "会员专属，请先登录"})
+            rid = str((b or {}).get("id") or "")
+            rec = next((r for r in load_reports() if r.get("id") == rid), None)
+            if not rec:
+                return self._json(404, {"ok": False, "err": "报告不存在"})
+            t = secrets.token_urlsafe(24)
+            c = db()
+            c.execute("CREATE TABLE IF NOT EXISTS audio_tickets(th TEXT PRIMARY KEY, rid TEXT, created REAL)")
+            c.execute("DELETE FROM audio_tickets WHERE created < ?", (time.time() - 21600,))
+            c.execute("INSERT INTO audio_tickets VALUES(?,?,?)", (thash(t), rid, time.time()))
+            c.commit(); c.close()
+            return self._json(200, {"ok": True, "t": t, "ttl": 21600})
 
         if p == "/api/debug":
             # 真机黑匣子：接收手机端事件回放（排障用），落盘 debug/ 目录，≤20KB
