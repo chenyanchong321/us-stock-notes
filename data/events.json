@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-19 09:07 北京时间",
+ "updated": "2026-08-19 09:37 北京时间",
  "earnings": [
   {
    "d": "2026-08-18",
@@ -315,6 +315,12 @@
   },
   {
    "d": "2026-09-02",
+   "code": "DELL",
+   "name": "戴尔科技",
+   "est": false
+  },
+  {
+   "d": "2026-09-02",
    "code": "MDB",
    "name": "MongoDB",
    "est": false
@@ -347,12 +353,6 @@
    "d": "2026-09-03",
    "code": "SNOW",
    "name": "Snowflake",
-   "est": false
-  },
-  {
-   "d": "2026-09-04",
-   "code": "DELL",
-   "name": "戴尔科技",
    "est": false
   },
   {
