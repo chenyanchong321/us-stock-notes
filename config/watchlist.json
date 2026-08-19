@@ -6743,6 +6743,20 @@
    "name": "17 机器人与 Physical AI",
    "items": [
     {
+     "name": "宇树科技",
+     "code": "688836",
+     "market": "A股",
+     "yahoo": "688836.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 3574.94,
+      "approx": true
+     },
+     "mcap_base_price": 883.87,
+     "ath_floor": 0
+    },
+    {
      "name": "优必选",
      "code": "09880",
      "market": "港股",
@@ -7304,6 +7318,7 @@
     {
      "name": "整机与代工",
      "codes": [
+      "688836",
       "09880",
       "09868",
       "300433"
