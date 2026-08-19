@@ -1246,7 +1246,7 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
   <div style="font-size:12px;color:var(--text2)" id="odds-upd">加载中…</div>
   <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 15px;margin:13px 0;font-size:12.5px;line-height:1.8;color:var(--text2)">
     <b>这里是烟囱个人的学习笔记与买卖纪律整理</b>——我自己在学、自己在用的东西，纯属个人分析记录，<b>不构成任何投资建议</b>。
-    第一批＝试探仓、第二批＝主力仓，熊/基准/牛的百分比以第二批带为基准；两批之间的空档按纪律不买；期限 12–18 个月；
+    第一批＝试探仓、第二批＝主力仓，全表百分比统一以<b>现价</b>为基准（买点距离与熊/基准/牛空间都是）；按纪律买入后的完整赔率与盈亏比看各笔记（以二批为基准）；两批之间的空档按纪律不买；期限 12–18 个月；
     盈亏比、情景概率与止损细节以各笔记为准。<b>现价为实时价</b>，距买点与各档空间随现价自动重算——表格按「谁先到第一批」排序，每天自己会变。
   </div>
   <div id="odds-mk" class="mktbar" style="margin:10px 0 2px"></div>
@@ -3805,7 +3805,9 @@ window.renderOdds = (function(){
     if(px<o.b1[0]) return ["",-2];
     return ["", px/o.b1[1]-1];
   }
-  function scen(v,o,cls){ return '<span class="'+cls+'">'+pr(v,o)+'</span><span class="pct">'+pc(v/o.b2[1]-1)+"~"+pc(v/o.b2[0]-1)+"</span>"; }
+  /* 熊/基准/牛第二行=情景价对「现价」的单值百分比（2026-08-19 主人定：全行统一现价参照系，实时更新；
+     按纪律的 vs二批完整赔率在各笔记里看，成交后两口径自然收敛） */
+  function scen(v,o,cls,px){ return '<span class="'+cls+'">'+pr(v,o)+'</span>'+(px?'<span class="pct">'+pc(v/px-1)+'</span>':""); }
   const ICO={"买卖点笔记":"📝","赔率分析":"🎲","赔率对比":"🎲","归因":"📄","深度报告":"📕","三一模版":"📘",
     "研究报告":"📘","财报点评":"🧾","情景演绎":"🎬","情景推演":"🎬","情景修正":"🎬","前景展望":"🔭",
     "学习笔记":"📚","事实核查":"🔍","讨论整理":"💬","问答复盘":"💬","研究底稿":"🗒","投研分析":"📄","点评":"🧾"};
@@ -3872,7 +3874,7 @@ window.renderOdds = (function(){
         +'<td class="px">'+(px!=null?pr(px,o):"–")+'</td>'
         +'<td class="band">'+pr(o.b1[0],o)+'–'+fp(o.b1[1])+b1sub+'</td>'
         +'<td class="band">'+pr(o.b2[0],o)+'–'+fp(o.b2[1])+b2sub+'</td>'
-        +'<td>'+scen(o.bear,o,"sc-bear")+'</td><td>'+scen(o.base,o,"sc-base")+'</td><td>'+scen(o.bull,o,"sc-bull")+'</td></tr>';
+        +'<td>'+scen(o.bear,o,"sc-bear",px)+'</td><td>'+scen(o.base,o,"sc-base",px)+'</td><td>'+scen(o.bull,o,"sc-bull",px)+'</td></tr>';
       if(links) h+='<tr class="rep-row" data-code="'+esc(o.code)+'"><td colspan="7"><div class="rep-in">'+links+'</div></td></tr>';
     });
     h+='</tbody></table>';
