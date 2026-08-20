@@ -862,3 +862,10 @@ json.dump(d,open("data/scenarios.json","w"),ensure_ascii=False,indent=1)
 - **挂新买卖点笔记/新报告 SOP（主人交付后）**：①私有仓库 `odds.json` 加/更新点位条目 `{code,name,mkt,ccy,b1,b2,b3?,bear,base,bull,note}`（现价不入库！前端实时）；②PDF 放 `docs/<code>/<yyyymmdd>_<type>.pdf` ＋ `odds_docs.json` 该 code 数组**头部**插 `{t,d,f}`。push 私有仓库≤10分钟生效，前端零改动。类型词表见 odds_docs 现有条目（买卖点笔记/赔率分析/归因/深度报告/财报点评/情景演绎/学习笔记…）。
 - **差量同步 SOP（主人说「同步烟囱自用」即执行，2026-08-20 定稿）**：①扫 `桌面/投研报告/<公司>/` 与 `桌面/Claude交付/` 里**比 odds_docs.json 最新登记日期更新的 PDF**（文件夹名（YYYY.M.D）/_yymmdd/文件 mtime 三级取日期；跳过 方法论沉淀/原始素材/作废/SOP/非标的文件）；②文件名关键词→类型（买点卖点→买卖点笔记、归因、赔率、深度研究→深度报告、四层定位、财报点评、三一模版…），复制 `docs/<code>/<yyyymmdd>_<type>.pdf` ＋ odds_docs.json 对应 code 数组按日期倒序插入；③查 `_买卖点赔率汇总.md` 版本号，变了→ 同步 odds.json 点位（新标的=汇总有而 odds 无，提取 b1/b2/b3/bear/base/bull+备注新建；以 H 股为基准梯的用 H 股代码与港元）；④push 私有仓库即生效（ECS≤10分钟）。不在赔率表的标的（如英特尔四层定位）照样入库备用，上表即自动显示。
 - **坑**：①`AUTH_API` 已含 `/api` 前缀，端点拼接是 `AUTH_API+"/odds"` 不是 `AUTH_API+"/api/odds"`（拼成 /api/api/* 得404，已踩）；②server.py 生产版在私有仓库 `deploy/server.py`（377行含音频端点），**公开副本 scripts/stockauth/ 曾滞后90行，改服务端以 deploy/ 为基准**（本次已同步）；③decorate 渲染现价标记必须容忍 DATA 异步未到（限次重试），渲染时快照异步数据的老坑。
+
+## 🤝 小圈子（2026-08-20 上线，会员之上的白名单二级权限）
+- **定位**：与朋友共创的宏观分析/小群沉淀，只给三五个人看（区别于90+会员）。**不搞独立博客、不搞板块密码**——复用会员账号体系，加一层用户名白名单。
+- **架构**：白名单 `/root/stockauth/circle_users.json`（ECS 本地，不进仓库，当前=["yancong"]）；内容清单 `circle.json` + PDF `circle/` 存**私有仓库 us-stock-member**（ECS 10分钟同步）；`/api/circle`（清单）与 `/api/circle-doc?f=`（PDF）三态：401未登录→登录卡、403会员非圈内→"仅共创成员可见"、200圈内→列表。前端 view=circle（KB卡「🤝 小圈子」），卡片=标题+分类·日期+阅读按钮（blob验票直开），带搜索。
+- **呈现规范（主人定）**：来源做成**分类标签**不塞标题（徐彬/Davis月会/Todd分享/对话沉淀/学习笔记/专题研究）；标题清洗工艺后缀（录音校对阅读版/Codex/手机版/副本）；只收手机阅读版，非手机版跳过。
+- **挂新内容 SOP（主人发PDF或指文件夹即执行）**：PDF → 私有仓库 `circle/<yyyymmdd>_<slug>.pdf` ＋ circle.json 的 items 加 `{t,cat,date,f}`（按日期倒序渲染，顺序无所谓），push 即生效（≤10分钟）。
+- **白名单管理（主人说"把XX加进/移出小圈子"）**：Workbench 上编辑 `/root/stockauth/circle_users.json`（JSON数组加/删用户名），无需重启服务。朋友侧零动作：有会员账号即可，登录就能看到。
