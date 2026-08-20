@@ -1264,6 +1264,7 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
   <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 15px;margin:13px 0;font-size:12.5px;line-height:1.8;color:var(--text2)">
     与朋友共创的宏观分析与讨论沉淀，<b>仅小圈成员可见</b>。内容为个人学习交流记录，不构成任何投资建议。
   </div>
+  <div id="circle-mk" class="mktbar" style="margin:10px 0 2px"></div>
   <div style="position:relative;margin:12px 0">
     <input id="circle-q" type="search" enterkeyhint="search" autocomplete="off" placeholder="🔍 搜标题 / 分类 / 关键词…" style="width:100%;box-sizing:border-box;padding:10px 34px 10px 14px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;color:var(--text);outline:none;font-size:16px">
     <span id="circle-clear" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--text2);padding:4px">✕</span>
@@ -3943,8 +3944,22 @@ window.renderCircle = (function(){
     if(DATA.state===401){ cnt.textContent="请先登录"; box.innerHTML=lockCard("小圈内部资料，登录后查看", true); return; }
     if(DATA.state===403){ cnt.textContent="仅小圈成员可见"; box.innerHTML=lockCard("小圈内部资料，仅共创成员可见", false); return; }
     if(!DATA.items){ box.innerHTML='<div style="color:var(--text2);padding:20px">加载失败，稍后重试</div>'; return; }
+    const mkBar=document.getElementById("circle-mk"), CAT=window.__circleCat||"";
+    if(mkBar){
+      const cnt={};
+      DATA.items.forEach(x=>{ const c=x.cat||"其他"; cnt[c]=(cnt[c]||0)+1; });
+      const cats=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]);
+      mkBar.innerHTML='<button class="perf-pill'+(CAT?"":" on")+'" data-ccat="">全部 '+DATA.items.length+'</button>'
+        +cats.map(c=>'<button class="perf-pill'+(CAT===c?" on":"")+'" data-ccat="'+esc(c)+'">'+esc(c)+' '+cnt[c]+'</button>').join("");
+      if(!mkBar._b){ mkBar._b=1;
+        mkBar.addEventListener("click",e=>{ const b=e.target.closest("button[data-ccat]");
+          if(b){ window.__circleCat=b.dataset.ccat; paint(); } });
+      }
+    }
     const ws=KW.trim().toLowerCase().split(/\s+/).filter(Boolean);
-    let items=DATA.items.filter(x=>{ if(!ws.length)return true;
+    let items=DATA.items.filter(x=>{
+      if(CAT && (x.cat||"其他")!==CAT) return false;
+      if(!ws.length)return true;
       const hay=[x.t,x.cat||"",x.d||"",x.date].join(" ").toLowerCase(); return ws.every(w=>hay.includes(w)); });
     items.sort((a,b)=>String(b.date).localeCompare(String(a.date)));
     cnt.textContent="共 "+DATA.items.length+" 篇 · 按日期倒序";
