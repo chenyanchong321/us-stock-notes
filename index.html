@@ -1257,6 +1257,21 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
   <div id="odds-box"></div>
 </div>
 
+<div id="view-circle" class="hidden" style="max-width:860px;margin:var(--header-h) auto 0;padding:18px 14px 60px">
+  <div class="kbar" data-kbar="circle"></div>
+  <h2 style="font-size:18px;margin:6px 0 2px">🤝 小圈子</h2>
+  <div style="font-size:12px;color:var(--text2)" id="circle-cnt">加载中…</div>
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 15px;margin:13px 0;font-size:12.5px;line-height:1.8;color:var(--text2)">
+    与朋友共创的宏观分析与讨论沉淀，<b>仅小圈成员可见</b>。内容为个人学习交流记录，不构成任何投资建议。
+  </div>
+  <div style="position:relative;margin:12px 0">
+    <input id="circle-q" type="search" enterkeyhint="search" autocomplete="off" placeholder="🔍 搜标题 / 分类 / 关键词…" style="width:100%;box-sizing:border-box;padding:10px 34px 10px 14px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;color:var(--text);outline:none;font-size:16px">
+    <span id="circle-clear" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--text2);padding:4px">✕</span>
+  </div>
+  <style>#circle-q::-webkit-search-cancel-button{display:none}</style>
+  <div id="circle-box"></div>
+</div>
+
 <div id="view-soxbear" class="hidden" style="max-width:1040px;margin:var(--header-h) auto 0;padding:18px 14px 60px">
   <style>
   #view-soxbear .sxb-tbl{width:100%;border-collapse:collapse;font-size:13px}
@@ -3899,6 +3914,61 @@ window.renderOdds = (function(){
     bind(); go();
     if(!timer) timer=setInterval(()=>{ const v=document.getElementById("view-odds");
       if(v&&!v.classList.contains("hidden")) go(); },30000);
+  };
+})();
+
+/* ===== 🤝 小圈子（2026-08-20）：会员之上的白名单二级权限栏目。
+   /api/circle 三态：401=未登录、403=会员但非圈内、200=清单；PDF 走 /api/circle-doc 验票 blob。 ===== */
+window.openCircleDoc = function(f){
+  const tk = localStorage.getItem("atk");
+  if(!tk){ window.openAuth && openAuth("login"); return; }
+  const w = window.open("about:blank");
+  fetch(AUTH_API+"/circle-doc?f="+encodeURIComponent(f), {headers:{Authorization:"Bearer "+tk}})
+    .then(r=>{ if(!r.ok){ if(w)w.close(); throw 0; } return r.blob(); })
+    .then(b=>{ const u=URL.createObjectURL(b); if(w) w.location=u; })
+    .catch(()=>{});
+};
+window.renderCircle = (function(){
+  const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  let DATA=null, KW="";
+  function lockCard(msg, needLogin){
+    return '<div style="background:var(--panel);border:1px dashed var(--gold);border-radius:10px;padding:34px 20px;text-align:center;color:var(--text2)">'
+      +'<div style="font-size:26px;margin-bottom:8px">🔒</div><div style="font-size:14px;color:var(--text)">'+msg+'</div>'
+      +(needLogin?'<div style="margin-top:14px"><a href="javascript:;" onclick="window.openAuth&&openAuth(\'login\')" style="color:var(--gold);border:1px solid var(--gold);border-radius:8px;padding:7px 22px;text-decoration:none;font-size:13px">登 录</a></div>':'')
+      +'</div>';
+  }
+  function paint(){
+    const box=document.getElementById("circle-box"), cnt=document.getElementById("circle-cnt");
+    if(!box||!DATA) return;
+    if(DATA.state===401){ cnt.textContent="请先登录"; box.innerHTML=lockCard("小圈内部资料，登录后查看", true); return; }
+    if(DATA.state===403){ cnt.textContent="仅小圈成员可见"; box.innerHTML=lockCard("小圈内部资料，仅共创成员可见", false); return; }
+    if(!DATA.items){ box.innerHTML='<div style="color:var(--text2);padding:20px">加载失败，稍后重试</div>'; return; }
+    const ws=KW.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    let items=DATA.items.filter(x=>{ if(!ws.length)return true;
+      const hay=[x.t,x.cat||"",x.d||"",x.date].join(" ").toLowerCase(); return ws.every(w=>hay.includes(w)); });
+    items.sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+    cnt.textContent="共 "+DATA.items.length+" 篇 · 按日期倒序";
+    box.innerHTML=items.map(x=>'<div class="attr-card">'
+      +'<div class="attr-title">'+esc(x.t)+'</div>'
+      +'<div class="attr-meta">'+esc(x.cat||"共创沉淀")+' · '+esc(x.date||"")+'</div>'
+      +(x.d?'<div style="font-size:12.5px;color:var(--text2);line-height:1.7;margin:6px 0 2px">'+esc(x.d)+'</div>':"")
+      +'<div class="attr-btns"><a class="attr-btn" href="javascript:;" onclick="window.openCircleDoc&&openCircleDoc(\''+esc(x.f)+'\')">📄 阅 读</a></div>'
+      +'</div>').join("") || '<div style="color:var(--text2);padding:20px">没有匹配的内容</div>';
+  }
+  function bind(){
+    const q=document.getElementById("circle-q"), x=document.getElementById("circle-clear");
+    if(!q||q._b) return; q._b=1;
+    q.addEventListener("input",()=>{ KW=q.value; x.style.display=q.value?"block":"none"; paint(); });
+    x.addEventListener("click",()=>{ q.value=""; KW=""; x.style.display="none"; q.focus(); paint(); });
+  }
+  return function(){
+    bind();
+    if(DATA){ paint(); return; }
+    const tk=localStorage.getItem("atk");
+    fetch(AUTH_API+"/circle",{headers: tk?{Authorization:"Bearer "+tk}:{}, cache:"no-store"})
+      .then(r=>{ if(r.status===401) return {state:401}; if(r.status===403) return {state:403}; if(!r.ok) throw 0; return r.json(); })
+      .catch(()=>({}))
+      .then(d=>{ DATA=d; paint(); });
   };
 })();
 
@@ -6850,7 +6920,7 @@ document.addEventListener("click", e=>{
      KB_VIEWS 下的任何页都算「学习笔记」页签高亮范围；新增栏目在 KB 数组加一项即全站生效。 */
   const KB = [["notes","📚 学习笔记"],["dict","📖 术语词典"],["history","📜 金融史"],["imap","🗺 产业地图"],
               ["universe","🌌 股票宇宙"],["events","📅 大事件"],["lev","⚖️ 杠杆率"],["margin","💳 融资余额"],["reads","📖 烟囱荐读"],
-              ["aicapex","💰 AI资金"],["scenarios","📊 情景演绎"],/* ["attrib","📄 个股分析"],  2026-08-18 主人定：烟囱自用已兼顾（价格轴+报告聚合），入口收起；视图与深链保留，恢复=取消本注释 */["sector","🧩 板块拆解"],["odds","🎯 烟囱自用"],["soxbear","🐻 费半熊市推算"]];
+              ["aicapex","💰 AI资金"],["scenarios","📊 情景演绎"],/* ["attrib","📄 个股分析"],  2026-08-18 主人定：烟囱自用已兼顾（价格轴+报告聚合），入口收起；视图与深链保留，恢复=取消本注释 */["sector","🧩 板块拆解"],["odds","🎯 烟囱自用"],["circle","🤝 小圈子"],["soxbear","🐻 费半熊市推算"]];
   const KB_VIEWS = KB.map(x=>x[0]);
   document.querySelectorAll(".kbar[data-kbar]").forEach(k=>{
     k.innerHTML = KB.map(([v,l])=>`<button data-view="${v}"${v===k.dataset.kbar?' class="on"':''}>${l}</button>`).join("");
@@ -6858,7 +6928,7 @@ document.addEventListener("click", e=>{
   window.switchTab = function(v){
     document.querySelectorAll(".tab[data-view]").forEach(t=>t.classList.toggle("active",
       t.dataset.view===v || (v==="drawdown" && t.dataset.view==="dash") || (v==="repread" && t.dataset.view==="reports") || (KB_VIEWS.includes(v) && v!=="notes" && t.dataset.view==="notes")));
-    ["dash","events","notes","dict","history","lev","margin","reads","aicapex","scenarios","attrib","sector","odds","soxbear","drawdown","reports","repread","imap","universe"].forEach(x=>{
+    ["dash","events","notes","dict","history","lev","margin","reads","aicapex","scenarios","attrib","sector","odds","circle","soxbear","drawdown","reports","repread","imap","universe"].forEach(x=>{
       const el = document.getElementById("view-"+x);
       if(el) el.classList.toggle("hidden", v!==x);
     });
@@ -6875,6 +6945,7 @@ document.addEventListener("click", e=>{
     if(v==="attrib" && window.renderAttrib){ try{ renderAttrib(); }catch(e){} }
     if(v==="sector" && window.renderSector){ try{ renderSector(); }catch(e){} }
     if(v==="odds" && window.renderOdds){ try{ renderOdds(); }catch(e){} }
+    if(v==="circle" && window.renderCircle){ try{ renderCircle(); }catch(e){} }
     if(v==="soxbear" && window.renderSoxbear){ try{ renderSoxbear(); }catch(e){} }
     if(v==="drawdown" && window.renderDrawdown){ try{ renderDrawdown(true); }catch(e){} }   /* 回撤可视化：切入即刷，跟随最新行情 */
     const mb=document.getElementById("mbottom");
@@ -6938,7 +7009,7 @@ document.addEventListener("click", e=>{
   const wantView = new URLSearchParams(location.search).get("view")
                 || (function(){ try{ return localStorage.getItem("homeView"); }catch(e){ return null; } })()   /* 设为默认首页（宇宙页开关，2026-07-18） */
                 || (function(){ try{ return localStorage.getItem("lastView"); }catch(e){ return null; } })();
-  if(["notes","dict","history","events","lev","margin","reads","aicapex","scenarios","attrib","sector","odds","soxbear","drawdown","reports","imap","universe"].includes(wantView)){
+  if(["notes","dict","history","events","lev","margin","reads","aicapex","scenarios","attrib","sector","odds","circle","soxbear","drawdown","reports","imap","universe"].includes(wantView)){
     window.switchTab(wantView);
   }
 
