@@ -1,24 +1,6 @@
 {
- "updated": "2026-08-29 03:45 北京时间",
+ "updated": "2026-08-29 04:00 北京时间",
  "earnings": [
-  {
-   "d": "2026-08-28",
-   "code": "MRVL",
-   "name": "迈威尔科技",
-   "est": false
-  },
-  {
-   "d": "2026-08-28",
-   "code": "SIVEF",
-   "name": "Sivers Semiconductors",
-   "est": true
-  },
-  {
-   "d": "2026-08-28",
-   "code": "IREN",
-   "name": "IREN Ltd",
-   "est": true
-  },
   {
    "d": "2026-08-28",
    "code": "00991",
@@ -29,24 +11,6 @@
    "d": "2026-08-28",
    "code": "01171",
    "name": "兖矿能源",
-   "est": false
-  },
-  {
-   "d": "2026-08-28",
-   "code": "ESTC",
-   "name": "Elastic",
-   "est": true
-  },
-  {
-   "d": "2026-08-28",
-   "code": "RBRK",
-   "name": "Rubrik",
-   "est": false
-  },
-  {
-   "d": "2026-08-28",
-   "code": "WDAY",
-   "name": "Workday",
    "est": false
   },
   {
