@@ -3898,7 +3898,7 @@ window.renderOdds = (function(){
     if(mkSel) rows=rows.filter(({o})=>o.mkt===mkSel);
     const ws=(window.__oddsKw||"").trim().toLowerCase().split(/\s+/).filter(Boolean);
     if(ws.length) rows=rows.filter(({o})=>{ const hay=(o.name+" "+o.code+" "+o.mkt).toLowerCase(); return ws.every(w=>hay.includes(w)); });
-    let h='<table id="odds-tbl"><thead><tr><th>标的</th><th>现价 / 买点</th><th>观察位<span style="display:block;font-size:10px;font-weight:400">财多多</span></th><th>距买点</th><th>熊</th><th>基准</th><th>牛</th><th class="fill"></th></tr></thead><tbody>';
+    let h='<table id="odds-tbl"><thead><tr><th>标的</th><th>观察位<span style="display:block;font-size:10px;font-weight:400">财多多</span></th><th>现价 / 买点</th><th>距买点</th><th>熊</th><th>基准</th><th>牛</th><th class="fill"></th></tr></thead><tbody>';
     rows.forEach(({o,px,dt})=>{
       const links=ODDS_DOCS_ON ? repLinks(o.code, d.docs) : "";
       /* v6（2026-08-29 主人定稿）：现价+买点并为一格，仿重点清单——白色现价在上，第二行绿色买点带
@@ -3910,10 +3910,10 @@ window.renderOdds = (function(){
         : '<span class="dpc">'+pc(o.b1[0]/px-1)+'</span>'));
       h+='<tr data-code="'+esc(o.code)+'"'+(links?'':' class="solo"')+'>'
         +'<td class="nm"><b>'+esc(o.name)+'</b><span class="sub">'+esc(o.code)+' · '+esc(o.mkt)+'</span></td>'
-        +'<td class="px">'+(px!=null?pr(px,o):"–")+'<span class="bands">'+bands+'</span></td>'
-        /* 观察位·财多多对照列紧挨买点格（2026-08-29 主人二改：两套点位并肩、共用左侧现价，
-           眼睛不横跨整行）。数据=BUY，与重点清单同源（会员通道下发；游客空对象显 –）。文案原样不解析。 */
+        /* 观察位·财多多＝标的后第一列（2026-08-29 主人三改定稿：烟囱自用整条链
+           现价买点→距买点→熊/基准/牛 必须连续，别人的点位不许插中间）。数据=BUY 与重点清单同源。 */
         +'<td class="cdd">'+(((typeof BUY!=="undefined")&&BUY[o.code])?esc(BUY[o.code]):'–')+'</td>'
+        +'<td class="px">'+(px!=null?pr(px,o):"–")+'<span class="bands">'+bands+'</span></td>'
         +'<td class="dist">'+st+'</td>'
         +'<td>'+scen(o.bear,o,"sc-bear",px)+'</td><td>'+scen(o.base,o,"sc-base",px)+'</td><td>'+scen(o.bull,o,"sc-bull",px)+'</td><td class="fill"></td></tr>';
       if(links) h+='<tr class="rep-row" data-code="'+esc(o.code)+'"><td colspan="8"><div class="rep-in">'+links+'</div></td></tr>';
