@@ -20,6 +20,8 @@ REPORTS_JSON = os.path.join(MEMBER, "reports.json")
 REPORTS_DIR = os.path.join(MEMBER, "reports")
 KEDU_POINTS = os.environ.get("STOCKAUTH_KEDU_POINTS", os.path.join(MEMBER, "kedu_points.json"))
 LIVE_QUOTES = os.environ.get("STOCKAUTH_LIVE_QUOTES", "/var/www/us-stock/data/live.json")
+STATIC_QUOTES = os.environ.get("STOCKAUTH_STATIC_QUOTES", "/var/www/us-stock/data/quotes.json")
+LIVE_MAX_AGE_SECONDS = int(os.environ.get("STOCKAUTH_LIVE_MAX_AGE", "600"))
 KEDU_ENABLED = os.environ.get("KEDU_DECISION_ENABLED", "0").lower() in {"1", "true", "yes", "on"}
 PORT = 8600
 ALLOW_ORIGINS = {"https://stock.ziyuanai.top", "https://www.ziyuanai.top",
@@ -127,6 +129,72 @@ def load_live_quotes():
         return {"q": {}}
 
 
+def load_static_quotes():
+    try:
+        with open(STATIC_QUOTES, encoding="utf-8") as f:
+            data = json.load(f)
+        return data if isinstance(data, dict) else {"sections": []}
+    except Exception:
+        return {"sections": []}
+
+
+def _market_number(value):
+    """把 quotes.json 的展示字符串还原成数值；空值永远保持 None，不能变成 0。"""
+    if isinstance(value, (int, float)) and not isinstance(value, bool):
+        return float(value)
+    if value is None:
+        return None
+    text = str(value).strip().replace(",", "").replace("−", "-")
+    if not text or text in {"-", "—", "获取失败"}:
+        return None
+    match = re.search(r"-?(?:\d+(?:\.\d*)?|\.\d+)", text)
+    return float(match.group()) if match else None
+
+
+def _static_quote(keys):
+    """全市场最近收盘价底座。quotes.json 的每行第 1 位是代码、第 5 位是现价。"""
+    wanted = {str(key).strip().upper() for key in keys if str(key).strip()}
+    data = load_static_quotes()
+    for section in data.get("sections", []):
+        for row in section.get("rows", []):
+            if not isinstance(row, list) or len(row) < 6 or str(row[1]).upper() not in wanted:
+                continue
+            price = _market_number(row[5])
+            if price is None or price <= 0:
+                continue
+            return {
+                "p": price,
+                "c": _market_number(row[16]) if len(row) > 16 else None,
+                "updated_at": data.get("updated"),
+                "src": "daily_close",
+                "mode": "close",
+            }
+    return None
+
+
+def _fresh_live_quote(keys):
+    """美股盘前/盘后覆盖层；超过 10 分钟未刷新就退回收盘价，不沿用陈旧快照。"""
+    data = load_live_quotes()
+    timestamp = _market_number(data.get("t"))
+    age = time.time() - timestamp if timestamp is not None else None
+    if age is None or age < -300 or age > LIVE_MAX_AGE_SECONDS:
+        return None
+    quotes = data.get("q", {}) if isinstance(data.get("q", {}), dict) else {}
+    for key in keys:
+        quote = quotes.get(str(key).upper()) or quotes.get(str(key))
+        price = _market_number(quote.get("p")) if isinstance(quote, dict) else None
+        if price is None or price <= 0:
+            continue
+        return {
+            "p": price,
+            "c": _market_number(quote.get("c")),
+            "updated_at": time.strftime("%Y-%m-%d %H:%M", time.gmtime(timestamp + 8 * 3600)) + " 北京时间",
+            "src": data.get("src") or "extended_market",
+            "mode": "extended",
+        }
+    return None
+
+
 def permissions_for(user_id):
     c = db()
     rows = c.execute("SELECT permission FROM permissions WHERE user_id=? ORDER BY permission", (user_id,)).fetchall()
@@ -147,11 +215,10 @@ def _pct(target, base):
 
 def enrich_kedu_point(item):
     """只给单家公司加实时状态；不生成任何可枚举的点位全集。"""
-    live = load_live_quotes()
-    quotes = live.get("q", {}) if isinstance(live.get("q", {}), dict) else {}
     keys = [item.get("code", "")] + list(item.get("aliases") or [])
-    quote = next((quotes.get(str(key).upper()) or quotes.get(str(key)) for key in keys if key and (quotes.get(str(key).upper()) or quotes.get(str(key)))), None)
-    price = float(quote.get("p")) if isinstance(quote, dict) and quote.get("p") else None
+    # 全市场收盘价兜底，美股盘前/盘后价只在文件仍新鲜时覆盖。
+    quote = _fresh_live_quote(keys) or _static_quote(keys)
+    price = quote.get("p") if quote else None
     bands = {}
     for key, values in (item.get("bands") or {}).items():
         if not values:
@@ -185,9 +252,11 @@ def enrich_kedu_point(item):
     enriched = dict(item)
     enriched["live"] = {
         "price": price,
-        "change_pct": quote.get("c") if isinstance(quote, dict) else None,
-        "updated_at": live.get("t"),
-        "source": live.get("src"),
+        "change_pct": quote.get("c") if quote else None,
+        "updated_at": quote.get("updated_at") if quote else None,
+        "source": quote.get("src") if quote else None,
+        "price_mode": quote.get("mode") if quote else "unavailable",
+        "price_status": "ok" if price else "unavailable",
         "state": state,
         "bands": bands,
         "scenarios": scenarios,

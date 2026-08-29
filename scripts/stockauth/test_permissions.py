@@ -4,6 +4,7 @@ import sqlite3
 import sys
 import tempfile
 import threading
+import time
 import unittest
 import urllib.error
 import urllib.request
@@ -49,10 +50,18 @@ class PermissionHTTPTest(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         root = Path(self.tmp.name)
-        self.old = (server.DB, server.KEDU_POINTS, server.LIVE_QUOTES, server.KEDU_ENABLED, server.hpw)
+        self.old = (
+            server.DB,
+            server.KEDU_POINTS,
+            server.LIVE_QUOTES,
+            server.STATIC_QUOTES,
+            server.KEDU_ENABLED,
+            server.hpw,
+        )
         server.DB = str(root / "auth.db")
         server.KEDU_POINTS = str(root / "kedu_points.json")
         server.LIVE_QUOTES = str(root / "live.json")
+        server.STATIC_QUOTES = str(root / "quotes.json")
         server.KEDU_ENABLED = True
         # macOS 自带的旧 Python 没编译 scrypt；这里只替换测试散列，不改变生产实现。
         server.hpw = lambda password, salt: hashlib.sha256((salt + password).encode()).hexdigest()
@@ -73,6 +82,18 @@ class PermissionHTTPTest(unittest.TestCase):
                             "sources": [{"report_id": "avav-buy", "title": "AVAV 买卖点笔记", "date": "2026-08-10"}],
                             "status": "current",
                         },
+                        {
+                            "code": "3110",
+                            "aliases": ["3110"],
+                            "company": "日东纺",
+                            "market": "日股",
+                            "currency": "JPY",
+                            "bands": {"b1": [2550, 2700], "b2": [2050, 2350]},
+                            "scenarios": {"bear": 2000, "base": 3650, "bull": 6000},
+                            "as_of": "2026-08-28",
+                            "sources": [],
+                            "status": "current",
+                        },
                         {"code": "SECRET", "aliases": [], "company": "不应返回的公司", "bands": {}, "scenarios": {}},
                     ],
                 },
@@ -81,7 +102,25 @@ class PermissionHTTPTest(unittest.TestCase):
             encoding="utf-8",
         )
         Path(server.LIVE_QUOTES).write_text(
-            json.dumps({"t": 1787875200, "src": "fixture", "q": {"AVAV": {"p": 147.94, "c": 1.2}}}),
+            json.dumps({"t": int(time.time()), "src": "fixture", "q": {"AVAV": {"p": 147.94, "c": 1.2}}}),
+            encoding="utf-8",
+        )
+        Path(server.STATIC_QUOTES).write_text(
+            json.dumps(
+                {
+                    "updated": "2026-08-29 20:16 北京时间",
+                    "sections": [
+                        {
+                            "sec": "test",
+                            "rows": [
+                                ["AeroVironment", "AVAV", "美股", "$76.8亿", "$409.83", "$152.28", -62.8, None, None, None, None, None, "", None, None, None, -1.4],
+                                ["日东纺织", "3110", "日股", "¥5524.1亿", "¥6,390.00", "¥3,035.00", -52.5, None, None, None, None, None, "", None, None, None, 2.1],
+                            ],
+                        }
+                    ],
+                },
+                ensure_ascii=False,
+            ),
             encoding="utf-8",
         )
         server.init()
@@ -96,7 +135,14 @@ class PermissionHTTPTest(unittest.TestCase):
 
     def tearDown(self):
         self.httpd.shutdown(); self.httpd.server_close(); self.thread.join(timeout=2)
-        server.DB, server.KEDU_POINTS, server.LIVE_QUOTES, server.KEDU_ENABLED, server.hpw = self.old
+        (
+            server.DB,
+            server.KEDU_POINTS,
+            server.LIVE_QUOTES,
+            server.STATIC_QUOTES,
+            server.KEDU_ENABLED,
+            server.hpw,
+        ) = self.old
         self.tmp.cleanup()
 
     def request(self, path, method="GET", body=None, token=None):
@@ -137,7 +183,25 @@ class PermissionHTTPTest(unittest.TestCase):
         self.assertEqual(data["item"]["live"]["state"], "inside_b2")
         self.assertEqual(data["item"]["live"]["bands"]["b1"]["distance_pct"], [6.8, 14.9])
         self.assertEqual(data["item"]["live"]["scenarios"]["bull"]["return_from_price_pct"], 72.4)
+        self.assertEqual(data["item"]["live"]["price_mode"], "extended")
         self.assertEqual(self.request("/api/points", token=account["token"])[0], 403)
+
+        # 日股不在美股盘前/盘后文件里，必须回退到全市场最新收盘价，不能显示成 0。
+        status, data, _ = self.request("/api/kedu/point?code=3110", token=account["token"])
+        self.assertEqual(status, 200)
+        self.assertEqual(data["item"]["live"]["price"], 3035.0)
+        self.assertEqual(data["item"]["live"]["price_mode"], "close")
+        self.assertEqual(data["item"]["live"]["updated_at"], "2026-08-29 20:16 北京时间")
+
+        # 盘前/盘后文件过期后不能一直覆盖更新得更晚的收盘价。
+        Path(server.LIVE_QUOTES).write_text(
+            json.dumps({"t": 1, "src": "stale", "q": {"AVAV": {"p": 147.94, "c": 1.2}}}),
+            encoding="utf-8",
+        )
+        status, data, _ = self.request("/api/kedu/point?code=AVAV", token=account["token"])
+        self.assertEqual(status, 200)
+        self.assertEqual(data["item"]["live"]["price"], 152.28)
+        self.assertEqual(data["item"]["live"]["price_mode"], "close")
 
     def test_stock_permission_cannot_read_kedu_points(self):
         account = self.register("STOCK-ONLY", "stock-user")
