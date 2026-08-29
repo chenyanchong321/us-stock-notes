@@ -27,6 +27,7 @@ import server as stockauth_server
 BASE = os.path.dirname(os.path.abspath(__file__))
 DB = stockauth_server.DB
 POINTS = stockauth_server.POINTS
+KEDU_POINTS = stockauth_server.KEDU_POINTS
 VALID_PERMISSIONS = stockauth_server.VALID_PERMISSIONS
 
 
@@ -152,6 +153,8 @@ def main():
             p = os.path.join(BASE, f)
             if os.path.exists(p):
                 shutil.copy2(p, d)
+        if os.path.exists(KEDU_POINTS):
+            shutil.copy2(KEDU_POINTS, os.path.join(d, "kedu_points.json"))
         print("已备份到", d)
     else:
         print(__doc__)
