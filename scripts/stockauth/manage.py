@@ -2,9 +2,12 @@
 # -*- coding: utf-8 -*-
 """stockauth 命令行管理（在 ECS 上：cd /root/stockauth && python3 manage.py <命令>）
 
-  invites N        生成 N 个邀请码并打印（发给谁自己记，或看 invlist）
+  invites N [权限] 生成 N 个邀请码；默认 stock_member，可填 kedu_points 或逗号分隔两项
   invlist          所有邀请码及使用状态
-  users            所有用户（含状态、注册时间、用的哪个码）
+  users            所有用户（含状态、注册时间、邀请码和权限）
+  perms 用户名      查看一个用户的权限
+  grant 用户名 权限 增加权限（stock_member / kedu_points）
+  revoke 用户名 权限 撤销权限并踢掉该用户现有登录
   ban 用户名        停用账号（立即失去点位访问）
   unban 用户名      恢复账号
   resetpw 用户名 新密码   重置密码（用户忘密码时用）
@@ -19,9 +22,12 @@
 """
 import json, os, sys, sqlite3, secrets, hashlib, time, shutil
 
+import server as stockauth_server
+
 BASE = os.path.dirname(os.path.abspath(__file__))
-DB = os.path.join(BASE, "auth.db")
-POINTS = os.path.join(BASE, "points.json")
+DB = stockauth_server.DB
+POINTS = stockauth_server.POINTS
+VALID_PERMISSIONS = stockauth_server.VALID_PERMISSIONS
 
 
 def db():
@@ -46,6 +52,7 @@ def save(pts):
 
 
 def main():
+    stockauth_server.init()
     a = sys.argv[1:]
     if not a:
         print(__doc__)
@@ -53,22 +60,57 @@ def main():
     cmd = a[0]
     if cmd == "invites":
         n = int(a[1]) if len(a) > 1 else 10
+        scope = a[2] if len(a) > 2 else "stock_member"
+        scopes = stockauth_server.normalize_scopes(scope)
+        if not scopes or set(scopes) != {value.strip() for value in scope.split(",") if value.strip()}:
+            sys.exit("权限只能是 stock_member、kedu_points，或用逗号组合两项")
+        scope = ",".join(scopes)
         c = db()
         now = time.strftime("%Y-%m-%d %H:%M:%S")
         out = []
         for _ in range(n):
             code = "YC-" + secrets.token_hex(2).upper() + "-" + secrets.token_hex(2).upper()
-            c.execute("INSERT INTO invites(code,created) VALUES(?,?)", (code, now))
+            c.execute("INSERT INTO invites(code,created,scope) VALUES(?,?,?)", (code, now, scope))
             out.append(code)
         c.commit()
         c.close()
         print("\n".join(out))
     elif cmd == "invlist":
-        for r in db().execute("SELECT code,status,used_by,used_at FROM invites ORDER BY created"):
-            print(f"{r[0]}  {r[1]:6s}  {r[2] or '':10s} {r[3] or ''}")
+        for r in db().execute("SELECT code,status,used_by,used_at,scope FROM invites ORDER BY created"):
+            print(f"{r[0]}  {r[1]:6s}  {r[2] or '':10s} {r[3] or ''}  权限 {r[4] or 'stock_member'}")
     elif cmd == "users":
-        for r in db().execute("SELECT id,username,status,created,invite FROM users ORDER BY id"):
-            print(f"#{r[0]:<3d} {r[1]:16s} {r[2]:8s} 注册 {r[3]}  码 {r[4]}")
+        c = db()
+        for r in c.execute("SELECT id,username,status,created,invite FROM users ORDER BY id"):
+            perms = ",".join(row[0] for row in c.execute("SELECT permission FROM permissions WHERE user_id=? ORDER BY permission", (r[0],))) or "无"
+            print(f"#{r[0]:<3d} {r[1]:16s} {r[2]:8s} 注册 {r[3]}  码 {r[4]}  权限 {perms}")
+        c.close()
+    elif cmd == "perms":
+        if len(a) < 2:
+            sys.exit("用法：manage.py perms 用户名")
+        c = db()
+        row = c.execute("SELECT id FROM users WHERE username=?", (a[1],)).fetchone()
+        if not row:
+            c.close(); sys.exit(f"没找到用户 {a[1]}")
+        print("\n".join(stockauth_server.permissions_for(row[0])) or "无权限")
+        c.close()
+    elif cmd in ("grant", "revoke"):
+        if len(a) < 3 or a[2] not in VALID_PERMISSIONS:
+            sys.exit("用法：manage.py grant|revoke 用户名 stock_member|kedu_points")
+        un, permission = a[1], a[2]
+        c = db()
+        row = c.execute("SELECT id FROM users WHERE username=?", (un,)).fetchone()
+        if not row:
+            c.close(); sys.exit(f"没找到用户 {un}")
+        if cmd == "grant":
+            c.execute(
+                "INSERT OR IGNORE INTO permissions(user_id,permission,created) VALUES(?,?,?)",
+                (row[0], permission, time.strftime("%Y-%m-%d %H:%M:%S")),
+            )
+        else:
+            c.execute("DELETE FROM permissions WHERE user_id=? AND permission=?", (row[0], permission))
+            c.execute("DELETE FROM tokens WHERE user_id=?", (row[0],))
+        c.commit(); c.close()
+        print(f"{un} -> {'增加' if cmd == 'grant' else '撤销'} {permission}")
     elif cmd in ("ban", "unban"):
         st = "banned" if cmd == "ban" else "active"
         c = db()

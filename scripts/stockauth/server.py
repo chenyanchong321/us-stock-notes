@@ -13,16 +13,20 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-DB = os.path.join(BASE, "auth.db")
-POINTS = os.path.join(BASE, "points.json")
-MEMBER = os.path.join(BASE, "member")          # us-stock-member 私有仓库的克隆（cron 定时 git pull）
+DB = os.environ.get("STOCKAUTH_DB", os.path.join(BASE, "auth.db"))
+POINTS = os.environ.get("STOCKAUTH_POINTS", os.path.join(BASE, "points.json"))
+MEMBER = os.environ.get("STOCKAUTH_MEMBER", os.path.join(BASE, "member"))  # 私有仓库克隆
 REPORTS_JSON = os.path.join(MEMBER, "reports.json")
 REPORTS_DIR = os.path.join(MEMBER, "reports")
+KEDU_POINTS = os.environ.get("STOCKAUTH_KEDU_POINTS", os.path.join(MEMBER, "kedu_points.json"))
+LIVE_QUOTES = os.environ.get("STOCKAUTH_LIVE_QUOTES", "/var/www/us-stock/data/live.json")
+KEDU_ENABLED = os.environ.get("KEDU_DECISION_ENABLED", "0").lower() in {"1", "true", "yes", "on"}
 PORT = 8600
 ALLOW_ORIGINS = {"https://stock.ziyuanai.top", "https://www.ziyuanai.top",
-                 "https://chenyanchong321.github.io"}
+                 "https://chenyanchong321.github.io", "https://lab.ziyuanai.top"}
 TOKEN_DAYS = 400          # 登录有效期：够长，熟人产品不折腾
 MAX_FAILS_PER_HOUR = 30   # 单IP每小时最多失败次数（防撞库）
+VALID_PERMISSIONS = {"stock_member", "kedu_points"}
 
 
 def db():
@@ -39,10 +43,27 @@ def init():
       status TEXT DEFAULT 'active', invite TEXT, created TEXT);
     CREATE TABLE IF NOT EXISTS invites(
       code TEXT PRIMARY KEY, status TEXT DEFAULT 'unused',
-      used_by TEXT, created TEXT, used_at TEXT);
+      used_by TEXT, created TEXT, used_at TEXT, scope TEXT DEFAULT 'stock_member');
     CREATE TABLE IF NOT EXISTS tokens(
       thash TEXT PRIMARY KEY, user_id INTEGER, created REAL, last_seen REAL);
+    CREATE TABLE IF NOT EXISTS permissions(
+      user_id INTEGER, permission TEXT, created TEXT,
+      PRIMARY KEY(user_id, permission));
+    CREATE TABLE IF NOT EXISTS meta(key TEXT PRIMARY KEY, value TEXT);
     """)
+    invite_cols = {row[1] for row in c.execute("PRAGMA table_info(invites)")}
+    if "scope" not in invite_cols:
+        c.execute("ALTER TABLE invites ADD COLUMN scope TEXT DEFAULT 'stock_member'")
+    # 只迁移一次：升级前的老用户保持原会员能力；升级后新账号完全按邀请码权限发放。
+    migrated = c.execute("SELECT value FROM meta WHERE key='permissions_v1'").fetchone()
+    if not migrated:
+        now = time.strftime("%Y-%m-%d %H:%M:%S")
+        c.execute(
+            "INSERT OR IGNORE INTO permissions(user_id,permission,created) "
+            "SELECT id,'stock_member',? FROM users",
+            (now,),
+        )
+        c.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('permissions_v1','done')")
     c.commit()
     c.close()
 
@@ -86,6 +107,92 @@ def load_reports():
             return json.load(f).get("reports", [])
     except Exception:
         return []
+
+
+def load_kedu_points():
+    try:
+        with open(KEDU_POINTS, encoding="utf-8") as f:
+            data = json.load(f)
+        return data if isinstance(data, dict) else {"items": []}
+    except Exception:
+        return {"items": []}
+
+
+def load_live_quotes():
+    try:
+        with open(LIVE_QUOTES, encoding="utf-8") as f:
+            data = json.load(f)
+        return data if isinstance(data, dict) else {"q": {}}
+    except Exception:
+        return {"q": {}}
+
+
+def permissions_for(user_id):
+    c = db()
+    rows = c.execute("SELECT permission FROM permissions WHERE user_id=? ORDER BY permission", (user_id,)).fetchall()
+    c.close()
+    return [row[0] for row in rows if row[0] in VALID_PERMISSIONS]
+
+
+def normalize_scopes(raw):
+    values = {value.strip() for value in str(raw or "").split(",") if value.strip()}
+    return sorted(values & VALID_PERMISSIONS)
+
+
+def _pct(target, base):
+    if not target or not base:
+        return None
+    return round((float(target) / float(base) - 1) * 100, 1)
+
+
+def enrich_kedu_point(item):
+    """只给单家公司加实时状态；不生成任何可枚举的点位全集。"""
+    live = load_live_quotes()
+    quotes = live.get("q", {}) if isinstance(live.get("q", {}), dict) else {}
+    keys = [item.get("code", "")] + list(item.get("aliases") or [])
+    quote = next((quotes.get(str(key).upper()) or quotes.get(str(key)) for key in keys if key and (quotes.get(str(key).upper()) or quotes.get(str(key)))), None)
+    price = float(quote.get("p")) if isinstance(quote, dict) and quote.get("p") else None
+    bands = {}
+    for key, values in (item.get("bands") or {}).items():
+        if not values:
+            continue
+        lo, hi = sorted(float(value) for value in values)
+        bands[key] = {
+            "range": [lo, hi],
+            "distance_pct": [_pct(lo, price), _pct(hi, price)] if price else None,
+            "inside": bool(price and lo <= price <= hi),
+        }
+    state = "price_unavailable"
+    if price and bands:
+        inside = next((key for key, value in bands.items() if value["inside"]), None)
+        if inside:
+            state = "inside_" + inside
+        else:
+            top = max(value["range"][1] for value in bands.values())
+            bottom = min(value["range"][0] for value in bands.values())
+            state = "above_bands" if price > top else ("below_bands" if price < bottom else "between_bands")
+    scenarios = {}
+    entry = (item.get("bands") or {}).get("b2") or (item.get("bands") or {}).get("b1")
+    for key, target in (item.get("scenarios") or {}).items():
+        if target is None:
+            continue
+        entry_returns = sorted(_pct(target, value) for value in entry) if entry else None
+        scenarios[key] = {
+            "target": target,
+            "return_from_price_pct": _pct(target, price) if price else None,
+            "return_from_entry_pct": entry_returns,
+        }
+    enriched = dict(item)
+    enriched["live"] = {
+        "price": price,
+        "change_pct": quote.get("c") if isinstance(quote, dict) else None,
+        "updated_at": live.get("t"),
+        "source": live.get("src"),
+        "state": state,
+        "bands": bands,
+        "scenarios": scenarios,
+    }
+    return enriched
 
 
 class H(BaseHTTPRequestHandler):
@@ -140,6 +247,16 @@ class H(BaseHTTPRequestHandler):
         c.execute("INSERT INTO tokens VALUES(?,?,?,?)", (thash(t), uid, time.time(), time.time()))
         return t
 
+    def _permission_user(self, permission, login_message="请先登录"):
+        u = self._user()
+        if not u:
+            self._json(401, {"ok": False, "err": login_message})
+            return None
+        if permission not in permissions_for(u["id"]):
+            self._json(403, {"ok": False, "err": "当前账号没有此项权限"})
+            return None
+        return u
+
     def do_OPTIONS(self):
         self.send_response(204)
         self._cors()
@@ -149,6 +266,8 @@ class H(BaseHTTPRequestHandler):
         p = urlparse(self.path).path
         if p == "/api/health":
             return self._json(200, {"ok": True, "ts": int(time.time())})
+        if p == "/api/kedu/config":
+            return self._json(200, {"ok": True, "enabled": KEDU_ENABLED})
         if p == "/api/public":
             pts = load_points()
             codes = sorted(set(pts["buy"]) | set(pts["sell"]) | set(pts["tgt"]))
@@ -159,9 +278,9 @@ class H(BaseHTTPRequestHandler):
                    for r in load_reports()]
             return self._json(200, {"ok": True, "reports": cat})
         if p == "/api/report-html":
-            u = self._user()
+            u = self._permission_user("stock_member", "研报为会员专属，请先登录")
             if not u:
-                return self._json(401, {"ok": False, "err": "研报为会员专属，请先登录"})
+                return
             rid = (parse_qs(urlparse(self.path).query).get("id") or [""])[-1]
             rec = next((r for r in load_reports() if r.get("id") == rid), None)
             if not rec:
@@ -172,9 +291,9 @@ class H(BaseHTTPRequestHandler):
             with open(hp, encoding="utf-8") as f:
                 return self._json(200, {"ok": True, "html": f.read()})
         if p == "/api/report":
-            u = self._user()
+            u = self._permission_user("stock_member", "研报为会员专属，请先登录")
             if not u:
-                return self._json(401, {"ok": False, "err": "研报为会员专属，请先登录"})
+                return
             rid = (parse_qs(urlparse(self.path).query).get("id") or [""])[-1]
             rec = next((r for r in load_reports() if r.get("id") == rid), None)
             if not rec:
@@ -194,9 +313,9 @@ class H(BaseHTTPRequestHandler):
             self.wfile.write(data)
             return
         if p == "/api/report-audio":
-            u = self._user()
+            u = self._permission_user("stock_member", "研报音频为会员专属，请先登录")
             if not u:
-                return self._json(401, {"ok": False, "err": "研报音频为会员专属，请先登录"})
+                return
             rid = (parse_qs(urlparse(self.path).query).get("id") or [""])[-1]
             rec = next((r for r in load_reports() if r.get("id") == rid), None)
             if not rec:
@@ -268,23 +387,46 @@ class H(BaseHTTPRequestHandler):
             return
         if p == "/api/odds":
             # 烟囱自用·买卖点赔率汇总（2026-08-16）：会员专属，数据 member/odds.json（私有仓库同步）
-            u = self._user()
+            u = self._permission_user("stock_member", "会员专属，请先登录")
             if not u:
-                return self._json(401, {"ok": False, "err": "会员专属，请先登录"})
+                return
             op = os.path.join(MEMBER, "odds.json")
             if not os.path.isfile(op):
                 return self._json(200, {"ok": True, "items": []})
             with open(op, encoding="utf-8") as f:
                 return self._json(200, {"ok": True, **json.load(f)})
         if p == "/api/points":
-            u = self._user()
+            u = self._permission_user("stock_member", "未登录或登录已过期")
             if not u:
-                return self._json(401, {"ok": False, "err": "未登录或登录已过期"})
+                return
             pts = load_points()
             return self._json(200, {"ok": True, "user": u["username"], **pts})
+        if p == "/api/kedu/point":
+            if not KEDU_ENABLED:
+                return self._json(404, {"ok": False, "err": "该功能尚未开放"})
+            u = self._permission_user("kedu_points", "点位为受邀用户专属，请先登录")
+            if not u:
+                return
+            code = (parse_qs(urlparse(self.path).query).get("code") or [""])[-1].strip().upper()
+            if not code or len(code) > 24:
+                return self._json(400, {"ok": False, "err": "缺少有效代码"})
+            data = load_kedu_points()
+            found = None
+            for item in data.get("items", []):
+                aliases = {str(item.get("code") or "").upper(), *(str(value).upper() for value in item.get("aliases") or [])}
+                if code in aliases:
+                    found = item
+                    break
+            if not found:
+                return self._json(404, {"ok": False, "err": "该公司暂无已校准点位"})
+            return self._json(200, {"ok": True, "item": enrich_kedu_point(found)})
         if p == "/api/me":
             u = self._user()
-            return self._json(200, {"ok": bool(u), "user": u["username"] if u else None})
+            return self._json(200, {
+                "ok": bool(u),
+                "user": u["username"] if u else None,
+                "permissions": permissions_for(u["id"]) if u else [],
+            })
         return self._json(404, {"ok": False, "err": "not found"})
 
     def do_POST(self):
@@ -296,9 +438,9 @@ class H(BaseHTTPRequestHandler):
 
         if p == "/api/audio-ticket":
             # 签发播放票据（2026-07-19）：会员验票后发短时效票（6小时·仅该报告·与登录token无关），供媒体栈直链流式。
-            u = self._user()
+            u = self._permission_user("stock_member", "会员专属，请先登录")
             if not u:
-                return self._json(401, {"ok": False, "err": "会员专属，请先登录"})
+                return
             rid = str((b or {}).get("id") or "")
             rec = next((r for r in load_reports() if r.get("id") == rid), None)
             if not rec:
@@ -336,7 +478,7 @@ class H(BaseHTTPRequestHandler):
             if len(pw) < 6:
                 return self._json(400, {"ok": False, "err": "密码至少6位"})
             c = db()
-            iv = c.execute("SELECT status FROM invites WHERE code=?", (code,)).fetchone()
+            iv = c.execute("SELECT status,scope FROM invites WHERE code=?", (code,)).fetchone()
             if not iv or iv[0] != "unused":
                 fail(ip)
                 c.close()
@@ -349,12 +491,20 @@ class H(BaseHTTPRequestHandler):
             c.execute("INSERT INTO users(username,pw,salt,invite,created) VALUES(?,?,?,?,?)",
                       (un, hpw(pw, salt), salt, code, now))
             uid = c.execute("SELECT id FROM users WHERE username=?", (un,)).fetchone()[0]
+            scopes = normalize_scopes(iv[1])
+            if not scopes:
+                c.close()
+                return self._json(400, {"ok": False, "err": "邀请码权限配置无效，请联系烟囱"})
+            c.executemany(
+                "INSERT OR IGNORE INTO permissions(user_id,permission,created) VALUES(?,?,?)",
+                [(uid, permission, now) for permission in scopes],
+            )
             c.execute("UPDATE invites SET status='used',used_by=?,used_at=? WHERE code=?",
                       (un, now, code))
             t = self._issue(c, uid)
             c.commit()
             c.close()
-            return self._json(200, {"ok": True, "token": t, "user": un})
+            return self._json(200, {"ok": True, "token": t, "user": un, "permissions": scopes})
 
         if p == "/api/login":
             if too_many(ip):
@@ -373,7 +523,12 @@ class H(BaseHTTPRequestHandler):
             t = self._issue(c, row[0])
             c.commit()
             c.close()
-            return self._json(200, {"ok": True, "token": t, "user": un})
+            return self._json(200, {
+                "ok": True,
+                "token": t,
+                "user": un,
+                "permissions": permissions_for(row[0]),
+            })
 
         return self._json(404, {"ok": False, "err": "not found"})
 
