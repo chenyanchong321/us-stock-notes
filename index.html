@@ -1251,11 +1251,19 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
   <div class="kbar" data-kbar="odds"></div>
   <h2 style="font-size:18px;margin:6px 0 2px">🎯 烟囱自用 · 买卖点赔率汇总</h2>
   <div style="font-size:12px;color:var(--text2)" id="odds-upd">加载中…</div>
-  <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 15px;margin:13px 0;font-size:12.5px;line-height:1.8;color:var(--text2)">
-    <b>这里是烟囱个人的学习笔记与买卖纪律整理</b>——我自己在学、自己在用的东西，纯属个人分析记录，<b>不构成任何投资建议</b>。
-    第一批＝试探仓、第二批＝主力仓，全表百分比统一以<b>现价</b>为基准（买点距离与熊/基准/牛空间都是）；按纪律买入后的完整赔率与盈亏比看各笔记（以二批为基准）；两批之间的空档按纪律不买；期限 12–18 个月；
-    盈亏比、情景概率与止损细节以各笔记为准。<b>现价为实时价</b>，距买点与各档空间随现价自动重算——表格按「谁先到第一批」排序，每天自己会变。<br>
-    <b>本页只放点位</b>，各标的的买卖点笔记、归因、深度报告等全部研究文档，请到「刻度」<a href="https://lab.ziyuanai.top" target="_blank" rel="noopener" style="color:var(--gold)">lab.ziyuanai.top</a> 查看。
+  <!-- 说明卡默认折叠（2026-08-29 主人定）：本页核心是点位表，方法论收进「展开说明」；
+       折叠态保留免责与刻度链接一行常驻（主人早前要求免责固定强调，不许折没）。 -->
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 15px;margin:13px 0;font-size:12.5px;line-height:1.8;color:var(--text2)">
+    <div onclick="var b=document.getElementById('odds-note-body'),t=document.getElementById('odds-note-tg'),v=b.style.display==='none';b.style.display=v?'block':'none';t.textContent=v?'收起 ▴':'展开说明 ▾'" style="cursor:pointer;user-select:none;display:flex;justify-content:space-between;align-items:center;gap:12px">
+      <span><b>烟囱个人学习笔记</b>，不构成任何投资建议；研究文档在「刻度」<a href="https://lab.ziyuanai.top" target="_blank" rel="noopener" style="color:var(--gold)" onclick="event.stopPropagation()">lab.ziyuanai.top</a>。</span>
+      <span id="odds-note-tg" style="color:var(--gold);white-space:nowrap;font-size:12px;flex:none">展开说明 ▾</span>
+    </div>
+    <div id="odds-note-body" style="display:none;margin-top:8px;border-top:1px dashed var(--border);padding-top:8px">
+      <b>这里是烟囱个人的学习笔记与买卖纪律整理</b>——我自己在学、自己在用的东西，纯属个人分析记录，<b>不构成任何投资建议</b>。
+      第一批＝试探仓、第二批＝主力仓，全表百分比统一以<b>现价</b>为基准（买点距离与熊/基准/牛空间都是）；按纪律买入后的完整赔率与盈亏比看各笔记（以二批为基准）；两批之间的空档按纪律不买；期限 12–18 个月；
+      盈亏比、情景概率与止损细节以各笔记为准。<b>现价为实时价</b>，距买点与各档空间随现价自动重算——表格按「谁先到第一批」排序，每天自己会变。<br>
+      <b>本页只放点位</b>，各标的的买卖点笔记、归因、深度报告等全部研究文档，请到「刻度」<a href="https://lab.ziyuanai.top" target="_blank" rel="noopener" style="color:var(--gold)">lab.ziyuanai.top</a> 查看。
+    </div>
   </div>
   <div id="odds-mk" class="mktbar" style="margin:10px 0 2px"></div>
   <div style="position:relative;margin:12px 0">
