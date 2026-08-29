@@ -5114,6 +5114,20 @@
      "ath_floor": 0
     },
     {
+     "name": "中国巨石",
+     "code": "600176",
+     "market": "A股",
+     "yahoo": "600176.SS",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 1714.4,
+      "approx": true
+     },
+     "mcap_base_price": 43.2,
+     "ath_floor": 0
+    },
+    {
      "name": "日本电气硝子NEG",
      "code": "5214",
      "market": "日本",
@@ -5248,6 +5262,7 @@
      "name": "上游玻纤与石英",
      "codes": [
       "3110",
+      "600176",
       "5214",
       "3407",
       "603256",
@@ -7219,6 +7234,20 @@
      "ath_floor": 0
     },
     {
+     "name": "极智嘉",
+     "code": "02590",
+     "market": "港股",
+     "yahoo": "2590.HK",
+     "currency": "HK$",
+     "mcap_base": {
+      "prefix": "HK$",
+      "yi": 136.1,
+      "approx": true
+     },
+     "mcap_base_price": 10.18,
+     "ath_floor": 0
+    },
+    {
      "name": "石头科技",
      "code": "688169",
      "market": "A股",
@@ -7387,6 +7416,7 @@
      "codes": [
       "ISRG",
       "SYM",
+      "02590",
       "688169",
       "603486",
       "689009"
@@ -8023,6 +8053,20 @@
      "ath_floor": 0
     },
     {
+     "name": "Fluence Energy",
+     "code": "FLNC",
+     "market": "美股",
+     "yahoo": "FLNC",
+     "currency": "$",
+     "mcap_base": {
+      "prefix": "$",
+      "yi": 20.1,
+      "approx": true
+     },
+     "mcap_base_price": 10.88,
+     "ath_floor": 0
+    },
+    {
      "name": "东鹏饮料",
      "code": "605499",
      "market": "A股",
@@ -8234,7 +8278,8 @@
       "300274",
       "605117",
       "002460",
-      "002466"
+      "002466",
+      "FLNC"
      ]
     },
     {
