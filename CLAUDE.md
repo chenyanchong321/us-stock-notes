@@ -231,6 +231,8 @@ mcap_base 的本质是"股本数"：yi/mcap_base_price 应等于总股本（亿�
 
 同批修的历史欠账：`update-levratio` 原来缺 `branches: [main]`（任意分支 push 都会跑）、缺 `permissions: contents: write`（靠仓库默认权限侥幸能提交）、concurrency 组名叫 `data-update`（孤儿名，跟谁都不互斥），已一并补齐。
 
+**2026-08-29 续集：`update-fundamentals` 裸 push 遇并发被拒，整班数据白抓。** 加中国巨石/极智嘉/FLNC 那次，基本面 524 条、评级 485 条都抓到了，`git push` 却撞上同时在提交的行情流水线，报 `! [rejected] main -> main (fetch first)` 直接失败退出——两条管线 concurrency 组不同、互不排队，撞车是常态不是意外。`update-data` 早有解法（fetch-depth:0 + 五次 `git rebase -X theirs origin/main` 重试），本管线一直是裸 `git push`。已照抄修好。**推广：凡是会往 main 提交数据的 workflow，提交步骤必须是「fetch-depth:0 + 无变化则跳过 + push 失败 rebase 重试」三件套，不许写裸 git push**；新建这类管线时照 `update-data.yml` 的「提交更新」步骤复制，别自己现写。排查口诀：数据管线「跑了但线上没变」，先看 run 的最后一步是不是 push 被拒，不要先怀疑抓取脚本。
+
 **新建管线的登记动作（三步，别省）**：① 想清楚它读哪个配置文件；② 把那个配置文件写进它的 `push.paths`；③ 回来把它加进上面这张表。**表里没有的管线 = 没人知道它什么时候该跑。**
 
 ## 锚点跳转防遮挡（2026-07-07）
