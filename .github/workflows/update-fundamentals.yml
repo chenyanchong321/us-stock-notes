@@ -19,11 +19,38 @@ jobs:
   f:
     runs-on: ubuntu-latest
     steps:
+      # fetch-depth: 0 = 拉完整历史，否则浅克隆上 rebase 必挂（与 update-data 同一教训）
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - run: python3 scripts/update_fundamentals.py
-      - run: |
+      - name: 提交更新
+        run: |
+          set -euo pipefail
           git config user.name bot
           git config user.email bot@example.com
           git add data/fundamentals.json data/ratings.json
-          git commit -m "chore: 更新基本面数据" || true
-          git push
+          if git diff --cached --quiet; then
+            echo "数据无变化，跳过提交"
+            exit 0
+          fi
+          git commit -m "chore: 更新基本面数据"
+
+          # 2026-08-29 立：本管线原来是裸 git push，与行情流水线同时提交时被拒(fetch first)，
+          # 整班数据白抓（加标的当天 524 条基本面就这么丢过一次）。照抄 update-data 的重试写法。
+          for i in 1 2 3 4 5; do
+            if git push origin HEAD:main; then
+              echo "推送成功（第 $i 次尝试）"
+              exit 0
+            fi
+            echo "推送被拒（远端有新提交），rebase 后重试 $i/5"
+            git fetch origin main
+            if ! git rebase -X theirs origin/main; then
+              git rebase --abort || true
+              echo "rebase 失败，放弃本轮"
+              exit 1
+            fi
+            sleep $((i * 3))
+          done
+          echo "5 次推送均失败"
+          exit 1
