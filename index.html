@@ -3882,15 +3882,31 @@ window.renderOdds = (function(){
     if(d.err||!d.items){ box.innerHTML='<div style="color:var(--text2);padding:20px">加载失败，稍后重试</div>'; return; }
     upd.textContent="点位版本 "+(d.updated||"")+"（"+(d.ver||"")+"）· 现价实时 · 按「谁先到第一批」自动排序 · 悬停名称看简介";
     let rows=d.items.map(o=>{ const px=livePx(o.code); const [dt,dk]=distTxt(px,o); return {o,px,dt,dk}; });
+    /* 并集对比表（2026-08-29 主人定）：财多多有观察位、自用没点位的标的也上表——
+       财多多格照常显示，自用链（买点/距买点/熊基准牛）整条空着。o.b1=null 是伪行标记。
+       排序权重 8e9＝压在全部自用标的之后、无现价行之前。名称/市场/现价从 DATA 行取。 */
+    try{
+      if(typeof BUY!=="undefined"){
+        const have=new Set(d.items.map(o=>o.code));
+        Object.keys(BUY).forEach(c=>{
+          if(have.has(c)||!BUY[c]) return;
+          let nm=c, mk="", pv=null;
+          if(typeof DATA!=="undefined"&&DATA){ outer: for(const s2 of DATA) for(const r2 of s2.rows) if(r2[1]===c){ nm=r2[0]; mk=String(r2[2]||""); pv=parseNum(r2[5]); break outer; } }
+          const m4 = mk.indexOf("美")===0?"美股":mk.indexOf("港")===0?"港股":(mk.indexOf("日")===0?"日股":(mk.indexOf("A")===0?"A股":(mk.indexOf("韩")===0?"韩股":(mk||"其他"))));
+          const CC = m4==="美股"?"$":m4==="港股"?"HK$":m4==="韩股"?"₩":"¥";
+          rows.push({o:{code:c,name:nm,mkt:m4,ccy:CC,b1:null},px:(pv>0?pv:null),dt:"",dk:8e9});
+        });
+      }
+    }catch(e){}
     rows.sort((a,b)=>a.dk-b.dk);
     const mkSel=window.__oddsMkt||"";
     const mkBar=document.getElementById("odds-mk");
     if(mkBar){
       const cnt={};
-      d.items.forEach(o=>{ cnt[o.mkt]=(cnt[o.mkt]||0)+1; });
+      rows.forEach(({o})=>{ cnt[o.mkt]=(cnt[o.mkt]||0)+1; });
       const MKS=["","美股","A股","港股","日股"].filter(m=>!m||cnt[m]);
       mkBar.innerHTML=MKS.map(m=>'<button class="perf-pill'+((mkSel===m)?" on":"")+'" data-omkt="'+m+'">'
-        +(m||"全部")+' '+(m?cnt[m]:d.items.length)+'</button>').join("");
+        +(m||"全部")+' '+(m?cnt[m]:rows.length)+'</button>').join("");
       if(!mkBar._b){ mkBar._b=1;
         mkBar.addEventListener("click",e=>{ const b=e.target.closest("button[data-omkt]");
           if(b){ window.__oddsMkt=b.dataset.omkt; go(); } });
@@ -3905,8 +3921,8 @@ window.renderOdds = (function(){
       /* v6（2026-08-29 主人定稿）：现价+买点并为一格，仿重点清单——白色现价在上，第二行绿色买点带
          （一批/二批/三批用 / 分隔，批内保留区间），第三行状态（🎯已进带/已破带/距一批 −x%）。
          原两行「−x%~+y%」区间百分比已废：位置感交给「谁先到一批」的排序。标的列宽度不放大（主人定）。 */
-      const bands=[o.b1,o.b2].concat(o.b3?[o.b3]:[]).map(b=>'<span class="bd">'+fp(b[0])+'–'+fp(b[1])+'</span>').join(' / ');
-      const st = px==null ? '–' : (px<o.b1[0] ? '<span class="inb">已破带</span>'
+      const bands=!o.b1?'':[o.b1,o.b2].concat(o.b3?[o.b3]:[]).map(b=>'<span class="bd">'+fp(b[0])+'–'+fp(b[1])+'</span>').join(' / ');
+      const st = (!o.b1||px==null) ? '–' : (px<o.b1[0] ? '<span class="inb">已破带</span>'
         : (px<=o.b1[1] ? '<span class="inb">🎯 已进带</span>'
         : '<span class="dpc">'+pc(o.b1[0]/px-1)+'</span>'));
       h+='<tr data-code="'+esc(o.code)+'"'+(links?'':' class="solo"')+'>'
@@ -3916,9 +3932,10 @@ window.renderOdds = (function(){
         +(function(){ const cb=(typeof BUY!=="undefined")&&BUY[o.code];
            /* 照抄重点清单 priceCell("buy")：白色现价+金色观察位，文案走 buyLabel()（截「（」前，注释收起）。 */
            return '<td class="cdd">'+(cb ? ((px!=null?pr(px,o):"–")+'<span class="cbl">观察位 '+esc(buyLabel(cb))+'</span>') : '–')+'</td>'; })()
-        +'<td class="px">'+(px!=null?pr(px,o):"–")+'<span class="bands">'+bands+'</span></td>'
+        +(o.b1?('<td class="px">'+(px!=null?pr(px,o):"–")+'<span class="bands">'+bands+'</span></td>'):'<td class="px" style="font-weight:400;color:var(--text2)">–</td>')
         +'<td class="dist">'+st+'</td>'
-        +'<td>'+scen(o.bear,o,"sc-bear",px)+'</td><td>'+scen(o.base,o,"sc-base",px)+'</td><td>'+scen(o.bull,o,"sc-bull",px)+'</td><td class="fill"></td></tr>';
+        +(o.b1?('<td>'+scen(o.bear,o,"sc-bear",px)+'</td><td>'+scen(o.base,o,"sc-base",px)+'</td><td>'+scen(o.bull,o,"sc-bull",px)+'</td>'):'<td>–</td><td>–</td><td>–</td>')
+        +'<td class="fill"></td></tr>';
       if(links) h+='<tr class="rep-row" data-code="'+esc(o.code)+'"><td colspan="8"><div class="rep-in">'+links+'</div></td></tr>';
     });
     h+='</tbody></table>';
