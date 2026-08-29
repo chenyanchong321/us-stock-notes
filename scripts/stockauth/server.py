@@ -265,17 +265,21 @@ def _bands_live(bands, price):
         live_bands.append({
             "range": values,
             "distance_pct": [_pct(lo, price), _pct(hi, price)] if price else None,
-            "inside": bool(price and lo <= price <= hi),
+            "reached": bool(price and price <= hi),
+            "inside": False,
         })
     state = "price_unavailable"
     if price and live_bands:
-        inside = next((index for index, band in enumerate(live_bands) if band["inside"]), None)
-        if inside is not None:
-            state = "inside_b" + str(inside + 1)
+        # 观察带是逐级触发线，不是离开下沿就失效的封闭箱体：
+        # 33 以下分批、30-33 观察区，价格跌到 32.76 都已经触发第一档；
+        # 多档位则取已经触发的最深一档，第二档要排在第一档前面。
+        reached = [index for index, band in enumerate(live_bands) if band["reached"]]
+        if reached:
+            deepest = max(reached)
+            live_bands[deepest]["inside"] = True
+            state = "inside_b" + str(deepest + 1)
         else:
-            top = max(band["range"][1] for band in live_bands)
-            bottom = min(band["range"][0] for band in live_bands)
-            state = "above_bands" if price > top else ("below_bands" if price < bottom else "between_bands")
+            state = "above_bands"
     return live_bands, state
 
 
@@ -433,17 +437,19 @@ def enrich_kedu_point(item):
         bands[key] = {
             "range": [lo, hi],
             "distance_pct": [_pct(lo, price), _pct(hi, price)] if price else None,
-            "inside": bool(price and lo <= price <= hi),
+            "reached": bool(price and price <= hi),
+            "inside": False,
         }
     state = "price_unavailable"
     if price and bands:
-        inside = next((key for key, value in bands.items() if value["inside"]), None)
-        if inside:
-            state = "inside_" + inside
+        ordered = [key for key in ("b1", "b2", "b3") if key in bands]
+        reached = [key for key in ordered if bands[key]["reached"]]
+        if reached:
+            deepest = reached[-1]
+            bands[deepest]["inside"] = True
+            state = "inside_" + deepest
         else:
-            top = max(value["range"][1] for value in bands.values())
-            bottom = min(value["range"][0] for value in bands.values())
-            state = "above_bands" if price > top else ("below_bands" if price < bottom else "between_bands")
+            state = "above_bands"
     scenarios = {}
     entry = (item.get("bands") or {}).get("b2") or (item.get("bands") or {}).get("b1")
     for key, target in (item.get("scenarios") or {}).items():

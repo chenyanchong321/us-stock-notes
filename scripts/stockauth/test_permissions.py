@@ -254,6 +254,19 @@ class PermissionHTTPTest(unittest.TestCase):
         self.assertIsNone(items["ONLYC"]["sources"]["kedu"])
         self.assertEqual(items["RAW"]["relation"], "uncomparable")
 
+    def test_observation_bands_are_entry_triggers_not_closed_boxes(self):
+        parsed = server.parse_observation_text("33以下分批（07/13锚，观察区30-33）")
+        self.assertEqual(parsed["bands"], [[33.0, 33.0]])
+        bands, state = server._bands_live(parsed["bands"], 32.76)
+        self.assertEqual(state, "inside_b1")
+        self.assertTrue(bands[0]["inside"])
+
+        tiers = [[158, 170], [136, 150]]
+        self.assertEqual(server._bands_live(tiers, 155)[1], "inside_b1")
+        self.assertEqual(server._bands_live(tiers, 147)[1], "inside_b2")
+        self.assertEqual(server._bands_live(tiers, 120)[1], "inside_b2")
+        self.assertEqual(server._bands_live(tiers, 180)[1], "above_bands")
+
     def test_legacy_direct_buypoints_shape_is_supported(self):
         Path(server.POINTS).write_text(json.dumps({"AVAV": "150/120/100"}), encoding="utf-8")
         points = server.load_points()
