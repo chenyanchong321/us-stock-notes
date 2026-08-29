@@ -1215,6 +1215,7 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
   #odds-tbl .pct.inb{color:var(--up);font-weight:700}
   #odds-tbl td.px{font-weight:700}
   #odds-tbl td.band{color:#7ecfa2}
+  #odds-tbl th.fill,#odds-tbl td.fill{width:100%;padding:0}
   #odds-tbl .bands{display:block;font-size:11px;font-weight:400;color:#7ecfa2;white-space:nowrap;margin-top:1px}
   html[data-theme="light"] #odds-tbl .bands{color:#188f4d}
   html[data-theme="light"] #odds-tbl td.band{color:#188f4d}
@@ -3884,7 +3885,7 @@ window.renderOdds = (function(){
     if(mkSel) rows=rows.filter(({o})=>o.mkt===mkSel);
     const ws=(window.__oddsKw||"").trim().toLowerCase().split(/\s+/).filter(Boolean);
     if(ws.length) rows=rows.filter(({o})=>{ const hay=(o.name+" "+o.code+" "+o.mkt).toLowerCase(); return ws.every(w=>hay.includes(w)); });
-    let h='<table id="odds-tbl"><thead><tr><th>标的</th><th>现价 / 买点</th><th>熊</th><th>基准</th><th>牛</th></tr></thead><tbody>';
+    let h='<table id="odds-tbl"><thead><tr><th>标的</th><th>现价 / 买点</th><th>熊</th><th>基准</th><th>牛</th><th class="fill"></th></tr></thead><tbody>';
     rows.forEach(({o,px,dt})=>{
       const links=ODDS_DOCS_ON ? repLinks(o.code, d.docs) : "";
       /* v6（2026-08-29 主人定稿）：现价+买点并为一格，仿重点清单——白色现价在上，第二行绿色买点带
@@ -3897,8 +3898,8 @@ window.renderOdds = (function(){
       h+='<tr data-code="'+esc(o.code)+'"'+(links?'':' class="solo"')+'>'
         +'<td class="nm"><b>'+esc(o.name)+'</b><span class="sub">'+esc(o.code)+' · '+esc(o.mkt)+'</span></td>'
         +'<td class="px">'+(px!=null?pr(px,o):"–")+'<span class="bands">'+bands+'</span>'+st+'</td>'
-        +'<td>'+scen(o.bear,o,"sc-bear",px)+'</td><td>'+scen(o.base,o,"sc-base",px)+'</td><td>'+scen(o.bull,o,"sc-bull",px)+'</td></tr>';
-      if(links) h+='<tr class="rep-row" data-code="'+esc(o.code)+'"><td colspan="5"><div class="rep-in">'+links+'</div></td></tr>';
+        +'<td>'+scen(o.bear,o,"sc-bear",px)+'</td><td>'+scen(o.base,o,"sc-base",px)+'</td><td>'+scen(o.bull,o,"sc-bull",px)+'</td><td class="fill"></td></tr>';
+      if(links) h+='<tr class="rep-row" data-code="'+esc(o.code)+'"><td colspan="6"><div class="rep-in">'+links+'</div></td></tr>';
     });
     h+='</tbody></table>';
     if(!rows.length) h='<div style="color:var(--text2);padding:24px;text-align:center">没有匹配的标的</div>';
