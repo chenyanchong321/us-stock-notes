@@ -260,6 +260,7 @@ mcap_base 的本质是"股本数"：yi/mcap_base_price 应等于总股本（亿�
 |---|---|---|---|---|
 | `RATINGS_ON` | false | 名称旁「评级」徽标＋机构评级共识浮窗（一致评级/目标价区间轴/EPS档位/逐家变动） | update-fundamentals 顺带产出 data/ratings.json，每日更新 | 2026-08-02 |
 | `MA_LADDER_ON` | false | 现价浮窗里的「均线台阶」块（MA20/50/60/120/200 排位与已破/在上方） | update_quotes.py 照算 r[20] 五均线 | 2026-08-02 |
+| `ODDS_DOCS_ON` | false | 烟囱自用页每标的第二行的文档胶囊（🎲赔率/📄归因/📝买卖点…） | 私有仓库 docs/ 与 odds_docs.json 原样保留，服务端 /api/doc 照常 | 2026-08-29 |
 | `FUND_TIP_ON` | false | 市值格悬停的估值仪表盘浮窗（PE/PB/EV-EBITDA/ROE/营收净利年季/毛利净利率/净现金/FCF）；非美元标的仍保留 PE+汇率小条 | update-fundamentals 的 data/fundamentals.json，每日更新 | 2026-08-02 |
 
 隐藏后浮窗现状：现价浮窗＝52周区间＋观察位/目标价（会员）＋非美元美元换算；市值浮窗＝仅非美元标的的 PE+汇率小条。
@@ -861,6 +862,8 @@ json.dump(d,open("data/scenarios.json","w"),ensure_ascii=False,indent=1)
 - **每标的第二行＝全量文档沉淀（2026-08-18 v3，主人核心诉求：一只票的驾驶舱）**：142份PDF存私有仓库 `docs/<code>/<yyyymmdd>_<type>[_1p].pdf`，清单 `odds_docs.json`（{code:[{t:类型,d:日期,f:路径}]}），`/api/odds` 一次带回、`/api/doc?f=` 验token吐PDF（路径锁死docs/）。前端按日期倒序渲染带日期的类型胶囊（🎲赔率/📄归因/📝买卖点/📕深度…），点击=blob开新页（openOddsDoc，openReport同款手势模式）。
 - **挂新买卖点笔记/新报告 SOP（主人交付后）**：①私有仓库 `odds.json` 加/更新点位条目 `{code,name,mkt,ccy,b1,b2,b3?,bear,base,bull,note}`（现价不入库！前端实时）；②PDF 放 `docs/<code>/<yyyymmdd>_<type>.pdf` ＋ `odds_docs.json` 该 code 数组**头部**插 `{t,d,f}`。push 私有仓库≤10分钟生效，前端零改动。类型词表见 odds_docs 现有条目（买卖点笔记/赔率分析/归因/深度报告/财报点评/情景演绎/学习笔记…）。
 - **差量同步 SOP（主人说「同步烟囱自用」即执行，2026-08-20 定稿）**：①扫 `桌面/投研报告/<公司>/` 与 `桌面/Claude交付/` 里**比 odds_docs.json 最新登记日期更新的 PDF**（文件夹名（YYYY.M.D）/_yymmdd/文件 mtime 三级取日期；跳过 方法论沉淀/原始素材/作废/SOP/非标的文件）；②文件名关键词→类型（买点卖点→买卖点笔记、归因、赔率、深度研究→深度报告、四层定位、财报点评、三一模版…），复制 `docs/<code>/<yyyymmdd>_<type>.pdf` ＋ odds_docs.json 对应 code 数组按日期倒序插入；③查 `_买卖点赔率汇总.md` 版本号，变了→ 同步 odds.json 点位（新标的=汇总有而 odds 无，提取 b1/b2/b3/bear/base/bull+备注新建；以 H 股为基准梯的用 H 股代码与港元）；④push 私有仓库即生效（ECS≤10分钟）。不在赔率表的标的（如英特尔四层定位）照样入库备用，上表即自动显示。
+- **2026-08-29 主人定：报告行下线，本页只留点位表**。理由＝报告统一去「刻度」lab.ziyuanai.top 看，这里不再重复承载。实现＝renderOdds IIFE 顶部 `ODDS_DOCS_ON=false`（已登记开关簿），repLinks/openOddsDoc/.rep-row 样式/私有仓库 docs/ 与 odds_docs.json/服务端 /api/doc **全部原样保留**，改回 true 即恢复。说明卡加了一句「报告去刻度看」并链过去。**连带：差量同步 SOP 只剩点位一半**——以后同步烟囱自用＝只对 odds.json，不再往 docs/ 灌 PDF、不再维护 odds_docs.json。「个股分析」页(view=attrib)的文档入口不受影响（主人明确只动烟囱自用）。
+- **点位同步的权威源＝桌面 `投研报告/_买卖点赔率汇总.md`**（活文档，每次交付买卖点笔记都会重登记）。解析法：取「总表」里 `class="price"` 的行，七列＝标的/现价/第一批/第二批/熊/基准/牛，区间用 – 分隔、日股带千分位逗号；名称→代码查同目录 `_公司代码.json`（键＝公司文件夹原名，值＝[代码,市场]）。**现价不入库**（前端实时取）。入库前跑自校验：b1/b2 两端有序、熊<基准<牛、二批上沿≤一批上沿。2026-08-29 首次全量对齐＝v38 43 标的，补入 11 只（东京应化/恩智浦/信越化学/AMD/生益科技/建滔积层板/藤仓/江海股份/安谋控股/中国巨石/铜冠铜箔），已有 32 只点位与台账一致无需改，另 3 只（英特尔/Bloom Energy/Lumentum）不在台账但保留备用。
 - **坑**：①`AUTH_API` 已含 `/api` 前缀，端点拼接是 `AUTH_API+"/odds"` 不是 `AUTH_API+"/api/odds"`（拼成 /api/api/* 得404，已踩）；②server.py 生产版在私有仓库 `deploy/server.py`（377行含音频端点），**公开副本 scripts/stockauth/ 曾滞后90行，改服务端以 deploy/ 为基准**（本次已同步）；③decorate 渲染现价标记必须容忍 DATA 异步未到（限次重试），渲染时快照异步数据的老坑。
 
 ## 🤝 小圈子（2026-08-20 上线，会员之上的白名单二级权限）
