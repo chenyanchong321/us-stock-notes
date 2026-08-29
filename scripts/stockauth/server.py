@@ -23,6 +23,7 @@ LIVE_QUOTES = os.environ.get("STOCKAUTH_LIVE_QUOTES", "/var/www/us-stock/data/li
 STATIC_QUOTES = os.environ.get("STOCKAUTH_STATIC_QUOTES", "/var/www/us-stock/data/quotes.json")
 LIVE_MAX_AGE_SECONDS = int(os.environ.get("STOCKAUTH_LIVE_MAX_AGE", "600"))
 KEDU_ENABLED = os.environ.get("KEDU_DECISION_ENABLED", "0").lower() in {"1", "true", "yes", "on"}
+KEDU_TABLE_ENABLED = os.environ.get("KEDU_POINTS_TABLE_ENABLED", "0").lower() in {"1", "true", "yes", "on"}
 PORT = 8600
 ALLOW_ORIGINS = {"https://stock.ziyuanai.top", "https://www.ziyuanai.top",
                  "https://chenyanchong321.github.io", "https://lab.ziyuanai.top"}
@@ -136,6 +137,208 @@ def load_static_quotes():
         return data if isinstance(data, dict) else {"sections": []}
     except Exception:
         return {"sections": []}
+
+
+def _currency_for(market, sample=""):
+    market = str(market or "").strip()
+    by_market = {"美股": "USD", "A股": "CNY", "港股": "HKD", "日股": "JPY", "韩股": "KRW"}
+    if market in by_market:
+        return by_market[market]
+    text = str(sample or "")
+    if "HK$" in text:
+        return "HKD"
+    if "$" in text:
+        return "USD"
+    if "¥" in text or "￥" in text:
+        return "CNY"
+    return ""
+
+
+def _static_identity_index():
+    """把公开行情快照转换成代码索引；只读取名称、市场、币种，不暴露任何私有点位。"""
+    index = {}
+    for section in load_static_quotes().get("sections", []):
+        for row in section.get("rows", []):
+            if not isinstance(row, list) or len(row) < 6:
+                continue
+            code = str(row[1] or "").strip().upper()
+            if not code:
+                continue
+            market = str(row[2] or "").strip()
+            index[code] = {
+                "company": str(row[0] or code).strip(),
+                "market": market,
+                "currency": _currency_for(market, row[5]),
+            }
+    return index
+
+
+def _point_number(value):
+    try:
+        number = float(str(value).replace(",", ""))
+    except (TypeError, ValueError):
+        return None
+    return number if number > 0 else None
+
+
+def parse_observation_text(value):
+    """保守解析财多多观察位。
+
+    能确认的单点／区间才进入 bands；无法确认时只返回原文，绝不从年份、百分比或说明文字猜数字。
+    """
+    if isinstance(value, dict):
+        raw = value.get("text") or value.get("raw") or value.get("value") or ""
+    else:
+        raw = value
+    text = str(raw or "").strip()
+    if not text:
+        return {"status": "current", "text": "", "bands": [], "threshold": None, "parse_status": "raw_only"}
+    clean = re.sub(r"（[^）]*）|\([^)]*\)", " ", text)
+    parts = [part.strip() for part in re.split(r"[/／;；、]", clean) if part.strip()]
+    range_re = re.compile(
+        r"(?<![\d.])(\d[\d,]*(?:\.\d+)?)\s*(?:-|–|—|~|～|至|到)\s*(\d[\d,]*(?:\.\d+)?)(?![\d%])"
+    )
+    number_re = re.compile(r"(?<![\d.])(\d[\d,]*(?:\.\d+)?)(?![\d%])")
+    bands = []
+    for part in parts[:6]:
+        match = range_re.search(part)
+        if match:
+            values = [_point_number(match.group(1)), _point_number(match.group(2))]
+            if all(values):
+                bands.append(sorted(values))
+                continue
+        match = number_re.search(part)
+        if not match:
+            continue
+        tail = part[match.end():].lstrip()
+        number = _point_number(match.group(1))
+        if number is None or tail.startswith("%") or tail.startswith("年"):
+            continue
+        bands.append([number, number])
+    return {
+        "status": "current",
+        "text": text,
+        "bands": bands,
+        "threshold": bands[0][1] if bands else None,
+        "parse_status": "parsed" if bands else "raw_only",
+        "source_ref": "财多多点位台账",
+    }
+
+
+def _normal_band(value):
+    if not isinstance(value, (list, tuple)) or not value:
+        return None
+    numbers = [_point_number(item) for item in value]
+    numbers = [item for item in numbers if item is not None]
+    if not numbers:
+        return None
+    return [min(numbers), max(numbers)]
+
+
+def _source_relation(caiduoduo, kedu):
+    caido_band = _normal_band((caiduoduo or {}).get("bands", [None])[0]) if (caiduoduo or {}).get("bands") else None
+    kedu_band = _normal_band(((kedu or {}).get("bands") or {}).get("b1"))
+    if not caido_band or not kedu_band:
+        return "uncomparable"
+    if max(caido_band[0], kedu_band[0]) <= min(caido_band[1], kedu_band[1]):
+        return "overlap"
+    caido_mid = sum(caido_band) / 2
+    kedu_mid = sum(kedu_band) / 2
+    gap_ratio = abs(caido_mid - kedu_mid) / max(caido_mid, kedu_mid)
+    if gap_ratio <= 0.10:
+        return "near"
+    if gap_ratio > 0.20:
+        return "divergent"
+    return "different"
+
+
+def _bands_live(bands, price):
+    live_bands = []
+    for band in bands or []:
+        values = _normal_band(band)
+        if not values:
+            continue
+        lo, hi = values
+        live_bands.append({
+            "range": values,
+            "distance_pct": [_pct(lo, price), _pct(hi, price)] if price else None,
+            "inside": bool(price and lo <= price <= hi),
+        })
+    state = "price_unavailable"
+    if price and live_bands:
+        inside = next((index for index, band in enumerate(live_bands) if band["inside"]), None)
+        if inside is not None:
+            state = "inside_b" + str(inside + 1)
+        else:
+            top = max(band["range"][1] for band in live_bands)
+            bottom = min(band["range"][0] for band in live_bands)
+            state = "above_bands" if price > top else ("below_bands" if price < bottom else "between_bands")
+    return live_bands, state
+
+
+def _quote_live(keys):
+    quote = _fresh_live_quote(keys) or _static_quote(keys)
+    return {
+        "price": quote.get("p") if quote else None,
+        "change_pct": quote.get("c") if quote else None,
+        "updated_at": quote.get("updated_at") if quote else None,
+        "source": quote.get("src") if quote else None,
+        "price_mode": quote.get("mode") if quote else "unavailable",
+        "price_status": "ok" if quote and quote.get("p") else "unavailable",
+    }
+
+
+def aggregate_kedu_points():
+    """动态组成刻度点位总表；两来源只并列，不平均、不覆盖。"""
+    kedu_data = load_kedu_points()
+    kedu_items = [item for item in kedu_data.get("items", []) if item.get("status") == "current"]
+    aliases = {}
+    for item in kedu_items:
+        for key in [item.get("code", ""), *(item.get("aliases") or [])]:
+            if str(key).strip():
+                aliases[str(key).strip().upper()] = item
+    caido_by_canonical = {}
+    for raw_code, raw_value in load_points().get("buy", {}).items():
+        code = str(raw_code or "").strip().upper()
+        if not code:
+            continue
+        matched = aliases.get(code)
+        canonical = str((matched or {}).get("code") or code).strip().upper()
+        caido_by_canonical[canonical] = parse_observation_text(raw_value)
+    kedu_by_code = {str(item.get("code") or "").strip().upper(): item for item in kedu_items if item.get("code")}
+    identities = _static_identity_index()
+    rows = []
+    for code in sorted(set(caido_by_canonical) | set(kedu_by_code)):
+        kedu = kedu_by_code.get(code)
+        caido = caido_by_canonical.get(code)
+        keys = [code] + list((kedu or {}).get("aliases") or [])
+        identity = identities.get(code) or next((identities.get(str(key).upper()) for key in keys if identities.get(str(key).upper())), {})
+        market = (kedu or {}).get("market") or identity.get("market") or ""
+        live = _quote_live(keys)
+        caido_live_bands, caido_state = _bands_live((caido or {}).get("bands"), live["price"])
+        live["caiduoduo"] = {"state": caido_state, "bands": caido_live_bands}
+        if kedu:
+            kedu_live = enrich_kedu_point(kedu).get("live", {})
+            live["kedu"] = {
+                "state": kedu_live.get("state"),
+                "bands": kedu_live.get("bands", {}),
+                "scenarios": kedu_live.get("scenarios", {}),
+            }
+        else:
+            live["kedu"] = None
+        relation = _source_relation(caido, kedu)
+        rows.append({
+            "code": code,
+            "aliases": list((kedu or {}).get("aliases") or []),
+            "company": (kedu or {}).get("company") or identity.get("company") or code,
+            "market": market,
+            "currency": (kedu or {}).get("currency") or identity.get("currency") or _currency_for(market),
+            "sources": {"caiduoduo": caido, "kedu": dict(kedu) if kedu else None},
+            "relation": relation,
+            "calibration": {"status": "confirmed", "relation": relation},
+            "live": live,
+        })
+    return rows
 
 
 def _market_number(value):
@@ -336,7 +539,11 @@ class H(BaseHTTPRequestHandler):
         if p == "/api/health":
             return self._json(200, {"ok": True, "ts": int(time.time())})
         if p == "/api/kedu/config":
-            return self._json(200, {"ok": True, "enabled": KEDU_ENABLED})
+            return self._json(200, {
+                "ok": True,
+                "enabled": KEDU_ENABLED,
+                "points_table_enabled": KEDU_TABLE_ENABLED,
+            })
         if p == "/api/public":
             pts = load_points()
             codes = sorted(set(pts["buy"]) | set(pts["sell"]) | set(pts["tgt"]))
@@ -489,6 +696,18 @@ class H(BaseHTTPRequestHandler):
             if not found:
                 return self._json(404, {"ok": False, "err": "该公司暂无已校准点位"})
             return self._json(200, {"ok": True, "item": enrich_kedu_point(found)})
+        if p == "/api/kedu/points":
+            if not KEDU_TABLE_ENABLED:
+                return self._json(404, {"ok": False, "err": "该功能尚未开放"})
+            u = self._permission_user("kedu_points", "点位为受邀用户专属，请先登录")
+            if not u:
+                return
+            data = load_kedu_points()
+            return self._json(200, {
+                "ok": True,
+                "updated_at": data.get("generated_at") or data.get("updated_at"),
+                "items": aggregate_kedu_points(),
+            })
         if p == "/api/me":
             u = self._user()
             return self._json(200, {
