@@ -1219,7 +1219,8 @@ html[data-theme="light"] .earnb.d1{color:#c0392b}
   #odds-tbl td.dist{white-space:nowrap}
   #odds-tbl td.dist .inb{color:var(--up);font-weight:700}
   #odds-tbl td.dist .dpc{color:var(--text2)}
-  #odds-tbl .bands{display:block;font-size:11px;font-weight:400;color:#7ecfa2;white-space:nowrap;margin-top:1px}
+  #odds-tbl .bands{display:block;font-size:11px;font-weight:400;color:#7ecfa2;white-space:normal;max-width:15em;margin-left:auto;margin-top:1px;line-height:1.5}
+  #odds-tbl .bands .bd{white-space:nowrap}
   html[data-theme="light"] #odds-tbl .bands{color:#188f4d}
   html[data-theme="light"] #odds-tbl td.band{color:#188f4d}
   #odds-tbl .sc-bear{color:var(--down)} #odds-tbl .sc-base{color:var(--accent)} #odds-tbl .sc-bull{color:var(--up)}
@@ -3894,7 +3895,7 @@ window.renderOdds = (function(){
       /* v6（2026-08-29 主人定稿）：现价+买点并为一格，仿重点清单——白色现价在上，第二行绿色买点带
          （一批/二批/三批用 / 分隔，批内保留区间），第三行状态（🎯已进带/已破带/距一批 −x%）。
          原两行「−x%~+y%」区间百分比已废：位置感交给「谁先到一批」的排序。标的列宽度不放大（主人定）。 */
-      const bands=[o.b1,o.b2].concat(o.b3?[o.b3]:[]).map(b=>fp(b[0])+'–'+fp(b[1])).join(' / ');
+      const bands=[o.b1,o.b2].concat(o.b3?[o.b3]:[]).map(b=>'<span class="bd">'+fp(b[0])+'–'+fp(b[1])+'</span>').join(' / ');
       const st = px==null ? '–' : (px<o.b1[0] ? '<span class="inb">已破带</span>'
         : (px<=o.b1[1] ? '<span class="inb">🎯 已进带</span>'
         : '<span class="dpc">'+pc(o.b1[0]/px-1)+'</span>'));
