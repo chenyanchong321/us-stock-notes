@@ -254,6 +254,12 @@ class PermissionHTTPTest(unittest.TestCase):
         self.assertIsNone(items["ONLYC"]["sources"]["kedu"])
         self.assertEqual(items["RAW"]["relation"], "uncomparable")
 
+    def test_legacy_direct_buypoints_shape_is_supported(self):
+        Path(server.POINTS).write_text(json.dumps({"AVAV": "150/120/100"}), encoding="utf-8")
+        points = server.load_points()
+        self.assertEqual(points["buy"], {"AVAV": "150/120/100"})
+        self.assertEqual(points["sell"], {})
+
     def test_kedu_points_table_requires_kedu_permission(self):
         self.assertEqual(self.request("/api/kedu/points")[0], 401)
         account = self.register("KEDU-ONLY", "kedu-table-user")

@@ -98,6 +98,9 @@ def load_points():
     try:
         with open(POINTS, encoding="utf-8") as f:
             d = json.load(f)
+        # 兼容 2026-07 旧版 buypoints.json（顶层直接是 code -> 观察位文字）。
+        if isinstance(d, dict) and not ({"buy", "sell", "tgt"} & set(d)):
+            return {"buy": d, "sell": {}, "tgt": {}}
         return {"buy": d.get("buy", {}), "sell": d.get("sell", {}), "tgt": d.get("tgt", {})}
     except Exception:
         return {"buy": {}, "sell": {}, "tgt": {}}
