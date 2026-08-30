@@ -283,8 +283,8 @@ def _bands_live(bands, price):
     return live_bands, state
 
 
-def _quote_live(keys):
-    quote = _fresh_live_quote(keys) or _static_quote(keys)
+def _quote_live(keys, market=""):
+    quote = _fresh_live_quote(keys) or _static_quote(keys, market)
     return {
         "price": quote.get("p") if quote else None,
         "change_pct": quote.get("c") if quote else None,
@@ -321,7 +321,7 @@ def aggregate_kedu_points():
         keys = [code] + list((kedu or {}).get("aliases") or [])
         identity = identities.get(code) or next((identities.get(str(key).upper()) for key in keys if identities.get(str(key).upper())), {})
         market = (kedu or {}).get("market") or identity.get("market") or ""
-        live = _quote_live(keys)
+        live = _quote_live(keys, market)
         caido_live_bands, caido_state = _bands_live((caido or {}).get("bands"), live["price"])
         live["caiduoduo"] = {"state": caido_state, "bands": caido_live_bands}
         if kedu:
@@ -361,24 +361,47 @@ def _market_number(value):
     return float(match.group()) if match else None
 
 
-def _static_quote(keys):
-    """全市场最近收盘价底座。quotes.json 的每行第 1 位是代码、第 5 位是现价。"""
-    wanted = {str(key).strip().upper() for key in keys if str(key).strip()}
+def _market_family(value):
+    text = str(value or "").strip()
+    for family in ("美股", "A股", "港股", "日股", "韩股"):
+        if text.startswith(family):
+            return family
+    return text
+
+
+def _static_quote(keys, market=""):
+    """全市场最近收盘价底座；主代码优先，别名只在同市场内兜底。"""
+    ordered = []
+    for key in keys:
+        code = str(key or "").strip().upper()
+        if code and code not in ordered:
+            ordered.append(code)
+    wanted = set(ordered)
+    wanted_market = _market_family(market)
     data = load_static_quotes()
+    matches = {}
     for section in data.get("sections", []):
         for row in section.get("rows", []):
-            if not isinstance(row, list) or len(row) < 6 or str(row[1]).upper() not in wanted:
+            if not isinstance(row, list) or len(row) < 6:
+                continue
+            code = str(row[1] or "").strip().upper()
+            if code not in wanted:
+                continue
+            if wanted_market and _market_family(row[2]) != wanted_market:
                 continue
             price = _market_number(row[5])
             if price is None or price <= 0:
                 continue
-            return {
+            matches.setdefault(code, {
                 "p": price,
                 "c": _market_number(row[16]) if len(row) > 16 else None,
                 "updated_at": data.get("updated"),
                 "src": "daily_close",
                 "mode": "close",
-            }
+            })
+    for code in ordered:
+        if code in matches:
+            return matches[code]
     return None
 
 
@@ -427,7 +450,7 @@ def enrich_kedu_point(item):
     """只给单家公司加实时状态；不生成任何可枚举的点位全集。"""
     keys = [item.get("code", "")] + list(item.get("aliases") or [])
     # 全市场收盘价兜底，美股盘前/盘后价只在文件仍新鲜时覆盖。
-    quote = _fresh_live_quote(keys) or _static_quote(keys)
+    quote = _fresh_live_quote(keys) or _static_quote(keys, item.get("market"))
     price = quote.get("p") if quote else None
     bands = {}
     for key, values in (item.get("bands") or {}).items():

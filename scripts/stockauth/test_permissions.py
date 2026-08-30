@@ -136,6 +136,8 @@ class PermissionHTTPTest(unittest.TestCase):
                                 ["日东纺织", "3110", "日股", "¥5524.1亿", "¥6,390.00", "¥3,035.00", -52.5, None, None, None, None, None, "", None, None, None, 2.1],
                                 ["仅财多多", "ONLYC", "美股", "$10亿", "$500.00", "$369.00", -26.2, None, None, None, None, None, "", None, None, None, 0.5],
                                 ["待人工判断", "RAW", "A股", "¥10亿", "¥30.00", "¥20.00", -33.3, None, None, None, None, None, "", None, None, None, -0.5],
+                                ["东鹏饮料", "605499", "A股", "¥720亿", "¥150.00", "¥120.81", -19.5, None, None, None, None, None, "", None, None, None, 0.4],
+                                ["东鹏饮料", "09980", "港股", "HK$822亿", "HK$209.28", "HK$112.00", -46.5, None, None, None, None, None, "", None, None, None, -0.7],
                             ],
                         }
                     ],
@@ -232,6 +234,21 @@ class PermissionHTTPTest(unittest.TestCase):
         self.assertEqual(account["permissions"], ["stock_member"])
         self.assertEqual(self.request("/api/kedu/point?code=AVAV", token=account["token"])[0], 403)
         self.assertEqual(self.request("/api/kedu/points", token=account["token"])[0], 403)
+
+    def test_a_and_h_share_name_but_never_share_price(self):
+        hk = server._static_quote(["09980", "605499"], "港股")
+        a_share = server._static_quote(["605499", "09980"], "A股")
+        self.assertEqual(hk["p"], 112.0)
+        self.assertEqual(a_share["p"], 120.81)
+
+        item = {
+            "code": "09980",
+            "aliases": ["09980", "605499"],
+            "market": "港股",
+            "bands": {},
+            "scenarios": {},
+        }
+        self.assertEqual(server.enrich_kedu_point(item)["live"]["price"], 112.0)
 
     def test_caido_parse_is_conservative_and_sources_stay_separate(self):
         parsed = server.parse_observation_text("150/120/100 倒金字塔（财多多）")
