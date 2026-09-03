@@ -1,29 +1,11 @@
 {
- "updated": "2026-09-04 03:50 北京时间",
+ "updated": "2026-09-04 04:00 北京时间",
  "earnings": [
-  {
-   "d": "2026-09-03",
-   "code": "AVGO",
-   "name": "博通",
-   "est": false
-  },
   {
    "d": "2026-09-03",
    "code": "CIEN",
    "name": "Ciena",
    "est": false
-  },
-  {
-   "d": "2026-09-03",
-   "code": "HPE",
-   "name": "慧与科技（HPE）",
-   "est": false
-  },
-  {
-   "d": "2026-09-03",
-   "code": "SNOW",
-   "name": "Snowflake",
-   "est": true
   },
   {
    "d": "2026-09-04",
