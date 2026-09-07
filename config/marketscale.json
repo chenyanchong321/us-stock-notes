@@ -16,25 +16,25 @@
       "key": "A股",
       "flag": "🇨🇳",
       "index": "000300.SS",
-      "cap_usd_t": 17.26,
-      "index_anchor": 4625.08642578125,
-      "anchor_date": "2026-08-31",
+      "cap_usd_t": 17.0,
+      "index_anchor": 4529.10009765625,
+      "anchor_date": "2026-07-17",
       "anchor_source": "ECS哨站(沪深交易所官方)"
     },
     {
       "key": "日本",
       "flag": "🇯🇵",
       "index": "^N225",
-      "cap_usd_t": 8.51,
-      "index_anchor": 64362.01953125,
-      "anchor_date": "2026-07-31",
+      "cap_usd_t": 8.85,
+      "index_anchor": 66311.9296875,
+      "anchor_date": "2026-08-31",
       "anchor_source": "JPX官方月末市值Excel"
     },
     {
       "key": "港股",
       "flag": "🇭🇰",
       "index": "^HSI",
-      "cap_usd_t": 5.98,
+      "cap_usd_t": 5.97,
       "index_anchor": 25884.43,
       "anchor_date": "2026-07-31",
       "anchor_source": "HKMA月报(市值+恒指官方配对)"

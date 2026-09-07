@@ -1,32 +1,37 @@
 {
- "run": "2026-08-31 18:56 北京时间",
+ "run": "2026-09-07 08:04 北京时间",
  "markets": {
   "港股": {
-   "ok": false,
-   "error": "The read operation timed out",
-   "diag": []
+   "ok": true,
+   "cap_usd_t": 5.97,
+   "index_anchor": 25884.43,
+   "anchor_date": "2026-07-31",
+   "anchor_source": "HKMA月报(市值+恒指官方配对)",
+   "diag": [
+    "HKMA 2026-07: 46,838,930 百万港元 × 0.1275 = 5.97T"
+   ]
   },
   "日本": {
    "ok": true,
-   "cap_usd_t": 8.51,
-   "index_anchor": 64362.01953125,
-   "anchor_date": "2026-07-31",
+   "cap_usd_t": 8.85,
+   "index_anchor": 66311.9296875,
+   "anchor_date": "2026-08-31",
    "anchor_source": "JPX官方月末市值Excel",
    "diag": [
     "JPX xlsx sheets: ['株式時価総額 Market Capitalization', '株式時価総額 Market Capitalizatio (旧)']",
-    "JPX 株式時価総額 Market Capitalization 最近行: 2026-07-31 原始值 1,362,573,525",
-    "按百万円解释 → 8.51万亿美元",
+    "JPX 株式時価総額 Market Capitalization 最近行: 2026-08-31 原始值 1,414,461,142",
+    "按百万円解释 → 8.85万亿美元",
     "✓ 单位=百万円"
    ]
   },
   "A股": {
    "ok": true,
-   "cap_usd_t": 17.26,
-   "index_anchor": 4625.08642578125,
-   "anchor_date": "2026-08-31",
+   "cap_usd_t": 17.0,
+   "index_anchor": 4529.10009765625,
+   "anchor_date": "2026-07-17",
    "anchor_source": "ECS哨站(沪深交易所官方)",
    "diag": [
-    "ECS哨站 2026-08-31: 沪+深 1,157,569 亿元 × 0.1491 = 17.26T；沪深300@2026-08-31=4625.08642578125"
+    "ECS哨站 2026-09-03: 沪+深 1,139,296 亿元 × 0.1492 = 17.00T；沪深300@2026-07-17=4529.10009765625"
    ]
   },
   "韩国": {
@@ -37,17 +42,17 @@
    "ok": true,
    "changed": false,
    "diag": [
-    "^DWCF 健康（最后 2026-08-28），无需变更"
+    "^DWCF 健康（最后 2026-09-04），无需变更"
    ]
   },
   "标普月线": {
    "ok": true,
-   "n": 1196,
-   "range": "1927-01~2026-08",
+   "n": 1197,
+   "range": "1927-01~2026-09",
    "diag": [
-    "datahub 1868行 首行[Date,SP500,Dividend,Earnings,Consumer Price Index,]",
-    "datahub 采纳 1195 个月（希勒月均价，1985年前专用；之后被Yahoo收盘覆盖）",
-    "yahoo 分块覆盖 501 点"
+    "datahub 1869行 首行[Date,SP500,Dividend,Earnings,Consumer Price Index,]",
+    "datahub 采纳 1196 个月（希勒月均价，1985年前专用；之后被Yahoo收盘覆盖）",
+    "yahoo 分块覆盖 502 点"
    ]
   }
  }
