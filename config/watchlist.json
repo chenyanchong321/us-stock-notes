@@ -2763,6 +2763,20 @@
      "ath_floor": 307.37
     },
     {
+     "name": "Lasertec",
+     "code": "6920",
+     "market": "日股",
+     "yahoo": "6920.T",
+     "currency": "¥",
+     "mcap_base": {
+      "prefix": "¥",
+      "yi": 34240.0,
+      "approx": true
+     },
+     "mcap_base_price": 36320.0,
+     "ath_floor": 0
+    },
+    {
      "name": "Onto Innovation",
      "code": "ONTO",
      "market": "美股",
@@ -3191,6 +3205,7 @@
      "name": "量测与检测",
      "codes": [
       "KLAC",
+      "6920",
       "ONTO",
       "NVMI",
       "CAMT",
