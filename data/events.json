@@ -1,17 +1,17 @@
 {
- "updated": "2026-09-11 18:00 北京时间",
+ "updated": "2026-09-11 18:15 北京时间",
  "earnings": [
   {
    "d": "2026-09-11",
    "code": "ORCL",
    "name": "甲骨文",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-09-11",
    "code": "ADBE",
    "name": "Adobe",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-09-15",
