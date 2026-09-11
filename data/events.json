@@ -1,16 +1,10 @@
 {
- "updated": "2026-09-11 20:55 北京时间",
+ "updated": "2026-09-11 21:02 北京时间",
  "earnings": [
   {
    "d": "2026-09-11",
    "code": "ORCL",
    "name": "甲骨文",
-   "est": true
-  },
-  {
-   "d": "2026-09-11",
-   "code": "ADBE",
-   "name": "Adobe",
    "est": true
   },
   {
@@ -54,18 +48,6 @@
    "code": "042700",
    "name": "韩美半导体",
    "est": true
-  },
-  {
-   "d": "2026-10-14",
-   "code": "ABT",
-   "name": "雅培",
-   "est": false
-  },
-  {
-   "d": "2026-10-21",
-   "code": "EQT",
-   "name": "EQT（天然气）",
-   "est": false
   },
   {
    "d": "2026-10-22",
@@ -359,6 +341,12 @@
    "d": "2026-12-10",
    "code": "AVGO",
    "name": "博通",
+   "est": false
+  },
+  {
+   "d": "2026-12-10",
+   "code": "ADBE",
+   "name": "Adobe",
    "est": false
   }
  ]
