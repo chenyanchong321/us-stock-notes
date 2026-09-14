@@ -1,10 +1,15 @@
 {
- "run": "2026-09-14 08:17 北京时间",
+ "run": "2026-09-14 17:57 北京时间",
  "markets": {
   "港股": {
-   "ok": false,
-   "error": "The read operation timed out",
-   "diag": []
+   "ok": true,
+   "cap_usd_t": 6.01,
+   "index_anchor": 25566.99,
+   "anchor_date": "2026-08-31",
+   "anchor_source": "HKMA月报(市值+恒指官方配对)",
+   "diag": [
+    "HKMA 2026-08: 47,154,680 百万港元 × 0.1275 = 6.01T"
+   ]
   },
   "日本": {
    "ok": true,
