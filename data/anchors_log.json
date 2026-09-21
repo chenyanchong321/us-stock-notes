@@ -1,5 +1,5 @@
 {
- "run": "2026-09-21 08:19 北京时间",
+ "run": "2026-09-21 18:01 北京时间",
  "markets": {
   "港股": {
    "ok": true,
@@ -26,17 +26,15 @@
   },
   "A股": {
    "ok": false,
-   "error": "深交所7天内无有效数据（海外IP被拒或接口变更）: <urlopen error [Errno 104] Connection reset by peer>",
+   "error": "上交所三轮重试均失败（海外IP大概率被拒，考虑ECS路线）: <urlopen error [Errno 101] Network is unreachable>",
    "diag": [
     "ECS哨站数据读取失败: Yahoo 000300.SS 在 2026-09-17 前无交易日数据，转直抓",
-    "深交所 2026-09-21 第1次失败: <urlopen error [Errno 104] Connection reset by peer>",
-    "深交所 2026-09-21 空表（非交易日），回退前一日",
-    "深交所 2026-09-20 空表（非交易日），回退前一日",
-    "深交所 2026-09-19 空表（非交易日），回退前一日",
-    "深交所 2026-09-18 空表（非交易日），回退前一日",
-    "深交所 2026-09-17 空表（非交易日），回退前一日",
-    "深交所 2026-09-16 空表（非交易日），回退前一日",
-    "深交所 2026-09-15 空表（非交易日），回退前一日"
+    "上交所 https 第1次失败: <urlopen error [Errno 101] Network is unreachable>",
+    "上交所 http 第1次失败: <urlopen error [Errno 101] Network is unreachable>",
+    "上交所 https 第2次失败: <urlopen error [Errno 101] Network is unreachable>",
+    "上交所 http 第2次失败: <urlopen error [Errno 101] Network is unreachable>",
+    "上交所 https 第3次失败: <urlopen error [Errno 101] Network is unreachable>",
+    "上交所 http 第3次失败: <urlopen error [Errno 101] Network is unreachable>"
    ]
   },
   "韩国": {
