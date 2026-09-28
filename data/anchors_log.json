@@ -1,15 +1,10 @@
 {
- "run": "2026-09-21 18:01 北京时间",
+ "run": "2026-09-28 08:55 北京时间",
  "markets": {
   "港股": {
-   "ok": true,
-   "cap_usd_t": 6.01,
-   "index_anchor": 25566.99,
-   "anchor_date": "2026-08-31",
-   "anchor_source": "HKMA月报(市值+恒指官方配对)",
-   "diag": [
-    "HKMA 2026-08: 47,154,680 百万港元 × 0.1275 = 6.01T"
-   ]
+   "ok": false,
+   "error": "HTTP Error 502: Bad Gateway",
+   "diag": []
   },
   "日本": {
    "ok": true,
@@ -25,16 +20,13 @@
    ]
   },
   "A股": {
-   "ok": false,
-   "error": "上交所三轮重试均失败（海外IP大概率被拒，考虑ECS路线）: <urlopen error [Errno 101] Network is unreachable>",
+   "ok": true,
+   "cap_usd_t": 16.81,
+   "index_anchor": 4439.14453125,
+   "anchor_date": "2026-09-24",
+   "anchor_source": "ECS哨站(沪深交易所官方)",
    "diag": [
-    "ECS哨站数据读取失败: Yahoo 000300.SS 在 2026-09-17 前无交易日数据，转直抓",
-    "上交所 https 第1次失败: <urlopen error [Errno 101] Network is unreachable>",
-    "上交所 http 第1次失败: <urlopen error [Errno 101] Network is unreachable>",
-    "上交所 https 第2次失败: <urlopen error [Errno 101] Network is unreachable>",
-    "上交所 http 第2次失败: <urlopen error [Errno 101] Network is unreachable>",
-    "上交所 https 第3次失败: <urlopen error [Errno 101] Network is unreachable>",
-    "上交所 http 第3次失败: <urlopen error [Errno 101] Network is unreachable>"
+    "ECS哨站 2026-09-24: 沪+深 1,128,307 亿元 × 0.1490 = 16.81T；沪深300@2026-09-24=4439.14453125"
    ]
   },
   "韩国": {
@@ -45,7 +37,7 @@
    "ok": true,
    "changed": false,
    "diag": [
-    "^DWCF 健康（最后 2026-09-18），无需变更"
+    "^DWCF 健康（最后 2026-09-25），无需变更"
    ]
   },
   "标普月线": {
