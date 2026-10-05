@@ -1,32 +1,32 @@
 {
- "run": "2026-09-28 19:01 北京时间",
+ "run": "2026-10-05 09:03 北京时间",
  "markets": {
   "港股": {
    "ok": false,
-   "error": "The read operation timed out",
+   "error": "HTTP Error 502: Bad Gateway",
    "diag": []
   },
   "日本": {
    "ok": true,
-   "cap_usd_t": 8.85,
-   "index_anchor": 66311.9296875,
-   "anchor_date": "2026-08-31",
+   "cap_usd_t": 8.86,
+   "index_anchor": 66753.71875,
+   "anchor_date": "2026-09-30",
    "anchor_source": "JPX官方月末市值Excel",
    "diag": [
     "JPX xlsx sheets: ['株式時価総額 Market Capitalization', '株式時価総額 Market Capitalizatio (旧)']",
-    "JPX 株式時価総額 Market Capitalization 最近行: 2026-08-31 原始值 1,414,461,142",
-    "按百万円解释 → 8.85万亿美元",
+    "JPX 株式時価総額 Market Capitalization 最近行: 2026-09-30 原始值 1,396,539,007",
+    "按百万円解释 → 8.86万亿美元",
     "✓ 单位=百万円"
    ]
   },
   "A股": {
    "ok": true,
-   "cap_usd_t": 16.44,
-   "index_anchor": 4340.7548828125,
-   "anchor_date": "2026-09-28",
+   "cap_usd_t": 16.52,
+   "index_anchor": 4357.61572265625,
+   "anchor_date": "2026-09-30",
    "anchor_source": "ECS哨站(沪深交易所官方)",
    "diag": [
-    "ECS哨站 2026-09-28: 沪+深 1,101,605 亿元 × 0.1492 = 16.44T；沪深300@2026-09-28=4340.7548828125"
+    "ECS哨站 2026-09-30: 沪+深 1,106,561 亿元 × 0.1493 = 16.52T；沪深300@2026-09-30=4357.61572265625"
    ]
   },
   "韩国": {
@@ -37,17 +37,17 @@
    "ok": true,
    "changed": false,
    "diag": [
-    "^DWCF 健康（最后 2026-09-25），无需变更"
+    "^DWCF 健康（最后 2026-10-02），无需变更"
    ]
   },
   "标普月线": {
    "ok": true,
-   "n": 1197,
-   "range": "1927-01~2026-09",
+   "n": 1198,
+   "range": "1927-01~2026-10",
    "diag": [
-    "datahub 1869行 首行[Date,SP500,Dividend,Earnings,Consumer Price Index,]",
-    "datahub 采纳 1196 个月（希勒月均价，1985年前专用；之后被Yahoo收盘覆盖）",
-    "yahoo 分块覆盖 502 点"
+    "datahub 1870行 首行[Date,SP500,Dividend,Earnings,Consumer Price Index,]",
+    "datahub 采纳 1197 个月（希勒月均价，1985年前专用；之后被Yahoo收盘覆盖）",
+    "yahoo 分块覆盖 503 点"
    ]
   }
  }
