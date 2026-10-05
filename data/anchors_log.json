@@ -1,9 +1,9 @@
 {
- "run": "2026-10-05 09:03 北京时间",
+ "run": "2026-10-05 19:36 北京时间",
  "markets": {
   "港股": {
    "ok": false,
-   "error": "HTTP Error 502: Bad Gateway",
+   "error": "The read operation timed out",
    "diag": []
   },
   "日本": {
