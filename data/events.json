@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-07 02:59 北京时间",
+ "updated": "2026-10-07 06:57 北京时间",
  "earnings": [
   {
    "d": "2026-10-08",
@@ -50,9 +50,9 @@
    "est": false
   },
   {
-   "d": "2026-10-21",
-   "code": "EQT",
-   "name": "EQT（天然气）",
+   "d": "2026-10-20",
+   "code": "VICR",
+   "name": "Vicor",
    "est": false
   },
   {
@@ -177,6 +177,12 @@
   },
   {
    "d": "2026-10-27",
+   "code": "CLS",
+   "name": "天弘科技（Celestica）",
+   "est": false
+  },
+  {
+   "d": "2026-10-27",
    "code": "ECL",
    "name": "艺康集团（Ecolab）",
    "est": false
@@ -243,6 +249,12 @@
   },
   {
    "d": "2026-10-29",
+   "code": "GOOGL",
+   "name": "谷歌（Alphabet）",
+   "est": false
+  },
+  {
+   "d": "2026-10-29",
    "code": "EQIX",
    "name": "易昆尼克斯（Equinix）",
    "est": false
@@ -305,6 +317,12 @@
    "d": "2026-10-29",
    "code": "BMY",
    "name": "百时美施贵宝",
+   "est": false
+  },
+  {
+   "d": "2026-10-30",
+   "code": "INTC",
+   "name": "英特尔",
    "est": false
   },
   {
@@ -413,6 +431,24 @@
    "d": "2026-11-03",
    "code": "PFE",
    "name": "辉瑞",
+   "est": false
+  },
+  {
+   "d": "2026-11-04",
+   "code": "AMD",
+   "name": "AMD",
+   "est": false
+  },
+  {
+   "d": "2026-11-04",
+   "code": "ANET",
+   "name": "Arista Networks",
+   "est": false
+  },
+  {
+   "d": "2026-11-04",
+   "code": "ALAB",
+   "name": "Astera Labs",
    "est": false
   },
   {
