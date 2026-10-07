@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-07 21:10 北京时间",
+ "updated": "2026-10-07 23:30 北京时间",
  "earnings": [
   {
    "d": "2026-10-08",
@@ -53,12 +53,6 @@
    "d": "2026-10-20",
    "code": "VICR",
    "name": "Vicor",
-   "est": false
-  },
-  {
-   "d": "2026-10-21",
-   "code": "EQT",
-   "name": "EQT（天然气）",
    "est": false
   },
   {
@@ -254,9 +248,21 @@
    "est": false
   },
   {
+   "d": "2026-10-28",
+   "code": "GEHC",
+   "name": "GE医疗",
+   "est": false
+  },
+  {
    "d": "2026-10-29",
    "code": "GOOGL",
    "name": "谷歌（Alphabet）",
+   "est": false
+  },
+  {
+   "d": "2026-10-29",
+   "code": "6723",
+   "name": "瑞萨电子",
    "est": false
   },
   {
@@ -629,6 +635,12 @@
    "d": "2026-11-10",
    "code": "5803",
    "name": "藤仓（Fujikura）",
+   "est": false
+  },
+  {
+   "d": "2026-11-10",
+   "code": "7012",
+   "name": "川崎重工",
    "est": false
   },
   {
