@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-08 03:18 北京时间",
+ "updated": "2026-10-08 07:44 北京时间",
  "earnings": [
   {
    "d": "2026-10-08",
@@ -225,6 +225,12 @@
   },
   {
    "d": "2026-10-28",
+   "code": "FLEX",
+   "name": "伟创力",
+   "est": false
+  },
+  {
+   "d": "2026-10-28",
    "code": "2383",
    "name": "台光电子",
    "est": false
@@ -243,6 +249,12 @@
   },
   {
    "d": "2026-10-28",
+   "code": "EQT",
+   "name": "EQT（天然气）",
+   "est": false
+  },
+  {
+   "d": "2026-10-28",
    "code": "HOOD",
    "name": "Robinhood",
    "est": false
@@ -251,6 +263,12 @@
    "d": "2026-10-28",
    "code": "GEHC",
    "name": "GE医疗",
+   "est": false
+  },
+  {
+   "d": "2026-10-29",
+   "code": "MSFT",
+   "name": "微软",
    "est": false
   },
   {
@@ -275,6 +293,12 @@
    "d": "2026-10-29",
    "code": "KLAC",
    "name": "科磊",
+   "est": false
+  },
+  {
+   "d": "2026-10-29",
+   "code": "FORM",
+   "name": "FormFactor",
    "est": false
   },
   {
@@ -513,6 +537,12 @@
   },
   {
    "d": "2026-11-04",
+   "code": "CRCL",
+   "name": "Circle",
+   "est": false
+  },
+  {
+   "d": "2026-11-04",
    "code": "NVO",
    "name": "诺和诺德",
    "est": false
@@ -563,6 +593,12 @@
    "d": "2026-11-05",
    "code": "CMI",
    "name": "康明斯",
+   "est": false
+  },
+  {
+   "d": "2026-11-05",
+   "code": "APP",
+   "name": "Applovin",
    "est": false
   },
   {
