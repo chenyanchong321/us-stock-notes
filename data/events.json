@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-07 23:30 北京时间",
+ "updated": "2026-10-08 03:18 北京时间",
  "earnings": [
   {
    "d": "2026-10-08",
@@ -305,6 +305,12 @@
    "d": "2026-10-29",
    "code": "FTNT",
    "name": "飞塔信息（Fortinet）",
+   "est": false
+  },
+  {
+   "d": "2026-10-29",
+   "code": "NOW",
+   "name": "ServiceNow",
    "est": false
   },
   {
