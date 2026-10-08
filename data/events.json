@@ -1,11 +1,11 @@
 {
- "updated": "2026-10-08 13:51 北京时间",
+ "updated": "2026-10-08 21:17 北京时间",
  "earnings": [
   {
    "d": "2026-10-08",
    "code": "APLD",
    "name": "Applied Digital",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-10-09",
@@ -213,6 +213,12 @@
   },
   {
    "d": "2026-10-28",
+   "code": "005930",
+   "name": "三星电子",
+   "est": false
+  },
+  {
+   "d": "2026-10-28",
    "code": "APH",
    "name": "安费诺",
    "est": false
@@ -311,6 +317,12 @@
    "d": "2026-10-29",
    "code": "ENTG",
    "name": "英特格（Entegris）",
+   "est": false
+  },
+  {
+   "d": "2026-10-29",
+   "code": "ASX",
+   "name": "日月光半导体 ADR",
    "est": false
   },
   {
@@ -467,6 +479,12 @@
    "d": "2026-11-03",
    "code": "AAPL",
    "name": "苹果",
+   "est": false
+  },
+  {
+   "d": "2026-11-03",
+   "code": "AEHR",
+   "name": "Aehr Test",
    "est": false
   },
   {
