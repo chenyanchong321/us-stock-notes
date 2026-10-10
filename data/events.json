@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-10 08:42 北京时间",
+ "updated": "2026-10-10 09:03 北京时间",
  "earnings": [
   {
    "d": "2026-10-09",
@@ -695,6 +695,12 @@
    "d": "2026-11-09",
    "code": "5016",
    "name": "JX金属",
+   "est": false
+  },
+  {
+   "d": "2026-11-09",
+   "code": "CEG",
+   "name": "Constellation Energy",
    "est": false
   },
   {
