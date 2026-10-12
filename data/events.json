@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-13 06:01 北京时间",
+ "updated": "2026-10-13 06:15 北京时间",
  "earnings": [
   {
    "d": "2026-10-12",
@@ -65,6 +65,12 @@
    "d": "2026-10-21",
    "code": "DHR",
    "name": "丹纳赫",
+   "est": false
+  },
+  {
+   "d": "2026-10-22",
+   "code": "META",
+   "name": "Meta Platforms",
    "est": false
   },
   {
@@ -509,6 +515,12 @@
    "d": "2026-11-03",
    "code": "AEHR",
    "name": "Aehr Test",
+   "est": false
+  },
+  {
+   "d": "2026-11-03",
+   "code": "PLTR",
+   "name": "Palantir",
    "est": false
   },
   {
