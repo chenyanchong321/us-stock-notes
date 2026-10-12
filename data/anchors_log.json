@@ -1,5 +1,5 @@
 {
- "run": "2026-10-12 09:25 北京时间",
+ "run": "2026-10-12 20:11 北京时间",
  "markets": {
   "港股": {
    "ok": true,
@@ -25,16 +25,13 @@
    ]
   },
   "A股": {
-   "ok": false,
-   "error": "上交所三轮重试均失败（海外IP大概率被拒，考虑ECS路线）: HTTP Error 403: Forbidden",
+   "ok": true,
+   "cap_usd_t": 16.15,
+   "index_anchor": 4287.97998046875,
+   "anchor_date": "2026-10-12",
+   "anchor_source": "ECS哨站(沪深交易所官方)",
    "diag": [
-    "ECS哨站数据过期（2026-09-30，12天前），转直抓",
-    "上交所 https 第1次失败: HTTP Error 403: Forbidden",
-    "上交所 http 第1次失败: HTTP Error 403: Forbidden",
-    "上交所 https 第2次失败: HTTP Error 403: Forbidden",
-    "上交所 http 第2次失败: HTTP Error 403: Forbidden",
-    "上交所 https 第3次失败: HTTP Error 403: Forbidden",
-    "上交所 http 第3次失败: HTTP Error 403: Forbidden"
+    "ECS哨站 2026-10-12: 沪+深 1,079,191 亿元 × 0.1497 = 16.15T；沪深300@2026-10-12=4287.97998046875"
    ]
   },
   "韩国": {
