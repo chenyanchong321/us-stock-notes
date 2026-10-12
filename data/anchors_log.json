@@ -1,10 +1,15 @@
 {
- "run": "2026-10-05 19:36 北京时间",
+ "run": "2026-10-12 09:25 北京时间",
  "markets": {
   "港股": {
-   "ok": false,
-   "error": "The read operation timed out",
-   "diag": []
+   "ok": true,
+   "cap_usd_t": 5.8,
+   "index_anchor": 24613.27,
+   "anchor_date": "2026-09-30",
+   "anchor_source": "HKMA月报(市值+恒指官方配对)",
+   "diag": [
+    "HKMA 2026-09: 45,480,389 百万港元 × 0.1274 = 5.80T"
+   ]
   },
   "日本": {
    "ok": true,
@@ -20,13 +25,16 @@
    ]
   },
   "A股": {
-   "ok": true,
-   "cap_usd_t": 16.52,
-   "index_anchor": 4357.61572265625,
-   "anchor_date": "2026-09-30",
-   "anchor_source": "ECS哨站(沪深交易所官方)",
+   "ok": false,
+   "error": "上交所三轮重试均失败（海外IP大概率被拒，考虑ECS路线）: HTTP Error 403: Forbidden",
    "diag": [
-    "ECS哨站 2026-09-30: 沪+深 1,106,561 亿元 × 0.1493 = 16.52T；沪深300@2026-09-30=4357.61572265625"
+    "ECS哨站数据过期（2026-09-30，12天前），转直抓",
+    "上交所 https 第1次失败: HTTP Error 403: Forbidden",
+    "上交所 http 第1次失败: HTTP Error 403: Forbidden",
+    "上交所 https 第2次失败: HTTP Error 403: Forbidden",
+    "上交所 http 第2次失败: HTTP Error 403: Forbidden",
+    "上交所 https 第3次失败: HTTP Error 403: Forbidden",
+    "上交所 http 第3次失败: HTTP Error 403: Forbidden"
    ]
   },
   "韩国": {
@@ -37,7 +45,7 @@
    "ok": true,
    "changed": false,
    "diag": [
-    "^DWCF 健康（最后 2026-10-02），无需变更"
+    "^DWCF 健康（最后 2026-10-09），无需变更"
    ]
   },
   "标普月线": {
