@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-13 21:00 北京时间",
+ "updated": "2026-10-13 21:15 北京时间",
  "earnings": [
   {
    "d": "2026-10-13",
@@ -509,6 +509,12 @@
    "d": "2026-11-03",
    "code": "AEHR",
    "name": "Aehr Test",
+   "est": false
+  },
+  {
+   "d": "2026-11-03",
+   "code": "TLN",
+   "name": "Talen Energy",
    "est": false
   },
   {
