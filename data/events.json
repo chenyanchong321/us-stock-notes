@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-14 06:00 北京时间",
+ "updated": "2026-10-14 06:15 北京时间",
  "earnings": [
   {
    "d": "2026-10-13",
@@ -212,6 +212,12 @@
    "est": false
   },
   {
+   "d": "2026-10-27",
+   "code": "HUBB",
+   "name": "哈勃集团",
+   "est": false
+  },
+  {
    "d": "2026-10-28",
    "code": "NXPI",
    "name": "恩智浦",
@@ -227,6 +233,12 @@
    "d": "2026-10-28",
    "code": "005930",
    "name": "三星电子",
+   "est": false
+  },
+  {
+   "d": "2026-10-28",
+   "code": "STX",
+   "name": "希捷科技",
    "est": false
   },
   {
@@ -525,6 +537,12 @@
   },
   {
    "d": "2026-11-03",
+   "code": "WMB",
+   "name": "Williams Companies",
+   "est": false
+  },
+  {
+   "d": "2026-11-03",
    "code": "PLTR",
    "name": "Palantir",
    "est": false
@@ -581,6 +599,12 @@
    "d": "2026-11-04",
    "code": "Q",
    "name": "Qnity Electronics",
+   "est": false
+  },
+  {
+   "d": "2026-11-04",
+   "code": "NVTS",
+   "name": "纳微半导体",
    "est": false
   },
   {
@@ -701,6 +725,12 @@
    "d": "2026-11-06",
    "code": "7011",
    "name": "三菱重工",
+   "est": false
+  },
+  {
+   "d": "2026-11-06",
+   "code": "NET",
+   "name": "Cloudflare",
    "est": false
   },
   {
