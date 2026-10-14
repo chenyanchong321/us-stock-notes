@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-15 06:00 北京时间",
+ "updated": "2026-10-15 06:15 北京时间",
  "earnings": [
   {
    "d": "2026-10-14",
@@ -195,6 +195,12 @@
   },
   {
    "d": "2026-10-27",
+   "code": "00902",
+   "name": "华能国际",
+   "est": false
+  },
+  {
+   "d": "2026-10-27",
    "code": "SPGI",
    "name": "标普全球",
    "est": false
@@ -257,6 +263,12 @@
    "d": "2026-10-28",
    "code": "6857",
    "name": "爱德万测试",
+   "est": false
+  },
+  {
+   "d": "2026-10-28",
+   "code": "00522",
+   "name": "ASMPT",
    "est": false
   },
   {
@@ -341,6 +353,12 @@
    "d": "2026-10-29",
    "code": "FORM",
    "name": "FormFactor",
+   "est": false
+  },
+  {
+   "d": "2026-10-29",
+   "code": "COHU",
+   "name": "科休半导体",
    "est": false
   },
   {
@@ -524,6 +542,12 @@
    "est": false
   },
   {
+   "d": "2026-10-30",
+   "code": "COIN",
+   "name": "Coinbase",
+   "est": false
+  },
+  {
    "d": "2026-10-31",
    "code": "AZN",
    "name": "阿斯利康",
@@ -627,6 +651,12 @@
   },
   {
    "d": "2026-11-04",
+   "code": "DDOG",
+   "name": "Datadog",
+   "est": false
+  },
+  {
+   "d": "2026-11-04",
    "code": "MCD",
    "name": "麦当劳",
    "est": false
@@ -653,6 +683,12 @@
    "d": "2026-11-05",
    "code": "QCOM",
    "name": "高通",
+   "est": false
+  },
+  {
+   "d": "2026-11-05",
+   "code": "COHR",
+   "name": "Coherent",
    "est": false
   },
   {
@@ -749,6 +785,12 @@
    "d": "2026-11-06",
    "code": "TEAM",
    "name": "Atlassian",
+   "est": false
+  },
+  {
+   "d": "2026-11-06",
+   "code": "FROG",
+   "name": "JFrog",
    "est": false
   },
   {
