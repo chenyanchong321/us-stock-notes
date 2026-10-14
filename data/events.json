@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-14 21:00 北京时间",
+ "updated": "2026-10-14 21:15 北京时间",
  "earnings": [
   {
    "d": "2026-10-14",
@@ -89,6 +89,12 @@
    "d": "2026-10-22",
    "code": "6146",
    "name": "迪思科（DISCO）",
+   "est": false
+  },
+  {
+   "d": "2026-10-22",
+   "code": "TTMI",
+   "name": "TTM Technologies",
    "est": false
   },
   {
@@ -269,6 +275,12 @@
    "d": "2026-10-28",
    "code": "6501",
    "name": "日立制作所",
+   "est": false
+  },
+  {
+   "d": "2026-10-28",
+   "code": "GNRC",
+   "name": "Generac",
    "est": false
   },
   {
