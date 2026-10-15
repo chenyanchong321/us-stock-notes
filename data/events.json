@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-15 09:07 北京时间",
+ "updated": "2026-10-15 09:37 北京时间",
  "earnings": [
   {
    "d": "2026-10-14",
@@ -11,6 +11,12 @@
    "d": "2026-10-15",
    "code": "TSM",
    "name": "台积电",
+   "est": false
+  },
+  {
+   "d": "2026-10-15",
+   "code": "01772",
+   "name": "赣锋锂业",
    "est": false
   },
   {
@@ -405,6 +411,12 @@
   },
   {
    "d": "2026-10-29",
+   "code": "00300",
+   "name": "美的集团",
+   "est": false
+  },
+  {
+   "d": "2026-10-29",
    "code": "AEM",
    "name": "伊格尔矿业（Agnico Eagle）",
    "est": false
@@ -693,6 +705,12 @@
   },
   {
    "d": "2026-11-05",
+   "code": "VIAV",
+   "name": "Viavi Solutions",
+   "est": false
+  },
+  {
+   "d": "2026-11-05",
    "code": "HIMX",
    "name": "奇景光电",
    "est": false
@@ -737,6 +755,12 @@
    "d": "2026-11-05",
    "code": "APP",
    "name": "Applovin",
+   "est": false
+  },
+  {
+   "d": "2026-11-05",
+   "code": "KVYO",
+   "name": "Klaviyo",
    "est": false
   },
   {
