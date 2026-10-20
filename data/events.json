@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-21 05:30 北京时间",
+ "updated": "2026-10-21 05:39 北京时间",
  "earnings": [
   {
    "d": "2026-10-20",
@@ -615,6 +615,12 @@
   },
   {
    "d": "2026-11-02",
+   "code": "CIFR",
+   "name": "Cipher Mining",
+   "est": false
+  },
+  {
+   "d": "2026-11-02",
    "code": "TEM",
    "name": "Tempus AI",
    "est": false
@@ -705,8 +711,20 @@
   },
   {
    "d": "2026-11-04",
+   "code": "SMCI",
+   "name": "超微电脑",
+   "est": false
+  },
+  {
+   "d": "2026-11-04",
    "code": "7729",
    "name": "东京精密（Accretech）",
+   "est": false
+  },
+  {
+   "d": "2026-11-04",
+   "code": "BRKR",
+   "name": "布鲁克",
    "est": false
   },
   {
@@ -743,6 +761,12 @@
    "d": "2026-11-04",
    "code": "DDOG",
    "name": "Datadog",
+   "est": false
+  },
+  {
+   "d": "2026-11-04",
+   "code": "TOST",
+   "name": "Toast",
    "est": false
   },
   {
@@ -1007,6 +1031,12 @@
    "d": "2026-11-12",
    "code": "2317",
    "name": "鸿海精密",
+   "est": false
+  },
+  {
+   "d": "2026-11-13",
+   "code": "CBRS",
+   "name": "Cerebras Systems",
    "est": false
   },
   {
