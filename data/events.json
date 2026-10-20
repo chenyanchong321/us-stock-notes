@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-20 08:32 北京时间",
+ "updated": "2026-10-20 08:45 北京时间",
  "earnings": [
   {
    "d": "2026-10-20",
@@ -47,6 +47,12 @@
    "d": "2026-10-21",
    "code": "DHR",
    "name": "丹纳赫",
+   "est": false
+  },
+  {
+   "d": "2026-10-21",
+   "code": "010120",
+   "name": "LS产电",
    "est": false
   },
   {
@@ -221,6 +227,12 @@
    "d": "2026-10-28",
    "code": "UMC",
    "name": "联电",
+   "est": false
+  },
+  {
+   "d": "2026-10-28",
+   "code": "SKHY",
+   "name": "SK海力士(美股ADR)",
    "est": false
   },
   {
@@ -609,6 +621,12 @@
   },
   {
    "d": "2026-11-03",
+   "code": "FN",
+   "name": "Fabrinet",
+   "est": false
+  },
+  {
+   "d": "2026-11-03",
    "code": "AEHR",
    "name": "Aehr Test",
    "est": false
@@ -749,6 +767,12 @@
    "d": "2026-11-05",
    "code": "HIMX",
    "name": "奇景光电",
+   "est": false
+  },
+  {
+   "d": "2026-11-05",
+   "code": "ACMR",
+   "name": "ACM Research",
    "est": false
   },
   {
@@ -899,6 +923,12 @@
    "d": "2026-11-09",
    "code": "MNDY",
    "name": "monday.com",
+   "est": false
+  },
+  {
+   "d": "2026-11-10",
+   "code": "ONTO",
+   "name": "Onto Innovation",
    "est": false
   },
   {
