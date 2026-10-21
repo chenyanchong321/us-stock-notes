@@ -1,24 +1,6 @@
 {
- "updated": "2026-10-22 03:45 北京时间",
+ "updated": "2026-10-22 04:00 北京时间",
  "earnings": [
-  {
-   "d": "2026-10-21",
-   "code": "NFLX",
-   "name": "奈飞",
-   "est": true
-  },
-  {
-   "d": "2026-10-21",
-   "code": "ISRG",
-   "name": "直觉外科",
-   "est": false
-  },
-  {
-   "d": "2026-10-21",
-   "code": "SPCX",
-   "name": "SpaceX",
-   "est": false
-  },
   {
    "d": "2026-10-21",
    "code": "ABT",
