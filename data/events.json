@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-21 23:30 北京时间",
+ "updated": "2026-10-21 23:45 北京时间",
  "earnings": [
   {
    "d": "2026-10-21",
@@ -813,6 +813,18 @@
   },
   {
    "d": "2026-11-05",
+   "code": "ACLS",
+   "name": "Axcelis",
+   "est": false
+  },
+  {
+   "d": "2026-11-05",
+   "code": "VECO",
+   "name": "维易科精密（Veeco）",
+   "est": false
+  },
+  {
+   "d": "2026-11-05",
    "code": "ACMR",
    "name": "ACM Research",
    "est": false
@@ -881,6 +893,12 @@
    "d": "2026-11-05",
    "code": "6479",
    "name": "美蓓亚三美",
+   "est": false
+  },
+  {
+   "d": "2026-11-05",
+   "code": "SDGR",
+   "name": "薛定谔",
    "est": false
   },
   {
