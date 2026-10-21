@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-22 05:30 北京时间",
+ "updated": "2026-10-22 05:37 北京时间",
  "earnings": [
   {
    "d": "2026-10-21",
@@ -869,6 +869,12 @@
    "d": "2026-11-05",
    "code": "APP",
    "name": "Applovin",
+   "est": false
+  },
+  {
+   "d": "2026-11-05",
+   "code": "HUBS",
+   "name": "HubSpot",
    "est": false
   },
   {
