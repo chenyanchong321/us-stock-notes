@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-22 23:30 北京时间",
+ "updated": "2026-10-22 23:45 北京时间",
  "earnings": [
   {
    "d": "2026-10-22",
@@ -767,6 +767,12 @@
    "d": "2026-11-05",
    "code": "COHR",
    "name": "Coherent",
+   "est": false
+  },
+  {
+   "d": "2026-11-05",
+   "code": "MTSI",
+   "name": "MACOM",
    "est": false
   },
   {
