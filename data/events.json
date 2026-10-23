@@ -1,18 +1,6 @@
 {
- "updated": "2026-10-24 03:45 北京时间",
+ "updated": "2026-10-24 04:00 北京时间",
  "earnings": [
-  {
-   "d": "2026-10-23",
-   "code": "WDC",
-   "name": "西部数据",
-   "est": false
-  },
-  {
-   "d": "2026-10-23",
-   "code": "BE",
-   "name": "Bloom Energy",
-   "est": false
-  },
   {
    "d": "2026-10-23",
    "code": "6954",
@@ -246,6 +234,12 @@
    "code": "GEHC",
    "name": "GE医疗",
    "est": false
+  },
+  {
+   "d": "2026-10-28",
+   "code": "SMMT",
+   "name": "Summit Therapeutics",
+   "est": true
   },
   {
    "d": "2026-10-29",
