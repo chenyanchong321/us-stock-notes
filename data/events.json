@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-27 05:30 北京时间",
+ "updated": "2026-10-27 05:45 北京时间",
  "earnings": [
   {
    "d": "2026-10-26",
@@ -579,6 +579,12 @@
   },
   {
    "d": "2026-11-03",
+   "code": "RXRX",
+   "name": "Recursion",
+   "est": false
+  },
+  {
+   "d": "2026-11-03",
    "code": "PHG",
    "name": "飞利浦",
    "est": false
@@ -671,6 +677,12 @@
    "d": "2026-11-04",
    "code": "MCD",
    "name": "麦当劳",
+   "est": false
+  },
+  {
+   "d": "2026-11-04",
+   "code": "HL",
+   "name": "赫克拉矿业（Hecla Mining）",
    "est": false
   },
   {
@@ -977,6 +989,12 @@
    "d": "2026-11-10",
    "code": "7012",
    "name": "川崎重工",
+   "est": false
+  },
+  {
+   "d": "2026-11-10",
+   "code": "ZETA",
+   "name": "Zeta Global",
    "est": false
   },
   {
