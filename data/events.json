@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-28 08:33 北京时间",
+ "updated": "2026-10-28 08:42 北京时间",
  "earnings": [
   {
    "d": "2026-10-27",
@@ -192,12 +192,6 @@
    "code": "GEHC",
    "name": "GE医疗",
    "est": false
-  },
-  {
-   "d": "2026-10-28",
-   "code": "SMMT",
-   "name": "Summit Therapeutics",
-   "est": true
   },
   {
    "d": "2026-10-29",
@@ -678,6 +672,12 @@
    "code": "NVO",
    "name": "诺和诺德",
    "est": false
+  },
+  {
+   "d": "2026-11-04",
+   "code": "SMMT",
+   "name": "Summit Therapeutics",
+   "est": true
   },
   {
    "d": "2026-11-05",
