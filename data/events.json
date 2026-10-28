@@ -1,17 +1,17 @@
 {
- "updated": "2026-10-28 17:30 北京时间",
+ "updated": "2026-10-28 17:45 北京时间",
  "earnings": [
   {
    "d": "2026-10-27",
    "code": "GLW",
    "name": "康宁",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-10-27",
    "code": "SHECY",
    "name": "信越化学",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-10-27",
@@ -53,7 +53,7 @@
    "d": "2026-10-28",
    "code": "SKHY",
    "name": "SK海力士(美股ADR)",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-10-28",
@@ -65,7 +65,7 @@
    "d": "2026-10-28",
    "code": "STX",
    "name": "希捷科技",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-10-28",
@@ -83,7 +83,7 @@
    "d": "2026-10-28",
    "code": "TER",
    "name": "泰瑞达",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-10-28",
