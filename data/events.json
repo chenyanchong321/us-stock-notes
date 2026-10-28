@@ -1,12 +1,6 @@
 {
- "updated": "2026-10-29 03:45 北京时间",
+ "updated": "2026-10-29 04:00 北京时间",
  "earnings": [
-  {
-   "d": "2026-10-28",
-   "code": "NXPI",
-   "name": "恩智浦",
-   "est": false
-  },
   {
    "d": "2026-10-28",
    "code": "UMC",
@@ -15,21 +9,9 @@
   },
   {
    "d": "2026-10-28",
-   "code": "SKHY",
-   "name": "SK海力士(美股ADR)",
-   "est": true
-  },
-  {
-   "d": "2026-10-28",
    "code": "005930",
    "name": "三星电子",
    "est": false
-  },
-  {
-   "d": "2026-10-28",
-   "code": "STX",
-   "name": "希捷科技",
-   "est": true
   },
   {
    "d": "2026-10-28",
@@ -42,12 +24,6 @@
    "code": "VRT",
    "name": "Vertiv Holdings",
    "est": false
-  },
-  {
-   "d": "2026-10-28",
-   "code": "TER",
-   "name": "泰瑞达",
-   "est": true
   },
   {
    "d": "2026-10-28",
@@ -101,18 +77,6 @@
    "d": "2026-10-28",
    "code": "GNRC",
    "name": "Generac",
-   "est": false
-  },
-  {
-   "d": "2026-10-28",
-   "code": "EQT",
-   "name": "EQT（天然气）",
-   "est": false
-  },
-  {
-   "d": "2026-10-28",
-   "code": "HOOD",
-   "name": "Robinhood",
    "est": false
   },
   {
