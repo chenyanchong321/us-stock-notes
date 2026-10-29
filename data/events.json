@@ -1,46 +1,10 @@
 {
- "updated": "2026-10-30 03:45 北京时间",
+ "updated": "2026-10-30 04:00 北京时间",
  "earnings": [
-  {
-   "d": "2026-10-29",
-   "code": "MSFT",
-   "name": "微软",
-   "est": true
-  },
-  {
-   "d": "2026-10-29",
-   "code": "GOOGL",
-   "name": "谷歌（Alphabet）",
-   "est": false
-  },
   {
    "d": "2026-10-29",
    "code": "6723",
    "name": "瑞萨电子",
-   "est": false
-  },
-  {
-   "d": "2026-10-29",
-   "code": "EQIX",
-   "name": "易昆尼克斯（Equinix）",
-   "est": false
-  },
-  {
-   "d": "2026-10-29",
-   "code": "KLAC",
-   "name": "科磊",
-   "est": true
-  },
-  {
-   "d": "2026-10-29",
-   "code": "FORM",
-   "name": "FormFactor",
-   "est": false
-  },
-  {
-   "d": "2026-10-29",
-   "code": "COHU",
-   "name": "科休半导体",
    "est": false
   },
   {
@@ -93,26 +57,8 @@
   },
   {
    "d": "2026-10-29",
-   "code": "FTNT",
-   "name": "飞塔信息（Fortinet）",
-   "est": false
-  },
-  {
-   "d": "2026-10-29",
-   "code": "NOW",
-   "name": "ServiceNow",
-   "est": true
-  },
-  {
-   "d": "2026-10-29",
    "code": "00300",
    "name": "美的集团",
-   "est": false
-  },
-  {
-   "d": "2026-10-29",
-   "code": "AEM",
-   "name": "伊格尔矿业（Agnico Eagle）",
    "est": false
   },
   {
