@@ -1,48 +1,6 @@
 {
- "updated": "2026-10-29 20:15 北京时间",
+ "updated": "2026-10-29 20:30 北京时间",
  "earnings": [
-  {
-   "d": "2026-10-28",
-   "code": "UMC",
-   "name": "联电",
-   "est": true
-  },
-  {
-   "d": "2026-10-28",
-   "code": "APH",
-   "name": "安费诺",
-   "est": true
-  },
-  {
-   "d": "2026-10-28",
-   "code": "VRT",
-   "name": "Vertiv Holdings",
-   "est": false
-  },
-  {
-   "d": "2026-10-28",
-   "code": "FLEX",
-   "name": "伟创力",
-   "est": true
-  },
-  {
-   "d": "2026-10-28",
-   "code": "GEV",
-   "name": "GE Vernova",
-   "est": false
-  },
-  {
-   "d": "2026-10-28",
-   "code": "GNRC",
-   "name": "Generac",
-   "est": false
-  },
-  {
-   "d": "2026-10-28",
-   "code": "GEHC",
-   "name": "GE医疗",
-   "est": false
-  },
   {
    "d": "2026-10-29",
    "code": "MSFT",
