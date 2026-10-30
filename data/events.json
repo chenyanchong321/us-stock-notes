@@ -1,18 +1,6 @@
 {
- "updated": "2026-10-31 03:45 北京时间",
+ "updated": "2026-10-31 04:00 北京时间",
  "earnings": [
-  {
-   "d": "2026-10-30",
-   "code": "AMZN",
-   "name": "亚马逊",
-   "est": false
-  },
-  {
-   "d": "2026-10-30",
-   "code": "INTC",
-   "name": "英特尔",
-   "est": true
-  },
   {
    "d": "2026-10-30",
    "code": "2454",
@@ -23,18 +11,6 @@
    "d": "2026-10-30",
    "code": "285A",
    "name": "铠侠",
-   "est": false
-  },
-  {
-   "d": "2026-10-30",
-   "code": "SNDK",
-   "name": "闪迪",
-   "est": false
-  },
-  {
-   "d": "2026-10-30",
-   "code": "AXTI",
-   "name": "AXT Inc",
    "est": false
   },
   {
@@ -75,12 +51,6 @@
   },
   {
    "d": "2026-10-30",
-   "code": "MPWR",
-   "name": "Monolithic Power",
-   "est": false
-  },
-  {
-   "d": "2026-10-30",
    "code": "5214",
    "name": "日本电气硝子NEG",
    "est": false
@@ -117,38 +87,8 @@
   },
   {
    "d": "2026-10-30",
-   "code": "TWLO",
-   "name": "Twilio",
-   "est": false
-  },
-  {
-   "d": "2026-10-30",
-   "code": "RDDT",
-   "name": "Reddit",
-   "est": false
-  },
-  {
-   "d": "2026-10-30",
    "code": "ABBV",
    "name": "艾伯维",
-   "est": false
-  },
-  {
-   "d": "2026-10-30",
-   "code": "SYK",
-   "name": "史赛克",
-   "est": true
-  },
-  {
-   "d": "2026-10-30",
-   "code": "MSTR",
-   "name": "Strategy",
-   "est": false
-  },
-  {
-   "d": "2026-10-30",
-   "code": "COIN",
-   "name": "Coinbase",
    "est": false
   },
   {
