@@ -1,48 +1,6 @@
 {
- "updated": "2026-10-30 20:15 北京时间",
+ "updated": "2026-10-30 20:30 北京时间",
  "earnings": [
-  {
-   "d": "2026-10-29",
-   "code": "ENTG",
-   "name": "英特格（Entegris）",
-   "est": false
-  },
-  {
-   "d": "2026-10-29",
-   "code": "ASX",
-   "name": "日月光半导体 ADR",
-   "est": false
-  },
-  {
-   "d": "2026-10-29",
-   "code": "STM",
-   "name": "意法半导体",
-   "est": true
-  },
-  {
-   "d": "2026-10-29",
-   "code": "CAT",
-   "name": "卡特彼勒",
-   "est": true
-  },
-  {
-   "d": "2026-10-29",
-   "code": "LLY",
-   "name": "礼来",
-   "est": false
-  },
-  {
-   "d": "2026-10-29",
-   "code": "MRK",
-   "name": "默沙东",
-   "est": false
-  },
-  {
-   "d": "2026-10-29",
-   "code": "BMY",
-   "name": "百时美施贵宝",
-   "est": false
-  },
   {
    "d": "2026-10-30",
    "code": "AMZN",
