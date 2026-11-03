@@ -1,11 +1,11 @@
 {
- "updated": "2026-11-03 18:30 北京时间",
+ "updated": "2026-11-03 18:45 北京时间",
  "earnings": [
   {
    "d": "2026-11-02",
    "code": "LITE",
    "name": "Lumentum",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-11-02",
@@ -23,7 +23,7 @@
    "d": "2026-11-03",
    "code": "AAPL",
    "name": "苹果",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-11-03",
@@ -41,7 +41,7 @@
    "d": "2026-11-03",
    "code": "FN",
    "name": "Fabrinet",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-11-03",
@@ -71,7 +71,7 @@
    "d": "2026-11-03",
    "code": "PLTR",
    "name": "Palantir",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-11-03",
