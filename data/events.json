@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-04 05:22 北京时间",
+ "updated": "2026-11-04 05:35 北京时间",
  "earnings": [
   {
    "d": "2026-11-03",
@@ -101,6 +101,12 @@
    "d": "2026-11-04",
    "code": "7013",
    "name": "IHI",
+   "est": false
+  },
+  {
+   "d": "2026-11-04",
+   "code": "DDOG",
+   "name": "Datadog",
    "est": false
   },
   {
@@ -245,6 +251,12 @@
    "d": "2026-11-05",
    "code": "6976",
    "name": "太阳诱电",
+   "est": false
+  },
+  {
+   "d": "2026-11-05",
+   "code": "CMI",
+   "name": "康明斯",
    "est": false
   },
   {
@@ -632,9 +644,21 @@
    "est": false
   },
   {
+   "d": "2026-12-03",
+   "code": "SNOW",
+   "name": "Snowflake",
+   "est": false
+  },
+  {
    "d": "2026-12-10",
    "code": "AVGO",
    "name": "博通",
+   "est": false
+  },
+  {
+   "d": "2026-12-10",
+   "code": "ADBE",
+   "name": "Adobe",
    "est": false
   },
   {
