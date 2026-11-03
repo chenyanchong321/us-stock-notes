@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-04 06:31 北京时间",
+ "updated": "2026-11-04 06:45 北京时间",
  "earnings": [
   {
    "d": "2026-11-03",
@@ -548,6 +548,12 @@
    "est": false
   },
   {
+   "d": "2026-11-17",
+   "code": "POWL",
+   "name": "Powell Industries",
+   "est": false
+  },
+  {
    "d": "2026-11-18",
    "code": "NVDA",
    "name": "英伟达",
@@ -558,12 +564,6 @@
    "code": "00700",
    "name": "腾讯控股",
    "est": false
-  },
-  {
-   "d": "2026-11-18",
-   "code": "POWL",
-   "name": "Powell Industries",
-   "est": true
   },
   {
    "d": "2026-11-19",
