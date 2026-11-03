@@ -1,12 +1,6 @@
 {
- "updated": "2026-11-04 06:45 北京时间",
+ "updated": "2026-11-04 07:00 北京时间",
  "earnings": [
-  {
-   "d": "2026-11-03",
-   "code": "2344",
-   "name": "华邦电子",
-   "est": false
-  },
   {
    "d": "2026-11-03",
    "code": "ETN",
@@ -165,24 +159,6 @@
   },
   {
    "d": "2026-11-05",
-   "code": "COHR",
-   "name": "Coherent",
-   "est": false
-  },
-  {
-   "d": "2026-11-05",
-   "code": "MTSI",
-   "name": "MACOM",
-   "est": false
-  },
-  {
-   "d": "2026-11-05",
-   "code": "VIAV",
-   "name": "Viavi Solutions",
-   "est": false
-  },
-  {
-   "d": "2026-11-05",
    "code": "HIMX",
    "name": "奇景光电",
    "est": false
@@ -315,12 +291,6 @@
   },
   {
    "d": "2026-11-06",
-   "code": "AAOI",
-   "name": "Applied Optoelectronics",
-   "est": false
-  },
-  {
-   "d": "2026-11-06",
    "code": "IREN",
    "name": "IREN Ltd",
    "est": false
@@ -371,12 +341,6 @@
    "d": "2026-11-06",
    "code": "SHL",
    "name": "西门子医疗",
-   "est": false
-  },
-  {
-   "d": "2026-11-09",
-   "code": "5801",
-   "name": "古河电工",
    "est": false
   },
   {
@@ -521,12 +485,6 @@
    "d": "2026-11-13",
    "code": "6481",
    "name": "THK",
-   "est": false
-  },
-  {
-   "d": "2026-11-16",
-   "code": "POET",
-   "name": "POET Technologies",
    "est": false
   },
   {
