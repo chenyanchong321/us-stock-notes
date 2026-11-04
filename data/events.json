@@ -1,30 +1,6 @@
 {
- "updated": "2026-11-05 04:45 北京时间",
+ "updated": "2026-11-05 05:00 北京时间",
  "earnings": [
-  {
-   "d": "2026-11-04",
-   "code": "AMD",
-   "name": "AMD",
-   "est": true
-  },
-  {
-   "d": "2026-11-04",
-   "code": "ANET",
-   "name": "Arista Networks",
-   "est": false
-  },
-  {
-   "d": "2026-11-04",
-   "code": "ALAB",
-   "name": "Astera Labs",
-   "est": false
-  },
-  {
-   "d": "2026-11-04",
-   "code": "SMCI",
-   "name": "超微电脑",
-   "est": true
-  },
   {
    "d": "2026-11-04",
    "code": "CAMT",
@@ -57,12 +33,6 @@
   },
   {
    "d": "2026-11-04",
-   "code": "NVTS",
-   "name": "纳微半导体",
-   "est": false
-  },
-  {
-   "d": "2026-11-04",
    "code": "7013",
    "name": "IHI",
    "est": false
@@ -75,20 +45,8 @@
   },
   {
    "d": "2026-11-04",
-   "code": "TOST",
-   "name": "Toast",
-   "est": false
-  },
-  {
-   "d": "2026-11-04",
    "code": "MCD",
    "name": "麦当劳",
-   "est": false
-  },
-  {
-   "d": "2026-11-04",
-   "code": "HL",
-   "name": "赫克拉矿业（Hecla Mining）",
    "est": false
   },
   {
