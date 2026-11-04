@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-04 21:30 北京时间",
+ "updated": "2026-11-04 21:45 北京时间",
  "earnings": [
   {
    "d": "2026-11-04",
@@ -507,6 +507,12 @@
   },
   {
    "d": "2026-11-17",
+   "code": "09618",
+   "name": "京东集团",
+   "est": false
+  },
+  {
+   "d": "2026-11-17",
    "code": "RCAT",
    "name": "Red Cat",
    "est": false
@@ -593,6 +599,12 @@
    "d": "2026-11-25",
    "code": "WDAY",
    "name": "Workday",
+   "est": false
+  },
+  {
+   "d": "2026-12-02",
+   "code": "CRWD",
+   "name": "CrowdStrike",
    "est": false
   },
   {
