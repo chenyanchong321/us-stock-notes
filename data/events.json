@@ -1,18 +1,6 @@
 {
- "updated": "2026-11-06 04:47 北京时间",
+ "updated": "2026-11-06 05:00 北京时间",
  "earnings": [
-  {
-   "d": "2026-11-05",
-   "code": "ARM",
-   "name": "Arm Holdings",
-   "est": true
-  },
-  {
-   "d": "2026-11-05",
-   "code": "QCOM",
-   "name": "高通",
-   "est": true
-  },
   {
    "d": "2026-11-05",
    "code": "01347",
@@ -21,21 +9,9 @@
   },
   {
    "d": "2026-11-05",
-   "code": "COHR",
-   "name": "Coherent",
-   "est": true
-  },
-  {
-   "d": "2026-11-05",
    "code": "MTSI",
    "name": "MACOM",
    "est": false
-  },
-  {
-   "d": "2026-11-05",
-   "code": "VIAV",
-   "name": "Viavi Solutions",
-   "est": true
   },
   {
    "d": "2026-11-05",
@@ -47,12 +23,6 @@
    "d": "2026-11-05",
    "code": "ACLS",
    "name": "Axcelis",
-   "est": false
-  },
-  {
-   "d": "2026-11-05",
-   "code": "VECO",
-   "name": "维易科精密（Veeco）",
    "est": false
   },
   {
@@ -69,12 +39,6 @@
   },
   {
    "d": "2026-11-05",
-   "code": "MKSI",
-   "name": "MKS仪器",
-   "est": false
-  },
-  {
-   "d": "2026-11-05",
    "code": "3110",
    "name": "日东纺织",
    "est": false
@@ -84,12 +48,6 @@
    "code": "6963",
    "name": "罗姆半导体",
    "est": false
-  },
-  {
-   "d": "2026-11-05",
-   "code": "WOLF",
-   "name": "Wolfspeed",
-   "est": true
   },
   {
    "d": "2026-11-05",
@@ -111,30 +69,6 @@
   },
   {
    "d": "2026-11-05",
-   "code": "APP",
-   "name": "Applovin",
-   "est": false
-  },
-  {
-   "d": "2026-11-05",
-   "code": "HUBS",
-   "name": "HubSpot",
-   "est": false
-  },
-  {
-   "d": "2026-11-05",
-   "code": "KVYO",
-   "name": "Klaviyo",
-   "est": false
-  },
-  {
-   "d": "2026-11-05",
-   "code": "SDGR",
-   "name": "薛定谔",
-   "est": false
-  },
-  {
-   "d": "2026-11-05",
    "code": "06160",
    "name": "百济神州",
    "est": false
@@ -150,12 +84,6 @@
    "code": "ZLAB",
    "name": "再鼎医药US",
    "est": false
-  },
-  {
-   "d": "2026-11-05",
-   "code": "SMMT",
-   "name": "Summit Therapeutics",
-   "est": true
   },
   {
    "d": "2026-11-06",
