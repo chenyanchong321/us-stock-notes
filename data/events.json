@@ -1,16 +1,10 @@
 {
- "updated": "2026-11-05 14:27 北京时间",
+ "updated": "2026-11-05 14:37 北京时间",
  "earnings": [
   {
    "d": "2026-11-04",
    "code": "CAMT",
    "name": "康特科技",
-   "est": false
-  },
-  {
-   "d": "2026-11-04",
-   "code": "7729",
-   "name": "东京精密（Accretech）",
    "est": false
   },
   {
@@ -21,20 +15,8 @@
   },
   {
    "d": "2026-11-04",
-   "code": "4203",
-   "name": "住友电木",
-   "est": false
-  },
-  {
-   "d": "2026-11-04",
    "code": "Q",
    "name": "Qnity Electronics",
-   "est": false
-  },
-  {
-   "d": "2026-11-04",
-   "code": "7013",
-   "name": "IHI",
    "est": false
   },
   {
