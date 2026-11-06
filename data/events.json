@@ -1,54 +1,6 @@
 {
- "updated": "2026-11-06 21:15 北京时间",
+ "updated": "2026-11-06 21:30 北京时间",
  "earnings": [
-  {
-   "d": "2026-11-05",
-   "code": "MTSI",
-   "name": "MACOM",
-   "est": true
-  },
-  {
-   "d": "2026-11-05",
-   "code": "HIMX",
-   "name": "奇景光电",
-   "est": false
-  },
-  {
-   "d": "2026-11-05",
-   "code": "ACLS",
-   "name": "Axcelis",
-   "est": false
-  },
-  {
-   "d": "2026-11-05",
-   "code": "ACMR",
-   "name": "ACM Research",
-   "est": false
-  },
-  {
-   "d": "2026-11-05",
-   "code": "NVMI",
-   "name": "Nova",
-   "est": false
-  },
-  {
-   "d": "2026-11-05",
-   "code": "CMI",
-   "name": "康明斯",
-   "est": true
-  },
-  {
-   "d": "2026-11-05",
-   "code": "ONC",
-   "name": "百济神州US",
-   "est": false
-  },
-  {
-   "d": "2026-11-05",
-   "code": "ZLAB",
-   "name": "再鼎医药US",
-   "est": false
-  },
   {
    "d": "2026-11-06",
    "code": "MCHP",
