@@ -1,24 +1,6 @@
 {
- "updated": "2026-11-07 04:45 北京时间",
+ "updated": "2026-11-07 05:00 北京时间",
  "earnings": [
-  {
-   "d": "2026-11-06",
-   "code": "MCHP",
-   "name": "微芯科技",
-   "est": true
-  },
-  {
-   "d": "2026-11-06",
-   "code": "AAOI",
-   "name": "Applied Optoelectronics",
-   "est": false
-  },
-  {
-   "d": "2026-11-06",
-   "code": "IREN",
-   "name": "IREN Ltd",
-   "est": true
-  },
   {
    "d": "2026-11-06",
    "code": "4626",
@@ -39,32 +21,8 @@
   },
   {
    "d": "2026-11-06",
-   "code": "NET",
-   "name": "Cloudflare",
-   "est": false
-  },
-  {
-   "d": "2026-11-06",
-   "code": "TEAM",
-   "name": "Atlassian",
-   "est": true
-  },
-  {
-   "d": "2026-11-06",
-   "code": "FROG",
-   "name": "JFrog",
-   "est": false
-  },
-  {
-   "d": "2026-11-06",
    "code": "6479",
    "name": "美蓓亚三美",
-   "est": false
-  },
-  {
-   "d": "2026-11-06",
-   "code": "KTOS",
-   "name": "Kratos",
    "est": false
   },
   {
