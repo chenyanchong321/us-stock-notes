@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-11 06:30 北京时间",
+ "updated": "2026-11-11 06:45 北京时间",
  "earnings": [
   {
    "d": "2026-11-10",
@@ -297,6 +297,12 @@
   },
   {
    "d": "2026-12-03",
+   "code": "CRM",
+   "name": "赛富时（Salesforce）",
+   "est": false
+  },
+  {
+   "d": "2026-12-03",
    "code": "SNOW",
    "name": "Snowflake",
    "est": false
@@ -371,6 +377,12 @@
    "d": "2027-01-28",
    "code": "STM",
    "name": "意法半导体",
+   "est": false
+  },
+  {
+   "d": "2027-01-29",
+   "code": "ROG",
+   "name": "罗氏",
    "est": false
   },
   {
