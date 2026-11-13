@@ -1,18 +1,6 @@
 {
- "updated": "2026-11-13 21:15 北京时间",
+ "updated": "2026-11-13 21:30 北京时间",
  "earnings": [
-  {
-   "d": "2026-11-12",
-   "code": "NBIS",
-   "name": "Nebius",
-   "est": true
-  },
-  {
-   "d": "2026-11-12",
-   "code": "ONDS",
-   "name": "Ondas",
-   "est": false
-  },
   {
    "d": "2026-11-13",
    "code": "CBRS",
