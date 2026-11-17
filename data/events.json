@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-17 18:30 北京时间",
+ "updated": "2026-11-17 18:45 北京时间",
  "earnings": [
   {
    "d": "2026-11-16",
@@ -23,7 +23,7 @@
    "d": "2026-11-17",
    "code": "POWL",
    "name": "Powell Industries",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-11-18",
