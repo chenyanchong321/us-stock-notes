@@ -1,23 +1,11 @@
 {
- "updated": "2026-11-18 04:45 北京时间",
+ "updated": "2026-11-18 05:00 北京时间",
  "earnings": [
   {
    "d": "2026-11-17",
    "code": "09618",
    "name": "京东集团",
    "est": false
-  },
-  {
-   "d": "2026-11-17",
-   "code": "RCAT",
-   "name": "Red Cat",
-   "est": false
-  },
-  {
-   "d": "2026-11-17",
-   "code": "POWL",
-   "name": "Powell Industries",
-   "est": true
   },
   {
    "d": "2026-11-18",
