@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-19 18:30 北京时间",
+ "updated": "2026-11-19 18:45 北京时间",
  "earnings": [
   {
    "d": "2026-11-19",
@@ -11,13 +11,13 @@
    "d": "2026-11-19",
    "code": "KLIC",
    "name": "库力索法",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-11-19",
    "code": "PANW",
    "name": "Palo Alto Networks",
-   "est": false
+   "est": true
   },
   {
    "d": "2026-11-19",
