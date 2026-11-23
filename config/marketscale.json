@@ -34,7 +34,7 @@
       "key": "港股",
       "flag": "🇭🇰",
       "index": "^HSI",
-      "cap_usd_t": 5.4,
+      "cap_usd_t": 5.41,
       "index_anchor": 23294.42,
       "anchor_date": "2026-10-31",
       "anchor_source": "HKMA月报(市值+恒指官方配对)"
