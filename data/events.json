@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-24 18:45 北京时间",
+ "updated": "2026-11-24 19:00 北京时间",
  "earnings": [
   {
    "d": "2026-11-23",
@@ -230,6 +230,18 @@
    "est": false
   },
   {
+   "d": "2027-02-02",
+   "code": "CAT",
+   "name": "卡特彼勒",
+   "est": false
+  },
+  {
+   "d": "2027-02-02",
+   "code": "MRK",
+   "name": "默沙东",
+   "est": false
+  },
+  {
    "d": "2027-02-03",
    "code": "IFNNY",
    "name": "英飞凌 ADR",
@@ -285,6 +297,12 @@
   },
   {
    "d": "2027-02-09",
+   "code": "6963",
+   "name": "罗姆半导体",
+   "est": false
+  },
+  {
+   "d": "2027-02-09",
    "code": "6324",
    "name": "哈默纳科机电",
    "est": false
@@ -294,6 +312,18 @@
    "code": "ENR",
    "name": "西门子能源",
    "est": false
+  },
+  {
+   "d": "2027-02-12",
+   "code": "CCJ",
+   "name": "Cameco",
+   "est": false
+  },
+  {
+   "d": "2027-02-23",
+   "code": "SMMT",
+   "name": "Summit Therapeutics",
+   "est": true
   }
  ]
 }
