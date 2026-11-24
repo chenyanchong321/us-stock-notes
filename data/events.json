@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-25 03:28 北京时间",
+ "updated": "2026-11-25 03:36 北京时间",
  "earnings": [
   {
    "d": "2026-11-24",
@@ -137,6 +137,12 @@
    "d": "2026-12-09",
    "code": "PLAB",
    "name": "福尼克斯（Photronics）",
+   "est": false
+  },
+  {
+   "d": "2026-12-09",
+   "code": "AVAV",
+   "name": "AeroVironment",
    "est": false
   },
   {
